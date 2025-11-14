@@ -1000,3 +1000,60 @@ section.section-3.subscribe-form .input-group-append{
     -webkit-transition: all .4s ease-in-out;
     transition: all .4s ease-in-out;
 }
+/* Google Login Button Styles */
+.btn-google-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 45px;
+  background: #ffffff;
+  color: #333333;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.btn-google-login:hover {
+  background: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+  color: #333333;
+  text-decoration: none;
+}
+
+.btn-google-login:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* OR divider styling */
+.login-divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.login-divider span {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 0 10px;
+  position: relative;
+  z-index: 1;
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.login-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255,255,255,0.2);
+  z-index: 0;
+}
