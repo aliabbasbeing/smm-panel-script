@@ -153,8 +153,7 @@ class Whatsapp_marketing_model extends MY_Model {
             COUNT(*) as total,
             SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) as sent,
             SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
-            SUM(CASE WHEN status = 'opened' THEN 1 ELSE 0 END) as opened,
-            SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) as bounced
+            SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending
         ");
         $this->db->from($this->tb_recipients);
         $this->db->where('campaign_id', $campaign_id);
@@ -167,8 +166,6 @@ class Whatsapp_marketing_model extends MY_Model {
                 'total_messages' => $stats->total,
                 'sent_messages' => $stats->sent,
                 'failed_messages' => $stats->failed,
-                'delivered_messages' => $stats->opened,
-                'read_messages' => $stats->bounced,
                 'updated_at' => NOW
             ]);
             return true;
@@ -466,12 +463,12 @@ class Whatsapp_marketing_model extends MY_Model {
             // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
             // This will be much faster for large datasets
             // $limit = 0 means no limit (import all available users)
-            // Note: Using first_name (with underscore) as per actual database schema
-            $this->db->select('u.id, u.phone, u.first_name as name, u.balance');
+            // Note: Using whatsapp_number from general_users table
+            $this->db->select('u.id, u.whatsapp_number, u.first_name as name, u.balance');
             $this->db->from(USERS . ' u');
             $this->db->where('u.status', 1);
-            $this->db->where('u.phone IS NOT NULL', NULL, FALSE);
-            $this->db->where('u.phone !=', '');
+            $this->db->where('u.whatsapp_number IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.whatsapp_number !=', '');
             
             // Apply filters if provided
             if (!empty($filters['role'])) {
@@ -491,22 +488,23 @@ class Whatsapp_marketing_model extends MY_Model {
             
             // Check for database errors
             if (!$query) {
-                log_message('error', 'Phone Marketing: Failed to query users - ' . $this->db->error()['message']);
-                return 0;
+                $error = $this->db->error();
+                $this->_log_model_error('import_from_users - Query Failed', 'Database error: ' . $error['message'], array('code' => $error['code']));
+                throw new Exception('Database query failed: ' . $error['message']);
             }
             
             $users = $query->result();
             
             $imported = 0;
             foreach ($users as $user) {
-                // Skip if phone is invalid
-                if (empty($user->phone) || !filter_var($user->phone, FILTER_VALIDATE_EMAIL)) {
+                // Skip if whatsapp_number is invalid (basic validation for phone number format)
+                if (empty($user->whatsapp_number)) {
                     continue;
                 }
                 
                 // Check if already exists
                 $this->db->where('campaign_id', $campaign_id);
-                $this->db->where('phone', $user->phone);
+                $this->db->where('phone_number', $user->whatsapp_number);
                 $exists = $this->db->count_all_results($this->tb_recipients);
                 
                 if ($exists == 0) {
@@ -516,12 +514,12 @@ class Whatsapp_marketing_model extends MY_Model {
                     
                     $custom_data = [
                         'username' => $user->name ? $user->name : 'User',
-                        'phone' => $user->phone,
+                        'phone_number' => $user->whatsapp_number,
                         'balance' => $user->balance ? $user->balance : 0,
                         'total_orders' => $order_count
                     ];
                     
-                    if ($this->add_recipient($campaign_id, $user->phone, $user->name, $user->id, $custom_data)) {
+                    if ($this->add_recipient($campaign_id, $user->whatsapp_number, $user->name, $user->id, $custom_data)) {
                         $imported++;
                     }
                 }
@@ -529,8 +527,8 @@ class Whatsapp_marketing_model extends MY_Model {
             
             return $imported;
         } catch (Exception $e) {
-            log_message('error', 'Phone Marketing: Error in import_from_users - ' . $e->getMessage());
-            return 0;
+            $this->_log_model_error('import_from_users - Exception', $e, array('campaign_id' => $campaign_id));
+            throw $e; // Re-throw so controller can catch it
         }
     }
     
@@ -584,8 +582,6 @@ class Whatsapp_marketing_model extends MY_Model {
         
         if ($status == 'sent') {
             $data['sent_at'] = NOW;
-        } elseif ($status == 'opened') {
-            $data['opened_at'] = NOW;
         }
         
         if ($error_message) {
