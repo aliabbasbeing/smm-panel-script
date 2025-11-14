@@ -30,12 +30,12 @@ class Whatsapp_marketing_model extends MY_Model {
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
         } else {
-            $this->db->select('c.*, t.name as template_name, a.name as api_name');
+            $this->db->select('c.*, t.name as template_name, s.name as api_name');
         }
         
         $this->db->from($this->tb_campaigns . ' c');
         $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
-        $this->db->join($this->tb_api_configs . ' a', 'c.api_config_id = a.id', 'left');
+        $this->db->join($this->tb_api_configs . ' s', 'c.api_config_id = s.id', 'left');
         
         if ($status !== null) {
             $this->db->where('c.status', $status);
@@ -60,10 +60,10 @@ class Whatsapp_marketing_model extends MY_Model {
     }
     
     public function get_campaign($ids) {
-        $this->db->select('c.*, t.name as template_name, a.name as api_name');
+        $this->db->select('c.*, t.name as template_name, s.name as api_name');
         $this->db->from($this->tb_campaigns . ' c');
         $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
-        $this->db->join($this->tb_api_configs . ' a', 'c.api_config_id = a.id', 'left');
+        $this->db->join($this->tb_api_configs . ' s', 'c.api_config_id = s.id', 'left');
         $this->db->where('c.ids', $ids);
         $query = $this->db->get();
         
@@ -85,6 +85,7 @@ class Whatsapp_marketing_model extends MY_Model {
     }
     
     public function delete_campaign($ids) {
+        // Get campaign to delete related data
         $campaign = $this->get_campaign($ids);
         if ($campaign) {
             // Delete recipients
@@ -106,7 +107,9 @@ class Whatsapp_marketing_model extends MY_Model {
         $this->db->select("
             COUNT(*) as total,
             SUM(CASE WHEN status = 'sent' THEN 1 ELSE 0 END) as sent,
-            SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed
+            SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) as failed,
+            SUM(CASE WHEN status = 'opened' THEN 1 ELSE 0 END) as opened,
+            SUM(CASE WHEN status = 'bounced' THEN 1 ELSE 0 END) as bounced
         ");
         $this->db->from($this->tb_recipients);
         $this->db->where('campaign_id', $campaign_id);
@@ -119,6 +122,8 @@ class Whatsapp_marketing_model extends MY_Model {
                 'total_messages' => $stats->total,
                 'sent_messages' => $stats->sent,
                 'failed_messages' => $stats->failed,
+                'delivered_messages' => $stats->opened,
+                'read_messages' => $stats->bounced,
                 'updated_at' => NOW
             ]);
             return true;
@@ -126,6 +131,11 @@ class Whatsapp_marketing_model extends MY_Model {
         return false;
     }
     
+    /**
+     * Reset failed recipients to pending for resending
+     * @param int $campaign_id Campaign ID
+     * @return int Number of recipients reset
+     */
     public function reset_failed_recipients($campaign_id) {
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('status', 'failed');
@@ -139,6 +149,10 @@ class Whatsapp_marketing_model extends MY_Model {
         return $this->db->affected_rows();
     }
     
+    /**
+     * Get overall phone marketing statistics
+     * @return object Statistics object
+     */
     public function get_overall_stats() {
         // Get campaign stats
         $this->db->select("
@@ -150,15 +164,18 @@ class Whatsapp_marketing_model extends MY_Model {
         ");
         $campaign_stats = $this->db->get($this->tb_campaigns)->row();
         
-        // Get message stats from all campaigns
+        // Get phone stats from all campaigns
         $this->db->select("
             SUM(total_messages) as total_messages,
             SUM(sent_messages) as total_sent,
-            SUM(failed_messages) as total_failed
+            SUM(failed_messages) as total_failed,
+            SUM(delivered_messages) as total_opened,
+            SUM(read_messages) as total_bounced
         ");
-        $message_stats = $this->db->get($this->tb_campaigns)->row();
+        $phone_stats = $this->db->get($this->tb_campaigns)->row();
         
-        $remaining = ($message_stats->total_messages - $message_stats->total_sent - $message_stats->total_failed);
+        // Calculate remaining messages
+        $remaining = ($phone_stats->total_messages - $phone_stats->total_sent - $phone_stats->total_failed);
         
         return (object) [
             'total_campaigns' => $campaign_stats->total_campaigns ?: 0,
@@ -166,14 +183,22 @@ class Whatsapp_marketing_model extends MY_Model {
             'completed_campaigns' => $campaign_stats->completed_campaigns ?: 0,
             'paused_campaigns' => $campaign_stats->paused_campaigns ?: 0,
             'pending_campaigns' => $campaign_stats->pending_campaigns ?: 0,
-            'total_messages' => $message_stats->total_messages ?: 0,
-            'total_sent' => $message_stats->total_sent ?: 0,
-            'total_failed' => $message_stats->total_failed ?: 0,
+            'total_messages' => $phone_stats->total_messages ?: 0,
+            'total_sent' => $phone_stats->total_sent ?: 0,
+            'total_failed' => $phone_stats->total_failed ?: 0,
+            'total_opened' => $phone_stats->total_opened ?: 0,
+            'total_bounced' => $phone_stats->total_bounced ?: 0,
             'total_remaining' => max(0, $remaining),
-            'failure_rate' => $message_stats->total_messages > 0 ? round(($message_stats->total_failed / $message_stats->total_messages) * 100, 1) : 0
+            'open_rate' => $phone_stats->total_sent > 0 ? round(($phone_stats->total_opened / $phone_stats->total_sent) * 100, 1) : 0,
+            'failure_rate' => $phone_stats->total_messages > 0 ? round(($phone_stats->total_failed / $phone_stats->total_messages) * 100, 1) : 0
         ];
     }
     
+    /**
+     * Get recent activity logs across all campaigns
+     * @param int $limit Number of logs to fetch
+     * @return array Array of log objects
+     */
     public function get_recent_logs($limit = 20) {
         $this->db->select('l.*, c.name as campaign_name');
         $this->db->from($this->tb_logs . ' l');
@@ -238,6 +263,7 @@ class Whatsapp_marketing_model extends MY_Model {
     }
     
     public function delete_template($ids) {
+        // Check if template is being used by any campaign
         $template = $this->get_template($ids);
         if ($template) {
             $this->db->where('template_id', $template->id);
@@ -245,7 +271,7 @@ class Whatsapp_marketing_model extends MY_Model {
             $count = $this->db->count_all_results($this->tb_campaigns);
             
             if ($count > 0) {
-                return false;
+                return false; // Cannot delete template in use
             }
             
             $this->db->where('ids', $ids);
@@ -304,6 +330,7 @@ class Whatsapp_marketing_model extends MY_Model {
         $data['created_at'] = NOW;
         $data['updated_at'] = NOW;
         
+        // If this is set as default, unset others
         if (isset($data['is_default']) && $data['is_default'] == 1) {
             $this->db->update($this->tb_api_configs, ['is_default' => 0]);
         }
@@ -314,6 +341,7 @@ class Whatsapp_marketing_model extends MY_Model {
     public function update_api_config($ids, $data) {
         $data['updated_at'] = NOW;
         
+        // If this is set as default, unset others
         if (isset($data['is_default']) && $data['is_default'] == 1) {
             $this->db->update($this->tb_api_configs, ['is_default' => 0]);
         }
@@ -325,12 +353,13 @@ class Whatsapp_marketing_model extends MY_Model {
     public function delete_api_config($ids) {
         $api = $this->get_api_config($ids);
         if ($api) {
+            // Check if API is being used
             $this->db->where('api_config_id', $api->id);
             $this->db->where('status !=', 'completed');
             $count = $this->db->count_all_results($this->tb_campaigns);
             
             if ($count > 0) {
-                return false;
+                return false; // Cannot delete API in use
             }
             
             $this->db->where('ids', $ids);
@@ -375,14 +404,15 @@ class Whatsapp_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-    public function add_recipient($campaign_id, $phone_number, $name = null, $user_id = null, $custom_data = null) {
+    public function add_recipient($campaign_id, $phone, $name = null, $user_id = null, $custom_data = null) {
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
-            'phone_number' => $phone_number,
+            'phone' => $phone,
             'name' => $name,
             'user_id' => $user_id,
             'custom_data' => $custom_data ? json_encode($custom_data) : null,
+            'tracking_token' => md5($campaign_id . $phone . time() . rand(1000, 9999)),
             'status' => 'pending',
             'created_at' => NOW,
             'updated_at' => NOW
@@ -393,27 +423,35 @@ class Whatsapp_marketing_model extends MY_Model {
     
     public function import_from_users($campaign_id, $filters = [], $limit = 0) {
         try {
-            $this->db->select('u.id, u.email, u.first_name as name, u.balance, u.whatsapp_number');
+            // More efficient approach: Use WHERE EXISTS instead of JOIN + GROUP BY
+            // This will be much faster for large datasets
+            // $limit = 0 means no limit (import all available users)
+            // Note: Using first_name (with underscore) as per actual database schema
+            $this->db->select('u.id, u.phone, u.first_name as name, u.balance');
             $this->db->from(USERS . ' u');
             $this->db->where('u.status', 1);
-            $this->db->where('u.whatsapp_number IS NOT NULL', NULL, FALSE);
-            $this->db->where('u.whatsapp_number !=', '');
+            $this->db->where('u.phone IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.phone !=', '');
             
+            // Apply filters if provided
             if (!empty($filters['role'])) {
                 $this->db->where('u.role', $filters['role']);
             }
             
-            // Import ALL users with WhatsApp numbers, not just those with orders
-            // Removed order requirement to import all users from general_users
+            // Only get users who have at least one order
+            // Using uid column from orders table as per schema
+            $this->db->where("EXISTS (SELECT 1 FROM " . ORDER . " o WHERE o.uid = u.id LIMIT 1)", NULL, FALSE);
             
+            // Apply limit if specified (0 = no limit)
             if ($limit > 0) {
                 $this->db->limit($limit);
             }
             
             $query = $this->db->get();
             
+            // Check for database errors
             if (!$query) {
-                log_message('error', 'WhatsApp Marketing: Failed to query users - ' . $this->db->error()['message']);
+                log_message('error', 'Phone Marketing: Failed to query users - ' . $this->db->error()['message']);
                 return 0;
             }
             
@@ -421,32 +459,29 @@ class Whatsapp_marketing_model extends MY_Model {
             
             $imported = 0;
             foreach ($users as $user) {
-                if (empty($user->whatsapp_number)) {
+                // Skip if phone is invalid
+                if (empty($user->phone) || !filter_var($user->phone, FILTER_VALIDATE_EMAIL)) {
                     continue;
                 }
                 
-                $phone = preg_replace('/[^0-9]/', '', $user->whatsapp_number);
-                if (strlen($phone) < 10) {
-                    continue;
-                }
-                
+                // Check if already exists
                 $this->db->where('campaign_id', $campaign_id);
-                $this->db->where('phone_number', $phone);
+                $this->db->where('phone', $user->phone);
                 $exists = $this->db->count_all_results($this->tb_recipients);
                 
                 if ($exists == 0) {
-                    // Get order count for this user (optional data)
+                    // Get order count for this user (with limit to prevent slow queries)
                     $this->db->where('uid', $user->id);
                     $order_count = $this->db->count_all_results(ORDER);
                     
                     $custom_data = [
                         'username' => $user->name ? $user->name : 'User',
-                        'email' => $user->email,
+                        'phone' => $user->phone,
                         'balance' => $user->balance ? $user->balance : 0,
                         'total_orders' => $order_count
                     ];
                     
-                    if ($this->add_recipient($campaign_id, $phone, $user->name, $user->id, $custom_data)) {
+                    if ($this->add_recipient($campaign_id, $user->phone, $user->name, $user->id, $custom_data)) {
                         $imported++;
                     }
                 }
@@ -454,7 +489,7 @@ class Whatsapp_marketing_model extends MY_Model {
             
             return $imported;
         } catch (Exception $e) {
-            log_message('error', 'WhatsApp Marketing: Error in import_from_users - ' . $e->getMessage());
+            log_message('error', 'Phone Marketing: Error in import_from_users - ' . $e->getMessage());
             return 0;
         }
     }
@@ -466,22 +501,21 @@ class Whatsapp_marketing_model extends MY_Model {
         
         $imported = 0;
         if (($handle = fopen($file_path, "r")) !== FALSE) {
-            $header = fgetcsv($handle);
+            $header = fgetcsv($handle); // Skip header row
             
             while (($data = fgetcsv($handle)) !== FALSE) {
-                if (isset($data[0])) {
-                    $phone = preg_replace('/[^0-9]/', '', trim($data[0]));
-                    if (strlen($phone) >= 10) {
-                        $name = isset($data[1]) ? trim($data[1]) : null;
-                        
-                        $this->db->where('campaign_id', $campaign_id);
-                        $this->db->where('phone_number', $phone);
-                        $exists = $this->db->count_all_results($this->tb_recipients);
-                        
-                        if ($exists == 0) {
-                            if ($this->add_recipient($campaign_id, $phone, $name)) {
-                                $imported++;
-                            }
+                if (isset($data[0]) && filter_var($data[0], FILTER_VALIDATE_EMAIL)) {
+                    $phone = trim($data[0]);
+                    $name = isset($data[1]) ? trim($data[1]) : null;
+                    
+                    // Check if already exists
+                    $this->db->where('campaign_id', $campaign_id);
+                    $this->db->where('phone', $phone);
+                    $exists = $this->db->count_all_results($this->tb_recipients);
+                    
+                    if ($exists == 0) {
+                        if ($this->add_recipient($campaign_id, $phone, $name)) {
+                            $imported++;
                         }
                     }
                 }
@@ -510,6 +544,8 @@ class Whatsapp_marketing_model extends MY_Model {
         
         if ($status == 'sent') {
             $data['sent_at'] = NOW;
+        } elseif ($status == 'opened') {
+            $data['opened_at'] = NOW;
         }
         
         if ($error_message) {
@@ -524,13 +560,13 @@ class Whatsapp_marketing_model extends MY_Model {
     // LOG METHODS
     // ========================================
     
-    public function add_log($campaign_id, $recipient_id, $phone_number, $message, $status, $error_message = null) {
+    public function add_log($campaign_id, $recipient_id, $phone, $subject, $status, $error_message = null) {
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
             'recipient_id' => $recipient_id,
-            'phone_number' => $phone_number,
-            'message' => $message,
+            'phone' => $phone,
+            'subject' => $subject,
             'status' => $status,
             'error_message' => $error_message,
             'sent_at' => ($status == 'sent') ? NOW : null,
@@ -608,9 +644,10 @@ class Whatsapp_marketing_model extends MY_Model {
     // HELPER METHODS
     // ========================================
     
-    public function process_template_variables($template_message, $variables) {
-        $message = $template_message;
+    public function process_template_variables($template_body, $variables) {
+        $body = $template_body;
         
+        // Add default variables
         $default_vars = [
             'site_name' => get_option('website_name', 'SMM Panel'),
             'site_url' => base_url(),
@@ -620,10 +657,11 @@ class Whatsapp_marketing_model extends MY_Model {
         
         $variables = array_merge($default_vars, $variables);
         
+        // Replace variables
         foreach ($variables as $key => $value) {
-            $message = str_replace('{' . $key . '}', $value, $message);
+            $body = str_replace('{' . $key . '}', $value, $body);
         }
         
-        return $message;
+        return $body;
     }
 }

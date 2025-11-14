@@ -1,9 +1,8 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
       <h1 class="page-title">
-        <i class="fe fe-message-square"></i> <?php echo htmlspecialchars($campaign->name); ?>
+        <i class="fe fe-mail"></i> <?php echo htmlspecialchars($campaign->name); ?>
       </h1>
       <div class="page-subtitle">
         <a href="<?php echo cn($module . '/campaigns'); ?>" class="btn btn-sm btn-secondary">
@@ -24,11 +23,11 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
-            <h6 class="text-uppercase text-muted mb-2">Total Messages</h6>
+            <h6 class="text-uppercase text-muted mb-2">Total Phone Numbers</h6>
             <span class="h2 mb-0"><?php echo number_format($campaign->total_messages); ?></span>
           </div>
           <div class="col-auto">
-            <span class="h2 fe fe-message-square text-muted mb-0"></span>
+            <span class="h2 fe fe-mail text-muted mb-0"></span>
           </div>
         </div>
       </div>
@@ -56,11 +55,14 @@
       <div class="card-body">
         <div class="row align-items-center">
           <div class="col">
-            <h6 class="text-uppercase text-muted mb-2">Pending</h6>
-            <span class="h2 mb-0 text-warning"><?php echo number_format($campaign->total_messages - $campaign->sent_messages - $campaign->failed_messages); ?></span>
+            <h6 class="text-uppercase text-muted mb-2">Delivered</h6>
+            <span class="h2 mb-0 text-info"><?php echo number_format($campaign->delivered_messages); ?></span>
+            <?php if($campaign->sent_messages > 0){ ?>
+            <small class="text-muted">(<?php echo round(($campaign->delivered_messages / $campaign->sent_messages) * 100, 1); ?>%)</small>
+            <?php } ?>
           </div>
           <div class="col-auto">
-            <span class="h2 fe fe-clock text-warning mb-0"></span>
+            <span class="h2 fe fe-eye text-info mb-0"></span>
           </div>
         </div>
       </div>
@@ -84,7 +86,7 @@
   </div>
 </div>
 
-<!-- Campaign Info & Progress -->
+<!-- Campaign Info -->
 <div class="row">
   <div class="col-md-6">
     <div class="card">
@@ -113,7 +115,7 @@
             <td><?php echo htmlspecialchars($campaign->template_name); ?></td>
           </tr>
           <tr>
-            <td><strong>API Config:</strong></td>
+            <td><strong>API:</strong></td>
             <td><?php echo htmlspecialchars($campaign->api_name); ?></td>
           </tr>
           <tr>
@@ -150,13 +152,86 @@
             <td><strong>Campaign Cron URL:</strong></td>
             <td>
               <small class="text-muted">
-                <code><?php echo base_url('whatsapp_cron/run?token=' . get_option('whatsapp_cron_token', 'YOUR_TOKEN') . '&campaign_id=' . $campaign->ids); ?></code>
+                <code><?php echo base_url('cron/whatsapp_marketing?token=' . get_option('phone_number_cron_token', 'YOUR_TOKEN') . '&campaign_id=' . $campaign->ids); ?></code>
               </small>
               <br>
               <small class="text-info">Use this URL for campaign-specific cron job</small>
             </td>
           </tr>
         </table>
+        
+        <!-- Campaign Health Indicator -->
+        <div class="mt-4">
+          <h5>Campaign Health</h5>
+          <?php 
+          $health_score = 100;
+          $health_class = 'success';
+          $health_issues = array();
+          
+          // Check failure rate
+          if($campaign->total_messages > 0){
+            $failure_rate = ($campaign->failed_messages / $campaign->total_messages) * 100;
+            if($failure_rate > 20){
+              $health_score -= 30;
+              $health_issues[] = 'High failure rate (' . round($failure_rate, 1) . '%)';
+            } elseif($failure_rate > 10){
+              $health_score -= 15;
+              $health_issues[] = 'Moderate failure rate (' . round($failure_rate, 1) . '%)';
+            }
+          }
+          
+          // Check open rate
+          if($campaign->sent_messages > 0){
+            $open_rate = ($campaign->delivered_messages / $campaign->sent_messages) * 100;
+            if($open_rate < 10){
+              $health_score -= 20;
+              $health_issues[] = 'Low open rate (' . round($open_rate, 1) . '%)';
+            } elseif($open_rate < 20){
+              $health_score -= 10;
+              $health_issues[] = 'Below average open rate (' . round($open_rate, 1) . '%)';
+            }
+          }
+          
+          // Check if campaign is stalled
+          if($campaign->status == 'running' && $campaign->last_sent_at){
+            $hours_since_last = (strtotime(NOW) - strtotime($campaign->last_sent_at)) / 3600;
+            if($hours_since_last > 24){
+              $health_score -= 25;
+              $health_issues[] = 'No messages sent in last 24 hours';
+            }
+          }
+          
+          // Set health class based on score
+          if($health_score >= 80){
+            $health_class = 'success';
+          } elseif($health_score >= 60){
+            $health_class = 'warning';
+          } else {
+            $health_class = 'danger';
+          }
+          ?>
+          
+          <div class="progress mb-2" style="height: 25px;">
+            <div class="progress-bar bg-<?php echo $health_class; ?>" role="progressbar" style="width: <?php echo $health_score; ?>%" aria-valuenow="<?php echo $health_score; ?>" aria-valuemin="0" aria-valuemax="100">
+              <strong><?php echo $health_score; ?>%</strong>
+            </div>
+          </div>
+          
+          <?php if(!empty($health_issues)){ ?>
+          <div class="alert alert-<?php echo $health_class; ?> mb-0">
+            <strong>Issues Detected:</strong>
+            <ul class="mb-0 pl-3">
+              <?php foreach($health_issues as $issue){ ?>
+              <li><?php echo $issue; ?></li>
+              <?php } ?>
+            </ul>
+          </div>
+          <?php } else { ?>
+          <div class="alert alert-success mb-0">
+            <i class="fe fe-check-circle"></i> Campaign is performing well!
+          </div>
+          <?php } ?>
+        </div>
       </div>
     </div>
   </div>
@@ -172,7 +247,7 @@
         if($campaign->total_messages > 0){
           $progress = round(($campaign->sent_messages / $campaign->total_messages) * 100);
         }
-        $remaining = $campaign->total_messages - $campaign->sent_messages - $campaign->failed_messages;
+        $remaining = $campaign->total_messages - $campaign->sent_messages;
         ?>
         <div class="mb-3">
           <div class="clearfix mb-2">
@@ -190,11 +265,11 @@
             <div class="h4"><?php echo number_format($remaining); ?></div>
           </div>
           <div class="col">
-            <div class="text-muted">Success Rate</div>
+            <div class="text-muted">Open Rate</div>
             <div class="h4">
               <?php 
               if($campaign->sent_messages > 0){
-                echo round((($campaign->sent_messages - $campaign->failed_messages) / $campaign->sent_messages) * 100, 1) . '%';
+                echo round(($campaign->delivered_messages / $campaign->sent_messages) * 100, 1) . '%';
               } else {
                 echo '0%';
               }
@@ -209,8 +284,8 @@
           </a>
           
           <?php if($campaign->failed_messages > 0){ ?>
-          <button class="btn btn-warning btn-block mt-2 actionItem" data-id="<?php echo $campaign->ids; ?>" data-action="<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>" data-confirm="Are you sure you want to resend <?php echo $campaign->failed_messages; ?> failed message(s)?">
-            <i class="fe fe-refresh-cw"></i> Resend Failed Messages (<?php echo $campaign->failed_messages; ?>)
+          <button class="btn btn-warning btn-block mt-2 actionCampaignResendFailed" data-ids="<?php echo $campaign->ids; ?>">
+            <i class="fe fe-refresh-cw"></i> Resend Failed Phone Numbers (<?php echo $campaign->failed_messages; ?>)
           </button>
           <?php } ?>
         </div>
@@ -219,52 +294,66 @@
   </div>
 </div>
 
-<!-- Recent Logs -->
+<!-- Recent Recipients -->
 <div class="row mt-3">
   <div class="col-md-12">
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">Recent Activity (Last 50)</h3>
+        <h3 class="card-title">Recent Recipients (Last 100)</h3>
+        <div class="card-options">
+          <div class="btn-group btn-group-sm" role="group">
+            <button type="button" class="btn btn-secondary filter-recipients active" data-filter="all">All</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="pending">Pending</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="sent">Sent</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="failed">Failed</button>
+            <button type="button" class="btn btn-secondary filter-recipients" data-filter="delivered">Delivered</button>
+          </div>
+        </div>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
           <thead>
             <tr>
               <th>Phone Number</th>
+              <th>Name</th>
               <th>Status</th>
               <th>Sent At</th>
-              <th>Error Message</th>
+              <th>Delivered At</th>
+              <th>Error</th>
+              <th>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            <?php if(!empty($logs)){ 
-              foreach($logs as $log){
+          <tbody id="recipients-table-body">
+            <?php if(!empty($recipients)){ 
+              foreach($recipients as $recipient){
                 $status_badge = 'secondary';
-                switch($log->status){
+                switch($recipient->status){
                   case 'sent': $status_badge = 'success'; break;
+                  case 'delivered': $status_badge = 'info'; break;
                   case 'failed': $status_badge = 'danger'; break;
-                  case 'pending': $status_badge = 'warning'; break;
+                  case 'read': $status_badge = 'warning'; break;
                 }
             ?>
-            <tr>
-              <td><?php echo htmlspecialchars($log->phone_number); ?></td>
+            <tr class="recipient-row" data-status="<?php echo $recipient->status; ?>">
+              <td><?php echo htmlspecialchars($recipient->phone_number); ?></td>
+              <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
+              <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($recipient->status); ?></span></td>
+              <td><?php echo $recipient->sent_at ? date('M d, H:i', strtotime($recipient->sent_at)) : '-'; ?></td>
+              <td><?php echo $recipient->delivered_at ? date('M d, H:i', strtotime($recipient->delivered_at)) : '-'; ?></td>
+              <td class="text-danger small"><?php echo $recipient->error_message ? htmlspecialchars(substr($recipient->error_message, 0, 50)) . (strlen($recipient->error_message) > 50 ? '...' : '') : '-'; ?></td>
               <td>
-                <span class="badge badge-<?php echo $status_badge; ?>">
-                  <?php echo ucfirst($log->status); ?>
-                </span>
-              </td>
-              <td>
-                <?php echo $log->sent_at ? date('M d, Y H:i:s', strtotime($log->sent_at)) : '-'; ?>
-              </td>
-              <td>
-                <?php echo $log->error_message ? htmlspecialchars($log->error_message) : '-'; ?>
+                <?php if($recipient->status == 'failed'){ ?>
+                <button class="btn btn-sm btn-warning actionResendSinglePhone Number" data-recipient-id="<?php echo $recipient->id; ?>" title="Resend this phone_number">
+                  <i class="fe fe-refresh-cw"></i>
+                </button>
+                <?php } else { ?>
+                <span class="text-muted">-</span>
+                <?php } ?>
               </td>
             </tr>
-            <?php 
-              }
-            } else { ?>
+            <?php }} else { ?>
             <tr>
-              <td colspan="4" class="text-center text-muted">No activity logs yet</td>
+              <td colspan="7" class="text-center">No recipients yet. <a href="<?php echo cn($module . '/recipients/' . $campaign->ids); ?>">Add recipients</a></td>
             </tr>
             <?php } ?>
           </tbody>
@@ -274,69 +363,163 @@
   </div>
 </div>
 
-<!-- Hidden CSRF Token Field -->
-<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+<script>
+$(document).ready(function(){
+  // Filter recipients by status
+  $('.filter-recipients').on('click', function(){
+    var filter = $(this).data('filter');
+    
+    // Update active button
+    $('.filter-recipients').removeClass('active');
+    $(this).addClass('active');
+    
+    // Filter rows
+    if(filter === 'all'){
+      $('.recipient-row').show();
+    } else {
+      $('.recipient-row').hide();
+      $('.recipient-row[data-status="' + filter + '"]').show();
+    }
+  });
+});
+</script>
+
+<!-- Recent Logs -->
+<div class="row mt-3">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Activity Log (Last 50)</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table table-hover table-vcenter card-table table-sm">
+          <thead>
+            <tr>
+              <th>Phone Number</th>
+              <th>Subject</th>
+              <th>Status</th>
+              <th>Timestamp</th>
+              <th>Error</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php if(!empty($logs)){ 
+              foreach($logs as $log){
+                $status_badge = 'secondary';
+                switch($log->status){
+                  case 'sent': $status_badge = 'success'; break;
+                  case 'delivered': $status_badge = 'info'; break;
+                  case 'failed': $status_badge = 'danger'; break;
+                }
+            ?>
+            <tr>
+              <td><?php echo htmlspecialchars($log->phone_number); ?></td>
+              <td><?php echo htmlspecialchars($log->subject); ?></td>
+              <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
+              <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
+              <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
+              <td>
+                <?php if($log->status == 'failed'){ ?>
+                <button class="btn btn-sm btn-warning actionResendSinglePhone Number" data-recipient-id="<?php echo $log->recipient_id; ?>" title="Resend this phone_number">
+                  <i class="fe fe-refresh-cw"></i>
+                </button>
+                <?php } else { ?>
+                <span class="text-muted">-</span>
+                <?php } ?>
+              </td>
+            </tr>
+            <?php }} else { ?>
+            <tr>
+              <td colspan="6" class="text-center">No activity logs yet</td>
+            </tr>
+            <?php } ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 $(document).ready(function(){
-  // Define toast notification helper
-  function showToast(message, type) {
-    if (typeof $.toast === 'function') {
-      $.toast({
-        heading: type == 'success' ? 'Success' : 'Error',
-        text: message,
-        position: 'top-right',
-        loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
-        icon: type,
-        hideAfter: 3500
-      });
-    } else if (typeof show_message === 'function') {
-      show_message(message, type);
-    } else {
-      alert(message);
-    }
-  }
-  
-  // Handle action buttons
-  $('.actionItem').on('click', function(e){
+  // Handle resend failed messages for campaign
+  $(document).on('click', '.actionCampaignResendFailed', function(e){
     e.preventDefault();
-    var $this = $(this);
-    var ids = $this.data('id');
-    var action = $this.data('action');
-    var confirm_msg = $this.data('confirm');
+    var ids = $(this).data('ids');
     
-    if(confirm_msg && !confirm(confirm_msg)){
+    if(!confirm('Are you sure you want to resend all failed messages for this campaign?')){
       return;
     }
     
-    // Get CSRF token dynamically
-    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
-    var csrfHash = $('input[name="' + csrfName + '"]').val();
-    
-    var postData = {ids: ids};
-    postData[csrfName] = csrfHash;
-    
     $.ajax({
-      url: action,
+      url: '<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>',
       type: 'POST',
-      dataType: 'json',
-      data: postData,
-      success: function(response){
-        if(response.status == 'success'){
-          showToast(response.message, 'success');
+      dataType: 'JSON',
+      data: {
+        ids: ids
+      },
+      success: function(data){
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
           setTimeout(function(){
             location.reload();
-          }, 1000);
+          }, 1500);
         } else {
-          showToast(response.message, 'error');
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+        }
+      }
+    });
+  });
+  
+  // Handle resend single phone_number
+  $(document).on('click', '.actionResendSinglePhone Number', function(e){
+    e.preventDefault();
+    var recipient_id = $(this).data('recipient-id');
+    var $btn = $(this);
+    
+    if(!confirm('Are you sure you want to resend this phone_number?')){
+      return;
+    }
+    
+    $btn.prop('disabled', true);
+    
+    $.ajax({
+      url: '<?php echo cn($module . '/ajax_resend_single_phone_number'); ?>',
+      type: 'POST',
+      dataType: 'JSON',
+      data: {
+        recipient_id: recipient_id
+      },
+      success: function(data){
+        $btn.prop('disabled', false);
+        if(data.status == 'success'){
+          _notif({
+            message: data.message,
+            type: data.status
+          });
+          setTimeout(function(){
+            location.reload();
+          }, 1500);
+        } else {
+          _notif({
+            message: data.message,
+            type: data.status
+          });
         }
       },
-      error: function(xhr, status, error){
-        if(xhr.status == 403){
-          showToast('Permission denied. Please refresh the page and try again.', 'error');
-        } else {
-          showToast('An error occurred: ' + error, 'error');
-        }
+      error: function(){
+        $btn.prop('disabled', false);
+        _notif({
+          message: 'An error occurred',
+          type: 'error'
+        });
       }
     });
   });
