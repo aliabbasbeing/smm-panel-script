@@ -442,11 +442,10 @@ class Whatsapp_marketing extends MX_Controller {
         _is_ajax($this->module);
         
         $name = post("name");
-        $subject = post("subject");
-        $body = post("body", false); // Don't XSS clean HTML content
+        $message = post("message", false); // Don't XSS clean message content
         $description = post("description");
         
-        if(empty($name) || empty($subject) || empty($body)){
+        if(empty($name) || empty($message)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -455,8 +454,7 @@ class Whatsapp_marketing extends MX_Controller {
         
         $template_data = array(
             'name' => $name,
-            'subject' => $subject,
-            'body' => $body,
+            'message' => $message,
             'description' => $description,
             'status' => 1
         );
@@ -494,11 +492,10 @@ class Whatsapp_marketing extends MX_Controller {
         }
         
         $name = post("name");
-        $subject = post("subject");
-        $body = post("body", false);
+        $message = post("message", false);
         $description = post("description");
         
-        if(empty($name) || empty($subject) || empty($body)){
+        if(empty($name) || empty($message)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -507,8 +504,7 @@ class Whatsapp_marketing extends MX_Controller {
         
         $update_data = array(
             'name' => $name,
-            'subject' => $subject,
-            'body' => $body,
+            'message' => $message,
             'description' => $description
         );
         
