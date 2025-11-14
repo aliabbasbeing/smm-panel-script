@@ -9,21 +9,73 @@ class Whatsapp_marketing extends MX_Controller {
     
     public function __construct(){
         parent::__construct();
-        $this->load->model(get_class($this).'_model', 'model');
         
-        // Config Module
-        $this->module_name = 'WhatsApp Marketing';
-        $this->module = strtolower(get_class($this));
-        $this->module_icon = "fa fa-whatsapp";
+        // Enable error logging for WhatsApp Marketing module
+        ini_set('display_errors', '1');
+        ini_set('display_startup_errors', '1');
+        error_reporting(E_ALL);
         
-        // Check if user is admin
-        if (!get_role("admin")) {
-            _validation('error', "Permission Denied!");
+        try {
+            $this->load->model(get_class($this).'_model', 'model');
+            
+            // Config Module
+            $this->module_name = 'WhatsApp Marketing';
+            $this->module = strtolower(get_class($this));
+            $this->module_icon = "fa fa-whatsapp";
+            
+            // Check if user is admin
+            if (!get_role("admin")) {
+                _validation('error', "Permission Denied!");
+            }
+            
+            // Check if required database tables exist
+            if (!$this->_check_tables_exist()) {
+                $this->_show_installation_required();
+            }
+        } catch (Exception $e) {
+            $this->_log_error('Constructor Error', $e);
+            die('WhatsApp Marketing Module Error: ' . $e->getMessage() . ' - Check logs at: ' . APPPATH . 'logs/whatsapp_marketing_errors.log');
+        }
+    }
+    
+    /**
+     * Log errors to a dedicated WhatsApp Marketing error log file
+     */
+    private function _log_error($context, $error, $additional_data = array()) {
+        $log_file = APPPATH . 'logs/whatsapp_marketing_errors.log';
+        
+        // Create logs directory if it doesn't exist
+        if (!is_dir(APPPATH . 'logs')) {
+            @mkdir(APPPATH . 'logs', 0755, true);
         }
         
-        // Check if required database tables exist
-        if (!$this->_check_tables_exist()) {
-            $this->_show_installation_required();
+        $timestamp = date('Y-m-d H:i:s');
+        $error_message = is_object($error) ? $error->getMessage() : (string)$error;
+        $error_trace = is_object($error) && method_exists($error, 'getTraceAsString') ? $error->getTraceAsString() : '';
+        
+        $log_entry = "\n" . str_repeat('=', 80) . "\n";
+        $log_entry .= "[$timestamp] WhatsApp Marketing Error\n";
+        $log_entry .= "Context: $context\n";
+        $log_entry .= "Error: $error_message\n";
+        
+        if (!empty($additional_data)) {
+            $log_entry .= "Additional Data: " . print_r($additional_data, true) . "\n";
+        }
+        
+        if ($error_trace) {
+            $log_entry .= "Stack Trace:\n$error_trace\n";
+        }
+        
+        $log_entry .= "URL: " . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 'N/A') . "\n";
+        $log_entry .= "Method: " . (isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'N/A') . "\n";
+        $log_entry .= "User IP: " . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'N/A') . "\n";
+        $log_entry .= str_repeat('=', 80) . "\n";
+        
+        @file_put_contents($log_file, $log_entry, FILE_APPEND);
+        
+        // Also log to CodeIgniter's log
+        if (function_exists('log_message')) {
+            log_message('error', "WhatsApp Marketing - $context: $error_message");
         }
     }
     
@@ -68,18 +120,23 @@ class Whatsapp_marketing extends MX_Controller {
     // ========================================
     
     public function index(){
-        // Get overall statistics
-        $stats = $this->model->get_overall_stats();
-        $recent_logs = $this->model->get_recent_logs(10);
-        
-        $data = array(
-            "module" => $this->module,
-            "module_name" => $this->module_name,
-            "module_icon" => $this->module_icon,
-            "stats" => $stats,
-            "recent_logs" => $recent_logs
-        );
-        $this->template->build("index", $data);
+        try {
+            // Get overall statistics
+            $stats = $this->model->get_overall_stats();
+            $recent_logs = $this->model->get_recent_logs(10);
+            
+            $data = array(
+                "module" => $this->module,
+                "module_name" => $this->module_name,
+                "module_icon" => $this->module_icon,
+                "stats" => $stats,
+                "recent_logs" => $recent_logs
+            );
+            $this->template->build("index", $data);
+        } catch (Exception $e) {
+            $this->_log_error('Dashboard Index', $e);
+            show_error('WhatsApp Marketing Dashboard Error: ' . $e->getMessage() . '<br><br>Check error log at: ' . APPPATH . 'logs/whatsapp_marketing_errors.log');
+        }
     }
     
     
@@ -388,25 +445,40 @@ class Whatsapp_marketing extends MX_Controller {
     }
     
     public function campaign_details($ids = ""){
-        $campaign = $this->model->get_campaign($ids);
-        if(!$campaign){
-            redirect(cn($this->module . "/campaigns"));
+        try {
+            $this->_log_error('Campaign Details Access', "Accessing campaign: $ids", array('ids' => $ids));
+            
+            $campaign = $this->model->get_campaign($ids);
+            if(!$campaign){
+                $this->_log_error('Campaign Details', "Campaign not found: $ids", array('ids' => $ids));
+                redirect(cn($this->module . "/campaigns"));
+            }
+            
+            $this->_log_error('Campaign Details', "Campaign found", array('campaign' => $campaign));
+            
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            $campaign = $this->model->get_campaign($ids); // Refresh data
+            
+            $recipients = $this->model->get_recipients($campaign->id, 100, 0);
+            $logs = $this->model->get_logs($campaign->id, 50, 0);
+            
+            $this->_log_error('Campaign Details', "Data loaded successfully", array(
+                'recipients_count' => count($recipients),
+                'logs_count' => count($logs)
+            ));
+            
+            $data = array(
+                "module" => $this->module,
+                "campaign" => $campaign,
+                "recipients" => $recipients,
+                "logs" => $logs
+            );
+            $this->template->build("campaigns/details", $data);
+        } catch (Exception $e) {
+            $this->_log_error('Campaign Details Error', $e, array('ids' => $ids));
+            show_error('Campaign Details Error: ' . $e->getMessage() . '<br><br>Campaign ID: ' . $ids . '<br>Check error log at: ' . APPPATH . 'logs/whatsapp_marketing_errors.log');
         }
-        
-        // Update campaign stats
-        $this->model->update_campaign_stats($campaign->id);
-        $campaign = $this->model->get_campaign($ids); // Refresh data
-        
-        $recipients = $this->model->get_recipients($campaign->id, 100, 0);
-        $logs = $this->model->get_logs($campaign->id, 50, 0);
-        
-        $data = array(
-            "module" => $this->module,
-            "campaign" => $campaign,
-            "recipients" => $recipients,
-            "logs" => $logs
-        );
-        $this->template->build("campaigns/details", $data);
     }
     
     // ========================================

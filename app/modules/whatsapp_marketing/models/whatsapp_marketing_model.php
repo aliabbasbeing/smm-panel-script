@@ -22,6 +22,40 @@ class Whatsapp_marketing_model extends MY_Model {
         $this->tb_settings = 'whatsapp_settings';
     }
     
+    /**
+     * Log model errors
+     */
+    private function _log_model_error($context, $error, $additional_data = array()) {
+        $log_file = APPPATH . 'logs/whatsapp_marketing_errors.log';
+        
+        if (!is_dir(APPPATH . 'logs')) {
+            @mkdir(APPPATH . 'logs', 0755, true);
+        }
+        
+        $timestamp = date('Y-m-d H:i:s');
+        $error_message = is_object($error) ? $error->getMessage() : (string)$error;
+        
+        $log_entry = "\n" . str_repeat('-', 80) . "\n";
+        $log_entry .= "[$timestamp] WhatsApp Marketing Model Error\n";
+        $log_entry .= "Context: $context\n";
+        $log_entry .= "Error: $error_message\n";
+        
+        if (!empty($additional_data)) {
+            $log_entry .= "Data: " . print_r($additional_data, true) . "\n";
+        }
+        
+        if ($this->db->error()) {
+            $db_error = $this->db->error();
+            $log_entry .= "DB Error Code: " . $db_error['code'] . "\n";
+            $log_entry .= "DB Error Message: " . $db_error['message'] . "\n";
+        }
+        
+        $log_entry .= "Last Query: " . $this->db->last_query() . "\n";
+        $log_entry .= str_repeat('-', 80) . "\n";
+        
+        @file_put_contents($log_file, $log_entry, FILE_APPEND);
+    }
+    
     // ========================================
     // CAMPAIGN METHODS
     // ========================================
@@ -60,14 +94,25 @@ class Whatsapp_marketing_model extends MY_Model {
     }
     
     public function get_campaign($ids) {
-        $this->db->select('c.*, t.name as template_name, s.name as api_name');
-        $this->db->from($this->tb_campaigns . ' c');
-        $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
-        $this->db->join($this->tb_api_configs . ' s', 'c.api_config_id = s.id', 'left');
-        $this->db->where('c.ids', $ids);
-        $query = $this->db->get();
-        
-        return $query->num_rows() > 0 ? $query->row() : null;
+        try {
+            $this->db->select('c.*, t.name as template_name, s.name as api_name');
+            $this->db->from($this->tb_campaigns . ' c');
+            $this->db->join($this->tb_templates . ' t', 'c.template_id = t.id', 'left');
+            $this->db->join($this->tb_api_configs . ' s', 'c.api_config_id = s.id', 'left');
+            $this->db->where('c.ids', $ids);
+            $query = $this->db->get();
+            
+            $result = $query->num_rows() > 0 ? $query->row() : null;
+            
+            if ($result === null) {
+                $this->_log_model_error('get_campaign - Not Found', "Campaign with ids '$ids' not found", array('ids' => $ids));
+            }
+            
+            return $result;
+        } catch (Exception $e) {
+            $this->_log_model_error('get_campaign - Exception', $e, array('ids' => $ids));
+            return null;
+        }
     }
     
     public function create_campaign($data) {
