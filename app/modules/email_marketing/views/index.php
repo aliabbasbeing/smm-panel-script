@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
