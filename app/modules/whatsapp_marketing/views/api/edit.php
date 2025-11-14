@@ -4,7 +4,7 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_api_edit/' . $api->ids); ?>" data-redirect="<?php echo cn($module . '/api'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit API Configuration</h4>
+            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit WhatsApp API Configuration</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -15,69 +15,50 @@
                   
                   <div class="form-group">
                     <label>Configuration Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="name" value="<?php echo htmlspecialchars($api->name); ?>" placeholder="e.g., Gmail API" required>
-                  </div>
-                  
-                  <div class="row">
-                    <div class="col-md-8">
-                      <div class="form-group">
-                        <label>API Host <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control square" name="host" value="<?php echo htmlspecialchars($api->host); ?>" placeholder="e.g., api.gmail.com" required>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label>Port <span class="text-danger">*</span></label>
-                        <input type="number" class="form-control square" name="port" value="<?php echo $api->port; ?>" required>
-                      </div>
-                    </div>
+                    <input type="text" class="form-control square" name="name" value="<?php echo htmlspecialchars($api->name); ?>" placeholder="e.g., Main WhatsApp API" required>
                   </div>
                   
                   <div class="form-group">
-                    <label>Encryption</label>
-                    <select class="form-control square" name="encryption">
-                      <option value="none" <?php echo ($api->encryption == 'none') ? 'selected' : ''; ?>>None</option>
-                      <option value="tls" <?php echo ($api->encryption == 'tls') ? 'selected' : ''; ?>>TLS</option>
-                      <option value="ssl" <?php echo ($api->encryption == 'ssl') ? 'selected' : ''; ?>>SSL</option>
+                    <label>API URL <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control square" name="api_url" value="<?php echo htmlspecialchars($api->api_url); ?>" placeholder="e.g., https://api.whatsapp.com/send" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>API Key <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control square" name="api_key" value="<?php echo htmlspecialchars($api->api_key); ?>" placeholder="Your WhatsApp API key" required>
+                  </div>
+                  
+                  <div class="form-group">
+                    <label>API Type</label>
+                    <select class="form-control square" name="api_type">
+                      <option value="whatsapp_business" <?php echo ($api->api_type == 'whatsapp_business') ? 'selected' : ''; ?>>WhatsApp Business API</option>
+                      <option value="third_party" <?php echo ($api->api_type == 'third_party') ? 'selected' : ''; ?>>Third Party API</option>
+                      <option value="custom" <?php echo ($api->api_type == 'custom') ? 'selected' : ''; ?>>Custom Integration</option>
                     </select>
                   </div>
                   
                   <div class="form-group">
-                    <label>Username <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="username" value="<?php echo htmlspecialchars($api->username); ?>" placeholder="API username" required>
+                    <label>Instance ID</label>
+                    <input type="text" class="form-control square" name="instance_id" value="<?php echo htmlspecialchars($api->instance_id); ?>" placeholder="Instance ID (if applicable)">
+                    <small class="form-text text-muted">Required for WhatsApp Business API</small>
                   </div>
                   
                   <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" class="form-control square" name="password" placeholder="Leave empty to keep current password">
-                    <small class="text-muted">Leave blank to keep existing password</small>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>From Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="from_name" value="<?php echo htmlspecialchars($api->from_name); ?>" placeholder="e.g., SMM Panel" required>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>From Phone Number <span class="text-danger">*</span></label>
-                    <input type="phone_number" class="form-control square" name="from_phone_number" value="<?php echo htmlspecialchars($api->from_phone_number); ?>" placeholder="e.g., noreply@example.com" required>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>Reply-To Phone Number</label>
-                    <input type="phone_number" class="form-control square" name="reply_to" value="<?php echo htmlspecialchars($api->reply_to); ?>" placeholder="e.g., support@example.com">
+                    <label>WhatsApp Phone Number</label>
+                    <input type="text" class="form-control square" name="phone_number" value="<?php echo htmlspecialchars($api->phone_number); ?>" placeholder="e.g., +1234567890">
+                    <small class="form-text text-muted">WhatsApp Business phone number</small>
                   </div>
                   
                   <div class="form-group">
                     <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_default" value="1" <?php echo $api->is_default ? 'checked' : ''; ?>>
-                      <span class="custom-control-label">Set as default API</span>
+                      <input type="checkbox" class="custom-control-input" name="is_default" value="1" <?php echo ($api->is_default) ? 'checked' : ''; ?>>
+                      <span class="custom-control-label">Set as default API configuration</span>
                     </label>
                   </div>
                   
                   <div class="form-group">
                     <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="status" value="1" <?php echo $api->status ? 'checked' : ''; ?>>
+                      <input type="checkbox" class="custom-control-input" name="status" value="1" <?php echo ($api->status) ? 'checked' : ''; ?>>
                       <span class="custom-control-label">Active</span>
                     </label>
                   </div>
@@ -87,8 +68,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Update</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
           </div>
         </form>
       </div>
