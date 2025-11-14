@@ -130,8 +130,7 @@
           <?php
             if (!empty($transactions)) {
               $i = 0;
-              $current_currency = get_current_currency();
-              $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", '$');
+              $currency_symbol = get_option("currency_symbol", '$');
               foreach ($transactions as $key => $row) {
                 $i++;
           ?>
@@ -168,7 +167,7 @@
                 <img class="payment" src="<?=BASE?>/assets/images/payments/<?=strtolower($row->type); ?>.png" alt="<?=$row->type?> icon">
               <?php } ?>
             </td>
-            <td><?=$currency_symbol . currency_format(convert_currency($row->amount), get_option('currency_decimal', 2))?></td>
+            <td><?=$currency_symbol.$row->amount?></td>
             <td><?=$row->txn_fee?></td>
             <?php if (get_role("admin")) { ?>
               <td><?=$row->note;?></td>

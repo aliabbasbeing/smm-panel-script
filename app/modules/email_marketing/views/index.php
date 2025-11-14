@@ -110,6 +110,83 @@
   </div>
 </div>
 
+
+<!-- Quick Access Cards -->
+<div class="row mt-4">
+  <div class="col-md-12">
+    <h3 class="mb-3"><i class="fe fe-grid"></i> Quick Access</h3>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="row row-cards">
+      
+      <!-- Campaigns Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-blue mr-3">
+              <i class="fe fe-mail"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/campaigns'); ?>" class="text-inherit">Campaigns</a></h4>
+              <small class="text-muted">Manage email campaigns</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Templates Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-green mr-3">
+              <i class="fe fe-file-text"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/templates'); ?>" class="text-inherit">Templates</a></h4>
+              <small class="text-muted">Email templates</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- SMTP Config Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-orange mr-3">
+              <i class="fe fe-settings"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/smtp'); ?>" class="text-inherit">SMTP Config</a></h4>
+              <small class="text-muted">SMTP settings</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Reports Card -->
+      <div class="col-sm-6 col-lg-3">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-purple mr-3">
+              <i class="fe fe-bar-chart-2"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
+              <small class="text-muted">Analytics & Reports</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
 <!-- Campaign Statistics -->
 <div class="row mt-4">
   <div class="col-md-12">
@@ -197,36 +274,36 @@
   </div>
   
   <div class="col-lg-4">
-    <div class="card">
-      <div class="card-header">
-        <h3 class="card-title">Quick Stats</h3>
-      </div>
-      <div class="card-body">
-        <div class="list-group list-group-flush">
-          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Total Campaigns</span>
-            <span class="badge badge-primary badge-pill"><?php echo $stats->total_campaigns; ?></span>
-          </div>
-          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Active Campaigns</span>
-            <span class="badge badge-success badge-pill"><?php echo $stats->running_campaigns; ?></span>
-          </div>
-          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Total Emails Sent</span>
-            <span class="badge badge-info badge-pill"><?php echo number_format($stats->total_sent); ?></span>
-          </div>
-          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Success Rate</span>
-            <span class="badge badge-success badge-pill"><?php echo $stats->total_emails > 0 ? round((($stats->total_sent - $stats->total_failed) / $stats->total_emails) * 100, 1) : 0; ?>%</span>
-          </div>
-          <div class="list-group-item d-flex justify-content-between align-items-center px-0">
-            <span>Open Rate</span>
-            <span class="badge badge-info badge-pill"><?php echo $stats->open_rate; ?>%</span>
-          </div>
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Quick Stats</h3>
+    </div>
+    <div class="card-body">
+      <div class="list-group list-group-flush">
+        <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
+          <span>Total Campaigns</span>
+          <span class="badge badge-primary badge-pill"><?php echo $stats->total_campaigns; ?></span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
+          <span>Active Campaigns</span>
+          <span class="badge badge-success badge-pill"><?php echo $stats->running_campaigns; ?></span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
+          <span>Total Emails Sent</span>
+          <span class="badge badge-info badge-pill"><?php echo number_format($stats->total_sent); ?></span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
+          <span>Success Rate</span>
+          <span class="badge badge-success badge-pill"><?php echo $stats->total_emails > 0 ? round((($stats->total_sent - $stats->total_failed) / $stats->total_emails) * 100, 1) : 0; ?>%</span>
+        </div>
+        <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
+          <span>Open Rate</span>
+          <span class="badge badge-info badge-pill"><?php echo $stats->open_rate; ?>%</span>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <!-- Recent Activity -->
@@ -273,80 +350,7 @@
 </div>
 <?php } ?>
 
-<!-- Quick Access Cards -->
-<div class="row mt-4">
-  <div class="col-md-12">
-    <h3 class="mb-3"><i class="fe fe-grid"></i> Quick Access</h3>
-  </div>
-</div>
 
-<div class="row">
-  <div class="col-md-12">
-    <div class="row row-cards">
-      
-      <!-- Campaigns Card -->
-      <div class="col-sm-6 col-lg-3">
-        <div class="card p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-blue mr-3">
-              <i class="fe fe-mail"></i>
-            </span>
-            <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/campaigns'); ?>" class="text-inherit">Campaigns</a></h4>
-              <small class="text-muted">Manage email campaigns</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Templates Card -->
-      <div class="col-sm-6 col-lg-3">
-        <div class="card p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-green mr-3">
-              <i class="fe fe-file-text"></i>
-            </span>
-            <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/templates'); ?>" class="text-inherit">Templates</a></h4>
-              <small class="text-muted">Email templates</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- SMTP Config Card -->
-      <div class="col-sm-6 col-lg-3">
-        <div class="card p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-orange mr-3">
-              <i class="fe fe-settings"></i>
-            </span>
-            <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/smtp'); ?>" class="text-inherit">SMTP Config</a></h4>
-              <small class="text-muted">SMTP settings</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Reports Card -->
-      <div class="col-sm-6 col-lg-3">
-        <div class="card p-3">
-          <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-purple mr-3">
-              <i class="fe fe-bar-chart-2"></i>
-            </span>
-            <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
-              <small class="text-muted">Analytics & Reports</small>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-  </div>
-</div>
 
 <div class="row mt-4">
   <div class="col-md-12">

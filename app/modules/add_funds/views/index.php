@@ -177,6 +177,7 @@
   <?php endif; ?>
 
 <!-- Red rounded YouTube button instead of accordion -->
+<br>
   <div class="row mb-3">
     <div class="col-sm-12 text-center">
       <a href="https://www.youtube.com/embed/wnCQolxg7OY?si=IHJBmRhhcZPAlbHr"

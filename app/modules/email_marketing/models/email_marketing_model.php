@@ -405,6 +405,16 @@ class Email_marketing_model extends MY_Model {
     }
     
     public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null) {
+        // Check if recipient already exists to prevent duplicates
+        $this->db->where('campaign_id', $campaign_id);
+        $this->db->where('email', $email);
+        $exists = $this->db->count_all_results($this->tb_recipients);
+        
+        if ($exists > 0) {
+            // Email already exists in this campaign, skip insertion
+            return false;
+        }
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
@@ -464,26 +474,20 @@ class Email_marketing_model extends MY_Model {
                     continue;
                 }
                 
-                // Check if already exists
-                $this->db->where('campaign_id', $campaign_id);
-                $this->db->where('email', $user->email);
-                $exists = $this->db->count_all_results($this->tb_recipients);
+                // Get order count for this user (with limit to prevent slow queries)
+                $this->db->where('uid', $user->id);
+                $order_count = $this->db->count_all_results(ORDER);
                 
-                if ($exists == 0) {
-                    // Get order count for this user (with limit to prevent slow queries)
-                    $this->db->where('uid', $user->id);
-                    $order_count = $this->db->count_all_results(ORDER);
-                    
-                    $custom_data = [
-                        'username' => $user->name ? $user->name : 'User',
-                        'email' => $user->email,
-                        'balance' => $user->balance ? $user->balance : 0,
-                        'total_orders' => $order_count
-                    ];
-                    
-                    if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
-                        $imported++;
-                    }
+                $custom_data = [
+                    'username' => $user->name ? $user->name : 'User',
+                    'email' => $user->email,
+                    'balance' => $user->balance ? $user->balance : 0,
+                    'total_orders' => $order_count
+                ];
+                
+                // add_recipient now handles duplicate checking
+                if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
+                    $imported++;
                 }
             }
             
@@ -508,15 +512,9 @@ class Email_marketing_model extends MY_Model {
                     $email = trim($data[0]);
                     $name = isset($data[1]) ? trim($data[1]) : null;
                     
-                    // Check if already exists
-                    $this->db->where('campaign_id', $campaign_id);
-                    $this->db->where('email', $email);
-                    $exists = $this->db->count_all_results($this->tb_recipients);
-                    
-                    if ($exists == 0) {
-                        if ($this->add_recipient($campaign_id, $email, $name)) {
-                            $imported++;
-                        }
+                    // add_recipient now handles duplicate checking
+                    if ($this->add_recipient($campaign_id, $email, $name)) {
+                        $imported++;
                     }
                 }
             }
