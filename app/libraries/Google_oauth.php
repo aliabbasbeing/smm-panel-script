@@ -37,11 +37,11 @@ class google_oauth{
                 $this->access_token = $token;
                 return $token;
             }else{
-                redirect(cn($this->redirect_url));
+                redirect(cn('auth/login'));
             }
             
         } catch (Exception $e) {
-            redirect(cn($this->redirect_url));
+            redirect(cn('auth/login'));
         }
     }
 

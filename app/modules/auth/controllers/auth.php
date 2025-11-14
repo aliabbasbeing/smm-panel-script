@@ -20,7 +20,7 @@ class auth extends MX_Controller {
 			$this->recaptcha = new \ReCaptcha\ReCaptcha(get_option('google_capcha_secret_key'));
 		}
 
-		if(session("uid") && segment(2) != 'logout'){
+		if(session("uid") && segment(2) != 'logout' && segment(2) != 'google_callback'){
 			redirect(cn("statistics"));
 		}
 	}
