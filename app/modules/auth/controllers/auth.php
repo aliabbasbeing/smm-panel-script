@@ -64,8 +64,17 @@ class auth extends MX_Controller {
 	}
 
 	public function google_callback(){
+		// Temporary debug file for troubleshooting
+		$debug_log = APPPATH . 'logs/google_oauth_debug.txt';
+		$debug_mode = true; // Set to false after debugging
+		
+		if ($debug_mode) {
+			file_put_contents($debug_log, date('Y-m-d H:i:s') . " - Callback started\n", FILE_APPEND);
+		}
+		
 		// Check if Google login is enabled
 		if (!get_option('enable_google_login')) {
+			if ($debug_mode) file_put_contents($debug_log, "Google login disabled\n", FILE_APPEND);
 			redirect(cn('auth/login'));
 		}
 
@@ -74,7 +83,13 @@ class auth extends MX_Controller {
 		$client_secret = get_option('google_client_secret');
 		
 		if (empty($client_id) || empty($client_secret)) {
+			if ($debug_mode) file_put_contents($debug_log, "Credentials missing\n", FILE_APPEND);
 			redirect(cn('auth/login'));
+		}
+		
+		if ($debug_mode) {
+			file_put_contents($debug_log, "Client ID: " . substr($client_id, 0, 20) . "...\n", FILE_APPEND);
+			file_put_contents($debug_log, "OAuth code present: " . (get("code") ? 'yes' : 'no') . "\n", FILE_APPEND);
 		}
 
 		// Load Google OAuth library
@@ -88,22 +103,42 @@ class auth extends MX_Controller {
 			// Get access token
 			$token = $this->google_oauth->get_access_token();
 			
+			if ($debug_mode) {
+				file_put_contents($debug_log, "Token received: " . ($token ? 'yes' : 'no') . "\n", FILE_APPEND);
+			}
+			
 			if (!$token) {
+				if ($debug_mode) file_put_contents($debug_log, "Token is null/false\n", FILE_APPEND);
 				redirect(cn('auth/login'));
 			}
 
 			// Get user info from Google
 			$user_info = $this->google_oauth->get_user_info();
 			
+			if ($debug_mode) {
+				file_put_contents($debug_log, "User info received: " . ($user_info ? 'yes' : 'no') . "\n", FILE_APPEND);
+				if ($user_info) {
+					file_put_contents($debug_log, "User email: " . (isset($user_info->email) ? $user_info->email : 'N/A') . "\n", FILE_APPEND);
+					file_put_contents($debug_log, "User ID: " . (isset($user_info->id) ? $user_info->id : 'N/A') . "\n", FILE_APPEND);
+				}
+			}
+			
 			if (!$user_info) {
+				if ($debug_mode) file_put_contents($debug_log, "User info is null/false\n", FILE_APPEND);
 				redirect(cn('auth/login'));
 			}
 
-			$google_id = $user_info->id;
-			$email = $user_info->email;
+			$google_id = isset($user_info->id) ? $user_info->id : '';
+			$email = isset($user_info->email) ? $user_info->email : '';
 			$first_name = isset($user_info->givenName) ? $user_info->givenName : '';
 			$last_name = isset($user_info->familyName) ? $user_info->familyName : '';
 			$full_name = isset($user_info->name) ? $user_info->name : '';
+
+			// Validate we have at minimum email and google_id
+			if (empty($google_id) || empty($email)) {
+				if ($debug_mode) file_put_contents($debug_log, "Missing google_id or email\n", FILE_APPEND);
+				redirect(cn('auth/login'));
+			}
 
 			// Split full name if first/last names are not provided
 			if (empty($first_name) && !empty($full_name)) {
@@ -114,15 +149,21 @@ class auth extends MX_Controller {
 
 			// Check if user already exists by google_id or email
 			$user = $this->model->get("*", $this->tb_users, "google_id = '{$google_id}' OR email = '{$email}'");
+			
+			if ($debug_mode) {
+				file_put_contents($debug_log, "User exists: " . (!empty($user) ? 'yes' : 'no') . "\n", FILE_APPEND);
+			}
 
 			if (!empty($user)) {
 				// User exists, update google_id if not set
 				if (empty($user->google_id)) {
 					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google'], ['id' => $user->id]);
+					if ($debug_mode) file_put_contents($debug_log, "Updated existing user with google_id\n", FILE_APPEND);
 				}
 
 				// Check if user is activated
 				if ($user->status != 1) {
+					if ($debug_mode) file_put_contents($debug_log, "User not activated\n", FILE_APPEND);
 					redirect(cn('auth/login'));
 				}
 
@@ -136,15 +177,23 @@ class auth extends MX_Controller {
 					'timezone'   => $user->timezone,
 				);
 				set_session('user_current_info', $data_session);
+				
+				if ($debug_mode) {
+					file_put_contents($debug_log, "Session set for user ID: " . $user->id . "\n", FILE_APPEND);
+					file_put_contents($debug_log, "About to redirect to statistics\n", FILE_APPEND);
+				}
 
 				// Log the user activity
 				$this->model->history_ip($user->id);
 				$this->insert_user_activity_logs();
 
-				// Send WhatsApp alert on successful sign-in
-				$this->send_signin_alert($user->id);
+				// Send WhatsApp alert on successful sign-in (don't wait for response)
+				if ($debug_mode) file_put_contents($debug_log, "Before WhatsApp alert\n", FILE_APPEND);
+				// Comment out WhatsApp for now to avoid blocking
+				// $this->send_signin_alert($user->id);
 
 				// Redirect to dashboard
+				if ($debug_mode) file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
 				redirect(cn('statistics'));
 			} else {
 				// Create new user
@@ -218,16 +267,27 @@ class auth extends MX_Controller {
 					}
 
 					// Send Signup Alert to Admin via WhatsApp
-					$this->send_signup_alert($uid);
+					// Comment out for now to avoid blocking
+					// $this->send_signup_alert($uid);
+					
+					if ($debug_mode) {
+						file_put_contents($debug_log, "New user created with ID: " . $uid . "\n", FILE_APPEND);
+						file_put_contents($debug_log, "Redirecting to statistics\n", FILE_APPEND);
+					}
 
 					// Redirect to dashboard
 					redirect(cn('statistics'));
 				} else {
+					if ($debug_mode) file_put_contents($debug_log, "Failed to insert new user\n", FILE_APPEND);
 					redirect(cn('auth/login'));
 				}
 			}
 
 		} catch (Exception $e) {
+			if ($debug_mode) {
+				file_put_contents($debug_log, "Exception caught: " . $e->getMessage() . "\n", FILE_APPEND);
+				file_put_contents($debug_log, "Stack trace: " . $e->getTraceAsString() . "\n", FILE_APPEND);
+			}
 			redirect(cn('auth/login'));
 		}
 	}

@@ -31,27 +31,52 @@ class google_oauth{
     function get_access_token(){
         try {
             if(get("code")){
-                $this->client->authenticate(get("code"));
-                $oauth2 = new Google_Service_Oauth2($this->client);
+                // Authenticate with the authorization code
+                $result = $this->client->authenticate(get("code"));
+                
+                // Get the access token
                 $token = $this->client->getAccessToken();
+                
+                if (!$token) {
+                    // Authentication failed - no token received
+                    redirect(cn('auth/login'));
+                    return false;
+                }
+                
                 $this->access_token = $token;
                 return $token;
             }else{
+                // No authorization code provided
                 redirect(cn('auth/login'));
+                return false;
             }
             
         } catch (Exception $e) {
+            // Log error for debugging (optional)
+            // error_log('Google OAuth Error: ' . $e->getMessage());
             redirect(cn('auth/login'));
+            return false;
         }
     }
 
     function get_user_info(){
         try {
-            $oauth2 = new Google_Service_Oauth2($this->client);
+            if (!$this->access_token) {
+                // No access token available
+                return false;
+            }
+            
+            // Set the access token before making API calls
             $this->client->setAccessToken($this->access_token);
+            
+            // Create OAuth2 service and get user info
+            $oauth2 = new Google_Service_Oauth2($this->client);
             $userinfo = $oauth2->userinfo->get();
+            
             return $userinfo;
         } catch (Exception $e) {
+            // Log error for debugging (optional)
+            // error_log('Google User Info Error: ' . $e->getMessage());
             return false;
         }
     }
