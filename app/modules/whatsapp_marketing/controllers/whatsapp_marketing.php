@@ -20,47 +20,6 @@ class Whatsapp_marketing extends MX_Controller {
         if (!get_role("admin")) {
             _validation('error', "Permission Denied!");
         }
-        
-        // Check if required database tables exist
-        if (!$this->_check_tables_exist()) {
-            $this->_show_installation_required();
-        }
-    }
-    
-    /**
-     * Check if all required database tables exist
-     */
-    private function _check_tables_exist() {
-        $required_tables = array(
-            'whatsapp_campaigns',
-            'whatsapp_templates',
-            'whatsapp_api_configs',
-            'whatsapp_recipients',
-            'whatsapp_logs',
-            'whatsapp_settings'
-        );
-        
-        foreach ($required_tables as $table) {
-            if (!$this->db->table_exists($table)) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
-     * Display installation required message
-     */
-    private function _show_installation_required() {
-        $data = array(
-            "module" => $this->module,
-            "module_name" => $this->module_name,
-            "module_icon" => $this->module_icon,
-            "sql_file" => "database/whatsapp-marketing.sql"
-        );
-        $this->template->build("installation_required", $data);
-        exit;
     }
     
     // ========================================
