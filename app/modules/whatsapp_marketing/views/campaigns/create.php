@@ -1,10 +1,11 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div id="main-modal-content">
   <div class="modal-right">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_create'); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-envelope"></i> Create New Campaign</h4>
+            <h4 class="modal-title"><i class="fa fa-whatsapp"></i> Create New WhatsApp Campaign</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -19,7 +20,7 @@
                   </div>
                   
                   <div class="form-group">
-                    <label>Phone Number Template <span class="text-danger">*</span></label>
+                    <label>Message Template <span class="text-danger">*</span></label>
                     <select class="form-control square" name="template_id" required>
                       <option value="">Select Template</option>
                       <?php if(!empty($templates)){ 
@@ -28,13 +29,13 @@
                       <option value="<?php echo $template->id; ?>"><?php echo htmlspecialchars($template->name); ?></option>
                       <?php }} ?>
                     </select>
-                    <small class="text-muted">Choose an phone_number template for this campaign</small>
+                    <small class="text-muted">Choose a message template for this campaign</small>
                   </div>
                   
                   <div class="form-group">
                     <label>API Configuration <span class="text-danger">*</span></label>
                     <select class="form-control square" name="api_config_id" required>
-                      <option value="">Select API</option>
+                      <option value="">Select API Config</option>
                       <?php if(!empty($api_configs)){ 
                         foreach($api_configs as $api){
                           if($api->status == 1){
@@ -45,7 +46,7 @@
                       </option>
                       <?php }}} ?>
                     </select>
-                    <small class="text-muted">Select API server to send messages</small>
+                    <small class="text-muted">Select WhatsApp API to send messages</small>
                   </div>
                   
                   <div class="row">

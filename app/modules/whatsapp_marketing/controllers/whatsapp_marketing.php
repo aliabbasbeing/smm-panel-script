@@ -570,18 +570,12 @@ class Whatsapp_marketing extends MX_Controller {
         _is_ajax($this->module);
         
         $name = post("name");
-        $host = post("host");
-        $port = post("port");
-        $username = post("username");
-        $password = post("password");
-        $encryption = post("encryption");
-        $from_name = post("from_name");
-        $from_phone = post("from_phone");
-        $reply_to = post("reply_to");
+        $api_url = post("api_url");
+        $api_key = post("api_key");
         $is_default = post("is_default");
         $status = post("status");
         
-        if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_phone)){
+        if(empty($name) || empty($api_url) || empty($api_key)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -590,14 +584,8 @@ class Whatsapp_marketing extends MX_Controller {
         
         $api_data = array(
             'name' => $name,
-            'host' => $host,
-            'port' => (int)$port,
-            'username' => $username,
-            'password' => $password,
-            'encryption' => $encryption,
-            'from_name' => $from_name,
-            'from_phone' => $from_phone,
-            'reply_to' => $reply_to,
+            'api_url' => $api_url,
+            'api_key' => $api_key,
             'is_default' => $is_default ? 1 : 0,
             'status' => $status ? 1 : 0
         );
@@ -635,18 +623,12 @@ class Whatsapp_marketing extends MX_Controller {
         }
         
         $name = post("name");
-        $host = post("host");
-        $port = post("port");
-        $username = post("username");
-        $password = post("password");
-        $encryption = post("encryption");
-        $from_name = post("from_name");
-        $from_phone = post("from_phone");
-        $reply_to = post("reply_to");
+        $api_url = post("api_url");
+        $api_key = post("api_key");
         $is_default = post("is_default");
         $status = post("status");
         
-        if(empty($name) || empty($host) || empty($port) || empty($username) || empty($from_phone)){
+        if(empty($name) || empty($api_url) || empty($api_key)){
             ms(array(
                 "status" => "error",
                 "message" => lang("please_fill_in_the_required_fields")
@@ -655,21 +637,11 @@ class Whatsapp_marketing extends MX_Controller {
         
         $update_data = array(
             'name' => $name,
-            'host' => $host,
-            'port' => (int)$port,
-            'username' => $username,
-            'encryption' => $encryption,
-            'from_name' => $from_name,
-            'from_phone' => $from_phone,
-            'reply_to' => $reply_to,
+            'api_url' => $api_url,
+            'api_key' => $api_key,
             'is_default' => $is_default ? 1 : 0,
             'status' => $status ? 1 : 0
         );
-        
-        // Only update password if provided
-        if(!empty($password)){
-            $update_data['password'] = $password;
-        }
         
         if($this->model->update_api_config($ids, $update_data)){
             ms(array(

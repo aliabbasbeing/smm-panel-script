@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div id="main-modal-content">
   <div class="modal-right">
     <div class="modal-dialog modal-lg" role="document">
@@ -20,47 +21,28 @@
                   
                   <div class="form-group">
                     <label>API URL <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="api_url" placeholder="e.g., https://api.whatsapp.com/send" required>
+                    <input type="url" class="form-control square" name="api_url" value="http://waapi.beastsmm.pk/send-message" placeholder="https://your-api-url.com/send-message" required>
+                    <small class="text-muted">Full URL to your WhatsApp API endpoint</small>
                   </div>
                   
                   <div class="form-group">
                     <label>API Key <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="api_key" placeholder="Your WhatsApp API key" required>
+                    <input type="text" class="form-control square" name="api_key" placeholder="Enter your API key" required>
+                    <small class="text-muted">Authentication key for your WhatsApp API</small>
                   </div>
                   
                   <div class="form-group">
-                    <label>API Type</label>
-                    <select class="form-control square" name="api_type">
-                      <option value="whatsapp_business">WhatsApp Business API</option>
-                      <option value="third_party" selected>Third Party API</option>
-                      <option value="custom">Custom Integration</option>
-                    </select>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="is_default" id="is_default">
+                      <label class="custom-control-label" for="is_default">Set as Default Configuration</label>
+                    </div>
                   </div>
                   
                   <div class="form-group">
-                    <label>Instance ID</label>
-                    <input type="text" class="form-control square" name="instance_id" placeholder="Instance ID (if applicable)">
-                    <small class="form-text text-muted">Required for WhatsApp Business API</small>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label>WhatsApp Phone Number</label>
-                    <input type="text" class="form-control square" name="phone_number" placeholder="e.g., +1234567890">
-                    <small class="form-text text-muted">WhatsApp Business phone number</small>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_default" value="1">
-                      <span class="custom-control-label">Set as default API configuration</span>
-                    </label>
-                  </div>
-                  
-                  <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="status" value="1" checked>
-                      <span class="custom-control-label">Active</span>
-                    </label>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" name="status" id="status" checked>
+                      <label class="custom-control-label" for="status">Active</label>
+                    </div>
                   </div>
                   
                 </div>
@@ -68,8 +50,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> Save</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-times"></i> Cancel</button>
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
+            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
           </div>
         </form>
       </div>

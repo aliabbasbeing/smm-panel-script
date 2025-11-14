@@ -164,18 +164,16 @@ class Whatsapp_marketing_model extends MY_Model {
         ");
         $campaign_stats = $this->db->get($this->tb_campaigns)->row();
         
-        // Get phone stats from all campaigns
+        // Get message stats from all campaigns
         $this->db->select("
             SUM(total_messages) as total_messages,
             SUM(sent_messages) as total_sent,
-            SUM(failed_messages) as total_failed,
-            SUM(delivered_messages) as total_opened,
-            SUM(read_messages) as total_bounced
+            SUM(failed_messages) as total_failed
         ");
-        $phone_stats = $this->db->get($this->tb_campaigns)->row();
+        $message_stats = $this->db->get($this->tb_campaigns)->row();
         
         // Calculate remaining messages
-        $remaining = ($phone_stats->total_messages - $phone_stats->total_sent - $phone_stats->total_failed);
+        $remaining = ($message_stats->total_messages - $message_stats->total_sent - $message_stats->total_failed);
         
         return (object) [
             'total_campaigns' => $campaign_stats->total_campaigns ?: 0,
@@ -183,14 +181,11 @@ class Whatsapp_marketing_model extends MY_Model {
             'completed_campaigns' => $campaign_stats->completed_campaigns ?: 0,
             'paused_campaigns' => $campaign_stats->paused_campaigns ?: 0,
             'pending_campaigns' => $campaign_stats->pending_campaigns ?: 0,
-            'total_messages' => $phone_stats->total_messages ?: 0,
-            'total_sent' => $phone_stats->total_sent ?: 0,
-            'total_failed' => $phone_stats->total_failed ?: 0,
-            'total_opened' => $phone_stats->total_opened ?: 0,
-            'total_bounced' => $phone_stats->total_bounced ?: 0,
+            'total_messages' => $message_stats->total_messages ?: 0,
+            'total_sent' => $message_stats->total_sent ?: 0,
+            'total_failed' => $message_stats->total_failed ?: 0,
             'total_remaining' => max(0, $remaining),
-            'open_rate' => $phone_stats->total_sent > 0 ? round(($phone_stats->total_opened / $phone_stats->total_sent) * 100, 1) : 0,
-            'failure_rate' => $phone_stats->total_messages > 0 ? round(($phone_stats->total_failed / $phone_stats->total_messages) * 100, 1) : 0
+            'failure_rate' => $message_stats->total_messages > 0 ? round(($message_stats->total_failed / $message_stats->total_messages) * 100, 1) : 0
         ];
     }
     

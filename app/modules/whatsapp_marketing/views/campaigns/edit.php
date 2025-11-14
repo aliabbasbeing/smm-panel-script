@@ -1,10 +1,11 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div id="main-modal-content">
   <div class="modal-right">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_edit/' . $campaign->ids); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Campaign</h4>
+            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Campaign: <?php echo htmlspecialchars($campaign->name); ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -15,54 +16,48 @@
                   
                   <div class="form-group">
                     <label>Campaign Name <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control square" name="name" value="<?php echo htmlspecialchars($campaign->name); ?>" placeholder="Enter campaign name" required>
+                    <input type="text" class="form-control square" name="name" value="<?php echo htmlspecialchars($campaign->name); ?>" required>
                   </div>
                   
                   <div class="form-group">
-                    <label>Phone Number Template <span class="text-danger">*</span></label>
+                    <label>Message Template <span class="text-danger">*</span></label>
                     <select class="form-control square" name="template_id" required>
-                      <option value="">Select Template</option>
                       <?php if(!empty($templates)){ 
                         foreach($templates as $template){
                       ?>
-                      <option value="<?php echo $template->id; ?>" <?php echo ($campaign->template_id == $template->id) ? 'selected' : ''; ?>>
+                      <option value="<?php echo $template->id; ?>" <?php echo $template->id == $campaign->template_id ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($template->name); ?>
                       </option>
                       <?php }} ?>
                     </select>
-                    <small class="text-muted">Choose an phone_number template for this campaign</small>
                   </div>
                   
                   <div class="form-group">
                     <label>API Configuration <span class="text-danger">*</span></label>
                     <select class="form-control square" name="api_config_id" required>
-                      <option value="">Select API</option>
                       <?php if(!empty($api_configs)){ 
                         foreach($api_configs as $api){
-                          if($api->status == 1){
                       ?>
-                      <option value="<?php echo $api->id; ?>" <?php echo ($campaign->api_config_id == $api->id) ? 'selected' : ''; ?>>
+                      <option value="<?php echo $api->id; ?>" <?php echo $api->id == $campaign->api_config_id ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($api->name); ?>
-                        <?php echo $api->is_default ? ' (Default)' : ''; ?>
                       </option>
-                      <?php }}} ?>
+                      <?php }} ?>
                     </select>
-                    <small class="text-muted">Select API server to send messages</small>
                   </div>
                   
                   <div class="row">
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Hourly Limit</label>
-                        <input type="number" class="form-control square" name="sending_limit_hourly" value="<?php echo $campaign->sending_limit_hourly; ?>" placeholder="e.g., 100" min="1">
-                        <small class="text-muted">Max messages per hour (leave empty for no limit)</small>
+                        <input type="number" class="form-control square" name="sending_limit_hourly" value="<?php echo $campaign->sending_limit_hourly; ?>" min="1">
+                        <small class="text-muted">Max messages per hour</small>
                       </div>
                     </div>
                     <div class="col-md-6">
                       <div class="form-group">
                         <label>Daily Limit</label>
-                        <input type="number" class="form-control square" name="sending_limit_daily" value="<?php echo $campaign->sending_limit_daily; ?>" placeholder="e.g., 1000" min="1">
-                        <small class="text-muted">Max messages per day (leave empty for no limit)</small>
+                        <input type="number" class="form-control square" name="sending_limit_daily" value="<?php echo $campaign->sending_limit_daily; ?>" min="1">
+                        <small class="text-muted">Max messages per day</small>
                       </div>
                     </div>
                   </div>
@@ -72,7 +67,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
+            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Update</button>
             <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
           </div>
         </form>

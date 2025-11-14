@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -21,11 +22,11 @@
         <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
       </div>
       <div class="card-body">
-        <p>Import active users who have placed at least 1 order</p>
+        <p>Import all active users with WhatsApp numbers from the database</p>
         <div class="alert alert-info mb-3">
-          <small><strong>Note:</strong> Only users with order history will be imported to ensure better targeting.</small>
+          <small><strong>Note:</strong> All users with valid WhatsApp numbers will be imported automatically.</small>
         </div>
-        <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST">
+        <form id="importUsersForm" action="<?php echo cn($module . '/ajax_import_from_users'); ?>" method="POST" class="actionForm">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
           <button type="submit" class="btn btn-primary">
             <i class="fe fe-download"></i> Import Users
@@ -41,7 +42,7 @@
         <h3 class="card-title"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
       </div>
       <div class="card-body">
-        <p>Upload a CSV file with phone numberes (format: phone_number,name)</p>
+        <p>Upload a CSV file with phone numbers (format: phone_number,name)</p>
         <form id="importCSVForm" action="<?php echo cn($module . '/ajax_import_from_csv'); ?>" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="campaign_ids" value="<?php echo $campaign->ids; ?>">
           <div class="form-group">
@@ -74,7 +75,7 @@
               <th>Name</th>
               <th>Status</th>
               <th>Sent At</th>
-              <th>Delivered At</th>
+              <th>Error</th>
             </tr>
           </thead>
           <tbody>
@@ -83,9 +84,7 @@
                 $status_badge = 'secondary';
                 switch($recipient->status){
                   case 'sent': $status_badge = 'success'; break;
-                  case 'delivered': $status_badge = 'info'; break;
                   case 'failed': $status_badge = 'danger'; break;
-                  case 'read': $status_badge = 'warning'; break;
                 }
             ?>
             <tr>
@@ -93,7 +92,7 @@
               <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($recipient->status); ?></span></td>
               <td><?php echo $recipient->sent_at ? date('M d, H:i', strtotime($recipient->sent_at)) : '-'; ?></td>
-              <td><?php echo $recipient->delivered_at ? date('M d, H:i', strtotime($recipient->delivered_at)) : '-'; ?></td>
+              <td><?php echo htmlspecialchars($recipient->error_message ?: '-'); ?></td>
             </tr>
             <?php }} else { ?>
             <tr>
@@ -111,43 +110,54 @@
 
 <script>
 $(document).ready(function(){
+  // Define toast notification helper
+  function showToast(message, type) {
+    if (typeof $.toast === 'function') {
+      $.toast({
+        heading: type == 'success' ? 'Success' : 'Error',
+        text: message,
+        position: 'top-right',
+        loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
+        icon: type,
+        hideAfter: 3500
+      });
+    } else {
+      alert(message);
+    }
+  }
+
   // Handle import from users
   $('#importUsersForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
-    var formData = $form.serializeArray();
-    
-    // Add CSRF token if it exists
-    var csrfToken = $('input[name="csrf_test_name"]').val();
-    if (csrfToken) {
-      formData.push({name: 'csrf_test_name', value: csrfToken});
-    }
+    var $button = $form.find('button[type="submit"]');
+    var formData = $form.serialize();
     
     $.ajax({
       url: $form.attr('action'),
       type: 'POST',
       dataType: 'json',
-      data: $.param(formData),
-      timeout: 60000, // 60 seconds timeout
+      data: formData,
+      timeout: 60000,
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
-          show_message(response.message, 'success');
+          showToast(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 500);
+          }, 1000);
         } else {
-          show_message(response.message, 'error');
-          $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
+          showToast(response.message, 'error');
+          $button.prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
         }
       },
       error: function(xhr, status, error){
         var errorMsg = 'An error occurred while importing users.';
         
         if (status === 'timeout') {
-          errorMsg = 'Request timed out. The import may be taking too long. Please check if users have been imported or try again with fewer users.';
+          errorMsg = 'Request timed out. The import may be taking too long. Please check if users have been imported or try again.';
         } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
         } else if (xhr.responseText) {
@@ -157,12 +167,12 @@ $(document).ready(function(){
               errorMsg = response.message;
             }
           } catch(e) {
-            // Not JSON, show generic error
+            errorMsg = 'Error: ' + xhr.status + ' - ' + error;
           }
         }
         
-        show_message(errorMsg, 'error');
-        $form.find('button').prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
+        showToast(errorMsg, 'error');
+        $button.prop('disabled', false).html('<i class="fe fe-download"></i> Import Users');
       }
     });
   });
@@ -171,13 +181,8 @@ $(document).ready(function(){
   $('#importCSVForm').on('submit', function(e){
     e.preventDefault();
     var $form = $(this);
+    var $button = $form.find('button[type="submit"]');
     var formData = new FormData($form[0]);
-    
-    // Add CSRF token if it exists
-    var csrfToken = $('input[name="csrf_test_name"]').val();
-    if (csrfToken) {
-      formData.append('csrf_test_name', csrfToken);
-    }
     
     $.ajax({
       url: $form.attr('action'),
@@ -186,32 +191,32 @@ $(document).ready(function(){
       data: formData,
       processData: false,
       contentType: false,
-      timeout: 60000, // 60 seconds timeout
+      timeout: 60000,
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
+        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
       },
       success: function(response){
         if(response.status == 'success'){
-          show_message(response.message, 'success');
+          showToast(response.message, 'success');
           setTimeout(function(){
             location.reload();
-          }, 500);
+          }, 1000);
         } else {
-          show_message(response.message, 'error');
-          $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
+          showToast(response.message, 'error');
+          $button.prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
         }
       },
       error: function(xhr, status, error){
         var errorMsg = 'An error occurred while uploading CSV.';
         
         if (status === 'timeout') {
-          errorMsg = 'Request timed out. The upload may be taking too long. Please try with a smaller file.';
+          errorMsg = 'Request timed out. Please try with a smaller file.';
         } else if (xhr.responseJSON && xhr.responseJSON.message) {
           errorMsg = xhr.responseJSON.message;
         }
         
-        show_message(errorMsg, 'error');
-        $form.find('button').prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
+        showToast(errorMsg, 'error');
+        $button.prop('disabled', false).html('<i class="fe fe-upload"></i> Upload & Import');
       }
     });
   });

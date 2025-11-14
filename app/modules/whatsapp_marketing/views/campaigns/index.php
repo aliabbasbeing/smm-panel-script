@@ -1,3 +1,4 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <div class="row justify-content-md-center">
   <div class="col-md-12">
     <div class="page-header">
@@ -7,7 +8,7 @@
             <i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
           </span>
         </a>
-        Phone Number Campaigns
+        WhatsApp Campaigns
       </h1>
       <div class="page-subtitle">
         <a href="<?php echo cn($module); ?>" class="btn btn-sm btn-secondary">
@@ -35,7 +36,7 @@
               <th class="w-1">No.</th>
               <th>Campaign Name</th>
               <th>Template</th>
-              <th>API</th>
+              <th>API Config</th>
               <th>Status</th>
               <th>Progress</th>
               <th>Statistics</th>
@@ -101,7 +102,7 @@
               <td>
                 <small>
                   <i class="fe fe-check-circle text-success"></i> <?php echo $campaign->sent_messages; ?> sent<br>
-                  <i class="fe fe-mail text-info"></i> <?php echo $campaign->delivered_messages; ?> delivered<br>
+                  <i class="fe fe-clock text-warning"></i> <?php echo $campaign->pending_messages; ?> pending<br>
                   <i class="fe fe-x-circle text-danger"></i> <?php echo $campaign->failed_messages; ?> failed
                 </small>
               </td>
@@ -162,8 +163,8 @@
                     data-id="<?php echo $campaign->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_campaign_resend_failed'); ?>" 
                     data-toggle="tooltip" 
-                    title="Resend Failed Phone Numbers (<?php echo $campaign->failed_messages; ?>)" 
-                    data-confirm="Are you sure you want to resend <?php echo $campaign->failed_messages; ?> failed phone_number(s)?">
+                    title="Resend Failed Messages (<?php echo $campaign->failed_messages; ?>)" 
+                    data-confirm="Are you sure you want to resend <?php echo $campaign->failed_messages; ?> failed message(s)?">
                     <i class="fe fe-refresh-cw"></i>
                   </a>
                   <?php } ?>
@@ -216,8 +217,29 @@
   <?php } ?>
 </div>
 
+<!-- Hidden CSRF Token Field -->
+<input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+
 <script>
 $(document).ready(function(){
+  // Define toast notification helper
+  function showToast(message, type) {
+    if (typeof $.toast === 'function') {
+      $.toast({
+        heading: type == 'success' ? 'Success' : 'Error',
+        text: message,
+        position: 'top-right',
+        loaderBg: type == 'success' ? '#5ba035' : '#c9302c',
+        icon: type,
+        hideAfter: 3500
+      });
+    } else if (typeof show_message === 'function') {
+      show_message(message, type);
+    } else {
+      alert(message);
+    }
+  }
+  
   // Handle action buttons
   $('.actionItem').on('click', function(e){
     e.preventDefault();
@@ -230,19 +252,33 @@ $(document).ready(function(){
       return;
     }
     
+    // Get CSRF token dynamically
+    var csrfName = '<?php echo $this->security->get_csrf_token_name(); ?>';
+    var csrfHash = $('input[name="' + csrfName + '"]').val();
+    
+    var postData = {ids: ids};
+    postData[csrfName] = csrfHash;
+    
     $.ajax({
       url: action,
       type: 'POST',
       dataType: 'json',
-      data: {ids: ids, csrf_test_name: $('input[name="csrf_test_name"]').val()},
+      data: postData,
       success: function(response){
         if(response.status == 'success'){
-          show_message(response.message, 'success');
+          showToast(response.message, 'success');
           setTimeout(function(){
             location.reload();
           }, 1000);
         } else {
-          show_message(response.message, 'error');
+          showToast(response.message, 'error');
+        }
+      },
+      error: function(xhr, status, error){
+        if(xhr.status == 403){
+          showToast('Permission denied. Please refresh the page and try again.', 'error');
+        } else {
+          showToast('An error occurred: ' + error, 'error');
         }
       }
     });
