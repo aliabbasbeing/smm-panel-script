@@ -8,7 +8,12 @@ class google_oauth{
     private $redirect_url;
     private $access_token;
 
-    public function __construct($client_id = null, $client_secret = null, $redirect_url = "auth/google"){
+    public function __construct($params = array()){
+        // Extract parameters from the array (CodeIgniter passes params as an array)
+        $client_id = isset($params['client_id']) ? $params['client_id'] : null;
+        $client_secret = isset($params['client_secret']) ? $params['client_secret'] : null;
+        $redirect_url = isset($params['redirect_url']) ? $params['redirect_url'] : "auth/google";
+        
         $this->client = new Google_Client();
         $this->client->setAccessType("offline");
         $this->client->setApprovalPrompt("force");
