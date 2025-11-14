@@ -37,6 +37,201 @@ class auth extends MX_Controller {
 		$this->template->build('../../../themes/'.get_theme().'/views/sign_in', $data);
 	}
 
+	public function google(){
+		// Check if Google login is enabled
+		if (!get_option('enable_google_login')) {
+			redirect(cn('auth/login'));
+		}
+
+		// Check if Google credentials are set
+		$client_id = get_option('google_client_id');
+		$client_secret = get_option('google_client_secret');
+		
+		if (empty($client_id) || empty($client_secret)) {
+			redirect(cn('auth/login'));
+		}
+
+		// Load Google OAuth library
+		$this->load->library('Google_oauth', array(
+			'client_id' => $client_id,
+			'client_secret' => $client_secret,
+			'redirect_url' => 'auth/google_callback'
+		));
+
+		// Redirect to Google OAuth
+		$login_url = $this->google_oauth->create_login_url();
+		redirect($login_url);
+	}
+
+	public function google_callback(){
+		// Check if Google login is enabled
+		if (!get_option('enable_google_login')) {
+			redirect(cn('auth/login'));
+		}
+
+		// Check if Google credentials are set
+		$client_id = get_option('google_client_id');
+		$client_secret = get_option('google_client_secret');
+		
+		if (empty($client_id) || empty($client_secret)) {
+			redirect(cn('auth/login'));
+		}
+
+		// Load Google OAuth library
+		$this->load->library('Google_oauth', array(
+			'client_id' => $client_id,
+			'client_secret' => $client_secret,
+			'redirect_url' => 'auth/google_callback'
+		));
+
+		try {
+			// Get access token
+			$token = $this->google_oauth->get_access_token();
+			
+			if (!$token) {
+				redirect(cn('auth/login'));
+			}
+
+			// Get user info from Google
+			$user_info = $this->google_oauth->get_user_info();
+			
+			if (!$user_info) {
+				redirect(cn('auth/login'));
+			}
+
+			$google_id = $user_info->id;
+			$email = $user_info->email;
+			$first_name = isset($user_info->givenName) ? $user_info->givenName : '';
+			$last_name = isset($user_info->familyName) ? $user_info->familyName : '';
+			$full_name = isset($user_info->name) ? $user_info->name : '';
+
+			// Split full name if first/last names are not provided
+			if (empty($first_name) && !empty($full_name)) {
+				$name_parts = explode(' ', $full_name, 2);
+				$first_name = $name_parts[0];
+				$last_name = isset($name_parts[1]) ? $name_parts[1] : '';
+			}
+
+			// Check if user already exists by google_id or email
+			$user = $this->model->get("*", $this->tb_users, "google_id = '{$google_id}' OR email = '{$email}'");
+
+			if (!empty($user)) {
+				// User exists, update google_id if not set
+				if (empty($user->google_id)) {
+					$this->db->update($this->tb_users, ['google_id' => $google_id, 'login_type' => 'google'], ['id' => $user->id]);
+				}
+
+				// Check if user is activated
+				if ($user->status != 1) {
+					redirect(cn('auth/login'));
+				}
+
+				// Set session data
+				set_session("uid", $user->id);
+				$data_session = array(
+					'role'       => $user->role,
+					'email'      => $user->email,
+					'first_name' => $user->first_name,
+					'last_name'  => $user->last_name,
+					'timezone'   => $user->timezone,
+				);
+				set_session('user_current_info', $data_session);
+
+				// Log the user activity
+				$this->model->history_ip($user->id);
+				$this->insert_user_activity_logs();
+
+				// Send WhatsApp alert on successful sign-in
+				$this->send_signin_alert($user->id);
+
+				// Redirect to dashboard
+				redirect(cn('statistics'));
+			} else {
+				// Create new user
+				// Get Settings (Limit payments) for new user
+				$this->load->model('payments/payments_model', 'payments_model');
+				$limit_payments = $this->payments_model->get_payments_list_for_new_user();
+				$settings = [
+					'limit_payments' => $limit_payments
+				];
+
+				$data = array(
+					"ids"                     => ids(),
+					"first_name"             => $first_name,
+					"last_name"              => $last_name,
+					"email"                  => $email,
+					"google_id"              => $google_id,
+					"login_type"             => 'google',
+					"password"               => '', // No password for Google login
+					"timezone"               => 'Asia/Karachi', // Default timezone
+					"status"                 => 1, // Auto-activate Google users
+					"api_key"                => create_random_string_key(32),
+					"affiliate_id"           => rand(10000,99999999),
+					"settings"               => json_encode($settings),
+					'history_ip'             => get_client_ip(),
+					"reset_key"              => create_random_string_key(32),
+					"activation_key"         => create_random_string_key(32),
+					"created"                => NOW,
+					"changed"                => NOW,
+				);
+
+				if($this->db->insert($this->tb_users, $data)){
+					$uid = $this->db->insert_id();
+					
+					// Set session
+					set_session('uid', $uid);
+					$data_session = array(
+						'role'       => 'user',
+						'email'      => $email,
+						'first_name' => $first_name,
+						'last_name'  => $last_name,
+						'timezone'   => 'Asia/Karachi',
+					);
+					set_session('user_current_info', $data_session);
+
+					// Insert User logs
+					$this->insert_user_activity_logs();
+
+					// Check is send welcome email or not
+					if (get_option("is_welcome_email", '')) {
+						$this->model->send_email(get_option('email_welcome_email_subject', ''), get_option('email_welcome_email_content', 0), $uid);
+					}
+
+					// Send email notification for Admin
+					if (get_option("is_new_user_email", '')) {
+						$subject = get_option('email_new_registration_subject', '');
+						$subject = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $subject);
+
+						$email_content = get_option('email_new_registration_content', '');
+						$email_content = str_replace("{{user_firstname}}", $first_name, $email_content);
+						$email_content = str_replace("{{user_lastname}}", $last_name, $email_content);
+						$email_content = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $email_content);
+						$email_content = str_replace("{{user_timezone}}", 'Asia/Karachi', $email_content);
+						$email_content = str_replace("{{user_email}}", $email, $email_content);
+
+						$admin_id = $this->model->get("id", $this->tb_users, "role = 'admin'","id","ASC")->id;
+						if ($admin_id == "") {
+							$admin_id = 1;
+						}
+
+						$this->model->send_email($subject, $email_content, $admin_id, false);
+					}
+
+					// Send Signup Alert to Admin via WhatsApp
+					$this->send_signup_alert($uid);
+
+					// Redirect to dashboard
+					redirect(cn('statistics'));
+				} else {
+					redirect(cn('auth/login'));
+				}
+			}
+
+		} catch (Exception $e) {
+			redirect(cn('auth/login'));
+		}
+	}
+
 	public function logout(){
 		/*----------  Insert User logs  ----------*/
 		$this->insert_user_activity_logs('logout');

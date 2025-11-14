@@ -45,6 +45,8 @@
       </div>
       <div class="list-group list-group-transparent mb-0">
         <a href="<?php echo cn($module."/payment")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'payment') ? 'active' : ''?>"><span class="icon mr-3"><i class="fe fe-alert-triangle"></i></span><?=lang("Payment")?></a>
+        
+        <a href="<?php echo cn($module."/google_oauth")?>" class="list-group-item list-group-item-action <?php echo (segment(2) == 'google_oauth') ? 'active' : ''?>"><span class="icon mr-3"><i class="fe fe-lock"></i></span><?=lang("Google OAuth")?></a>
       </div>
 
     </div>
