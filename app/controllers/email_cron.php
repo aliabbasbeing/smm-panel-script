@@ -10,6 +10,7 @@ class Email_cron extends CI_Controller {
         parent::__construct();
         $this->load->model('email_marketing/email_marketing_model', 'email_model');
         $this->load->library('email');
+        $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('email_cron_token', md5('email_marketing_cron_' . ENCRYPTION_KEY));
@@ -21,43 +22,64 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
-        // Verify token
-        $token = $this->input->get('token', true);
-        if(!$token || !hash_equals($this->requiredToken, $token)){
-            show_404();
-            return;
-        }
-        
-        // Get optional campaign_id for campaign-specific cron
+        $start_time = microtime(true);
         $campaign_id = $this->input->get('campaign_id', true);
+        $cron_name = 'cron/email_marketing' . ($campaign_id ? '_' . $campaign_id : '');
+        $log_id = $this->cron_logger->start($cron_name);
         
-        // Rate limiting - prevent running too frequently
-        $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
-        $lockFile = APPPATH.'cache/email_cron_' . $lockFileKey . '.lock';
-        
-        $minInterval = 60; // 60 seconds minimum between runs
-        if(file_exists($lockFile)){
-            $lastRun = (int)@file_get_contents($lockFile);
-            $now = time();
-            if($lastRun && ($now - $lastRun) < $minInterval){
-                $this->respond([
-                    'status' => 'rate_limited',
-                    'message' => 'Cron is rate limited. Please wait.',
-                    'retry_after_sec' => $minInterval - ($now - $lastRun),
-                    'campaign_id' => $campaign_id,
-                    'time' => date('c')
-                ]);
+        try {
+            // Verify token
+            $token = $this->input->get('token', true);
+            if(!$token || !hash_equals($this->requiredToken, $token)){
+                $execution_time = microtime(true) - $start_time;
+                $this->cron_logger->end($log_id, 'failed', 404, 'Invalid or missing token', $execution_time);
+                show_404();
                 return;
             }
+            
+            // Rate limiting - prevent running too frequently
+            $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
+            $lockFile = APPPATH.'cache/email_cron_' . $lockFileKey . '.lock';
+            
+            $minInterval = 60; // 60 seconds minimum between runs
+            if(file_exists($lockFile)){
+                $lastRun = (int)@file_get_contents($lockFile);
+                $now = time();
+                if($lastRun && ($now - $lastRun) < $minInterval){
+                    $execution_time = microtime(true) - $start_time;
+                    $retry_msg = 'Cron is rate limited. Please wait.';
+                    $this->cron_logger->end($log_id, 'failed', 429, $retry_msg, $execution_time);
+                    $this->respond([
+                        'status' => 'rate_limited',
+                        'message' => $retry_msg,
+                        'retry_after_sec' => $minInterval - ($now - $lastRun),
+                        'campaign_id' => $campaign_id,
+                        'time' => date('c')
+                    ]);
+                    return;
+                }
+            }
+            
+            // Update lock file
+            @file_put_contents($lockFile, time());
+            
+            // Process emails
+            $result = $this->process_emails($campaign_id);
+            
+            $execution_time = microtime(true) - $start_time;
+            $status = (isset($result['status']) && $result['status'] === 'success') ? 'success' : 'failed';
+            $message = isset($result['message']) ? $result['message'] : 'Email processing completed';
+            $this->cron_logger->end($log_id, $status, 200, $message, $execution_time);
+            
+            $this->respond($result);
+        } catch (Exception $e) {
+            $execution_time = microtime(true) - $start_time;
+            $this->cron_logger->end($log_id, 'failed', 500, $e->getMessage(), $execution_time);
+            $this->respond([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
-        
-        // Update lock file
-        @file_put_contents($lockFile, time());
-        
-        // Process emails
-        $result = $this->process_emails($campaign_id);
-        
-        $this->respond($result);
     }
     
     /**

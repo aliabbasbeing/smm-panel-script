@@ -9,6 +9,7 @@ class Whatsapp_cron extends CI_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('whatsapp_marketing/whatsapp_marketing_model', 'whatsapp_model');
+        $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('whatsapp_cron_token', md5('whatsapp_marketing_cron_' . ENCRYPTION_KEY));
@@ -20,41 +21,62 @@ class Whatsapp_cron extends CI_Controller {
      * URL: /whatsapp_cron/run?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
-        // Verify token
-        $token = $this->input->get('token', true);
-        if(!$token || !hash_equals($this->requiredToken, $token)){
-            show_404();
-            return;
-        }
-        
-        // Get optional campaign_id for campaign-specific cron
+        $start_time = microtime(true);
         $campaign_id = $this->input->get('campaign_id', true);
+        $cron_name = 'whatsapp_cron/run' . ($campaign_id ? '_' . $campaign_id : '');
+        $log_id = $this->cron_logger->start($cron_name);
         
-        // Rate limiting
-        $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
-        $lockFile = APPPATH.'cache/whatsapp_cron_' . $lockFileKey . '.lock';
-        
-        $minInterval = 108;
-        if(file_exists($lockFile)){
-            $lastRun = (int)@file_get_contents($lockFile);
-            $now = time();
-            if($lastRun && ($now - $lastRun) < $minInterval){
-                $this->respond([
-                    'status' => 'rate_limited',
-                    'message' => 'Cron is rate limited. Please wait.',
-                    'retry_after_sec' => $minInterval - ($now - $lastRun),
-                    'campaign_id' => $campaign_id,
-                    'time' => date('c')
-                ]);
+        try {
+            // Verify token
+            $token = $this->input->get('token', true);
+            if(!$token || !hash_equals($this->requiredToken, $token)){
+                $execution_time = microtime(true) - $start_time;
+                $this->cron_logger->end($log_id, 'failed', 404, 'Invalid or missing token', $execution_time);
+                show_404();
                 return;
             }
+            
+            // Rate limiting
+            $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
+            $lockFile = APPPATH.'cache/whatsapp_cron_' . $lockFileKey . '.lock';
+            
+            $minInterval = 108;
+            if(file_exists($lockFile)){
+                $lastRun = (int)@file_get_contents($lockFile);
+                $now = time();
+                if($lastRun && ($now - $lastRun) < $minInterval){
+                    $execution_time = microtime(true) - $start_time;
+                    $retry_msg = 'Cron is rate limited. Please wait.';
+                    $this->cron_logger->end($log_id, 'failed', 429, $retry_msg, $execution_time);
+                    $this->respond([
+                        'status' => 'rate_limited',
+                        'message' => $retry_msg,
+                        'retry_after_sec' => $minInterval - ($now - $lastRun),
+                        'campaign_id' => $campaign_id,
+                        'time' => date('c')
+                    ]);
+                    return;
+                }
+            }
+            
+            @file_put_contents($lockFile, time());
+            
+            $result = $this->process_messages($campaign_id);
+            
+            $execution_time = microtime(true) - $start_time;
+            $status = (isset($result['status']) && $result['status'] === 'success') ? 'success' : 'failed';
+            $message = isset($result['message']) ? $result['message'] : 'Message processing completed';
+            $this->cron_logger->end($log_id, $status, 200, $message, $execution_time);
+            
+            $this->respond($result);
+        } catch (Exception $e) {
+            $execution_time = microtime(true) - $start_time;
+            $this->cron_logger->end($log_id, 'failed', 500, $e->getMessage(), $execution_time);
+            $this->respond([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ]);
         }
-        
-        @file_put_contents($lockFile, time());
-        
-        $result = $this->process_messages($campaign_id);
-        
-        $this->respond($result);
     }
     
     /**
