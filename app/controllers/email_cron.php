@@ -233,8 +233,10 @@ class Email_cron extends CI_Controller {
                 'smtp_crypto' => $smtp->encryption,
                 'mailtype' => 'html',
                 'charset' => 'utf-8',
-                'newline' => "\r\n",
-                'wordwrap' => TRUE
+                'newline' => "\r\n",       // Fix for RFC compliance
+                'crlf' => "\r\n",          // Fix for RFC compliance  
+                'wordwrap' => TRUE,        // Enable word wrapping to prevent long lines
+                'wrapchars' => 78          // Wrap at 78 characters (RFC recommended)
             ];
             
             $this->email->initialize($config);

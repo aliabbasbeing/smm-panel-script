@@ -358,6 +358,11 @@ class MY_Model extends CI_Model
 		$this->load->library("Phpmailer_lib");
 		$mail = new PHPMailer(true);
 		$mail->CharSet = "utf-8";
+		
+		// Fix for RFC line length limits - prevents "lines too long for transport" error
+		$mail->WordWrap = 78; // Wrap lines at 78 characters
+		$mail->Encoding = 'quoted-printable'; // Use quoted-printable encoding for proper line wrapping
+		
 		try {
 
 			/*----------  Check send email through PHP mail or SMTP  ----------*/
@@ -458,6 +463,11 @@ class MY_Model extends CI_Model
         $this->load->library("phpmailer_lib");
         $mail = new PHPMailer(true);
         $mail->CharSet = "utf-8";
+        
+        // Fix for RFC line length limits - prevents "lines too long for transport" error
+        $mail->WordWrap = 78; // Wrap lines at 78 characters
+        $mail->Encoding = 'quoted-printable'; // Use quoted-printable encoding for proper line wrapping
+        
         try {
             /*----------  Check send email through PHP mail or SMTP  ----------*/
             $email_protocol_type    = get_option("email_protocol_type", "");

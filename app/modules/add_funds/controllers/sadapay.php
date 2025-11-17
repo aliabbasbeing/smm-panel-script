@@ -115,6 +115,10 @@ class sadapay extends MX_Controller
         $mail = new PHPMailer(true);
 
         try {
+            // Fix for RFC line length limits - prevents "lines too long for transport" error
+            $mail->WordWrap = 78; // Wrap lines at 78 characters
+            $mail->Encoding = 'quoted-printable'; // Use quoted-printable encoding for proper line wrapping
+            
             // Server settings
             $mail->isSMTP();
             $mail->Host = 'mail.beastsmm.pk'; // Your SMTP server
