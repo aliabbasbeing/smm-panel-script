@@ -354,6 +354,9 @@ class childpanel extends MX_Controller
 
 	public function cron()
 	{
+		// Load cron logger
+		$this->load->library('cron_logger');
+		$this->cron_logger->start('/cron/childpanel');
 
 		$panel_logs = $this->model->get_order_logs_list_cron();
 
@@ -374,14 +377,19 @@ class childpanel extends MX_Controller
 					$this->db->update($this->tb_childpanel, ["status" => "active", "renewal_date" => $renewal_date], ["id" => $row->id]);
 				}
 			}
+			$this->cron_logger->log_success("Processed " . count($panel_logs) . " child panels", 200);
 			echo "Success";
 		}else{
+			$this->cron_logger->log_info("No panels available to be renewed", 200);
 		    echo "No Panels available to be renewed";
 		}
 	}
 	
 	public function check_panel_status()
 	{
+		// Load cron logger
+		$this->load->library('cron_logger');
+		$this->cron_logger->start('/cron/check_panel_status');
 
         $params = [];
 		$child_key      = (isset($_REQUEST["key"])) ? strip_tags(urldecode($_REQUEST["key"])) : '';
@@ -390,6 +398,7 @@ class childpanel extends MX_Controller
         
         $child_exists = get_field($this->tb_childpanel, ["child_key" => $child_key], "status");
 		if ($child_key == "" || empty($child_exists)) {
+			$this->cron_logger->log_failure("Child panel not found: " . $child_key, 404);
 			echo_json_string(array(
 			    'error' => "1",
 				'code' => "not_found",
@@ -399,6 +408,7 @@ class childpanel extends MX_Controller
         switch ($child_exists) {
 
 			case 'active':
+				$this->cron_logger->log_success("Child panel active: " . $child_key, 200);
 				echo_json_string(array(
 			    'error' => "0",
 				'code' => "active",
@@ -406,6 +416,7 @@ class childpanel extends MX_Controller
 				break;
 				
 			case 'processing':
+				$this->cron_logger->log_info("Child panel processing: " . $child_key, 200);
 				echo_json_string(array(
 			    'error' => "1",
 				'code' => "processing",
@@ -413,6 +424,7 @@ class childpanel extends MX_Controller
 				break;	
 			
 			case 'refunded':
+				$this->cron_logger->log_info("Child panel refunded: " . $child_key, 200);
 				echo_json_string(array(
 			    'error' => "1",
 				'code' => "refunded",
@@ -420,6 +432,7 @@ class childpanel extends MX_Controller
 				break;
 			
 			case 'disabled':
+				$this->cron_logger->log_info("Child panel disabled: " . $child_key, 200);
 				echo_json_string(array(
 			    'error' => "1",
 				'code' => "disabled",
@@ -427,6 +440,7 @@ class childpanel extends MX_Controller
 				break;
 			
 			case 'terminated':
+				$this->cron_logger->log_info("Child panel terminated: " . $child_key, 200);
 				echo_json_string(array(
 			    'error' => "1",
 				'code' => "terminated",
