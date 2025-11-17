@@ -14,6 +14,8 @@ class Order_completion_cron extends MX_Controller {
     
     public function __construct() {
         parent::__construct();
+        // Load database library - required for $this->db to work
+        $this->load->database();
         $this->tb_orders = ORDER;
         $this->tb_services = SERVICES;
     }

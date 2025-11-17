@@ -57,7 +57,6 @@ class services extends MX_Controller {
 		
 		if (!session('uid')) {
 			$this->template->set_layout('general_page');
-			$this->template->build("index", $data);
 		}
 		$this->template->build("index", $data);
 	}
