@@ -386,6 +386,10 @@
           <div class="nav-item" class="sidenavContent"><i class="fa fa-share-alt"></i><?=lang("Services_Providers")?></div>
         </a>
         
+        <a href="<?=cn('cron_logs')?>" class="nav-link <?=(segment(1) == 'cron_logs')?"active":""?>">
+          <div class="nav-item" class="sidenavContent"><i class="fa fa-clock-o"></i><?=lang("Cron Logs")?></div>
+        </a>
+        
         <a href="<?=cn('payments')?>" class="nav-link <?=(segment(1) == 'payments')?"active":""?>">
           <div class="nav-item" class="sidenavContent"><i class="fa fa-credit-card"></i><?=lang("Payments")?></div>
         </a>
