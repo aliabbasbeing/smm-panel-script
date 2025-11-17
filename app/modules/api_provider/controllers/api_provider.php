@@ -33,6 +33,7 @@ class api_provider extends MX_Controller {
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
 		$this->model->get_class();
+		$this->load->library('cron_logger');
 
 		$this->tb_users         = USERS;
 		$this->tb_categories    = CATEGORIES;
@@ -804,23 +805,35 @@ class api_provider extends MX_Controller {
 	| NOTE: sync_services here now maps is_enable_sync_price => enable_sync_options
 	--------------------------------------------------------------*/
 	public function cron($type = ""){
-		switch ($type) {
+		// Start logging
+		$cron_name = 'cron/' . ($type ? $type : 'unknown');
+		$this->cron_logger->start($cron_name);
+		
+		try {
+			switch ($type) {
 
-			case 'order':
-				$this->cron_place_orders();
-				break;
+				case 'order':
+					$this->cron_place_orders();
+					break;
 
-			case 'status_subscriptions':
-				$this->cron_status_subscriptions();
-				break;
+				case 'status_subscriptions':
+					$this->cron_status_subscriptions();
+					break;
 
-			case 'status':
-				$this->cron_status_orders();
-				break;
+				case 'status':
+					$this->cron_status_orders();
+					break;
 
-			case 'sync_services':
-				$this->cron_sync_services();
-				break;
+				case 'sync_services':
+					$this->cron_sync_services();
+					break;
+			}
+			
+			// Log success
+			$this->cron_logger->end('Cron executed successfully');
+		} catch (Exception $e) {
+			$this->cron_logger->fail($e->getMessage());
+			echo "Error: " . $e->getMessage();
 		}
 	}
 
