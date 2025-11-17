@@ -21,9 +21,14 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        // Load cron logger
+        $this->load->library('cron_logger');
+        $this->cron_logger->start('/cron/email_marketing');
+        
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->cron_logger->log_failure('Invalid or missing token', 403);
             show_404();
             return;
         }
@@ -40,13 +45,15 @@ class Email_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
-                $this->respond([
+                $response = [
                     'status' => 'rate_limited',
                     'message' => 'Cron is rate limited. Please wait.',
                     'retry_after_sec' => $minInterval - ($now - $lastRun),
                     'campaign_id' => $campaign_id,
                     'time' => date('c')
-                ]);
+                ];
+                $this->cron_logger->log_rate_limited(json_encode($response), 429);
+                $this->respond($response);
                 return;
             }
         }
@@ -56,6 +63,15 @@ class Email_cron extends CI_Controller {
         
         // Process emails
         $result = $this->process_emails($campaign_id);
+        
+        // Log based on result status
+        if($result['status'] == 'success'){
+            $this->cron_logger->log_success(json_encode($result), 200);
+        } elseif($result['status'] == 'info'){
+            $this->cron_logger->log_info(json_encode($result), 200);
+        } else {
+            $this->cron_logger->log_failure(json_encode($result), 500);
+        }
         
         $this->respond($result);
     }

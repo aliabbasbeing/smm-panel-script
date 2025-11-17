@@ -804,23 +804,41 @@ class api_provider extends MX_Controller {
 	| NOTE: sync_services here now maps is_enable_sync_price => enable_sync_options
 	--------------------------------------------------------------*/
 	public function cron($type = ""){
-		switch ($type) {
+		// Load cron logger
+		$this->load->library('cron_logger');
+		$cron_name = '/cron/' . ($type ?: 'unknown');
+		$this->cron_logger->start($cron_name);
+		
+		try {
+			switch ($type) {
 
-			case 'order':
-				$this->cron_place_orders();
-				break;
+				case 'order':
+					$result = $this->cron_place_orders();
+					$this->cron_logger->log_success($result, 200);
+					break;
 
-			case 'status_subscriptions':
-				$this->cron_status_subscriptions();
-				break;
+				case 'status_subscriptions':
+					$result = $this->cron_status_subscriptions();
+					$this->cron_logger->log_success($result, 200);
+					break;
 
-			case 'status':
-				$this->cron_status_orders();
-				break;
+				case 'status':
+					$result = $this->cron_status_orders();
+					$this->cron_logger->log_success($result, 200);
+					break;
 
-			case 'sync_services':
-				$this->cron_sync_services();
-				break;
+				case 'sync_services':
+					$result = $this->cron_sync_services();
+					$this->cron_logger->log_success($result, 200);
+					break;
+					
+				default:
+					$this->cron_logger->log_failure('Unknown cron type: ' . $type, 404);
+					break;
+			}
+		} catch (Exception $e) {
+			$this->cron_logger->log_failure($e->getMessage(), 500);
+			echo "Error: " . $e->getMessage();
 		}
 	}
 
@@ -828,7 +846,7 @@ class api_provider extends MX_Controller {
 		$orders = $this->model->get_all_orders();
 		if (empty($orders)) {
 			echo "There is no order at the present.<br>Successfully";
-			return;
+			return "No orders to process";
 		}
 
 		foreach ($orders as $row) {
@@ -931,6 +949,7 @@ class api_provider extends MX_Controller {
 			}
 		}
 		echo "Successfully";
+		return "Processed " . count($orders) . " orders";
 	}
 
 	private function cron_status_subscriptions(){
@@ -940,7 +959,7 @@ class api_provider extends MX_Controller {
 
 		if (empty($orders)) {
 			echo "There is no order at the present.<br>Successfully";
-			return;
+			return "No subscription orders to process";
 		}
 
 		foreach ($orders as $row) {
@@ -990,6 +1009,7 @@ class api_provider extends MX_Controller {
 			}
 		}
 		echo "Successfully";
+		return "Processed " . count($orders) . " subscription orders";
 	}
 
 	private function cron_status_orders(){
@@ -998,7 +1018,7 @@ class api_provider extends MX_Controller {
 
     if (empty($orders)) {
         echo "There is no order at the present.<br>Successfully";
-        return;
+        return "No orders to check status";
     }
 
     $new_currency_rate = get_option('new_currecry_rate', 1);
@@ -1122,6 +1142,7 @@ class api_provider extends MX_Controller {
     }
 
     echo "Successfully";
+    return "Checked status for " . count($orders) . " orders";
 }
 
 
@@ -1186,6 +1207,7 @@ class api_provider extends MX_Controller {
 			$this->sync_services_by_api($data_item);
 		}
 		echo "Successfully";
+		return "Synced services from " . count($api_lists) . " API providers";
 	}
 
 	/*--------------------------------------------------------------
