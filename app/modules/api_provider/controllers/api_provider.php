@@ -971,7 +971,13 @@ class api_provider extends MX_Controller {
 				];
 
 				if (in_array($response->status, ["Completed","Canceled"])) {
-					$data["status"] = ($response->status == "Completed") ? "completed" : "canceled";
+					$new_status = ($response->status == "Completed") ? "completed" : "canceled";
+					$data["status"] = $new_status;
+					
+					// Set completed_at timestamp when status changes to completed
+					if ($new_status == 'completed' && $row->status != 'completed') {
+						$data['completed_at'] = NOW;
+					}
 				}
 
 				// New subscription child orders
@@ -1044,6 +1050,11 @@ class api_provider extends MX_Controller {
                     "changed" => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
                     "status"  => $status_dripfeed,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($status_dripfeed == 'completed' && $row->status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
 
                 if (isset($response->runs)) {
                     $data['sub_response_orders'] = json_encode($response);
@@ -1077,13 +1088,19 @@ class api_provider extends MX_Controller {
                 if ($remains < 0) {
                     $remains = "+".abs($remains);
                 }
+                $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
                 $data = [
                     "start_counter" => $response->start_count,
                     "remains"       => $remains,
                     "note"          => "",
                     "changed"       => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
-                    "status"        => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                    "status"        => $new_status,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($new_status == 'completed' && $row->status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
             }
 
             if (!empty($data)) {
@@ -1429,6 +1446,11 @@ public function update_order_status($order_id = ""){
                 "changed" => NOW,
                 "status" => $status_dripfeed,
             ];
+            
+            // Set completed_at timestamp when status changes to completed
+            if ($status_dripfeed == 'completed' && $old_status != 'completed') {
+                $data['completed_at'] = NOW;
+            }
 
             if (isset($response->runs)) {
                 $data['sub_response_orders'] = json_encode($response);
@@ -1462,13 +1484,19 @@ public function update_order_status($order_id = ""){
                 $remains = "+" . abs($remains);
             }
 
+            $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
             $data = [
                 "start_counter" => isset($response->start_count) ? $response->start_count : null,
                 "remains" => $remains,
                 "note" => "",
                 "changed" => NOW,
-                "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                "status" => $new_status,
             ];
+            
+            // Set completed_at timestamp when status changes to completed
+            if ($new_status == 'completed' && $old_status != 'completed') {
+                $data['completed_at'] = NOW;
+            }
         }
 
         if (!empty($data)) {
@@ -1639,6 +1667,11 @@ public function update_latest_orders($limit = 200){
                     "changed" => NOW,
                     "status" => $status_dripfeed,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($status_dripfeed == 'completed' && $old_status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
 
                 if (isset($response->runs)) {
                     $data['sub_response_orders'] = json_encode($response);
@@ -1672,13 +1705,19 @@ public function update_latest_orders($limit = 200){
                     $remains = "+" . abs($remains);
                 }
 
+                $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
                 $data = [
                     "start_counter" => isset($response->start_count) ? $response->start_count : null,
                     "remains" => $remains,
                     "note" => "",
                     "changed" => NOW,
-                    "status" => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                    "status" => $new_status,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($new_status == 'completed' && $old_status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
             }
 
             if (!empty($data)) {
