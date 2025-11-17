@@ -19,8 +19,8 @@ class Cron_logs extends MX_Controller {
         $this->module_icon = 'fa fa-clock-o';
         
         // Check admin access
-        if (!get_role('admin')) {
-            redirect(cn('auth'));
+        if (!get_role('admin') || !session('uid')) {
+            redirect(cn('statistics'));
         }
     }
     
