@@ -310,15 +310,21 @@ class currencies extends MX_Controller {
 	 * This endpoint bypasses authentication for cron job access
 	 */
 	public function cron_fetch_rates(){
+		// Load cron logger
+		$this->load->library('cron_logger');
+		$this->cron_logger->start('/currencies/cron_fetch_rates');
+		
 		// Optional: Add authentication token for security
 		$token = $this->input->get('token', true);
 		$expected_token = get_option('currency_cron_token', '');
 		
 		if ($expected_token && $token !== $expected_token) {
-			echo json_encode([
+			$error = json_encode([
 				'status' => 'error',
 				'message' => 'Invalid token'
 			]);
+			$this->cron_logger->log_failure($error, 403);
+			echo $error;
 			return;
 		}
 		
@@ -326,10 +332,12 @@ class currencies extends MX_Controller {
 		$default_currency = $this->model->get_default_currency();
 		
 		if (!$default_currency) {
-			echo json_encode([
+			$error = json_encode([
 				'status'  => 'error',
 				'message' => 'No default currency set'
 			]);
+			$this->cron_logger->log_failure($error, 500);
+			echo $error;
 			return;
 		}
 
@@ -352,20 +360,24 @@ class currencies extends MX_Controller {
 		curl_close($ch);
 		
 		if ($http_code !== 200 || !$response) {
-			echo json_encode([
+			$error = json_encode([
 				'status'  => 'error',
 				'message' => 'Failed to fetch exchange rates from API'
 			]);
+			$this->cron_logger->log_failure($error, 500);
+			echo $error;
 			return;
 		}
 		
 		$data = json_decode($response, true);
 		
 		if (!isset($data['rates']) || empty($data['rates'])) {
-			echo json_encode([
+			$error = json_encode([
 				'status'  => 'error',
 				'message' => 'Invalid API response'
 			]);
+			$this->cron_logger->log_failure($error, 500);
+			echo $error;
 			return;
 		}
 		
@@ -400,7 +412,7 @@ class currencies extends MX_Controller {
 			}
 		}
 		
-		echo json_encode([
+		$result = json_encode([
 			'status'  => 'success',
 			'message' => "Successfully updated {$updated_count} exchange rates",
 			'data' => [
@@ -409,6 +421,9 @@ class currencies extends MX_Controller {
 				'timestamp' => date('Y-m-d H:i:s')
 			]
 		]);
+		
+		$this->cron_logger->log_success($result, 200);
+		echo $result;
 	}
 
 	/**
