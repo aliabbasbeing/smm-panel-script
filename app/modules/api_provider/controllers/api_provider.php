@@ -1044,6 +1044,11 @@ class api_provider extends MX_Controller {
                     "changed" => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
                     "status"  => $status_dripfeed,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($status_dripfeed == 'completed' && $row->status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
 
                 if (isset($response->runs)) {
                     $data['sub_response_orders'] = json_encode($response);
@@ -1077,13 +1082,19 @@ class api_provider extends MX_Controller {
                 if ($remains < 0) {
                     $remains = "+".abs($remains);
                 }
+                $new_status = ($response->status == "In progress") ? "inprogress" : strtolower($response->status);
                 $data = [
                     "start_counter" => $response->start_count,
                     "remains"       => $remains,
                     "note"          => "",
                     "changed"       => date('Y-m-d H:i:s', strtotime(NOW) + $rand_time),
-                    "status"        => ($response->status == "In progress") ? "inprogress" : strtolower($response->status),
+                    "status"        => $new_status,
                 ];
+                
+                // Set completed_at timestamp when status changes to completed
+                if ($new_status == 'completed' && $row->status != 'completed') {
+                    $data['completed_at'] = NOW;
+                }
             }
 
             if (!empty($data)) {

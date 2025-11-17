@@ -429,6 +429,14 @@ $lang["max_order_is_required"] = "Max order is required";
 $lang["max_order_must_to_be_greater_than_min_order"] = "Max order must to be greater than Min order";
 $lang["price_invalid"] = "Price invalid";
 $lang["currency_decimal_places_must_to_be_equal_than_2"] = "Currency decimal places must to be equal than 2";
+$lang["Average_Completion_Time"] = "Average Completion Time";
+$lang["based_on_last_10_orders"] = "(Based on last 10 orders)";
+$lang["hour"] = "hour";
+$lang["hours"] = "hours";
+$lang["minute"] = "minute";
+$lang["minutes"] = "minutes";
+$lang["second"] = "second";
+$lang["seconds"] = "seconds";
 
 $lang["Details"] 			= "Details";
 $lang["__good_seller"] 		= "Good Seller";

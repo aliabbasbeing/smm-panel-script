@@ -68,3 +68,34 @@
     <input class="form-control223344 square" type="text" name="service_price" value="<?=(!empty($service->price))?currency_format(convert_currency($service->price), get_option("currency_decimal")) :''?>" readonly>
   </div>
 </div>
+
+<?php if (!empty($service->avg_completion_time) && $service->avg_completion_time > 0): ?>
+<div class="col-md-12 col-sm-12 col-xs-12">
+  <div class="form-group">
+    <label><?=lang("Average_Completion_Time")?></label>
+    <div class="alert alert-info" style="margin-bottom: 0;">
+      <i class="fa fa-clock-o"></i> 
+      <?php
+        $avg_time = $service->avg_completion_time;
+        $hours = floor($avg_time / 3600);
+        $minutes = floor(($avg_time % 3600) / 60);
+        $seconds = $avg_time % 60;
+        
+        $time_parts = array();
+        if ($hours > 0) {
+          $time_parts[] = $hours . ' ' . ($hours == 1 ? lang('hour') : lang('hours'));
+        }
+        if ($minutes > 0) {
+          $time_parts[] = $minutes . ' ' . ($minutes == 1 ? lang('minute') : lang('minutes'));
+        }
+        if ($seconds > 0 || empty($time_parts)) {
+          $time_parts[] = $seconds . ' ' . ($seconds == 1 ? lang('second') : lang('seconds'));
+        }
+        
+        echo implode(', ', $time_parts);
+      ?>
+      <small class="text-muted"><?=lang("based_on_last_10_orders")?></small>
+    </div>
+  </div>
+</div>
+<?php endif; ?>

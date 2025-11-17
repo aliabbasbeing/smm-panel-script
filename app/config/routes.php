@@ -115,6 +115,9 @@ $route['cron/auto_sync']     = 'api_provider/cron/sync_services'; // optional se
 // NEW: service sync
 $route['cron/sync_services'] = 'api_provider/cron/sync_services';
 
+// Order completion time calculation cron
+$route['cron/completion_time']          = 'order_completion_cron/calculate_avg_completion';
+
 // Email Marketing cron
 $route['cron/email_marketing'] = 'email_cron/run';
 

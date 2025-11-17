@@ -947,6 +947,11 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
         "remains"           => $remains,
         "changed"           => NOW,
     );
+    
+    // Set completed_at timestamp when status is changed to 'completed'
+    if ($status == 'completed') {
+        $data['completed_at'] = NOW;
+    }
 
     // ✅ FIX: Now fetching BOTH id (numeric) and ids (hash)
     $check_item = $this->model->get("id, ids, cate_id, service_id, service_type, api_provider_id, api_service_id, charge, uid, quantity, status, formal_charge, profit", $this->tb_order, "ids = '{$ids}'");
