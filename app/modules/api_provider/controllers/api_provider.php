@@ -49,6 +49,9 @@ class api_provider extends MX_Controller {
 
 		// Load secret from config (define $config['auto_sync_cron_secret'] in config.php)
 		$this->auto_sync_secret = config_item('auto_sync_cron_secret');
+		
+		// Load cron logger library
+		$this->load->library('cron_logger');
 	}
 
 	/*--------------------------------------------------------------
@@ -804,23 +807,36 @@ class api_provider extends MX_Controller {
 	| NOTE: sync_services here now maps is_enable_sync_price => enable_sync_options
 	--------------------------------------------------------------*/
 	public function cron($type = ""){
-		switch ($type) {
+		$start_time = microtime(true);
+		$cron_name = 'cron/' . $type;
+		$log_id = $this->cron_logger->start($cron_name);
+		
+		try {
+			switch ($type) {
 
-			case 'order':
-				$this->cron_place_orders();
-				break;
+				case 'order':
+					$this->cron_place_orders();
+					break;
 
-			case 'status_subscriptions':
-				$this->cron_status_subscriptions();
-				break;
+				case 'status_subscriptions':
+					$this->cron_status_subscriptions();
+					break;
 
-			case 'status':
-				$this->cron_status_orders();
-				break;
+				case 'status':
+					$this->cron_status_orders();
+					break;
 
-			case 'sync_services':
-				$this->cron_sync_services();
-				break;
+				case 'sync_services':
+					$this->cron_sync_services();
+					break;
+			}
+			
+			$execution_time = microtime(true) - $start_time;
+			$this->cron_logger->end($log_id, 'success', 200, 'Cron executed successfully', $execution_time);
+		} catch (Exception $e) {
+			$execution_time = microtime(true) - $start_time;
+			$this->cron_logger->end($log_id, 'failed', 500, $e->getMessage(), $execution_time);
+			throw $e;
 		}
 	}
 

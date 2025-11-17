@@ -393,6 +393,10 @@
         <a href="<?=cn('payments_bonuses')?>" class="nav-link <?=(segment(1) == 'payments_bonuses')?"active":""?>">
           <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Payments_Bonuses")?></div>
         </a>
+        
+        <a href="<?=cn('cron_logs')?>" class="nav-link <?=(segment(1) == 'cron_logs')?"active":""?>">
+          <div class="nav-item" class="sidenavContent"><i class="fa fa-clock-o"></i>Cron Logs</div>
+        </a>
       <?php } ?>
       
       <?php if(get_role("admin")){ ?>
