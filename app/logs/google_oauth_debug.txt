@@ -1,0 +1,22 @@
+2025-11-17 01:55:39 - Callback started
+Google login disabled
+2025-11-17 01:56:41 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: aliabbaszounr213@gmail.com
+User ID: 116188080760525018782
+User exists: no
+New user created with ID: 6240
+Redirecting to statistics
+2025-11-17 15:03:48 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: arnbhai555@gmail.com
+User ID: 110319501887050226315
+User exists: no
+New user created with ID: 6241
+Redirecting to statistics

@@ -32402,3 +32402,55 @@ WHERE `id` = '4860'
 [2025-09-30T21:33:07+05:00] PARSE FAIL uid=10742 subj=[SMSForwarder] New message from easypaisa - 09/30, 1:46 AM
 [2025-09-30T21:33:08+05:00] SUMMARY processed=7 matched=1
 [2025-09-30T21:33:08+05:00] ---- Cron end 2025-09-30T21:33:08+05:00 ----
+[2025-11-16T16:29:54+05:00] ---- Cron start 2025-11-16T16:29:54+05:00 ----
+[2025-11-16T16:29:56+05:00] No emails in last 180 minutes.
+[2025-11-16T16:29:56+05:00] ---- Cron end 2025-11-16T16:29:56+05:00 ----
+[2025-11-16T20:21:27+05:00] ---- Cron start 2025-11-16T20:21:27+05:00 ----
+[2025-11-16T20:21:29+05:00] DEBUG uid=10928 subj=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM sample=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM Trx ID [NUM]. You have Received Rs 50.00 from SHOAIB AKHTAR with Easypaisa Account 923199****08.
+[2025-11-16T20:21:29+05:00] Parsed => {"amount":50,"transaction_id":"42360729441"}
+[2025-11-16T20:21:29+05:00] DEBUG: amount match (note) txid=42360729441
+[2025-11-16T20:21:29+05:00] DEBUG UPDATE: txRow=5102 affected_rows=1
+[2025-11-16T20:21:29+05:00] CREDIT: uid=6236 +50 (txid=42360729441)
+[2025-11-16T20:21:30+05:00] ERROR: whatsapp API failure response={"status":true,"message":"Message sent successfully","attempts":1,"timestamp":"2025-11-16T15:21:30.174Z"}
+[2025-11-16T20:21:30+05:00] SUCCESS: txid=42360729441 row_id=5102 updated=yes credited=yes whatsapp=no
+[2025-11-16T20:21:31+05:00] DEBUG uid=10927 subj=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM sample=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM Trx ID [NUM]. You have Received Rs 50.00 from SHOAIB AKHTAR with Easypaisa Account 923199****08.
+[2025-11-16T20:21:31+05:00] Parsed => {"amount":50,"transaction_id":"42359343709"}
+[2025-11-16T20:21:31+05:00] DEBUG: amount match (note) txid=42359343709
+[2025-11-16T20:21:31+05:00] DEBUG UPDATE: txRow=5101 affected_rows=1
+[2025-11-16T20:21:31+05:00] CREDIT: uid=6236 +50 (txid=42359343709)
+[2025-11-16T20:21:31+05:00] ERROR: whatsapp API failure response={"status":true,"message":"Message sent successfully","attempts":1,"timestamp":"2025-11-16T15:21:31.484Z"}
+[2025-11-16T20:21:31+05:00] SUCCESS: txid=42359343709 row_id=5101 updated=yes credited=yes whatsapp=no
+[2025-11-16T20:21:32+05:00] DEBUG uid=10926 subj=Important update for your account, Ali sample=Important update for your account, Ali <html> <body style=\"font-family:Arial, sans-serif; color:#333; line-height:1.6;\"> Great news for you! 🎉 We’ve added some exciting new TikTok services and wanted to share them with you. 🚀 Here’s what’s now available: ✨ Tiktok Followers [Speed: 10k/Day] [Guarantee: No] [Start Time: 0-30 Min] ✨ Tiktok Followers [Speed: 10k/Day] [Guarantee: 30 D
+[2025-11-16T20:21:32+05:00] PARSE FAIL uid=10926 subj=Important update for your account, Ali
+[2025-11-16T20:21:32+05:00] SUMMARY processed=3 matched=2
+[2025-11-16T20:21:32+05:00] ---- Cron end 2025-11-16T20:21:32+05:00 ----
+[2025-11-17T00:09:48+05:00] ---- Cron start 2025-11-17T00:09:48+05:00 ----
+[2025-11-17T00:09:50+05:00] DEBUG uid=10929 subj=[SMSForwarder] New message from easypaisa - 11/16, 11:50 PM sample=[SMSForwarder] New message from easypaisa - 11/16, 11:50 PM Trx ID [NUM]. You have Received Rs 1000.00 from MUZAMIL AHMED with Easypaisa Account 923161****99.
+[2025-11-17T00:09:50+05:00] Parsed => {"amount":1000,"transaction_id":"42366877550"}
+[2025-11-17T00:09:50+05:00] DEBUG: amount match (note) txid=42366877550
+[2025-11-17T00:09:50+05:00] DEBUG UPDATE: txRow=5103 affected_rows=1
+[2025-11-17T00:09:50+05:00] CREDIT: uid=6239 +1000 (txid=42366877550)
+[2025-11-17T00:09:50+05:00] ERROR: whatsapp API failure response={"status":true,"message":"Message sent successfully","attempts":1,"timestamp":"2025-11-16T19:09:50.945Z"}
+[2025-11-17T00:09:51+05:00] SUCCESS: txid=42366877550 row_id=5103 updated=yes credited=yes whatsapp=no
+[2025-11-17T00:09:52+05:00] DEBUG uid=10928 subj=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM sample=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM Trx ID [NUM]. You have Received Rs 50.00 from SHOAIB AKHTAR with Easypaisa Account 923199****08.
+[2025-11-17T00:09:52+05:00] Parsed => {"amount":50,"transaction_id":"42360729441"}
+[2025-11-17T00:09:52+05:00] DEBUG: no row txid=42360729441 (status=0 enforced)
+[2025-11-17T00:09:52+05:00] NO MATCH txid=42360729441 amount=50
+[2025-11-17T00:09:53+05:00] DEBUG uid=10927 subj=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM sample=[SMSForwarder] New message from easypaisa - 11/16, 7:47 PM Trx ID [NUM]. You have Received Rs 50.00 from SHOAIB AKHTAR with Easypaisa Account 923199****08.
+[2025-11-17T00:09:53+05:00] Parsed => {"amount":50,"transaction_id":"42359343709"}
+[2025-11-17T00:09:53+05:00] DEBUG: no row txid=42359343709 (status=0 enforced)
+[2025-11-17T00:09:53+05:00] NO MATCH txid=42359343709 amount=50
+[2025-11-17T00:09:54+05:00] DEBUG uid=10926 subj=Important update for your account, Ali sample=Important update for your account, Ali <html> <body style=\"font-family:Arial, sans-serif; color:#333; line-height:1.6;\"> Great news for you! 🎉 We’ve added some exciting new TikTok services and wanted to share them with you. 🚀 Here’s what’s now available: ✨ Tiktok Followers [Speed: 10k/Day] [Guarantee: No] [Start Time: 0-30 Min] ✨ Tiktok Followers [Speed: 10k/Day] [Guarantee: 30 D
+[2025-11-17T00:09:54+05:00] PARSE FAIL uid=10926 subj=Important update for your account, Ali
+[2025-11-17T00:09:54+05:00] SUMMARY processed=4 matched=1
+[2025-11-17T00:09:54+05:00] ---- Cron end 2025-11-17T00:09:54+05:00 ----
+[2025-11-17T11:52:03+05:00] ---- Cron start 2025-11-17T11:52:03+05:00 ----
+[2025-11-17T11:52:05+05:00] DEBUG uid=10930 subj=[SMSForwarder] New message from easypaisa - 11/17, 11:51 AM sample=[SMSForwarder] New message from easypaisa - 11/17, 11:51 AM Trx ID [NUM]. You have Received Rs 700.00 from MUZAMIL AHMED with Easypaisa Account 923161****99.
+[2025-11-17T11:52:05+05:00] Parsed => {"amount":700,"transaction_id":"42378806831"}
+[2025-11-17T11:52:05+05:00] DEBUG: amount match (note) txid=42378806831
+[2025-11-17T11:52:05+05:00] DEBUG UPDATE: txRow=5104 affected_rows=1
+[2025-11-17T11:52:05+05:00] CREDIT: uid=6239 +700 (txid=42378806831)
+[2025-11-17T11:52:06+05:00] ERROR: whatsapp API failure response={"status":true,"message":"Message sent successfully","attempts":1,"timestamp":"2025-11-17T06:52:06.163Z"}
+[2025-11-17T11:52:06+05:00] SUCCESS: txid=42378806831 row_id=5104 updated=yes credited=yes whatsapp=no
+[2025-11-17T11:52:06+05:00] SUMMARY processed=1 matched=1
+[2025-11-17T11:52:06+05:00] ---- Cron end 2025-11-17T11:52:06+05:00 ----

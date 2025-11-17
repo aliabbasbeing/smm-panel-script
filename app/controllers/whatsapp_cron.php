@@ -34,7 +34,7 @@ class Whatsapp_cron extends CI_Controller {
         $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
         $lockFile = APPPATH.'cache/whatsapp_cron_' . $lockFileKey . '.lock';
         
-        $minInterval = 60;
+        $minInterval = 108;
         if(file_exists($lockFile)){
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();

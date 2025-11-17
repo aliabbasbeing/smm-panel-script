@@ -35,20 +35,6 @@ $service_item_default = !empty($services) ? $services[0] : null;
     <?php unset($_SESSION['message']); ?>
 <?php endif; ?>
 
-<!-- Card for Updating WhatsApp Number -->
-<?php if (!$whatsapp_number_exists): ?>
-<div class="whatsapp-card mt-3">
-    <div class="text-center">
-        <h5 class="card-title">Update WhatsApp Number</h5>
-        <p class="card-text">We noticed you haven't added a WhatsApp number. Please update it.</p>
-        
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#whatsappUpdateModal">
-            Update Number
-        </button>
-    </div>
-</div>
-<?php endif; ?>
-
 <style>
 .cat-icon-filter-bar {
   display: flex;
@@ -249,19 +235,26 @@ if (!empty($announcement_text)):
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Update WhatsApp Number</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+               <h5 class="modal-title">Update WhatsApp Number</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <!-- <span aria-hidden="true">&times;</span> -->
+                </button>
             </div>
             <div class="modal-body">
-                <form id="whatsappUpdateForm" action="<?= cn("$module/update_whatsapp_number") ?>" method="POST">
-                    <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
-
-                    <div class="form-group">
-                        <label for="whatsapp_number">WhatsApp Number</label>
-                        <input type="text" id="whatsapp_number" name="whatsapp_number" class="form-control" placeholder="+923XXXXXXXXX" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
+                <div class="text-center">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text">We noticed you haven't added a WhatsApp number. Please update it.</p>
+                    
+                    <form id="whatsappUpdateForm" action="<?= cn("$module/update_whatsapp_number") ?>" method="POST">
+                        <input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>">
+                        
+                        <div class="form-group">
+                            <label for="whatsapp_number">WhatsApp Number</label>
+                            <input type="text" id="whatsapp_number" name="whatsapp_number" class="form-control" placeholder="+923XXXXXXXXX" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -1062,6 +1055,14 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 </script>
 <?php endif; ?>
 
+<?php if (!$whatsapp_number_exists): ?>
+<script>
+  $(document).ready(function(){
+    $('#whatsappUpdateModal').modal('show');
+  });
+</script>
+<?php endif; ?>
+
 <!-- Platform Filter and Select2 Initialization -->
 <script>
 (function($){
@@ -1419,8 +1420,7 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
       $bar.find('.catf-btn').removeClass('active');
       $btn.addClass('active');
       indexCategories();
-      var plat = $btn.data('platform');
-      rebuildCategorySelect(plat);
+      rebuildCategorySelect($btn.data('platform'));
     });
   }
 
