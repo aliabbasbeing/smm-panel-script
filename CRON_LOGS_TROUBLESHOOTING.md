@@ -4,6 +4,26 @@
 
 If you're experiencing issues accessing the Cron Logs page (it redirects to statistics), follow these steps:
 
+### Step 0: Enable Logging (CRITICAL)
+
+**If you don't see any logs, logging might be disabled!**
+
+1. Check `app/config/config.php` and find the `log_threshold` setting
+2. If it's set to `0`, change it to at least `3` for debugging:
+   ```php
+   $config['log_threshold'] = 3; // or 4 for all messages
+   ```
+3. The values are:
+   - 0 = Disable logging
+   - 1 = Error Messages only
+   - 2 = Debug Messages
+   - 3 = Informational Messages
+   - 4 = All Messages
+
+4. **ALTERNATIVE**: Check the emergency debug file at `app/logs/cron_logs_debug.txt`
+   - This file is written directly, bypassing CodeIgniter's logging system
+   - It will show you the exact point where the redirect happens
+
 ### Step 1: Verify Admin Role
 
 1. The cron_logs page requires admin access

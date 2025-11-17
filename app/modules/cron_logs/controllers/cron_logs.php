@@ -6,24 +6,44 @@ class cron_logs extends MX_Controller {
     public function __construct() {
         parent::__construct();
         
+        // EMERGENCY DEBUG: Write directly to file since log_threshold might be 0
+        $debug_file = APPPATH . 'logs/cron_logs_debug.txt';
+        $debug_msg = date('Y-m-d H:i:s') . " - Constructor called\n";
+        @file_put_contents($debug_file, $debug_msg, FILE_APPEND);
+        
         // Check admin access with detailed logging for debugging
         $is_admin = get_role('admin');
         $session_uid = session('uid');
         $current_user = isset($_SESSION['user_current_info']) ? $_SESSION['user_current_info'] : null;
         
-        // Log access attempt for debugging
+        // EMERGENCY DEBUG: Write session info
+        $debug_msg = date('Y-m-d H:i:s') . " - Is Admin: " . ($is_admin ? 'Yes' : 'No') . 
+                     ", Session UID: " . ($session_uid ?: 'None') . 
+                     ", User Role: " . (isset($current_user['role']) ? $current_user['role'] : 'Unknown') . "\n";
+        @file_put_contents($debug_file, $debug_msg, FILE_APPEND);
+        
+        // Log access attempt for debugging (only works if log_threshold > 0)
         log_message('info', 'Cron_logs access attempt - Is Admin: ' . ($is_admin ? 'Yes' : 'No') . ', Session UID: ' . ($session_uid ?: 'None') . ', User Role: ' . (isset($current_user['role']) ? $current_user['role'] : 'Unknown'));
         
         if (!$is_admin) {
+            $debug_msg = date('Y-m-d H:i:s') . " - Access DENIED - Redirecting to statistics\n";
+            @file_put_contents($debug_file, $debug_msg, FILE_APPEND);
+            
             log_message('warning', 'Cron_logs access denied - User does not have admin role. Redirecting to statistics.');
             redirect(cn('statistics'));
             return;
         }
         
+        $debug_msg = date('Y-m-d H:i:s') . " - Access GRANTED - Loading model\n";
+        @file_put_contents($debug_file, $debug_msg, FILE_APPEND);
+        
         // Try to load model with error handling
         try {
             $this->load->model('cron_logs_model', 'model');
         } catch (Exception $e) {
+            $debug_msg = date('Y-m-d H:i:s') . " - Model load FAILED: " . $e->getMessage() . "\n";
+            @file_put_contents($debug_file, $debug_msg, FILE_APPEND);
+            
             log_message('error', 'Cron_logs controller - Failed to load model: ' . $e->getMessage());
             log_message('error', 'Stack trace: ' . $e->getTraceAsString());
             show_error('Unable to load cron logs. Please ensure the database table is created.');
