@@ -5,7 +5,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * Order Completion Time Cron Controller
  * 
  * This controller calculates and updates average completion times
- * for services based on the last 10 completed orders
+ * for services based on the last 10 completed orders.
+ * 
+ * This controller is fully independent and loads all necessary dependencies
+ * (database, models, helpers) on its own without relying on other cron jobs.
+ * 
+ * Route: /cron/completion_time
  */
 class Order_completion_cron extends MX_Controller {
     
