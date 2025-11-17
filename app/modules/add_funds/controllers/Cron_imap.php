@@ -16,23 +16,30 @@ class Imap_cron extends CI_Controller
         $this->lockFile      = $this->config->item('imap_cron_lock_file') ?? APPPATH.'cache/imap_cron_last_run.lock';
 
         $this->load->library('ImapAutoVerifier');
+        $this->load->library('cron_logger');
     }
 
     public function run()
     {
+        // Start logging
+        $this->cron_logger->start('imap-auto-verify');
+        
         // Simple debug banner
         header('X-Debug-Controller: Imap_cron');
 
         $token = $this->input->get('token', true);
 
         if (!$token) {
+            $this->cron_logger->fail('Token not supplied', 401);
             return $this->debugRespond('missing_token', 'Token not supplied');
         }
         if (!$this->requiredToken) {
+            $this->cron_logger->fail('Config token not loaded', 500);
             return $this->debugRespond('missing_config', 'Config token not loaded');
         }
         if (!hash_equals($this->requiredToken, $token)) {
             log_message('error', 'IMAP cron bad token');
+            $this->cron_logger->fail('Token mismatch', 403);
             return $this->debugRespond('bad_token', 'Token mismatch');
         }
 
@@ -41,6 +48,7 @@ class Imap_cron extends CI_Controller
             if (file_exists($this->lockFile)) {
                 $last = (int)trim(@file_get_contents($this->lockFile));
                 if ($last && ($now - $last) < $this->minInterval) {
+                    $this->cron_logger->rate_limit('Rate limited. Retry after ' . ($this->minInterval - ($now - $last)) . ' seconds');
                     return $this->debugRespond('rate_limited', 'Try later', [
                         'retry_after_sec' => $this->minInterval - ($now - $last)
                     ]);
@@ -49,9 +57,20 @@ class Imap_cron extends CI_Controller
             @file_put_contents($this->lockFile, (string)$now);
         }
 
-        $ok = $this->imapautoverifier->run();
+        try {
+            $ok = $this->imapautoverifier->run();
+            
+            if ($ok) {
+                $this->cron_logger->end('IMAP auto-verification completed successfully', 200);
+            } else {
+                $this->cron_logger->fail('IMAP auto-verification failed', 500);
+            }
 
-        return $this->debugRespond($ok ? 'ok' : 'fail', 'Run completed');
+            return $this->debugRespond($ok ? 'ok' : 'fail', 'Run completed');
+        } catch (Exception $e) {
+            $this->cron_logger->fail($e->getMessage());
+            return $this->debugRespond('error', $e->getMessage());
+        }
     }
 
     private function debugRespond($status, $msg, $extra = [])

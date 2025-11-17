@@ -12,6 +12,7 @@ class childpanel extends MX_Controller
 	{
 		parent::__construct();
 		$this->load->model(get_class($this) . '_model', 'model');
+		$this->load->library('cron_logger');
 
 		//Config Module
 		$this->tb_users               = USERS;
@@ -354,70 +355,86 @@ class childpanel extends MX_Controller
 
 	public function cron()
 	{
+		// Start logging
+		$this->cron_logger->start('cron/childpanel');
+		
+		try {
+			$panel_logs = $this->model->get_order_logs_list_cron();
 
-		$panel_logs = $this->model->get_order_logs_list_cron();
+			$date = new DateTime(NOW);
+			$date->modify('+1 month');
+			$renewal_date = $date->format('Y-m-d');
 
-		$date = new DateTime(NOW);
-		$date->modify('+1 month');
-		$renewal_date = $date->format('Y-m-d');
+			if (!empty($panel_logs)) {
+				$i = 0;
+				foreach ($panel_logs as $key => $row) {
+					$i++;
+					if ($row->user_balance < $row->charge) {
 
-		if (!empty($panel_logs)) {
-			$i = 0;
-			foreach ($panel_logs as $key => $row) {
-				$i++;
-				if ($row->user_balance < $row->charge) {
-
-					$this->db->update($this->tb_childpanel, ["status" => "terminated"], ["id" => $row->id]);
-				} else {
-					$balance = $row->user_balance - $row->charge;
-					$this->db->update($this->tb_users, ["balance" => $balance], ["id" => $row->uid]);
-					$this->db->update($this->tb_childpanel, ["status" => "active", "renewal_date" => $renewal_date], ["id" => $row->id]);
+						$this->db->update($this->tb_childpanel, ["status" => "terminated"], ["id" => $row->id]);
+					} else {
+						$balance = $row->user_balance - $row->charge;
+						$this->db->update($this->tb_users, ["balance" => $balance], ["id" => $row->uid]);
+						$this->db->update($this->tb_childpanel, ["status" => "active", "renewal_date" => $renewal_date], ["id" => $row->id]);
+					}
 				}
+				echo "Success";
+				$this->cron_logger->end("Processed {$i} child panels successfully");
+			}else{
+				echo "No Panels available to be renewed";
+				$this->cron_logger->end("No panels to renew");
 			}
-			echo "Success";
-		}else{
-		    echo "No Panels available to be renewed";
+		} catch (Exception $e) {
+			$this->cron_logger->fail($e->getMessage());
+			echo "Error: " . $e->getMessage();
 		}
 	}
 	
 	public function check_panel_status()
 	{
-
-        $params = [];
-		$child_key      = (isset($_REQUEST["key"])) ? strip_tags(urldecode($_REQUEST["key"])) : '';
-		// Build parameters and call appropriate sub function
-		$params = $_REQUEST;
-        
-        $child_exists = get_field($this->tb_childpanel, ["child_key" => $child_key], "status");
-		if ($child_key == "" || empty($child_exists)) {
-			echo_json_string(array(
-			    'error' => "1",
-				'code' => "not_found",
-			));
-		}
-
-        switch ($child_exists) {
-
-			case 'active':
-				echo_json_string(array(
-			    'error' => "0",
-				'code' => "active",
-			    ));
-				break;
-				
-			case 'processing':
-				echo_json_string(array(
-			    'error' => "1",
-				'code' => "processing",
-			    ));
-				break;	
+		// Start logging
+		$this->cron_logger->start('cron/check_panel_status');
+		
+		try {
+			$params = [];
+			$child_key      = (isset($_REQUEST["key"])) ? strip_tags(urldecode($_REQUEST["key"])) : '';
+			// Build parameters and call appropriate sub function
+			$params = $_REQUEST;
 			
-			case 'refunded':
+			$child_exists = get_field($this->tb_childpanel, ["child_key" => $child_key], "status");
+			if ($child_key == "" || empty($child_exists)) {
+				$this->cron_logger->end("Panel not found for key: {$child_key}", 404);
 				echo_json_string(array(
-			    'error' => "1",
-				'code' => "refunded",
-			    ));
-				break;
+					'error' => "1",
+					'code' => "not_found",
+				));
+				return;
+			}
+
+			$this->cron_logger->end("Panel status checked: {$child_exists}", 200);
+			
+			switch ($child_exists) {
+
+				case 'active':
+					echo_json_string(array(
+					'error' => "0",
+					'code' => "active",
+					));
+					break;
+					
+				case 'processing':
+					echo_json_string(array(
+					'error' => "1",
+					'code' => "processing",
+					));
+					break;	
+				
+				case 'refunded':
+					echo_json_string(array(
+					'error' => "1",
+					'code' => "refunded",
+					));
+					break;
 			
 			case 'disabled':
 				echo_json_string(array(
