@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cron_logs_model extends MY_Model {
+class cron_logs_model extends MY_Model {
     
     private $tb_cron_logs = 'cron_logs';
     

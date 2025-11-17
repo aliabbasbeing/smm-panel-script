@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Cron_logs extends MX_Controller {
+class cron_logs extends MX_Controller {
     
     public function __construct() {
         parent::__construct();
@@ -17,6 +17,7 @@ class Cron_logs extends MX_Controller {
             $this->load->model('cron_logs_model', 'model');
         } catch (Exception $e) {
             log_message('error', 'Cron_logs controller - Failed to load model: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
             show_error('Unable to load cron logs. Please ensure the database table is created.');
         }
     }
@@ -36,6 +37,7 @@ class Cron_logs extends MX_Controller {
             $this->template->build('index', $data);
         } catch (Exception $e) {
             log_message('error', 'Cron_logs index - Database error: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
             show_error('Unable to load cron logs. Please ensure the cron_logs table exists in the database. Run the SQL migration file: database/cron-logging-system.sql');
         }
     }

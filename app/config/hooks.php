@@ -21,6 +21,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 $hook['post_controller_constructor'][] = array(
     'class'    => 'Cron_monitor',
     'function' => 'monitor',
-    'filename' => 'Cron_monitor.php',
+    'filename' => 'cron_monitor.php',
     'filepath' => 'hooks'
 );

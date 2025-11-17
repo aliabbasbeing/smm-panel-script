@@ -32,6 +32,9 @@ class Cron_monitor {
             
             // Check if this is a cron endpoint
             if ($this->is_cron_endpoint($uri, $controller, $method)) {
+                // Log cron detection
+                log_message('info', 'Cron detected: /' . $uri . ' (Controller: ' . $controller . ', Method: ' . $method . ')');
+                
                 // Load the cron logger
                 $this->CI->load->library('cron_logger');
                 
@@ -45,8 +48,9 @@ class Cron_monitor {
                 register_shutdown_function(array($this, 'auto_log_on_shutdown'));
             }
         } catch (Exception $e) {
-            // Silently fail to avoid breaking the application
+            // Log error to file for debugging
             log_message('error', 'Cron_monitor hook failed: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
         }
     }
     

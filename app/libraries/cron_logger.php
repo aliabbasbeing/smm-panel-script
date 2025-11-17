@@ -96,11 +96,25 @@ class Cron_logger {
             'created' => date('Y-m-d H:i:s')
         );
         
+        // Log to file for better debugging
+        $log_level = ($status === 'failed') ? 'error' : 'info';
+        $log_msg = sprintf(
+            'CRON [%s] %s - Status: %s, Code: %d, Time: %.4fs, Message: %s',
+            date('Y-m-d H:i:s'),
+            $this->cron_name,
+            $status,
+            $response_code,
+            $execution_time,
+            $message ? substr($message, 0, 200) : 'N/A'
+        );
+        log_message($log_level, $log_msg);
+        
         try {
             $this->CI->db->insert($this->db_table, $data);
         } catch (Exception $e) {
-            // Silently fail to avoid breaking cron execution
-            log_message('error', 'Cron logger failed: ' . $e->getMessage());
+            // Log database error to file
+            log_message('error', 'Cron logger database insert failed: ' . $e->getMessage());
+            log_message('error', 'Failed cron data: ' . json_encode($data));
         }
         
         // Clean up old logs based on retention setting
