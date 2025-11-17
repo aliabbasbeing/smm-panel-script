@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS `cron_logs` (
 
 -- Create settings table entry for cron notification email (if general_options table exists)
 -- If using a different settings mechanism, adjust accordingly
-INSERT IGNORE INTO `general_options` (`name`, `value`, `created`) 
-VALUES ('cron_notification_email', '', NOW()),
-       ('cron_enable_notifications', '0', NOW()),
-       ('cron_log_retention_days', '30', NOW());
+-- These settings can also be added through the admin panel settings interface
+-- INSERT IGNORE INTO `general_options` (`name`, `value`, `created`) 
+-- VALUES ('cron_notification_email', '', NOW()),
+--        ('cron_enable_notifications', '0', NOW()),
+--        ('cron_log_retention_days', '30', NOW());

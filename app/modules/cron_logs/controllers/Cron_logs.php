@@ -5,11 +5,19 @@ class Cron_logs extends MX_Controller {
     
     public function __construct() {
         parent::__construct();
-        $this->load->model('cron_logs_model', 'model');
         
-        // Check admin access
+        // Check admin access first
         if (!get_role('admin')) {
             redirect(cn('statistics'));
+            return;
+        }
+        
+        // Try to load model with error handling
+        try {
+            $this->load->model('cron_logs_model', 'model');
+        } catch (Exception $e) {
+            log_message('error', 'Cron_logs controller - Failed to load model: ' . $e->getMessage());
+            show_error('Unable to load cron logs. Please ensure the database table is created.');
         }
     }
     
@@ -17,14 +25,19 @@ class Cron_logs extends MX_Controller {
      * Main view - List all cron logs with summary
      */
     public function index() {
-        $data = array(
-            'module' => get_class($this),
-            'title' => lang('cron_logs'),
-            'summary' => $this->model->get_cron_summary(),
-            'statistics' => $this->model->get_statistics()
-        );
-        
-        $this->template->build('index', $data);
+        try {
+            $data = array(
+                'module' => get_class($this),
+                'title' => lang('cron_logs'),
+                'summary' => $this->model->get_cron_summary(),
+                'statistics' => $this->model->get_statistics()
+            );
+            
+            $this->template->build('index', $data);
+        } catch (Exception $e) {
+            log_message('error', 'Cron_logs index - Database error: ' . $e->getMessage());
+            show_error('Unable to load cron logs. Please ensure the cron_logs table exists in the database. Run the SQL migration file: database/cron-logging-system.sql');
+        }
     }
     
     /**

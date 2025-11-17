@@ -25,23 +25,28 @@ class Cron_monitor {
      * This method should be called on post_controller_constructor hook
      */
     public function monitor() {
-        $uri = $this->CI->uri->uri_string();
-        $controller = $this->CI->router->fetch_class();
-        $method = $this->CI->router->fetch_method();
-        
-        // Check if this is a cron endpoint
-        if ($this->is_cron_endpoint($uri, $controller, $method)) {
-            // Load the cron logger
-            $this->CI->load->library('cron_logger');
+        try {
+            $uri = $this->CI->uri->uri_string();
+            $controller = $this->CI->router->fetch_class();
+            $method = $this->CI->router->fetch_method();
             
-            // Determine the cron name
-            $cron_name = $this->get_cron_name($uri, $controller, $method);
-            
-            // Start logging
-            $this->CI->cron_logger->start($cron_name);
-            
-            // Set a shutdown function to auto-log if the cron doesn't explicitly log
-            register_shutdown_function(array($this, 'auto_log_on_shutdown'));
+            // Check if this is a cron endpoint
+            if ($this->is_cron_endpoint($uri, $controller, $method)) {
+                // Load the cron logger
+                $this->CI->load->library('cron_logger');
+                
+                // Determine the cron name
+                $cron_name = $this->get_cron_name($uri, $controller, $method);
+                
+                // Start logging
+                $this->CI->cron_logger->start($cron_name);
+                
+                // Set a shutdown function to auto-log if the cron doesn't explicitly log
+                register_shutdown_function(array($this, 'auto_log_on_shutdown'));
+            }
+        } catch (Exception $e) {
+            // Silently fail to avoid breaking the application
+            log_message('error', 'Cron_monitor hook failed: ' . $e->getMessage());
         }
     }
     
@@ -54,6 +59,11 @@ class Cron_monitor {
      * @return bool
      */
     private function is_cron_endpoint($uri, $controller, $method) {
+        // Exclude the cron_logs admin interface itself
+        if ($controller === 'cron_logs' || stripos($uri, 'cron_logs') !== false) {
+            return false;
+        }
+        
         // Check URI patterns
         foreach ($this->cron_patterns as $pattern) {
             if (stripos($uri, $pattern) !== false) {
