@@ -16,6 +16,7 @@ class Order_completion_cron extends MX_Controller {
         parent::__construct();
         $this->tb_orders = ORDER;
         $this->tb_services = SERVICES;
+        $this->load->library('cron_logger');
     }
     
     /**
@@ -23,42 +24,55 @@ class Order_completion_cron extends MX_Controller {
      * Route: /cron/completion_time
      */
     public function calculate_avg_completion() {
-        echo "Starting average completion time calculation...<br>";
+        // Start logging
+        $this->cron_logger->start('cron/completion_time');
         
-        // Get all active services
-        $this->db->select('id');
-        $this->db->from($this->tb_services);
-        $services = $this->db->get()->result();
-        
-        if (empty($services)) {
-            echo "No services found.<br>Successfully";
-            return;
-        }
-        
-        $updated_count = 0;
-        
-        foreach ($services as $service) {
-            // Calculate average completion time for last 10 completed orders
-            $avg_time = $this->calculate_service_avg_time($service->id);
+        try {
+            echo "Starting average completion time calculation...<br>";
             
-            // Update service table with new average
-            $this->db->update($this->tb_services, 
-                ['avg_completion_time' => $avg_time], 
-                ['id' => $service->id]
-            );
+            // Get all active services
+            $this->db->select('id');
+            $this->db->from($this->tb_services);
+            $services = $this->db->get()->result();
             
-            // Update recent orders with the new average
-            $this->update_recent_orders_avg($service->id, $avg_time);
-            
-            $updated_count++;
-            
-            if ($updated_count % 50 == 0) {
-                echo "Processed {$updated_count} services...<br>";
+            if (empty($services)) {
+                echo "No services found.<br>Successfully";
+                $this->cron_logger->end('No services found');
+                return;
             }
+            
+            $updated_count = 0;
+            
+            foreach ($services as $service) {
+                // Calculate average completion time for last 10 completed orders
+                $avg_time = $this->calculate_service_avg_time($service->id);
+                
+                // Update service table with new average
+                $this->db->update($this->tb_services, 
+                    ['avg_completion_time' => $avg_time], 
+                    ['id' => $service->id]
+                );
+                
+                // Update recent orders with the new average
+                $this->update_recent_orders_avg($service->id, $avg_time);
+                
+                $updated_count++;
+                
+                if ($updated_count % 50 == 0) {
+                    echo "Processed {$updated_count} services...<br>";
+                }
+            }
+            
+            echo "Completed! Updated {$updated_count} services.<br>";
+            echo "Successfully";
+            
+            // Log success
+            $this->cron_logger->end("Updated {$updated_count} services successfully");
+            
+        } catch (Exception $e) {
+            $this->cron_logger->fail($e->getMessage());
+            echo "Error: " . $e->getMessage();
         }
-        
-        echo "Completed! Updated {$updated_count} services.<br>";
-        echo "Successfully";
     }
     
     /**

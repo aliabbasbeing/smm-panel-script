@@ -124,6 +124,13 @@ $route['cron/email_marketing'] = 'email_cron/run';
 // Email Marketing tracking (public endpoint)
 $route['email_marketing/track/(:any)'] = 'email_marketing/track/$1';
 
+// Cron logs management (admin only)
+$route['cron_logs/dashboard'] = 'cron_logs/cron_logs/dashboard';
+$route['cron_logs/view/(:num)'] = 'cron_logs/cron_logs/view/$1';
+$route['cron_logs/trigger'] = 'cron_logs/cron_logs/trigger';
+$route['cron_logs/cleanup'] = 'cron_logs/cron_logs/cleanup';
+$route['cron_logs'] = 'cron_logs/cron_logs/index';
+
 // client area
 $route['faq']               = 'client/faq';
 $route['terms']             = 'client/terms';

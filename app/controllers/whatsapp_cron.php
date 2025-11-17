@@ -9,6 +9,7 @@ class Whatsapp_cron extends CI_Controller {
     public function __construct(){
         parent::__construct();
         $this->load->model('whatsapp_marketing/whatsapp_marketing_model', 'whatsapp_model');
+        $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('whatsapp_cron_token', md5('whatsapp_marketing_cron_' . ENCRYPTION_KEY));
@@ -20,15 +21,18 @@ class Whatsapp_cron extends CI_Controller {
      * URL: /whatsapp_cron/run?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        // Start logging
+        $campaign_id = $this->input->get('campaign_id', true);
+        $cron_name = 'whatsapp_cron/run' . ($campaign_id ? '?campaign_id=' . $campaign_id : '');
+        $this->cron_logger->start($cron_name);
+        
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->cron_logger->fail('Invalid or missing token', 403);
             show_404();
             return;
         }
-        
-        // Get optional campaign_id for campaign-specific cron
-        $campaign_id = $this->input->get('campaign_id', true);
         
         // Rate limiting
         $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
@@ -39,9 +43,11 @@ class Whatsapp_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
+                $message = 'Cron is rate limited. Please wait.';
+                $this->cron_logger->rate_limit($message);
                 $this->respond([
                     'status' => 'rate_limited',
-                    'message' => 'Cron is rate limited. Please wait.',
+                    'message' => $message,
                     'retry_after_sec' => $minInterval - ($now - $lastRun),
                     'campaign_id' => $campaign_id,
                     'time' => date('c')
@@ -53,6 +59,13 @@ class Whatsapp_cron extends CI_Controller {
         @file_put_contents($lockFile, time());
         
         $result = $this->process_messages($campaign_id);
+        
+        // Log result
+        if($result['status'] === 'success'){
+            $this->cron_logger->end(json_encode($result), 200);
+        } else {
+            $this->cron_logger->end(json_encode($result), 200);
+        }
         
         $this->respond($result);
     }

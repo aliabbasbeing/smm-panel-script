@@ -6,6 +6,7 @@ class currencies extends MX_Controller {
 	public function __construct(){
 		parent::__construct();
 		$this->load->model('currencies_model', 'model');
+		$this->load->library('cron_logger');
 	}
 
 	/**
@@ -310,11 +311,15 @@ class currencies extends MX_Controller {
 	 * This endpoint bypasses authentication for cron job access
 	 */
 	public function cron_fetch_rates(){
+		// Start logging
+		$this->cron_logger->start('currencies/cron_fetch_rates');
+		
 		// Optional: Add authentication token for security
 		$token = $this->input->get('token', true);
 		$expected_token = get_option('currency_cron_token', '');
 		
 		if ($expected_token && $token !== $expected_token) {
+			$this->cron_logger->fail('Invalid token', 403);
 			echo json_encode([
 				'status' => 'error',
 				'message' => 'Invalid token'
@@ -322,93 +327,110 @@ class currencies extends MX_Controller {
 			return;
 		}
 		
-		// Get default currency
-		$default_currency = $this->model->get_default_currency();
-		
-		if (!$default_currency) {
-			echo json_encode([
-				'status'  => 'error',
-				'message' => 'No default currency set'
-			]);
-			return;
-		}
+		try {
+			// Get default currency
+			$default_currency = $this->model->get_default_currency();
+			
+			if (!$default_currency) {
+				$this->cron_logger->fail('No default currency set');
+				echo json_encode([
+					'status'  => 'error',
+					'message' => 'No default currency set'
+				]);
+				return;
+			}
 
-		$base_code = $default_currency->code;
-		
-		// Use exchangerate-api.com (free tier, no API key required for basic usage)
-		$api_url = "https://api.exchangerate-api.com/v4/latest/{$base_code}";
-		
-		// Fetch exchange rates
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $api_url);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		// SSL verification enabled for security
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		
-		$response = curl_exec($ch);
-		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-		curl_close($ch);
-		
-		if ($http_code !== 200 || !$response) {
-			echo json_encode([
-				'status'  => 'error',
-				'message' => 'Failed to fetch exchange rates from API'
-			]);
-			return;
-		}
-		
-		$data = json_decode($response, true);
-		
-		if (!isset($data['rates']) || empty($data['rates'])) {
-			echo json_encode([
-				'status'  => 'error',
-				'message' => 'Invalid API response'
-			]);
-			return;
-		}
-		
-		$rates = $data['rates'];
-		$updated_count = 0;
-		
-		// Update exchange rates for all active currencies
-		$currencies = $this->model->get_active_currencies();
-		
-		foreach ($currencies as $currency) {
-			// Skip default currency (it stays at 1.0)
-			if ($currency->is_default) {
-				continue;
+			$base_code = $default_currency->code;
+			
+			// Use exchangerate-api.com (free tier, no API key required for basic usage)
+			$api_url = "https://api.exchangerate-api.com/v4/latest/{$base_code}";
+			
+			// Fetch exchange rates
+			$ch = curl_init();
+			curl_setopt($ch, CURLOPT_URL, $api_url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+			// SSL verification enabled for security
+			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+			
+			$response = curl_exec($ch);
+			$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			curl_close($ch);
+			
+			if ($http_code !== 200 || !$response) {
+				$this->cron_logger->fail('Failed to fetch exchange rates from API', $http_code);
+				echo json_encode([
+					'status'  => 'error',
+					'message' => 'Failed to fetch exchange rates from API'
+				]);
+				return;
 			}
 			
-			// Check if we have a rate for this currency
-			if (isset($rates[$currency->code])) {
-				$new_rate = $rates[$currency->code];
-				
-				// The API returns rates in format: 1 BASE = X TARGET
-				// Example: With PKR as base, API returns: "USD": 0.00353876
-				// This means: 1 PKR = 0.00353876 USD
-				// Our database stores rates in the same format (exchange_rate for USD would be 0.00353876)
-				// So we can directly use the rate from API
-				$this->db->where('id', $currency->id);
-				$this->db->update('currencies', [
-					'exchange_rate' => $new_rate,
-					'updated_at' => date('Y-m-d H:i:s')
+			$data = json_decode($response, true);
+			
+			if (!isset($data['rates']) || empty($data['rates'])) {
+				$this->cron_logger->fail('Invalid API response');
+				echo json_encode([
+					'status'  => 'error',
+					'message' => 'Invalid API response'
 				]);
-				
-				$updated_count++;
+				return;
 			}
+			
+			$rates = $data['rates'];
+			$updated_count = 0;
+			
+			// Update exchange rates for all active currencies
+			$currencies = $this->model->get_active_currencies();
+			
+			foreach ($currencies as $currency) {
+				// Skip default currency (it stays at 1.0)
+				if ($currency->is_default) {
+					continue;
+				}
+				
+				// Check if we have a rate for this currency
+				if (isset($rates[$currency->code])) {
+					$new_rate = $rates[$currency->code];
+					
+					// The API returns rates in format: 1 BASE = X TARGET
+					// Example: With PKR as base, API returns: "USD": 0.00353876
+					// This means: 1 PKR = 0.00353876 USD
+					// Our database stores rates in the same format (exchange_rate for USD would be 0.00353876)
+					// So we can directly use the rate from API
+					$this->db->where('id', $currency->id);
+					$this->db->update('currencies', [
+						'exchange_rate' => $new_rate,
+						'updated_at' => date('Y-m-d H:i:s')
+					]);
+					
+					$updated_count++;
+				}
+			}
+			
+			$result = [
+				'status'  => 'success',
+				'message' => "Successfully updated {$updated_count} exchange rates",
+				'data' => [
+					'updated_count' => $updated_count,
+					'base_currency' => $base_code,
+					'timestamp' => date('Y-m-d H:i:s')
+				]
+			];
+			
+			// Log success
+			$this->cron_logger->end(json_encode($result), 200);
+			
+			echo json_encode($result);
+			
+		} catch (Exception $e) {
+			$this->cron_logger->fail($e->getMessage());
+			echo json_encode([
+				'status'  => 'error',
+				'message' => $e->getMessage()
+			]);
 		}
-		
-		echo json_encode([
-			'status'  => 'success',
-			'message' => "Successfully updated {$updated_count} exchange rates",
-			'data' => [
-				'updated_count' => $updated_count,
-				'base_currency' => $base_code,
-				'timestamp' => date('Y-m-d H:i:s')
-			]
-		]);
 	}
 
 	/**

@@ -10,6 +10,7 @@ class Email_cron extends CI_Controller {
         parent::__construct();
         $this->load->model('email_marketing/email_marketing_model', 'email_model');
         $this->load->library('email');
+        $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('email_cron_token', md5('email_marketing_cron_' . ENCRYPTION_KEY));
@@ -21,15 +22,18 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        // Start logging
+        $campaign_id = $this->input->get('campaign_id', true);
+        $cron_name = 'cron/email_marketing' . ($campaign_id ? '?campaign_id=' . $campaign_id : '');
+        $this->cron_logger->start($cron_name);
+        
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->cron_logger->fail('Invalid or missing token', 403);
             show_404();
             return;
         }
-        
-        // Get optional campaign_id for campaign-specific cron
-        $campaign_id = $this->input->get('campaign_id', true);
         
         // Rate limiting - prevent running too frequently
         $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
@@ -40,9 +44,11 @@ class Email_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
+                $message = 'Cron is rate limited. Please wait.';
+                $this->cron_logger->rate_limit($message);
                 $this->respond([
                     'status' => 'rate_limited',
-                    'message' => 'Cron is rate limited. Please wait.',
+                    'message' => $message,
                     'retry_after_sec' => $minInterval - ($now - $lastRun),
                     'campaign_id' => $campaign_id,
                     'time' => date('c')
@@ -56,6 +62,13 @@ class Email_cron extends CI_Controller {
         
         // Process emails
         $result = $this->process_emails($campaign_id);
+        
+        // Log result
+        if($result['status'] === 'success'){
+            $this->cron_logger->end(json_encode($result), 200);
+        } else {
+            $this->cron_logger->end(json_encode($result), 200);
+        }
         
         $this->respond($result);
     }
