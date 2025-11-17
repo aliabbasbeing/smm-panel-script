@@ -6,8 +6,16 @@ class cron_logs extends MX_Controller {
     public function __construct() {
         parent::__construct();
         
-        // Check admin access first
-        if (!get_role('admin')) {
+        // Check admin access with detailed logging for debugging
+        $is_admin = get_role('admin');
+        $session_uid = session('uid');
+        $current_user = isset($_SESSION['user_current_info']) ? $_SESSION['user_current_info'] : null;
+        
+        // Log access attempt for debugging
+        log_message('info', 'Cron_logs access attempt - Is Admin: ' . ($is_admin ? 'Yes' : 'No') . ', Session UID: ' . ($session_uid ?: 'None') . ', User Role: ' . (isset($current_user['role']) ? $current_user['role'] : 'Unknown'));
+        
+        if (!$is_admin) {
+            log_message('warning', 'Cron_logs access denied - User does not have admin role. Redirecting to statistics.');
             redirect(cn('statistics'));
             return;
         }
@@ -241,6 +249,32 @@ class cron_logs extends MX_Controller {
         }
         
         fclose($output);
+        exit;
+    }
+    
+    /**
+     * Debug endpoint to check session and access info
+     * Temporary method for troubleshooting admin access issues
+     * Remove this method once the issue is resolved
+     */
+    public function debug_access() {
+        // Allow access without admin check for debugging
+        $debug_info = array(
+            'get_role_admin' => get_role('admin') ? 'TRUE' : 'FALSE',
+            'session_uid' => session('uid'),
+            'session_data' => isset($_SESSION) ? $_SESSION : 'No session data',
+            'user_current_info' => isset($_SESSION['user_current_info']) ? $_SESSION['user_current_info'] : 'Not set',
+            'php_session_id' => session_id(),
+            'controller_class' => get_class($this),
+            'is_logged_in' => session('uid') ? 'YES' : 'NO'
+        );
+        
+        // Log this access
+        log_message('info', 'Cron_logs debug_access called: ' . json_encode($debug_info));
+        
+        // Display as JSON
+        header('Content-Type: application/json');
+        echo json_encode($debug_info, JSON_PRETTY_PRINT);
         exit;
     }
 }
