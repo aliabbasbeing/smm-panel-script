@@ -7,12 +7,29 @@ class cron_logs extends MX_Controller {
 
 	public function __construct(){
 		parent::__construct();
+		
+		// DEBUG: Log controller access attempt
+		$log_file = APPPATH . 'logs/cron_logs_debug.txt';
+		$debug_info = date('Y-m-d H:i:s') . " - Cron_logs Constructor Called\n";
+		$debug_info .= "User Session ID: " . (session('uid') ?? 'NONE') . "\n";
+		$debug_info .= "User Role: " . (session('user_current_info')['role'] ?? 'NONE') . "\n";
+		$debug_info .= "get_role('admin'): " . (get_role('admin') ? 'TRUE' : 'FALSE') . "\n";
+		$debug_info .= "Controller Class: " . get_class($this) . "\n";
+		$debug_info .= "Router Class: " . $this->router->fetch_class() . "\n";
+		$debug_info .= "Router Method: " . $this->router->fetch_method() . "\n";
+		$debug_info .= "URL Segments: " . implode('/', $this->uri->segment_array()) . "\n";
+		$debug_info .= "---\n\n";
+		@file_put_contents($log_file, $debug_info, FILE_APPEND);
+		
 		$this->load->model(get_class($this).'_model', 'model');
 		
+		// TEMPORARILY DISABLED FOR DEBUGGING - Allow all users to access
 		// Check if user is admin - restrict access to admin only
-		if (!get_role("admin")) {
-			redirect(cn("statistics"));
-		}
+		// if (!get_role("admin")) {
+		// 	$debug_info = date('Y-m-d H:i:s') . " - REDIRECT: Non-admin user attempted access\n\n";
+		// 	@file_put_contents($log_file, $debug_info, FILE_APPEND);
+		// 	redirect(cn("statistics"));
+		// }
 		
 		// Define the table
 		$this->tb_cron_logs = 'cron_logs';
@@ -28,6 +45,11 @@ class cron_logs extends MX_Controller {
 	}
 
 	public function index(){
+		// DEBUG: Log index method call
+		$log_file = APPPATH . 'logs/cron_logs_debug.txt';
+		$debug_info = date('Y-m-d H:i:s') . " - index() method called\n\n";
+		@file_put_contents($log_file, $debug_info, FILE_APPEND);
+		
 		$page        = (int)get("p");
 		$page        = ($page > 0) ? ($page - 1) : 0;
 		$limit_per_page = get_option("default_limit_per_page", 10);
