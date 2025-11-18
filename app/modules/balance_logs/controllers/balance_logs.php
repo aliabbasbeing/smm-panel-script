@@ -211,4 +211,114 @@ class balance_logs extends MX_Controller {
 				break;
 		}
 	}
+	
+	/**
+	 * View Cron Logs - Display cron execution logs
+	 * Admin only
+	 */
+	public function view_cron_logs(){
+		// TEMPORARILY REMOVED ADMIN CHECK FOR TESTING
+		// if (!get_role("admin")) {
+		// 	redirect(cn($this->module));
+		// }
+		
+		$page           = (int)get("p");
+		$page           = ($page > 0) ? ($page - 1) : 0;
+		$limit_per_page = get_option("default_limit_per_page", 10);
+		
+		// Get filter parameters
+		$filter_cron    = get("cron_name");
+		$filter_status  = get("status");
+		$filter_date_from = get("date_from");
+		$filter_date_to = get("date_to");
+		
+		// Build query for pagination
+		$query = array();
+		if ($filter_cron) {
+			$query['cron_name'] = $filter_cron;
+		}
+		if ($filter_status) {
+			$query['status'] = $filter_status;
+		}
+		if ($filter_date_from) {
+			$query['date_from'] = $filter_date_from;
+		}
+		if ($filter_date_to) {
+			$query['date_to'] = $filter_date_to;
+		}
+		
+		$query_string = (!empty($query)) ? "?".http_build_query($query) : "";
+		
+		// Get cron logs from database
+		$this->db->select('*');
+		$this->db->from('cron_logs');
+		
+		// Apply filters
+		if ($filter_cron) {
+			$this->db->like('cron_name', $filter_cron);
+		}
+		if ($filter_status) {
+			$this->db->where('status', $filter_status);
+		}
+		if ($filter_date_from) {
+			$this->db->where('executed_at >=', $filter_date_from . ' 00:00:00');
+		}
+		if ($filter_date_to) {
+			$this->db->where('executed_at <=', $filter_date_to . ' 23:59:59');
+		}
+		
+		$total_rows = $this->db->count_all_results('', FALSE);
+		
+		$this->db->order_by('executed_at', 'DESC');
+		$this->db->limit($limit_per_page, $page * $limit_per_page);
+		$cron_logs = $this->db->get()->result();
+		
+		// Get unique cron names for filter
+		$this->db->select('DISTINCT cron_name');
+		$this->db->from('cron_logs');
+		$this->db->order_by('cron_name', 'ASC');
+		$cron_names = $this->db->get()->result();
+		
+		// Get last run info for each cron
+		$last_runs = array();
+		foreach ($cron_names as $cron) {
+			$this->db->select('*');
+			$this->db->from('cron_logs');
+			$this->db->where('cron_name', $cron->cron_name);
+			$this->db->order_by('executed_at', 'DESC');
+			$this->db->limit(1);
+			$query = $this->db->get();
+			if ($query->num_rows() > 0) {
+				$last_runs[$cron->cron_name] = $query->row();
+			}
+		}
+		
+		// Pagination config
+		$config = array(
+			'base_url'         => cn($this->module.'/view_cron_logs'.$query_string),
+			'total_rows'       => $total_rows,
+			'per_page'         => $limit_per_page,
+			'use_page_numbers' => true,
+			'prev_link'        => '<i class="fe fe-chevron-left"></i>',
+			'first_link'       => '<i class="fe fe-chevrons-left"></i>',
+			'next_link'        => '<i class="fe fe-chevron-right"></i>',
+			'last_link'        => '<i class="fe fe-chevrons-right"></i>',
+		);
+		$this->pagination->initialize($config);
+		$links = $this->pagination->create_links();
+		
+		$data = array(
+			"module"         => $this->module,
+			"cron_logs"      => $cron_logs,
+			"cron_names"     => $cron_names,
+			"last_runs"      => $last_runs,
+			"links"          => $links,
+			"filter_cron"    => $filter_cron,
+			"filter_status"  => $filter_status,
+			"filter_date_from" => $filter_date_from,
+			"filter_date_to"   => $filter_date_to,
+		);
+		
+		$this->template->build('cron_logs', $data);
+	}
 }

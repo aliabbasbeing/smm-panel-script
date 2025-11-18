@@ -42,6 +42,9 @@ class Order_completion_cron extends CI_Controller {
         // Load database library
         $this->load->database();
         
+        // Load cron logger
+        $this->load->library('cron_logger');
+        
         $this->tb_orders = ORDER;
         $this->tb_services = SERVICES;
     }
@@ -51,6 +54,9 @@ class Order_completion_cron extends CI_Controller {
      * Route: /cron/completion_time
      */
     public function calculate_avg_completion() {
+        // Start logging
+        $log_id = $this->cron_logger->start('cron/completion_time');
+        
         try {
             echo "Starting average completion time calculation...<br>";
             
@@ -94,6 +100,9 @@ class Order_completion_cron extends CI_Controller {
             echo "Completed! Updated {$updated_count} services.<br>";
             echo "Successfully";
             
+            // Log success
+            $this->cron_logger->end($log_id, 'Success', 200, "Updated {$updated_count} services");
+            
         } catch (Exception $e) {
             // Log the error
             log_message('error', 'Order completion cron error: ' . $e->getMessage());
@@ -101,6 +110,9 @@ class Order_completion_cron extends CI_Controller {
             // Output error message
             echo "Error: " . $e->getMessage() . "<br>";
             echo "Failed";
+            
+            // Log failure
+            $this->cron_logger->end($log_id, 'Failed', 500, $e->getMessage());
             
             // Write to error log if logging is available
             if (function_exists('error_log')) {

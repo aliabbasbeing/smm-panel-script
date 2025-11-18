@@ -886,3 +886,31 @@ $lang["Set as Default"] = "Set as Default";
 $lang["Update"] = "Update";
 $lang["Add"] = "Add";
 
+/*----------  Cron Logs  ----------*/
+$lang["Cron_Logs"] = "Cron Logs";
+$lang["Cron_Name"] = "Cron Name";
+$lang["Executed_At"] = "Executed At";
+$lang["Response_Code"] = "Response Code";
+$lang["Execution_Time"] = "Execution Time";
+$lang["Response_Message"] = "Response Message";
+$lang["Cron_Execution_Logs"] = "Cron Execution Logs";
+$lang["Last_Run_Summary"] = "Last Run Summary";
+$lang["Last_Execution"] = "Last Execution";
+$lang["All_Crons"] = "All Crons";
+$lang["All_Status"] = "All Status";
+$lang["Date_From"] = "Date From";
+$lang["Date_To"] = "Date To";
+$lang["Filter"] = "Filter";
+$lang["Reset"] = "Reset";
+$lang["Cleanup_Old_Logs"] = "Cleanup Old Logs";
+$lang["Clear_All"] = "Clear All";
+$lang["No_cron_logs_found"] = "No cron logs found";
+$lang["Cron_logs_will_appear_here_after_crons_are_executed"] = "Cron logs will appear here after crons are executed";
+$lang["Cron_triggered_successfully"] = "Cron triggered successfully";
+$lang["Cron_trigger_failed"] = "Cron trigger failed";
+$lang["Invalid_cron_path"] = "Invalid cron path";
+$lang["old_records"] = "old records";
+$lang["View_Cron_Logs"] = "View Cron Logs";
+$lang["Filter_Cron_Logs"] = "Filter Cron Logs";
+$lang["Back_to_Balance_Logs"] = "Back to Balance Logs";
+
