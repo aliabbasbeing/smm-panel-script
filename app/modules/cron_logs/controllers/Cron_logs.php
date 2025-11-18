@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
  
-class Cron_logs extends MX_Controller {
+class cron_logs extends MX_Controller {
 	public $tb_cron_logs;
 	public $columns;
 
