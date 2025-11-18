@@ -134,6 +134,9 @@ define("SUBSCRIBERS", "general_subscribers");
 define("PAYMENTS_METHOD", "payments");
 define("PAYMENTS_BONUSES", "payments_bonus");
 
+// Cron Logs
+define("CRON_LOGS", "cron_logs");
+
 // Email Marketing
 define("EMAIL_CAMPAIGNS", "email_campaigns");
 define("EMAIL_TEMPLATES", "email_templates");
