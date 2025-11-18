@@ -78,22 +78,6 @@ class MX_Controller
 			if (isset($_COOKIE["lc_verified"]) && $_COOKIE["lc_verified"] != "") {
 	          $cookie_lc_verified = base64_decode($_COOKIE["lc_verified"]);
 	        }
-	        
-	        // DEBUG: Log permission check for balance_logs/cron_logs
-	        if ($this->router->fetch_class() == 'balance_logs' && segment(2) == 'cron_logs') {
-		        $log_file = APPPATH . 'logs/balance_logs_cron_debug.txt';
-		        $debug_info = date('Y-m-d H:i:s') . " - MX_Controller Permission Check\n";
-		        $debug_info .= "User Role: " . $user['role'] . "\n";
-		        $debug_info .= "Controller: " . $this->router->fetch_class() . "\n";
-		        $debug_info .= "Method (segment 2): " . segment(2) . "\n";
-		        $debug_info .= "Allowed Controllers: " . implode(', ', $user_allowed_controllers) . "\n";
-		        $debug_info .= "Is controller in allowed list: " . (in_array($this->router->fetch_class(), $user_allowed_controllers) ? 'YES' : 'NO') . "\n";
-		        $debug_info .= "Is segment(2) == 'update': " . (segment(2) == 'update' ? 'YES' : 'NO') . "\n";
-		        $debug_info .= "Will redirect: " . (($user['role'] != 'admin' && (in_array($this->router->fetch_class(), $user_allowed_controllers) || segment(2) == 'update')) ? 'YES' : 'NO') . "\n";
-		        $debug_info .= "---\n\n";
-		        @file_put_contents($log_file, $debug_info, FILE_APPEND);
-	        }
-	        
 			if ($user['role'] != 'admin' && (in_array($this->router->fetch_class(), $user_allowed_controllers) || in_array(segment(2), ['update']))) {
 				redirect(PATH."statistics");
 			}

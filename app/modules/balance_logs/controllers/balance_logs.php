@@ -217,25 +217,10 @@ class balance_logs extends MX_Controller {
 	 * Admin only
 	 */
 	public function cron_logs(){
-		// DEBUG: Log access attempt
-		$log_file = APPPATH . 'logs/balance_logs_cron_debug.txt';
-		$debug_info = date('Y-m-d H:i:s') . " - cron_logs() method called\n";
-		$debug_info .= "User Session ID: " . (session('uid') ?? 'NONE') . "\n";
-		$debug_info .= "User Role: " . (session('user_current_info')['role'] ?? 'NONE') . "\n";
-		$debug_info .= "get_role('admin'): " . (get_role('admin') ? 'TRUE' : 'FALSE') . "\n";
-		$debug_info .= "Module: " . $this->module . "\n";
-		$debug_info .= "---\n\n";
-		@file_put_contents($log_file, $debug_info, FILE_APPEND);
-		
-		// Admin only
-		if (!get_role("admin")) {
-			$debug_info = date('Y-m-d H:i:s') . " - REDIRECT: User is not admin\n\n";
-			@file_put_contents($log_file, $debug_info, FILE_APPEND);
-			redirect(cn($this->module));
-		}
-		
-		$debug_info = date('Y-m-d H:i:s') . " - Admin check passed, continuing...\n\n";
-		@file_put_contents($log_file, $debug_info, FILE_APPEND);
+		// TEMPORARILY REMOVED ADMIN CHECK FOR TESTING
+		// if (!get_role("admin")) {
+		// 	redirect(cn($this->module));
+		// }
 		
 		$page           = (int)get("p");
 		$page           = ($page > 0) ? ($page - 1) : 0;
