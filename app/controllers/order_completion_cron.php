@@ -1,6 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+// Enable error display immediately to catch any initialization errors
+@ini_set('display_errors', '1');
+@error_reporting(E_ALL);
+
 /**
  * Order Completion Time Cron Controller
  * 
@@ -12,19 +16,28 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * 
  * Route: /cron/completion_time
  */
-class Order_completion_cron extends MX_Controller {
+class Order_completion_cron extends CI_Controller {
     
     public $tb_orders;
     public $tb_services;
     
     public function __construct() {
-        parent::__construct();
-        
-        // Load database library
-        $this->load->database();
-        
-        $this->tb_orders = ORDER;
-        $this->tb_services = SERVICES;
+        try {
+            parent::__construct();
+            
+            // Load database library
+            $this->load->database();
+            
+            $this->tb_orders = ORDER;
+            $this->tb_services = SERVICES;
+        } catch (Exception $e) {
+            // If constructor fails, log and display error
+            echo "Constructor error: " . $e->getMessage() . "<br>";
+            if (function_exists('log_message')) {
+                log_message('error', 'Order completion cron constructor error: ' . $e->getMessage());
+            }
+            throw $e; // Re-throw to prevent execution
+        }
     }
     
     /**
@@ -32,12 +45,17 @@ class Order_completion_cron extends MX_Controller {
      * Route: /cron/completion_time
      */
     public function calculate_avg_completion() {
+        // Output immediately to ensure something is displayed
+        echo "Cron endpoint accessed<br>";
+        flush();
+        
         // Enable error output for this cron to prevent blank pages
         @ini_set('display_errors', '1');
         @error_reporting(E_ALL);
         
         try {
             echo "Starting average completion time calculation...<br>";
+            flush();
             
             // Verify database connection
             if (!$this->db->conn_id) {
@@ -73,6 +91,7 @@ class Order_completion_cron extends MX_Controller {
                 
                 if ($updated_count % 50 == 0) {
                     echo "Processed {$updated_count} services...<br>";
+                    flush();
                 }
             }
             
