@@ -213,10 +213,10 @@ class balance_logs extends MX_Controller {
 	}
 	
 	/**
-	 * Cron Logs - Display cron execution logs
+	 * View Cron Logs - Display cron execution logs
 	 * Admin only
 	 */
-	public function cron_logs(){
+	public function view_cron_logs(){
 		// TEMPORARILY REMOVED ADMIN CHECK FOR TESTING
 		// if (!get_role("admin")) {
 		// 	redirect(cn($this->module));
@@ -295,7 +295,7 @@ class balance_logs extends MX_Controller {
 		
 		// Pagination config
 		$config = array(
-			'base_url'         => cn($this->module.'/cron_logs'.$query_string),
+			'base_url'         => cn($this->module.'/view_cron_logs'.$query_string),
 			'total_rows'       => $total_rows,
 			'per_page'         => $limit_per_page,
 			'use_page_numbers' => true,

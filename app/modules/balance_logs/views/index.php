@@ -55,7 +55,7 @@
   </h1>
   <?php if (get_role('admin')): ?>
   <div class="page-options">
-    <a href="<?=cn($module.'/cron_logs')?>" class="btn btn-info">
+    <a href="<?=cn($module.'/view_cron_logs')?>" class="btn btn-info">
       <i class="fe fe-activity"></i> <?=lang('View_Cron_Logs')?>
     </a>
   </div>
@@ -72,7 +72,7 @@
       
       <div class="d-flex align-items-center">
         <?php if (get_role('admin')): ?>
-          <a href="<?=cn($module.'/cron_logs')?>" class="btn btn-info btn-sm mr-3">
+          <a href="<?=cn($module.'/view_cron_logs')?>" class="btn btn-info btn-sm mr-3">
             <i class="fe fe-activity"></i> <?=lang('View_Cron_Logs')?>
           </a>
         <?php endif; ?>
