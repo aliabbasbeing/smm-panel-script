@@ -33,6 +33,7 @@ class api_provider extends MX_Controller {
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
 		$this->model->get_class();
+		$this->load->library('cron_logger');
 
 		$this->tb_users         = USERS;
 		$this->tb_categories    = CATEGORIES;
@@ -804,37 +805,47 @@ class api_provider extends MX_Controller {
 	| NOTE: sync_services here now maps is_enable_sync_price => enable_sync_options
 	--------------------------------------------------------------*/
 	public function cron($type = ""){
+		// Start logging
+		$log_id = $this->cron_logger->start('cron/' . $type);
+		
 		switch ($type) {
 
 			case 'order':
-				$this->cron_place_orders();
+				$this->cron_place_orders($log_id);
 				break;
 
 			case 'status_subscriptions':
-				$this->cron_status_subscriptions();
+				$this->cron_status_subscriptions($log_id);
 				break;
 
 			case 'status':
-				$this->cron_status_orders();
+				$this->cron_status_orders($log_id);
 				break;
 
 			case 'sync_services':
-				$this->cron_sync_services();
+				$this->cron_sync_services($log_id);
 				break;
 		}
 	}
 
-	private function cron_place_orders(){
+	private function cron_place_orders($log_id = null){
 		$orders = $this->model->get_all_orders();
 		if (empty($orders)) {
 			echo "There is no order at the present.<br>Successfully";
+			if ($log_id) {
+				$this->cron_logger->end($log_id, 'Success', 200, 'No orders to process');
+			}
 			return;
 		}
+
+		$processed = 0;
+		$errors = 0;
 
 		foreach ($orders as $row) {
 			$api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id]);
 			if (empty($api)) {
 				echo "API Provider does not exists.<br>";
+				$errors++;
 				continue;
 			}
 			$data_post = [
@@ -913,6 +924,7 @@ class api_provider extends MX_Controller {
 					"note"    => 'Troubleshooting API requests',
 					"changed" => NOW,
 				], ["id" => $row->id]);
+				$errors++;
 				continue;
 			}
 
@@ -923,25 +935,39 @@ class api_provider extends MX_Controller {
 					"note"    => $response->error,
 					"changed" => NOW,
 				], ["id" => $row->id]);
+				$errors++;
 				continue;
 			}
 
 			if (!empty($response->order)) {
 				$this->db->update($this->tb_orders, ["api_order_id" => $response->order, "changed" => NOW], ["id" => $row->id]);
+				$processed++;
 			}
 		}
 		echo "Successfully";
+		
+		// Log the result
+		if ($log_id) {
+			$message = "Processed {$processed} orders" . ($errors > 0 ? ", {$errors} errors" : "");
+			$status = ($errors == 0 || $processed > 0) ? 'Success' : 'Failed';
+			$this->cron_logger->end($log_id, $status, 200, $message);
+		}
 	}
 
-	private function cron_status_subscriptions(){
+	private function cron_status_subscriptions($log_id = null){
 		$orders = $this->model->get_all_subscriptions_status();
 		$new_currency_rate = get_option('new_currecry_rate', 1);
 		if ($new_currency_rate == 0) $new_currency_rate = 1;
 
 		if (empty($orders)) {
 			echo "There is no order at the present.<br>Successfully";
+			if ($log_id) {
+				$this->cron_logger->end($log_id, 'Success', 200, 'No subscriptions to check');
+			}
 			return;
 		}
+
+		$processed = 0;
 
 		foreach ($orders as $row) {
 			$api = $this->model->get("id, url, key", $this->tb_api_providers, ["id" => $row->api_provider_id] );
@@ -993,22 +1019,33 @@ class api_provider extends MX_Controller {
 					}
 				}
 				$this->db->update($this->tb_orders, $data, ["id" => $row->id]);
+				$processed++;
 			}
 		}
 		echo "Successfully";
+		
+		// Log the result
+		if ($log_id) {
+			$this->cron_logger->end($log_id, 'Success', 200, "Checked {$processed} subscriptions");
+		}
 	}
 
-	private function cron_status_orders(){
+	private function cron_status_orders($log_id = null){
     $limit = 50;
     $orders = $this->model->get_all_orders_status($limit, 0);
 
     if (empty($orders)) {
         echo "There is no order at the present.<br>Successfully";
+        if ($log_id) {
+            $this->cron_logger->end($log_id, 'Success', 200, 'No orders to check');
+        }
         return;
     }
 
     $new_currency_rate = get_option('new_currecry_rate', 1);
     if ($new_currency_rate == 0) $new_currency_rate = 1;
+
+    $processed = 0;
 
     foreach ($orders as $row) {
         echo "Checking Order ID: {$row->id}<br>"; // ✅ log every checked order
@@ -1134,15 +1171,21 @@ class api_provider extends MX_Controller {
                     }
                 }
                 $this->db->update($this->tb_orders, $data, ["id" => $row->id]);
+                $processed++;
             }
         }
     }
 
     echo "Successfully";
+    
+    // Log the result
+    if ($log_id) {
+        $this->cron_logger->end($log_id, 'Success', 200, "Checked {$processed} orders");
+    }
 }
 
 
-	private function cron_sync_services(){
+	private function cron_sync_services($log_id = null){
 		ini_set('max_execution_time', 300000);
 
 		$defaut_auto_sync = get_option("defaut_auto_sync_service_setting", '{"price_percentage_increase":50,"sync_request":0,"new_currency_rate":"1","is_enable_sync_price":0,"is_convert_to_new_currency":0}');
@@ -1170,6 +1213,8 @@ class api_provider extends MX_Controller {
     0,
     2
 );
+
+		$synced_apis = 0;
 
 
 		foreach ($apis as $api) {
@@ -1201,8 +1246,14 @@ class api_provider extends MX_Controller {
 			];
 
 			$this->sync_services_by_api($data_item);
+			$synced_apis++;
 		}
 		echo "Successfully";
+		
+		// Log the result
+		if ($log_id) {
+			$this->cron_logger->end($log_id, 'Success', 200, "Synced {$synced_apis} API providers");
+		}
 	}
 
 	/*--------------------------------------------------------------
