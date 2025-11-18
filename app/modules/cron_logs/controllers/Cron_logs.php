@@ -9,6 +9,11 @@ class cron_logs extends MX_Controller {
 		parent::__construct();
 		$this->load->model(get_class($this).'_model', 'model');
 		
+		// Check if user is admin - restrict access to admin only
+		if (!get_role("admin")) {
+			redirect(cn("statistics"));
+		}
+		
 		// Define the table
 		$this->tb_cron_logs = 'cron_logs';
 		
