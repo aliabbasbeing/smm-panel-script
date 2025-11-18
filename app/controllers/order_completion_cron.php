@@ -1,9 +1,10 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-// Enable error display immediately to catch any initialization errors
-@ini_set('display_errors', '1');
-@error_reporting(E_ALL);
+// Suppress PHP 8.x deprecation warnings for this cron endpoint
+// These are compatibility issues with CodeIgniter 3.x running on PHP 8.x
+@error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
+@ini_set('display_errors', '0');
 
 /**
  * Order Completion Time Cron Controller
@@ -22,22 +23,27 @@ class Order_completion_cron extends CI_Controller {
     public $tb_services;
     
     public function __construct() {
+        // Suppress errors during parent construction (session issues on PHP 8.x)
+        $error_level = error_reporting();
+        error_reporting(0);
+        
         try {
             parent::__construct();
-            
-            // Load database library
-            $this->load->database();
-            
-            $this->tb_orders = ORDER;
-            $this->tb_services = SERVICES;
         } catch (Exception $e) {
-            // If constructor fails, log and display error
-            echo "Constructor error: " . $e->getMessage() . "<br>";
-            if (function_exists('log_message')) {
-                log_message('error', 'Order completion cron constructor error: ' . $e->getMessage());
-            }
-            throw $e; // Re-throw to prevent execution
+            // Session initialization may fail on PHP 8.x, but we don't need sessions for cron
+            // Continue anyway
+        } catch (TypeError $e) {
+            // PHP 8.x type errors from session callbacks - safe to ignore for cron
         }
+        
+        // Restore error reporting for our code
+        error_reporting($error_level);
+        
+        // Load database library
+        $this->load->database();
+        
+        $this->tb_orders = ORDER;
+        $this->tb_services = SERVICES;
     }
     
     /**
@@ -45,17 +51,8 @@ class Order_completion_cron extends CI_Controller {
      * Route: /cron/completion_time
      */
     public function calculate_avg_completion() {
-        // Output immediately to ensure something is displayed
-        echo "Cron endpoint accessed<br>";
-        flush();
-        
-        // Enable error output for this cron to prevent blank pages
-        @ini_set('display_errors', '1');
-        @error_reporting(E_ALL);
-        
         try {
             echo "Starting average completion time calculation...<br>";
-            flush();
             
             // Verify database connection
             if (!$this->db->conn_id) {
@@ -91,7 +88,6 @@ class Order_completion_cron extends CI_Controller {
                 
                 if ($updated_count % 50 == 0) {
                     echo "Processed {$updated_count} services...<br>";
-                    flush();
                 }
             }
             
