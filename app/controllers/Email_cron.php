@@ -10,6 +10,7 @@ class Email_cron extends CI_Controller {
         parent::__construct();
         $this->load->model('email_marketing/email_marketing_model', 'email_model');
         $this->load->library('email');
+                $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('email_cron_token', md5('email_marketing_cron_' . ENCRYPTION_KEY));
@@ -21,9 +22,11 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        $log_id = $this->cron_logger->start('cron/email_marketing');
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
             show_404();
             return;
         }
@@ -56,6 +59,11 @@ class Email_cron extends CI_Controller {
         
         // Process emails
         $result = $this->process_emails($campaign_id);
+        // Log the result
+        $status = ($result['status'] == 'success' || $result['status'] == 'info') ? 'Success' : 'Failed';
+        $response_code = ($status == 'Success') ? 200 : 500;
+        $message = $result['message'] . ' (Sent: ' . $result['emails_sent'] . ')';
+        $this->cron_logger->end($log_id, $status, $response_code, $message);
         
         $this->respond($result);
     }

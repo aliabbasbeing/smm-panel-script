@@ -211,4 +211,84 @@ class balance_logs extends MX_Controller {
 				break;
 		}
 	}
+	
+	/**
+	 * View Execution Logs - Display cron execution logs
+	 * Admin only
+	 * 
+	 * RENAMED FROM: view_cron_logs
+	 * REASON: Avoid conflict with license check system that detects "cron" in segment(2)
+	 */
+	public function view_execution_logs(){
+    if (!get_role("admin") && !get_role("supporter")) {
+        redirect(cn($this->module));
+    }
+    
+    // Get filter parameters
+    $filter_status  = get("status") ? get("status") : '';
+    $search_cron    = get("search") ? get("search") : '';
+    
+    // Get all unique cron names
+    $this->db->distinct();
+    $this->db->select('cron_name');
+    $this->db->from('cron_logs');
+    if ($search_cron) {
+        $this->db->like('cron_name', $search_cron);
+    }
+    $this->db->order_by('cron_name', 'ASC');
+    $cron_names = $this->db->get()->result();
+    
+    // Get last run info for each cron with statistics
+    $cron_summary = array();
+    foreach ($cron_names as $cron) {
+        // Get last execution
+        $this->db->select('*');
+        $this->db->from('cron_logs');
+        $this->db->where('cron_name', $cron->cron_name);
+        $this->db->order_by('executed_at', 'DESC');
+        $this->db->limit(1);
+        $last_run = $this->db->get()->row();
+        
+        if ($last_run) {
+            // Apply status filter
+            if ($filter_status && $last_run->status != $filter_status) {
+                continue;
+            }
+            
+            // Get statistics for this cron
+            $this->db->select('COUNT(*) as total_runs, SUM(CASE WHEN status = "Success" THEN 1 ELSE 0 END) as success_count, SUM(CASE WHEN status = "Failed" THEN 1 ELSE 0 END) as failed_count, AVG(execution_time) as avg_time');
+            $this->db->from('cron_logs');
+            $this->db->where('cron_name', $cron->cron_name);
+            $stats = $this->db->get()->row();
+            
+            $cron_summary[] = (object)[
+                'cron_name' => $cron->cron_name,
+                'last_run' => $last_run,
+                'stats' => $stats
+            ];
+        }
+    }
+    
+    // Calculate overall statistics
+    $this->db->select('COUNT(*) as total_executions, SUM(CASE WHEN status = "Success" THEN 1 ELSE 0 END) as total_success, SUM(CASE WHEN status = "Failed" THEN 1 ELSE 0 END) as total_failed');
+    $this->db->from('cron_logs');
+    $overall_stats = $this->db->get()->row();
+    
+    // Get total unique crons
+    $this->db->distinct();
+    $this->db->select('cron_name');
+    $this->db->from('cron_logs');
+    $total_crons = $this->db->count_all_results();
+    
+    $data = array(
+        "module"         => $this->module,
+        "cron_summary"   => $cron_summary,
+        "overall_stats"  => $overall_stats,
+        "total_crons"    => $total_crons,
+        "filter_status"  => $filter_status,
+        "search_cron"    => $search_cron,
+    );
+    
+    $this->template->build('execution_logs', $data);
+}
 }

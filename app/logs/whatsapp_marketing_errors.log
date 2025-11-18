@@ -3308,3 +3308,67 @@ URL: /whatsapp_marketing/campaign_details/93f7bc92183ee7310b4c9233ceb8d7ec
 Method: GET
 User IP: 154.198.114.132
 ================================================================================
+
+================================================================================
+[2025-11-18 16:47:15] WhatsApp Marketing Error
+Context: Campaign Details Access
+Error: Accessing campaign: 93f7bc92183ee7310b4c9233ceb8d7ec
+Additional Data: Array
+(
+    [ids] => 93f7bc92183ee7310b4c9233ceb8d7ec
+)
+
+URL: /whatsapp_marketing/campaign_details/93f7bc92183ee7310b4c9233ceb8d7ec
+Method: GET
+User IP: 154.198.113.200
+================================================================================
+
+================================================================================
+[2025-11-18 16:47:15] WhatsApp Marketing Error
+Context: Campaign Details
+Error: Campaign found
+Additional Data: Array
+(
+    [campaign] => stdClass Object
+        (
+            [id] => 1
+            [ids] => 93f7bc92183ee7310b4c9233ceb8d7ec
+            [name] => Ali Abbas
+            [template_id] => 1
+            [api_config_id] => 1
+            [status] => running
+            [total_messages] => 1441
+            [sent_messages] => 53
+            [failed_messages] => 26
+            [sending_limit_hourly] => 100
+            [sending_limit_daily] => 1000
+            [last_sent_at] => 2025-11-16 12:45:48
+            [started_at] => 2025-11-14 18:30:08
+            [completed_at] => 
+            [created_at] => 2025-11-14 17:28:59
+            [updated_at] => 2025-11-16 16:29:36
+            [template_name] => Welcome Message
+            [api_name] => Default WhatsApp API
+        )
+
+)
+
+URL: /whatsapp_marketing/campaign_details/93f7bc92183ee7310b4c9233ceb8d7ec
+Method: GET
+User IP: 154.198.113.200
+================================================================================
+
+================================================================================
+[2025-11-18 16:47:15] WhatsApp Marketing Error
+Context: Campaign Details
+Error: Data loaded successfully
+Additional Data: Array
+(
+    [recipients_count] => 100
+    [logs_count] => 50
+)
+
+URL: /whatsapp_marketing/campaign_details/93f7bc92183ee7310b4c9233ceb8d7ec
+Method: GET
+User IP: 154.198.113.200
+================================================================================

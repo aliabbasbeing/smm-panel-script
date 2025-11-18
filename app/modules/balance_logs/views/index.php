@@ -53,6 +53,13 @@
     <i class="fe fe-activity" aria-hidden="true"> </i> 
     <?=lang("Balance_Logs")?>
   </h1>
+  <?php if (get_role('admin')): ?>
+  <div class="page-options">
+    <a href="<?=cn($module.'/view_execution_logs')?>" class="btn btn-info">
+      <i class="fe fe-activity"></i> <?=lang('View_Cron_Logs')?>
+    </a>
+  </div>
+  <?php endif; ?>
 </div>
 
 <div class="row" id="result_ajaxSearch">
@@ -63,25 +70,33 @@
     <div class="balance-logs-card-header">
       <h3 class="balance-logs-card-title"><?= lang('Balance_Change_History') ?></h3>
       
-      <?php if (get_role('admin') || get_role('supporter')): ?>
-        <div class="search-form">
-          <form action="<?=cn($module."/search")?>" method="get" class="form-inline">
-            <div class="form-group mr-2">
-              <select name="search_type" class="form-control">
-                <option value="1"><?=lang('User_Email')?></option>
-                <option value="2"><?=lang('Related_ID')?></option>
-                <option value="3"><?=lang('Action_Type')?></option>
-              </select>
-            </div>
-            <div class="form-group mr-2">
-              <input type="text" name="query" class="form-control" placeholder="<?=lang('Search')?>" value="<?=get('query')?>">
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm">
-              <i class="fe fe-search"></i> <?=lang('Search')?>
-            </button>
-          </form>
-        </div>
-      <?php endif; ?>
+      <div class="d-flex align-items-center">
+        <?php if (get_role('admin')): ?>
+          <a href="<?=cn($module.'/view_execution_logs')?>" class="btn btn-info btn-sm mr-3">
+            <i class="fe fe-activity"></i> <?=lang('View_Cron_Logs')?>
+          </a>
+        <?php endif; ?>
+        
+        <?php if (get_role('admin') || get_role('supporter')): ?>
+          <div class="search-form">
+            <form action="<?=cn($module."/search")?>" method="get" class="form-inline">
+              <div class="form-group mr-2">
+                <select name="search_type" class="form-control">
+                  <option value="1"><?=lang('User_Email')?></option>
+                  <option value="2"><?=lang('Related_ID')?></option>
+                  <option value="3"><?=lang('Action_Type')?></option>
+                </select>
+              </div>
+              <div class="form-group mr-2">
+                <input type="text" name="query" class="form-control" placeholder="<?=lang('Search')?>" value="<?=get('query')?>">
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">
+                <i class="fe fe-search"></i> <?=lang('Search')?>
+              </button>
+            </form>
+          </div>
+        <?php endif; ?>
+      </div>
     </div>
 
     <div class="table-responsive">
