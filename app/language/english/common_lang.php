@@ -910,4 +910,7 @@ $lang["Cron_triggered_successfully"] = "Cron triggered successfully";
 $lang["Cron_trigger_failed"] = "Cron trigger failed";
 $lang["Invalid_cron_path"] = "Invalid cron path";
 $lang["old_records"] = "old records";
+$lang["View_Cron_Logs"] = "View Cron Logs";
+$lang["Filter_Cron_Logs"] = "Filter Cron Logs";
+$lang["Back_to_Balance_Logs"] = "Back to Balance Logs";
 

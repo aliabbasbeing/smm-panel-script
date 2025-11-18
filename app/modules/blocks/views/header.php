@@ -371,10 +371,6 @@
           <div class="nav-item" class="sidenavContent"><i class="fa fa-sort"></i><?=lang("user_activity_logs")?></div>
         </a>
         
-        <a href="<?=cn('cron_logs')?>" class="nav-link <?=(segment(1) == 'cron_logs')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fe fe-activity"></i><?=lang("Cron_Logs")?></div>
-        </a>
-        
         <a href="<?=cn('user_block_ip')?>" class="nav-link <?=(segment(1) == 'user' && segment(2) == 'mail' && segment(3) == 'logs')?"active":""?>">
           <div class="nav-item" class="sidenavContent"><i class="fa fa-ban"></i><?=lang("banned_ip_address")?></div>
         </a>
