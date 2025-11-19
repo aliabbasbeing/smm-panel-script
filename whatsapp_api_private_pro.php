@@ -3,9 +3,9 @@ session_start();
 
 // Database connection
 $host = 'localhost';
-$user = 'beastsmm_ali';
-$pass = 'ra6efcTo[4z#';
-$db = 'beastsmm_ali';
+$user = 'root';
+$pass = '';
+$db = 'beastsmm';
 
 $conn = new mysqli($host, $user, $pass, $db);
 
