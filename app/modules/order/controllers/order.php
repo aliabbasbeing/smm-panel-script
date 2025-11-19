@@ -928,7 +928,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                 $profit = $check_item->profit * (1 - ($remains / $check_item->quantity ));
             }
 
-            $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
+            $user = $this->model->get("id, balance, whatsapp_number", $this->tb_users, ["id"=> $check_item->uid]);
             if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
                 $balance = $user->balance;
                 $refund_amount = $charge - $real_charge;
@@ -946,6 +946,37 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                         $new_balance,               // new_balance
                         $status                     // reason
                     );
+                }
+
+                // Send WhatsApp notification for order cancellation or partial completion
+                $this->load->library('whatsapp_notification');
+                if ($this->whatsapp_notification->is_configured() && !empty($user->whatsapp_number)) {
+                    // Get service name
+                    $service = $this->model->get("name", SERVICES, ["id" => $check_item->service_id]);
+                    $service_name = isset($service->name) ? $service->name : 'Unknown Service';
+
+                    if ($status == "canceled" || $status == "refunded") {
+                        // Send order cancelled notification
+                        $variables = array(
+                            'order_id' => $check_item->id,
+                            'refund_amount' => number_format($refund_amount, 2),
+                            'service_name' => $service_name,
+                            'new_balance' => number_format($new_balance, 2)
+                        );
+                        $this->whatsapp_notification->send('order_cancelled', $variables, $user->whatsapp_number);
+                    } elseif ($status == "partial") {
+                        // Send order partial notification
+                        $delivered_quantity = $check_item->quantity - $remains;
+                        $variables = array(
+                            'order_id' => $check_item->id,
+                            'service_name' => $service_name,
+                            'delivered_quantity' => $delivered_quantity,
+                            'ordered_quantity' => $check_item->quantity,
+                            'refund_amount' => number_format($refund_amount, 2),
+                            'new_balance' => number_format($new_balance, 2)
+                        );
+                        $this->whatsapp_notification->send('order_partial', $variables, $user->whatsapp_number);
+                    }
                 }
             }
             $data['charge'] = $real_charge;

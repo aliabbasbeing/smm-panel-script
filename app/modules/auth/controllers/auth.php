@@ -907,6 +907,18 @@ public function ajax_sign_in() {
 				));
 			}
 
+			// Send WhatsApp notification for password reset
+			$this->load->library('whatsapp_notification');
+			if ($this->whatsapp_notification->is_configured() && !empty($user->whatsapp_number)) {
+				$reset_link = base_url('auth/reset_password/' . $user->reset_key);
+				$variables = array(
+					'username' => $user->first_name . ' ' . $user->last_name,
+					'reset_link' => $reset_link,
+					'expiry_minutes' => '60'
+				);
+				$this->whatsapp_notification->send('reset_password', $variables, $user->whatsapp_number);
+			}
+
 			ms(array(
 				"status"  => "success",
 				"message" => lang("we_have_send_you_a_link_to_reset_password_and_get_back_into_your_account_please_check_your_email"),
