@@ -198,9 +198,9 @@ class setting extends MX_Controller {
     }
 
     /**
-     * Save WhatsApp notification settings
+     * Save WhatsApp notification settings (individual template)
      */
-    public function ajax_whatsapp_notifications() {
+    public function ajax_save_notification_template() {
         if ($this->input->method() !== 'post') {
             ms([
                 'status'  => 'error',
@@ -208,50 +208,37 @@ class setting extends MX_Controller {
             ]);
         }
 
-        $notification_status = $this->input->post('notification_status', true);
-        $notification_template = $this->input->post('notification_template', true);
+        $event_type = $this->input->post('event_type', true);
+        $status = $this->input->post('status', true);
+        $template = $this->input->post('template', false); // Don't XSS filter template content
 
-        if (!is_array($notification_status)) {
-            $notification_status = array();
-        }
-        if (!is_array($notification_template)) {
-            $notification_template = array();
-        }
-
-        // Load WhatsApp notification library
-        $this->load->library('whatsapp_notification');
-
-        // Get all notifications from database
-        $all_notifications = $this->whatsapp_notification->get_all_notifications();
-
-        $updated_count = 0;
-
-        foreach ($all_notifications as $notification) {
-            $event_type = $notification->event_type;
-            
-            // Update status (1 if checked, 0 if not)
-            $status = isset($notification_status[$event_type]) ? 1 : 0;
-            
-            // Update template if provided
-            $template = isset($notification_template[$event_type]) ? trim($notification_template[$event_type]) : $notification->template;
-
-            // Update in database
-            $update_data = array(
-                'status' => $status,
-                'template' => $template
-            );
-
-            $this->db->where('event_type', $event_type);
-            $this->db->update('whatsapp_notifications', $update_data);
-
-            if ($this->db->affected_rows() > 0) {
-                $updated_count++;
-            }
+        if (empty($event_type)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Event type is required'
+            ]);
         }
 
-        ms([
-            'status'  => 'success',
-            'message' => lang('Update_successfully') . " ($updated_count notifications updated)"
-        ]);
+        // Update in database
+        $update_data = array(
+            'status' => $status == '1' ? 1 : 0,
+            'template' => trim($template)
+        );
+
+        $this->db->where('event_type', $event_type);
+        $this->db->update('whatsapp_notifications', $update_data);
+
+        // Check if update was successful
+        if ($this->db->affected_rows() >= 0) {
+            ms([
+                'status'  => 'success',
+                'message' => lang('Update_successfully')
+            ]);
+        } else {
+            ms([
+                'status'  => 'error',
+                'message' => 'Failed to update notification'
+            ]);
+        }
     }
 }

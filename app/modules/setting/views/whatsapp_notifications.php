@@ -105,14 +105,19 @@
                 </div>
             <?php else: ?>
                 
-                <form class="actionForm" method="POST" action="<?php echo cn('setting/ajax_whatsapp_notifications'); ?>" data-redirect="<?= get_current_url(); ?>">
+                <?php foreach ($notifications as $notification): 
+                    $variables = json_decode($notification->variables, true);
+                    if (!is_array($variables)) {
+                        $variables = array();
+                    }
+                ?>
                     
-                    <?php foreach ($notifications as $notification): 
-                        $variables = json_decode($notification->variables, true);
-                        if (!is_array($variables)) {
-                            $variables = array();
-                        }
-                    ?>
+                    <form class="actionForm notification-form-<?php echo $notification->event_type; ?>" 
+                          method="POST" 
+                          action="<?php echo cn('setting/ajax_save_notification_template'); ?>" 
+                          data-redirect="<?= get_current_url(); ?>">
+                        
+                        <input type="hidden" name="event_type" value="<?php echo $notification->event_type; ?>">
                         
                         <div class="notification-card mb-4">
                             <div class="notification-header">
@@ -124,7 +129,7 @@
                                     <div class="custom-control custom-switch custom-switch-lg">
                                         <input type="checkbox" 
                                                class="custom-control-input notification-toggle" 
-                                               name="notification_status[<?php echo $notification->event_type; ?>]" 
+                                               name="status" 
                                                id="status_<?php echo $notification->event_type; ?>"
                                                value="1"
                                                <?php echo ($notification->status == 1) ? 'checked' : ''; ?>>
@@ -150,7 +155,7 @@
                                     </label>
                                     <textarea 
                                         class="form-control template-textarea" 
-                                        name="notification_template[<?php echo $notification->event_type; ?>]" 
+                                        name="template" 
                                         rows="8"
                                         placeholder="Enter message template"><?php echo htmlspecialchars($notification->template); ?></textarea>
                                 </div>
@@ -168,17 +173,18 @@
                                         </small>
                                     </div>
                                 <?php endif; ?>
+                                
+                                <!-- Individual Save Button -->
+                                <div class="mt-3">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-save"></i> Save This Template
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                        
-                    <?php endforeach; ?>
+                    </form>
                     
-                    <div class="form-footer mt-4 pt-3" style="border-top: 2px solid #e9ecef;">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fa fa-save"></i> Save All Notification Templates
-                        </button>
-                    </div>
-                </form>
+                <?php endforeach; ?>
                 
             <?php endif; ?>
         </div>
