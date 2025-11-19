@@ -10,9 +10,12 @@
             $url = cn($module."/ajax_update");
           }
         ?>
-        <form class="form actionForm" action="<?=$url?>" method="POST">
+        <form class="form actionForm" action="<?=$url?>" method="POST" data-redirect="<?=cn($module)?>">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("edit_service")?></h4>
+            <h4 class="modal-title">
+              <i class="fa <?=($ids != "") ? 'fa-edit' : 'fa-plus'?>"></i> 
+              <?=($ids != "") ? lang("edit_service") : lang("add_new_service")?>
+            </h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -43,7 +46,7 @@
                     <div class="form-label"><?php echo lang("Type"); ?></div>
                     <div class="custom-controls-stacked">
                       <label class="custom-control custom-radio custom-control-inline">
-                        <input type="radio" class="custom-control-input" name="add_type" value="manual" <?php echo (isset($service->add_type) && $service->add_type == 'manual')? 'checked': ''?>>
+                        <input type="radio" class="custom-control-input" name="add_type" value="manual" <?php echo (!isset($service->add_type) || (isset($service->add_type) && $service->add_type == 'manual'))? 'checked': ''?>>
                         <span class="custom-control-label"><?php echo lang('Manual'); ?></span>
                       </label>
                       <label class="custom-control custom-radio custom-control-inline">
