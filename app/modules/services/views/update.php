@@ -20,18 +20,26 @@
             </button>
           </div>
           <div class="modal-body">
+            <!-- Alert area for validation errors -->
+            <div id="modal-alert-area" class="alert alert-danger d-none" role="alert">
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+              <span id="modal-alert-message"></span>
+            </div>
+            
             <div class="form-body" id="add_edit_service">
               <div class="row justify-content-md-center">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                   <div class="form-group emoji-picker-container">
-                    <label ><?=lang("package_name")?></label>
-                    <input type="text" data-emojiable="true" class="form-control square" name="name" value="<?=(!empty($service->name))? $service->name: ''?>">
+                    <label><?=lang("package_name")?> <span class="text-danger">*</span></label>
+                    <input type="text" data-emojiable="true" class="form-control square" name="name" value="<?=(!empty($service->name))? $service->name: ''?>" required>
                   </div>
                 </div>
                 <div class="col-md-12 col-sm-12 col-xs-12">
                   <div class="form-group">
-                    <label><?=lang("choose_a_category")?></label>
-                    <select  name="category" class="form-control square">
+                    <label><?=lang("choose_a_category")?> <span class="text-danger">*</span></label>
+                    <select name="category" class="form-control square" required>
                       <?php if(!empty($categories)){
                         foreach ($categories as $key => $category) {
                       ?>
@@ -134,22 +142,22 @@
 
                 <div class="col-md-4 col-sm-6 col-xs-6">
                   <div class="form-group">
-                    <label><?=lang("minimum_amount")?></label>
-                    <input type="number" class="form-control square" name="min" value="<?=(!empty($service->min))? $service->min :  get_option('default_min_order',"")?>">
+                    <label><?=lang("minimum_amount")?> <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control square" name="min" value="<?=(!empty($service->min))? $service->min :  get_option('default_min_order',"")?>" min="1" required>
                   </div>
                 </div>
 
                 <div class="col-md-4 col-sm-6 col-xs-6">
                   <div class="form-group">
-                    <label><?=lang("maximum_amount")?></label>
-                    <input type="number" class="form-control square" name="max" value="<?=(!empty($service->max))? $service->max : get_option('default_max_order',"")?>">
+                    <label><?=lang("maximum_amount")?> <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control square" name="max" value="<?=(!empty($service->max))? $service->max : get_option('default_max_order',"")?>" min="1" required>
                   </div>
                 </div>
 
                 <div class="col-md-4 col-sm-6 col-xs-6">
                   <div class="form-group">
-                    <label><?=lang("rate_per_1000")?></label>
-                    <input type="text" class="form-control square" name="price" value="<?=(!empty($service->price))? $service->price: currency_format(get_option('default_price_per_1k',"0.80"),2)?>">
+                    <label><?=lang("rate_per_1000")?> <span class="text-danger">*</span></label>
+                    <input type="number" step="0.01" class="form-control square" name="price" value="<?=(!empty($service->price))? $service->price: currency_format(get_option('default_price_per_1k',"0.80"),2)?>" min="0.01" required>
                   </div>
                 </div>
 
@@ -307,5 +315,62 @@
       pickerPosition: "top",
       tonesStyle: "bullet"
     });
+    
+    // Client-side form validation
+    $("#add_edit_service").closest("form").on("submit", function(e) {
+      // Clear any previous errors
+      $("#modal-alert-area").addClass("d-none");
+      $("#modal-alert-message").text("");
+      
+      // Validate required fields
+      var name = $("input[name='name']").val().trim();
+      var category = $("select[name='category']").val();
+      var min = $("input[name='min']").val();
+      var max = $("input[name='max']").val();
+      var price = $("input[name='price']").val();
+      
+      if (!name) {
+        showModalError("<?=lang('name_is_required')?>");
+        e.preventDefault();
+        return false;
+      }
+      
+      if (!category) {
+        showModalError("<?=lang('category_is_required')?>");
+        e.preventDefault();
+        return false;
+      }
+      
+      if (!min || min <= 0) {
+        showModalError("<?=lang('min_order_is_required')?>");
+        e.preventDefault();
+        return false;
+      }
+      
+      if (!max || max <= 0) {
+        showModalError("<?=lang('max_order_is_required')?>");
+        e.preventDefault();
+        return false;
+      }
+      
+      if (parseInt(min) > parseInt(max)) {
+        showModalError("<?=lang('max_order_must_to_be_greater_than_min_order')?>");
+        e.preventDefault();
+        return false;
+      }
+      
+      if (!price || price <= 0) {
+        showModalError("<?=lang('price_invalid')?>");
+        e.preventDefault();
+        return false;
+      }
+    });
+    
+    function showModalError(message) {
+      $("#modal-alert-message").text(message);
+      $("#modal-alert-area").removeClass("d-none");
+      // Scroll to top of modal to show error
+      $(".modal-body").animate({ scrollTop: 0 }, 300);
+    }
   });
 </script>
