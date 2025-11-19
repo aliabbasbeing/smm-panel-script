@@ -586,73 +586,41 @@ public function send_signup_alert($user_id) {
     $user_info = $this->model->get("*", $this->tb_users, ['id' => $user_id]);
 
     if (empty($user_info)) {
-        ms(array(
-            "status" => "error",
-            "message" => "User not found"
-        ));
+        log_message('error', 'WhatsApp Welcome: User not found - ID: ' . $user_id);
         return;
     }
 
-    // Get the WhatsApp configuration from the database
-    $whatsapp_config = $this->model->get("url, api_key, admin_phone", "whatsapp_config", []);
-    if (empty($whatsapp_config) || empty($whatsapp_config->url) || empty($whatsapp_config->api_key)) {
-        ms(array(
-            "status" => "error",
-            "message" => "WhatsApp API URL or API key not configured"
-        ));
+    // Load WhatsApp notification library
+    $this->load->library('whatsapp_notification');
+
+    // Check if configured
+    if (!$this->whatsapp_notification->is_configured()) {
+        log_message('error', 'WhatsApp Welcome: Not configured');
         return;
     }
-
-    // Get API URL, API key, and admin phone from config
-    $apiUrl = $whatsapp_config->url;
-    $apiKey = $whatsapp_config->api_key;
-    $adminPhone = $whatsapp_config->admin_phone;
 
     // Get the user's WhatsApp number
-    $user_phone_number = isset($user_info->whatsapp_number) ? $user_info->whatsapp_number : 'N/A';
+    $user_phone_number = isset($user_info->whatsapp_number) ? $user_info->whatsapp_number : '';
 
-    // Sanitize the phone number: Remove the leading '+' if it exists
-    $user_phone_number = ltrim($user_phone_number, '+');
+    if (empty($user_phone_number)) {
+        log_message('info', 'WhatsApp Welcome: No phone number for user ID: ' . $user_id);
+        return;
+    }
 
-    // Prepare the message
-    $message = "*Welcome to BeastSMM! 🎉* \n\n";
-    $message .= "Hello *{$user_info->first_name} {$user_info->last_name}* 👋,\n\n";
-    $message .= "Thank you for signing up with us! 🙏 Your registration has been successfully completed. ✅ \n\n";
-    $message .= "If you need help, just let us know! 😊💬 We're here to assist you! 🛠️";
-
-    // Send the WhatsApp message using cURL to the user's number
-    $data = array(
-        'apiKey' => $apiKey, // Include API key for validation
-        'phoneNumber' => $user_phone_number,
-        'message' => $message
+    // Prepare variables for the welcome message template
+    $variables = array(
+        'username' => $user_info->first_name . ' ' . $user_info->last_name,
+        'email' => $user_info->email,
+        'balance' => '0.00'
     );
 
-    // Initialize cURL
-    $ch = curl_init($apiUrl);
+    // Send welcome notification to the user
+    $result = $this->whatsapp_notification->send('welcome_message', $variables, $user_phone_number);
 
-    // Set cURL options
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    // Execute the cURL request
-    $response = curl_exec($ch);
-
-    // Close cURL session
-    curl_close($ch);
-
-    // Handle the response (optional)
-    if ($response === false) {
-        ms(array(
-            "status" => "error",
-            "message" => "Failed to send WhatsApp message to user"
-        ));
+    if ($result === true) {
+        log_message('info', 'WhatsApp Welcome: Sent to user ID: ' . $user_id);
     } else {
-        ms(array(
-            "status" => "success",
-            "message" => "Welcome, you have signed up successfully"
-        ));
+        log_message('error', 'WhatsApp Welcome: Failed - ' . $result);
     }
 }
 
