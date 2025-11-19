@@ -234,6 +234,18 @@ class tickets extends MX_Controller {
 						'message'  => $send_message,
 					));
 				}
+
+				// Send WhatsApp notification to admin for new support ticket
+				$this->load->library('whatsapp_notification');
+				if ($this->whatsapp_notification->is_configured()) {
+					$variables = array(
+						'ticket_id' => $ticket_id,
+						'user_email' => $user_info['email'],
+						'subject' => $subject,
+						'message' => truncate_string($description, 200)
+					);
+					$this->whatsapp_notification->send('support_ticket', $variables);
+				}
 			}
 
 			ms(array(

@@ -47,6 +47,7 @@ $lang["Copyright"]         = "Copyright &copy; 2019";
  *
  */
 $lang["add_new"]          = "Add new";
+$lang["add_new_service"]  = "Add New Service";
 $lang["Lists"]            = "Lists";
 $lang["No_"]              = "No.";
 $lang["Created"]          = "Created";

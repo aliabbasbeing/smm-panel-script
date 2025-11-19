@@ -566,89 +566,44 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             log_order_deduction(session("uid"), $order_id, $total_charge, $user_balance, $new_balance);
         }
 
-        /*---------- Helper Function to Send WhatsApp Notification ----------*/
-        function sendWhatsAppNotification($apiUrl, $apiKey, $phoneNumber, $message) {
-            // Prepare data for the POST request
-            $data = [
-                "apiKey" => $apiKey, // Include API key for validation
-                "phoneNumber" => $phoneNumber,
-                "message" => $message
-            ];
+        /*---------- Send Admin WhatsApp Notification ----------*/
+        // Load WhatsApp notification library
+        $this->load->library('whatsapp_notification');
 
-            // Initialize cURL
-            $ch = curl_init($apiUrl);
+        // Check if configured
+        if ($this->whatsapp_notification->is_configured()) {
+            // Fetch user details
+            $user = $this->model->get("email", $this->tb_users, "id = '" . session('uid') . "'");
+            $user_email = isset($user->email) ? $user->email : '';
 
-            // Set the headers
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                "Content-Type: application/json"
-            ]);
-
-            // Set the POST method and attach the data
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-            // Set options to return the response
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-
-            // Execute the cURL request
-            $response = curl_exec($ch);
-
-            // Check for errors
-            if (curl_errno($ch)) {
-                error_log("WhatsApp API Error: " . curl_error($ch));
+            // Format link
+            $formatted_link = '';
+            if (!empty($data_orders['link'])) {
+                $formatted_link = filter_var($data_orders['link'], FILTER_VALIDATE_URL) ? 
+                                preg_replace('#^https?://#', '', $data_orders['link']) : 
+                                truncate_string($data_orders['link'], 60);
             }
 
-            // Close cURL session
-            curl_close($ch);
+            // Prepare variables for order placed notification
+            $variables = array(
+                'order_id' => $order_id,
+                'total_charge' => $total_charge,
+                'quantity' => $data_orders['quantity'],
+                'link' => $formatted_link,
+                'user_email' => $user_email
+            );
 
-            return $response;
-        }
+            // Send order placed notification to admin
+            $result = $this->whatsapp_notification->send('order_placed', $variables);
 
-        /*---------- Send Admin WhatsApp Notification ----------*/
-        // Fetch WhatsApp configuration from the database
-        $whatsapp_config = $this->model->get("url, api_key, admin_phone", "whatsapp_config", []);
-        if (empty($whatsapp_config) || empty($whatsapp_config->url) || empty($whatsapp_config->api_key) || empty($whatsapp_config->admin_phone)) {
-            error_log("WhatsApp API URL, API key, or admin phone not configured.");
-            return false;
-        }
-
-        // Get the API URL, API key, and admin phone from config
-        $apiUrl = $whatsapp_config->url;
-        $apiKey = $whatsapp_config->api_key;
-        $adminPhone = $whatsapp_config->admin_phone;
-
-        // Fetch user details
-        $user = $this->model->get("email", $this->tb_users, "id = '" . session('uid') . "'");
-        $user_email = $user->email;
-
-        // Format link
-        $formatted_link = '';
-        if (!empty($data_orders['link'])) {
-            $formatted_link = filter_var($data_orders['link'], FILTER_VALIDATE_URL) ? 
-                            preg_replace('#^https?://#', '', $data_orders['link']) : 
-                            truncate_string($data_orders['link'], 60);
-        }
-
-        // Define admin message with formatted link and quantity
-        $admin_message = "*🔔 New Order Received*\n\n" .
-            "🔢 *Order ID:* #{$order_id}\n" .
-            "💰 *Total Charge:* " . get_option("currency_symbol", "") . $total_charge . "\n" .
-            "📦 *Quantity:* {$data_orders['quantity']}\n" .
-            "🔗 *Link:* {$formatted_link}\n" .
-            "📧 *User Email:* {$user_email}\n" .
-            "\nPlease review the order details.";
-
-        // Send admin notification
-        // Remove + from phone number if present
-        $adminPhone = ltrim($adminPhone, '+');
-        $response = sendWhatsAppNotification($apiUrl, $apiKey, $adminPhone, $admin_message);
-
-        // Log the response if needed
-        if ($response) {
-            error_log("Admin WhatsApp notification sent successfully: " . $response);
+            // Log the response
+            if ($result === true) {
+                error_log("Admin WhatsApp notification sent successfully for order #" . $order_id);
+            } else {
+                error_log("Failed to send admin WhatsApp notification: " . $result);
+            }
         } else {
-            error_log("Failed to send admin WhatsApp notification.");
+            error_log("WhatsApp API not configured.");
         }
         /*---------- Send Order notification email to Admin ----------*/
         if (get_option("is_order_notice_email", '')) {
@@ -973,7 +928,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                 $profit = $check_item->profit * (1 - ($remains / $check_item->quantity ));
             }
 
-            $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $check_item->uid]);
+            $user = $this->model->get("id, balance, whatsapp_number", $this->tb_users, ["id"=> $check_item->uid]);
             if (!empty($user) && !in_array($check_item->status, array('partial', 'cancelled', 'refunded'))) {
                 $balance = $user->balance;
                 $refund_amount = $charge - $real_charge;
@@ -991,6 +946,37 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                         $new_balance,               // new_balance
                         $status                     // reason
                     );
+                }
+
+                // Send WhatsApp notification for order cancellation or partial completion
+                $this->load->library('whatsapp_notification');
+                if ($this->whatsapp_notification->is_configured() && !empty($user->whatsapp_number)) {
+                    // Get service name
+                    $service = $this->model->get("name", SERVICES, ["id" => $check_item->service_id]);
+                    $service_name = isset($service->name) ? $service->name : 'Unknown Service';
+
+                    if ($status == "canceled" || $status == "refunded") {
+                        // Send order cancelled notification
+                        $variables = array(
+                            'order_id' => $check_item->id,
+                            'refund_amount' => number_format($refund_amount, 2),
+                            'service_name' => $service_name,
+                            'new_balance' => number_format($new_balance, 2)
+                        );
+                        $this->whatsapp_notification->send('order_cancelled', $variables, $user->whatsapp_number);
+                    } elseif ($status == "partial") {
+                        // Send order partial notification
+                        $delivered_quantity = $check_item->quantity - $remains;
+                        $variables = array(
+                            'order_id' => $check_item->id,
+                            'service_name' => $service_name,
+                            'delivered_quantity' => $delivered_quantity,
+                            'ordered_quantity' => $check_item->quantity,
+                            'refund_amount' => number_format($refund_amount, 2),
+                            'new_balance' => number_format($new_balance, 2)
+                        );
+                        $this->whatsapp_notification->send('order_partial', $variables, $user->whatsapp_number);
+                    }
                 }
             }
             $data['charge'] = $real_charge;
