@@ -201,43 +201,112 @@ class setting extends MX_Controller {
      * Save WhatsApp notification settings (individual template)
      */
     public function ajax_save_notification_template() {
-        if ($this->input->method() !== 'post') {
-            ms([
-                'status'  => 'error',
-                'message' => 'Invalid method'
-            ]);
+        // Create logs directory if it doesn't exist
+        $log_dir = APPPATH . 'logs';
+        if (!is_dir($log_dir)) {
+            @mkdir($log_dir, 0755, true);
         }
+        
+        $log_file = $log_dir . '/whatsapp_notification_save.log';
+        $timestamp = date('Y-m-d H:i:s');
+        
+        // Log request start
+        $log_entry = "\n" . str_repeat('=', 80) . "\n";
+        $log_entry .= "[$timestamp] WhatsApp Notification Save Request\n";
+        $log_entry .= "Method: " . $this->input->method() . "\n";
+        $log_entry .= "URL: " . (isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : 'N/A') . "\n";
+        
+        try {
+            if ($this->input->method() !== 'post') {
+                $log_entry .= "ERROR: Invalid method - not POST\n";
+                @file_put_contents($log_file, $log_entry, FILE_APPEND);
+                
+                ms([
+                    'status'  => 'error',
+                    'message' => 'Invalid method'
+                ]);
+            }
 
-        $event_type = $this->input->post('event_type', true);
-        $status = $this->input->post('status', true);
-        $template = $this->input->post('template', false); // Don't XSS filter template content
+            $event_type = $this->input->post('event_type', true);
+            $status = $this->input->post('status', true);
+            $template = $this->input->post('template', false); // Don't XSS filter template content
+            
+            // Log received data
+            $log_entry .= "Received Data:\n";
+            $log_entry .= "  event_type: " . var_export($event_type, true) . "\n";
+            $log_entry .= "  status: " . var_export($status, true) . "\n";
+            $log_entry .= "  template length: " . strlen($template) . " chars\n";
+            
+            if (empty($event_type)) {
+                $log_entry .= "ERROR: Event type is empty\n";
+                @file_put_contents($log_file, $log_entry, FILE_APPEND);
+                
+                ms([
+                    'status'  => 'error',
+                    'message' => 'Event type is required'
+                ]);
+            }
 
-        if (empty($event_type)) {
+            // Determine status value - checkbox sends "1" when checked, nothing when unchecked
+            $status_value = ($status == '1') ? 1 : 0;
+            
+            // Update in database
+            $update_data = array(
+                'status' => $status_value,
+                'template' => trim($template)
+            );
+            
+            $log_entry .= "Update Data:\n";
+            $log_entry .= "  status: " . $status_value . "\n";
+            $log_entry .= "  template: " . substr($update_data['template'], 0, 100) . "...\n";
+
+            $this->db->where('event_type', $event_type);
+            $this->db->update('whatsapp_notifications', $update_data);
+            
+            $affected = $this->db->affected_rows();
+            $log_entry .= "Database Update Result:\n";
+            $log_entry .= "  affected_rows: " . $affected . "\n";
+            
+            // Check for database errors
+            $db_error = $this->db->error();
+            if (!empty($db_error['message'])) {
+                $log_entry .= "  DB Error: " . $db_error['message'] . "\n";
+                @file_put_contents($log_file, $log_entry, FILE_APPEND);
+                
+                ms([
+                    'status'  => 'error',
+                    'message' => 'Database error: ' . $db_error['message']
+                ]);
+            }
+
+            // Check if update was successful
+            // affected_rows() returns 0 if no changes were made (data was same)
+            // This is still considered success
+            if ($affected >= 0) {
+                $log_entry .= "SUCCESS: Notification updated successfully\n";
+                @file_put_contents($log_file, $log_entry, FILE_APPEND);
+                
+                ms([
+                    'status'  => 'success',
+                    'message' => lang('Update_successfully')
+                ]);
+            } else {
+                $log_entry .= "ERROR: Failed to update notification\n";
+                @file_put_contents($log_file, $log_entry, FILE_APPEND);
+                
+                ms([
+                    'status'  => 'error',
+                    'message' => 'Failed to update notification'
+                ]);
+            }
+        } catch (Exception $e) {
+            $log_entry .= "EXCEPTION: " . $e->getMessage() . "\n";
+            $log_entry .= "Stack Trace:\n" . $e->getTraceAsString() . "\n";
+            @file_put_contents($log_file, $log_entry, FILE_APPEND);
+            
             ms([
                 'status'  => 'error',
-                'message' => 'Event type is required'
-            ]);
-        }
-
-        // Update in database
-        $update_data = array(
-            'status' => $status == '1' ? 1 : 0,
-            'template' => trim($template)
-        );
-
-        $this->db->where('event_type', $event_type);
-        $this->db->update('whatsapp_notifications', $update_data);
-
-        // Check if update was successful
-        if ($this->db->affected_rows() >= 0) {
-            ms([
-                'status'  => 'success',
-                'message' => lang('Update_successfully')
-            ]);
-        } else {
-            ms([
-                'status'  => 'error',
-                'message' => 'Failed to update notification'
+                'message' => 'Error: ' . $e->getMessage()
             ]);
         }
     }

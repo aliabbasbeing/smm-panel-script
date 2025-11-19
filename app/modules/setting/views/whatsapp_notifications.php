@@ -118,6 +118,8 @@
                           data-redirect="<?= get_current_url(); ?>">
                         
                         <input type="hidden" name="event_type" value="<?php echo $notification->event_type; ?>">
+                        <!-- Hidden input ensures status is always sent, even when unchecked -->
+                        <input type="hidden" name="status" value="0">
                         
                         <div class="notification-card mb-4">
                             <div class="notification-header">
@@ -311,13 +313,17 @@
 
 <script>
 $(document).ready(function() {
+    console.log('WhatsApp Notifications: Page loaded');
+    
     // Update badge text when switch changes
     $('.notification-toggle').on('change', function() {
         var badge = $(this).siblings('.custom-control-label').find('.status-badge');
         if ($(this).is(':checked')) {
             badge.removeClass('badge-secondary').addClass('badge-success').text('Enabled');
+            console.log('Notification toggle: Enabled');
         } else {
             badge.removeClass('badge-success').addClass('badge-secondary').text('Disabled');
+            console.log('Notification toggle: Disabled');
         }
     });
 
@@ -337,6 +343,18 @@ $(document).ready(function() {
         setTimeout(function() {
             $(self).text(original);
         }, 1000);
+    });
+    
+    // Add form submit logging
+    $('.actionForm').on('submit', function(e) {
+        var formData = $(this).serialize();
+        var action = $(this).attr('action');
+        console.log('WhatsApp Notification Form Submit:');
+        console.log('  Action:', action);
+        console.log('  Form Data:', formData);
+        console.log('  Event Type:', $(this).find('input[name="event_type"]').val());
+        console.log('  Status:', $(this).find('input[name="status"]:checked').length > 0 ? 'Checked' : 'Unchecked');
+        console.log('  Template Length:', $(this).find('textarea[name="template"]').val().length);
     });
 });
 </script>
