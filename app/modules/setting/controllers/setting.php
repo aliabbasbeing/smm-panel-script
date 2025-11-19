@@ -27,9 +27,12 @@ class setting extends MX_Controller {
             redirect(cn('setting'));
         }
 
+        // Load WhatsApp API settings from whatsapp_config (single-row pattern)
+        $whatsapp_api = $this->db->get('whatsapp_config')->row();
         $data = [
             "module"       => get_class($this),
             "tab"          => $tab,
+            "whatsapp_api" => $whatsapp_api,  // may be null if not created yet
         ];
 
         $this->template->build('index', $data);
@@ -53,9 +56,12 @@ class setting extends MX_Controller {
             redirect(cn('setting'));
         }
 
+        // Also supply API settings here if partial loads happen via AJAX tab switching
+        $whatsapp_api = $this->db->get('whatsapp_config')->row();
         $data = [
             "module"       => get_class($this),
             "tab"          => $tab,
+            "whatsapp_api" => $whatsapp_api,
         ];
         $this->template->build('index', $data);
     }
@@ -95,6 +101,18 @@ class setting extends MX_Controller {
                     if ($value <= 0) $value = 1;
                 }
 
+                if ($key === 'whatsapp_number') {
+                    $value = trim($value);
+                    $normalized = preg_replace('/[\s\-\(\)]+/', '', $value);
+                    if ($normalized !== '' && !preg_match('/^\+?[0-9]{6,20}$/', $normalized)) {
+                        ms([
+                            'status'  => 'error',
+                            'message' => 'Invalid WhatsApp number format'
+                        ]);
+                    }
+                    $value = $normalized;
+                }
+
                 update_option($key, $value);
             }
         }
@@ -113,6 +131,127 @@ class setting extends MX_Controller {
         ms([
             "status"  => "success",
             "message" => lang('Update_successfully')
+        ]);
+    }
+
+    /**
+     * Save WhatsApp API settings (url, api_key, admin_phone) to whatsapp_config table.
+     * Table schema expected:
+     * id (INT PK, usually 1), url VARCHAR, api_key VARCHAR, admin_phone VARCHAR
+     */
+    public function ajax_whatsapp_api_settings() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+        }
+
+        $url         = trim($this->input->post('url', true));
+        $api_key     = trim($this->input->post('api_key', true));
+        $admin_phone = trim($this->input->post('admin_phone', true));
+
+        // Basic validation (adjust as needed)
+        if ($url === '' || $api_key === '' || $admin_phone === '') {
+            ms([
+                'status'  => 'error',
+                'message' => 'All fields are required'
+            ]);
+        }
+
+        // Normalize admin phone (optional)
+        $normalized_phone = preg_replace('/[\s\-\(\)]+/', '', $admin_phone);
+        if (!preg_match('/^\+?[0-9]{6,20}$/', $normalized_phone)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid admin phone format'
+            ]);
+        }
+
+        // Ensure single row pattern
+        $existing = $this->db->get('whatsapp_config')->row();
+        $data = [
+            'url'         => $url,
+            'api_key'     => $api_key,
+            'admin_phone' => $normalized_phone,
+        ];
+
+        if ($existing) {
+            $this->db->where('id', $existing->id)->update('whatsapp_config', $data);
+        } else {
+            // Force id=1 (optional) or let auto-increment
+            $this->db->insert('whatsapp_config', $data);
+        }
+
+        if ($this->db->affected_rows() >= 0) {
+            ms([
+                'status'  => 'success',
+                'message' => lang('Update_successfully'),
+                'data'    => $data
+            ]);
+        } else {
+            ms([
+                'status'  => 'error',
+                'message' => 'No changes detected'
+            ]);
+        }
+    }
+
+    /**
+     * Save WhatsApp notification settings
+     */
+    public function ajax_whatsapp_notifications() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+        }
+
+        $notification_status = $this->input->post('notification_status', true);
+        $notification_template = $this->input->post('notification_template', true);
+
+        if (!is_array($notification_status)) {
+            $notification_status = array();
+        }
+        if (!is_array($notification_template)) {
+            $notification_template = array();
+        }
+
+        // Load WhatsApp notification library
+        $this->load->library('whatsapp_notification');
+
+        // Get all notifications from database
+        $all_notifications = $this->whatsapp_notification->get_all_notifications();
+
+        $updated_count = 0;
+
+        foreach ($all_notifications as $notification) {
+            $event_type = $notification->event_type;
+            
+            // Update status (1 if checked, 0 if not)
+            $status = isset($notification_status[$event_type]) ? 1 : 0;
+            
+            // Update template if provided
+            $template = isset($notification_template[$event_type]) ? trim($notification_template[$event_type]) : $notification->template;
+
+            // Update in database
+            $update_data = array(
+                'status' => $status,
+                'template' => $template
+            );
+
+            $this->db->where('event_type', $event_type);
+            $this->db->update('whatsapp_notifications', $update_data);
+
+            if ($this->db->affected_rows() > 0) {
+                $updated_count++;
+            }
+        }
+
+        ms([
+            'status'  => 'success',
+            'message' => lang('Update_successfully') . " ($updated_count notifications updated)"
         ]);
     }
 }

@@ -393,10 +393,6 @@
         <a href="<?=cn('payments_bonuses')?>" class="nav-link <?=(segment(1) == 'payments_bonuses')?"active":""?>">
           <div class="nav-item" class="sidenavContent"><i class="fa fa-money"></i><?=lang("Payments_Bonuses")?></div>
         </a>
-        
-        <a href="<?=cn('whatsapp_notification')?>" class="nav-link <?=(segment(1) == 'whatsapp_notification')?"active":""?>">
-          <div class="nav-item" class="sidenavContent"><i class="fa fa-whatsapp"></i>WhatsApp Notification</div>
-        </a>
       <?php } ?>
       
       <?php if(get_role("admin")){ ?>
