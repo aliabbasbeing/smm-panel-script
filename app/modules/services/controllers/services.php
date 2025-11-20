@@ -87,7 +87,7 @@ class services extends MX_Controller {
 			"categories" 		=> $categories,
 			"api_providers" 	=> $api_providers,
 		);
-		$this->load->view('add_service', $data);
+		$this->template->build('add_service', $data);
 	}
 
 	public function desc($ids = ""){
