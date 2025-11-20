@@ -28,7 +28,7 @@
           <?php 
             if(get_role("admin") || get_role("supporter")) {
           ?>
-          <a href="<?=cn("$module/add")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("Add New Service")?>" data-original-title="Add New Service"><i class="btn btn-info fa fa-plus"> <?=lang("Add New Service")?></i></span></a>
+          <a href="<?=cn("$module/add")?>"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("Add New Service")?>" data-original-title="Add New Service"><i class="btn btn-info fa fa-plus"> <?=lang("Add New Service")?></i></span></a>
           <?php }else{?>
             <i class="fe fe-list" aria-hidden="true"> </i> 
           <?php }?>

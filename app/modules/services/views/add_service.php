@@ -1,18 +1,18 @@
-<div id="main-modal-content">
-  <div class="modal-right">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fa fa-plus"></i> <?=lang("Add New Service")?></h3>
+        <div class="card-options">
+          <a href="<?=cn($module)?>" class="btn btn-sm btn-secondary"><i class="fa fa-arrow-left"></i> <?=lang("Back to Services")?></a>
+        </div>
+      </div>
+      <div class="card-body">
         <?php
           $url = cn($module."/ajax_add");
         ?>
-        <form class="form actionForm" action="<?=$url?>" method="POST">
-          <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-plus"></i> <?=lang("Add New Service")?></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            </button>
-          </div>
-          <div class="modal-body">
-            <div class="form-body" id="add_edit_service">
+        <form class="form actionForm" action="<?=$url?>" data-redirect="<?=cn($module)?>" method="POST">
+          <div class="form-body" id="add_edit_service">
               <div class="row justify-content-md-center">
                 <div class="col-md-12 col-sm-12 col-xs-12">
                   <div class="form-group emoji-picker-container">
@@ -163,10 +163,11 @@
               </div>
             </div>
           </div>
-          <div class="modal-footer">
-            <a href="<?=cn("api_provider/services")?>" class="btn round btn-info btn-min-width mr-1 mb-1"><?=lang("add_new_service_via_api")?></a>
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+          
+          <div class="card-footer text-right">
+            <a href="<?=cn("api_provider/services")?>" class="btn btn-info"><?=lang("add_new_service_via_api")?></a>
+            <a href="<?=cn($module)?>" class="btn btn-secondary"><?=lang("Cancel")?></a>
+            <button type="submit" class="btn btn-primary"><?=lang("Submit")?></button>
           </div>
         </form>
       </div>
