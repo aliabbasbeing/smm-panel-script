@@ -31,7 +31,7 @@
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/general_page.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/layout.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
 
     <script type="text/javascript">

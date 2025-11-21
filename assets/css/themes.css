@@ -1,0 +1,79 @@
+/* ===== Theme-Specific Styles ===== */
+
+/* Default Theme */
+.theme-default .header.top {
+  background: #03a9f4;
+  background: -webkit-linear-gradient(45deg, #03a9f4, #05d0a0) !important;
+  background: -moz-linear-gradient(45deg, #03a9f4, #05d0a0) !important;
+  background: -o-linear-gradient(45deg, #03a9f4, #05d0a0) !important;
+  background: linear-gradient(45deg, #03a9f4, #05d0a0) !important;
+}
+
+/* Purple Theme */
+.theme-purple .header.top {
+  background: #9a56ff;
+  background: -webkit-linear-gradient(top left, #9a56ff 0%, #e36cd9 100%) !important;
+  background: -o-linear-gradient(top left, #9a56ff 0%, #e36cd9 100%) !important;
+  background: linear-gradient(to bottom right, #9a56ff 0%, #e36cd9 100%) !important;
+}
+
+/* Light Blue Theme */
+.theme-light-blue .header.top {
+  background: #03A9F4;
+  background: -webkit-linear-gradient(to right, #03A9F4, #6dd5ed);
+  background: linear-gradient(to right, #03A9F4, #6dd5ed);
+}
+
+/* Dimigo Theme */
+.theme-dimigo .header.top {
+  background: #ec008c;
+  background: -webkit-linear-gradient(to right, #ec008c, #fc6767);
+  background: linear-gradient(to right, #ec008c, #fc6767);
+}
+
+/* Blue Lagoo Theme */
+.theme-bluelagoo .header.top {
+  background: rgb(0, 195, 255);
+}
+
+/* Twitch Theme */
+.theme-twitch .header.top {
+  background: #6441a5;
+  background: -webkit-linear-gradient(to right, #6441a5, #2a0845);
+  background: linear-gradient(to right, #6441a5, #2a0845);
+}
+
+/* Royal Theme */
+.theme-royal .header.top {
+  background: #141e30;
+  background: -webkit-linear-gradient(to right, #141e30, #243b55);
+  background: linear-gradient(to right, #141e30, #243b55);
+}
+
+/* Cosmic Fusion Theme */
+.theme-cosmic-fusion .header.top {
+  background: #ff00cc;
+  background: -webkit-linear-gradient(to right, #ff00cc, #333399);
+  background: linear-gradient(to right, #ff00cc, #333399);
+}
+
+/* Lawrencium Theme */
+.theme-lawrencium .header.top {
+  background: #0f0c29;
+  background: -webkit-linear-gradient(to right, #0f0c29, #302b63, #24243e);
+  background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+}
+
+/* Cool Sky Theme */
+.theme-cool-sky .header.top {
+  background: #2980b9;
+  background: -webkit-linear-gradient(to right, #2980b9, #6dd5fa, #a1dff7);
+  background: linear-gradient(to right, #2980b9, #6dd5fa, #a1dff7);
+}
+
+/* Dark Ocean Theme */
+.theme-dark-ocean .header.top {
+  background: #373b44;
+  background: -webkit-linear-gradient(to right, #373b44, #4286f4);
+  background: linear-gradient(to right, #373b44, #4286f4);
+}
