@@ -64,6 +64,7 @@
     <link href="<?php echo BASE; ?>assets/css/footer.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/themes.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/auth.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/new-style.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/util.css" rel="stylesheet">
 
     <script type="text/javascript">
