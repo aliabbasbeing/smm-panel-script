@@ -209,7 +209,7 @@ hr {
   color: white;
   background: #05d0a0;
   background: -webkit-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
-  background: -moz-oldlinear-gradient(45deg, #05d0a0, #9fd6ef) !important;
+  background: -moz-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
   background: -o-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
   background: linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
 }
