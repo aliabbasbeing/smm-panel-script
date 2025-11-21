@@ -31,8 +31,8 @@
     <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/landing_page.css" rel="stylesheet">
     <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/slide.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/layout.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/header.css" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',
