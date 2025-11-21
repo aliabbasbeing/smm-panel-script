@@ -83,11 +83,20 @@
     }
   ?>
   <body class="theme-<?php echo $theme_name; ?>">
-  <div id="page-overlay" class="visible incoming">
+  <div id="page-overlay">
   <div class="loader-wrapper-outer">
     <div class="loader-wrapper-inner">
-      <div class="loader"></div>
-      <div class="loading-text">
+      <div class="lds-double-ring">
+        <div></div>
+        <div></div>
+        <div>
+          <div></div>
+        </div>
+        <div>
+          <div></div>
+        </div>
+      </div>
+      <div class="loading-text" style="color: #000; font-size: 20px; font-weight:700; font-family: Arial, sans-serif; margin-top: 10px; text-align: center;">
         <span>Loading...</span>
       </div>
     </div>

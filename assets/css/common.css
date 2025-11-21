@@ -333,41 +333,33 @@ hr {
   text-align: center;
 }
 
-/* New Rolling Ball Loader */
-.loader {
-  width: 48px;
-  height: 48px;
-  background: #fff;
-  border-radius: 50%;
+.lds-double-ring {
+  display: inline-block;
   position: relative;
-  animation: roll 1s ease-in-out infinite alternate;
+  width: 80px;
+  height: 80px;
 }
 
-.loader:after {
-  content: "";
+.lds-double-ring div {
+  box-sizing: border-box;
+  display: block;
   position: absolute;
-  inset: 5px;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
   border-radius: 50%;
-  border: 5px solid;
-  border-color: #ff3d00 transparent;
+  animation: lds-double-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
 }
 
-@keyframes roll {
+@keyframes lds-double-ring {
   0% {
-    transform: translateX(-150%) rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    transform: translateX(150%) rotate(360deg);
+    transform: rotate(360deg);
   }
-}
-
-.loading-text {
-  color: #fff;
-  font-size: 20px;
-  font-weight: 700;
-  font-family: Arial, sans-serif;
-  margin-top: 20px;
-  text-align: center;
 }
 
 /* ===== Icon Buttons (WhatsApp, Bell) ===== */
