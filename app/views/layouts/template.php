@@ -86,17 +86,8 @@
   <div id="page-overlay" class="visible incoming">
   <div class="loader-wrapper-outer">
     <div class="loader-wrapper-inner">
-      <div class="lds-double-ring">
-        <div></div>
-        <div></div>
-        <div>
-          <div></div>
-        </div>
-        <div>
-          <div></div>
-        </div>
-      </div>
-      <div class="loading-text" style="color: #000; font-size: 20px; font-weight:700; font-family: Arial, sans-serif; margin-top: 10px; text-align: center;">
+      <div class="loader"></div>
+      <div class="loading-text">
         <span>Loading...</span>
       </div>
     </div>
