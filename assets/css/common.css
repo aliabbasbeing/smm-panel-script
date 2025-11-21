@@ -1,0 +1,453 @@
+/* ===== Common Styles and Utilities ===== */
+
+/* Global Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Arial";
+}
+
+/* Body */
+body {
+  padding: 0px !important;
+  background: #0b141b;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: rgb(255, 255, 255) !important;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+  text-decoration: none;
+  color: white;
+}
+
+/* Horizontal Rule */
+hr {
+  height: 1px;
+  border: 0;
+  color: red;
+  background-color: gray;
+  margin: 15px auto 10px auto;
+}
+
+/* ===== Card Styles ===== */
+
+.card {
+  box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.07), 0 2px 9px 0 rgba(3, 1, 14, 0.06);
+  color: #ffffff;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background: linear-gradient(145deg, #061d2d, #0b304a);
+  overflow: hidden;
+  border: #333 0.5px solid;
+  transition: box-shadow 0.3s ease-in-out;
+  padding: 10px;
+  margin-top: 15px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card2 {
+  margin: 5px;
+  color: #000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  border: 0.5px solid;
+  border-color: #00ffff;
+  border-radius: 5px;
+  background: #061d2b;
+  background-clip: border-box;
+}
+
+.card3 {
+  color: #000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  border-color: #fff;
+  border-radius: 5px;
+  background: transparent;
+  background-clip: border-box;
+}
+
+.card4 {
+  margin: 5px;
+  color: #000;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  border: 0.5px solid;
+  border-color: #00ffff;
+  border-radius: 5px;
+  background: #061d2b;
+  background-clip: border-box;
+}
+
+.card-options a:not(.btn) {
+  margin-left: 0px;
+}
+
+.card-options a:not(.btn):hover {
+  text-decoration: none;
+}
+
+/* ===== Form Controls ===== */
+
+.form-control {
+  width: 100%;
+  padding: 0.4rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #fff;
+  background: #05253d;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus {
+  border: 1px solid #ffffff;
+  outline: none;
+  box-shadow: 0 0 10px rgb(0, 0, 0);
+}
+
+.form-control2233 {
+  display: block;
+  width: 100%;
+  padding: 0.075rem 0.75rem;
+  font-size: 0.8075rem;
+  line-height: 1.6;
+  color: #fff;
+  background: transparent;
+  border: 1px solid #ffffff;
+  border-radius: 5px;
+  transition: border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+}
+
+.form-control223344 {
+  display: block;
+  width: 100%;
+  padding: 0.00000rem 0.00rem;
+  font-size: 0.0000000rem;
+  line-height: 1.6;
+  color: #0208FE;
+  background: linear-gradient(to right, #0208FE, #0208FE);
+  border: 0.1px none #000;
+  border-radius: 5px;
+  transition: border-color 0.25s ease-in-out, box-shadow 0.25s ease-in-out;
+  float: left;
+}
+
+/* ===== Buttons ===== */
+
+.pace-order {
+  padding: 5px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 50%;
+  margin-left: 20px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid yellow;
+  background-size: 300% 100%;
+  border-radius: 20px;
+  -moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+  background-image: linear-gradient(to right, #151DF3, #151DF3, #151DF3, #29E3D1, #0C13D4, #151DF3, #29E3D1);
+}
+
+.pace-order:hover {
+  border: 2px solid black;
+  background-position: 100% 0;
+  -moz-transition: all .4s ease-in-out;
+  -o-transition: all .4s ease-in-out;
+  -webkit-transition: all .4s ease-in-out;
+  transition: all .4s ease-in-out;
+}
+
+/* ===== Modals ===== */
+
+.modal-title {
+  display: inline-block;
+}
+
+.modal-right .modal-dialog {
+  margin: 0 auto;
+  margin-right: 0px;
+  margin-top: 0;
+  margin-bottom: 0 !important;
+  height: 100%;
+  max-width: 600px;
+}
+
+.news_announcement .modal-right .modal-dialog {
+  max-width: 420px;
+}
+
+.news_announcement .modal-header {
+  color: white;
+  background: #05d0a0;
+  background: -webkit-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
+  background: -moz-oldlinear-gradient(45deg, #05d0a0, #9fd6ef) !important;
+  background: -o-linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
+  background: linear-gradient(45deg, #05d0a0, #9fd6ef) !important;
+}
+
+.news_announcement .modal-content {
+  height: 100vh;
+}
+
+.news_announcement .modal-content .modal-body {
+  background: #f7f7f7;
+  padding: 0.5rem;
+}
+
+.news_announcement .news-item .card {
+  margin-bottom: 0.5rem;
+}
+
+.news_announcement .news-item .card .card-header {
+  min-height: 0.5rem;
+  padding: 0.5rem 0.5rem;
+}
+
+.news_announcement .news-item .card .desc > ul {
+  padding-left: 5px;
+}
+
+.news-annoucement .table td > ul {
+  padding-left: 10px;
+}
+
+/* ===== Tables ===== */
+
+.table th,
+.text-wrap table th {
+  text-transform: capitalize !important;
+  font-size: 0.75rem !important;
+}
+
+/* ===== Pagination ===== */
+
+.pagination > li > a {
+  position: relative;
+  display: block;
+  padding: 0.5rem 0.75rem;
+  margin-left: -1px;
+  line-height: 1.25;
+  color: #495057;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+}
+
+/* ===== Loader ===== */
+
+#loader {
+  margin: 100px auto;
+  width: 120px;
+  height: 120px;
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
+  border-bottom: 16px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite, heart-beat 3s linear infinite;
+  background-color: #fff;
+  text-align: center;
+  line-height: 120px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes heart-beat {
+  55% {
+    background-color: #3498db;
+  }
+  60% {
+    background-color: #3498db;
+  }
+  65% {
+    background-color: blue;
+  }
+  70% {
+    background-color: #3498db;
+  }
+  100% {
+    background-color: #3498db;
+  }
+}
+
+/* ===== Page Overlay ===== */
+
+#page-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  display: none;
+}
+
+#page-overlay.visible {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-wrapper-outer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loader-wrapper-inner {
+  text-align: center;
+}
+
+.lds-double-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-double-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-double-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
+}
+
+@keyframes lds-double-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== Icon Buttons (WhatsApp, Bell) ===== */
+
+.whatsapp-fix {
+  width: 40px;
+  height: 40px;
+  background: #29AD37;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  border-color: white;
+}
+
+.bell-fix {
+  width: 35px;
+  height: 35px;
+  background: #0BD199;
+  border-radius: 20px;
+  border: 2px solid #ccc;
+  border-color: white;
+}
+
+.custom-whatsapp-button {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-top: 10px;
+}
+
+.custom-whatsapp-icon {
+  width: 100%;
+  height: 100%;
+}
+
+/* ===== Utility Classes ===== */
+
+.main-content {
+  padding-top: 70px;
+}
+
+.slct {
+  border-bottom: 2px;
+  border-color: red;
+}
+
+#whole-flex {
+  position: absolute;
+  flex-direction: column;
+  text-align: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: -10;
+}
+
+/* ===== Responsive Utilities ===== */
+
+@media (max-width: 720px) {
+  .order_resume {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ededed;
+  }
+}
+
+@media (max-width: 992px) {
+  .modules-lists .module-item .product-name {
+    max-width: 230px;
+  }
+}
+
+/* ===== Module Lists ===== */
+
+.modules-lists .module-item .product-price {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.modules-lists .module-item .product-name {
+  font-size: 16px;
+  font-weight: 600;
+  max-width: 300px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

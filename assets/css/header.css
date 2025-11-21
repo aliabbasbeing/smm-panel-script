@@ -1,0 +1,588 @@
+/* ===== Header and Navigation Styles ===== */
+
+/* Top Header Bar */
+.top-header {
+  height: 70px;
+  width: 100%;
+  background: linear-gradient(135deg, #051d2f, #063a58);
+  border-bottom: 0.5px solid #04a9f4;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.top-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(4, 169, 244, 0.2) 0%, rgba(5, 29, 47, 0) 70%);
+  animation: floatingLight 6s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes floatingLight {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(50%);
+  }
+}
+
+.show-btn {
+  height: 30px;
+  width: 40px;
+  z-index: 100;
+}
+
+.header-logo {
+  margin-top: 35px;
+  margin-left: 70px;
+}
+
+/* Site Logo */
+.site-logo a {
+  text-decoration: none;
+}
+
+.site-logo img {
+  max-height: 40px;
+}
+
+/* Notification Icon */
+.notifcation.m-r-10 {
+  z-index: 100;
+  position: relative;
+}
+
+.header.top .notifcation {
+  position: relative;
+  font-size: 25px;
+  color: white;
+}
+
+.header.top .notifcation .nav-unread {
+  top: 2px;
+  right: -1px;
+  background: #ffffff;
+}
+
+.header.top .notifcation .nav-unread.change_color {
+  top: 2px;
+  right: -1px;
+  background-image: radial-gradient(circle, #0b76f6, #0070f7, #006af7, #0063f7, #005cf7, #005cf7, #005cf7, #005cf7, #0063f7, #006af7, #0070f7, #0b76f6);
+  animation: change_color 3s infinite;
+}
+
+@keyframes change_color {
+  from {
+    background: #ffffff;
+  }
+  to {
+    background: #cd201f;
+  }
+}
+
+/* Card Title in Header */
+.card-title.text-center {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== Sidebar Navigation (Sidenav) ===== */
+
+/* Sidenav Container */
+.sidenav {
+  max-width: 200px;
+  width: 85%;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  height: 100%;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background-color: #051d2f;
+  transform-origin: left center;
+  transform: translateX(-380px);
+  -moz-transition: all 1300ms;
+  -webkit-transition: all 1300ms;
+  transition: all 1300ms;
+}
+
+/* Sidenav Header */
+.sidenavHeader {
+  height: 70px;
+  color: #07324d;
+  font-weight: bold;
+  border-bottom: 1px solid #04a9f4;
+  background-color: #051d2f;
+  padding: 10px 0px 10px 30px;
+  font-size: 23px;
+}
+
+/* Sidenav Section Headers */
+.sidenavContentHeader {
+  margin-top: 5px;
+  padding: 15px 0px 15px 25px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #04a9f4;
+}
+
+/* Sidenav Items */
+.sidenavContent {
+  background-color: #051d2f;
+  padding: 10px 0px 15px 25px;
+  border-bottom: 0.3px solid black;
+}
+
+.sidenavContent:hover {
+  background-color: blue;
+}
+
+.sidenavRow {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 15px 25px 15px 25px;
+}
+
+.sidenavRow:hover {
+  background-color: #eaeded;
+}
+
+.sidenavRow:hover i {
+  color: #111111 !important;
+}
+
+/* Close Button */
+#closeBtn {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-left: 160px;
+  color: white;
+  font-size: 40px;
+  cursor: pointer;
+  z-index: 175;
+  transform: translateY(-5px);
+  transition: visibility 1s;
+}
+
+/* Overlay */
+#overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 50;
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Dropdown in Sidenav */
+.sidenavContainer hr {
+  width: 85%;
+}
+
+.sidenavRowDropdown {
+  display: flex;
+  width: 100%;
+  justify-content: start;
+  align-items: center;
+  padding: 15px 25px 15px 25px;
+  cursor: pointer;
+}
+
+.sidenavRowDropdown:hover {
+  background-color: #eaeded;
+}
+
+.sidenavRowDropdown:hover i {
+  color: #111111 !important;
+}
+
+.sidenavContainer {
+  display: none;
+  height: 0px;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: center top;
+}
+
+@keyframes expandDropDown {
+  0% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+
+@keyframes collapseDropDown {
+  0% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0);
+    opacity: 0;
+  }
+}
+
+/* Main Container in Sidenav */
+#main-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  color: blue;
+}
+
+@keyframes mainAway {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-380px);
+  }
+}
+
+@keyframes mainBack {
+  0% {
+    transform: translateX(-380px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+#sub-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  background-color: white;
+  transform: translateX(380px);
+}
+
+@keyframes subBack {
+  0% {
+    transform: translateX(380px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes subPush {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(380px);
+  }
+}
+
+#mainMenu {
+  margin-top: 5px;
+  padding: 15px 0px 15px 25px;
+  font-weight: bold;
+}
+
+#mainMenu:hover {
+  background-color: #eaeded;
+  cursor: pointer;
+}
+
+/* Sidenav Animations */
+@keyframes collapse {
+  0% {
+    z-index: 100;
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-380px);
+  }
+}
+
+@keyframes expand {
+  0% {
+    z-index: 100;
+    transform: translateX(-380px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes show {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hide {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* ===== Navigation Tabs ===== */
+
+.nav-tabs {
+  border-bottom: 1px solid #dee2e6;
+}
+
+.header .nav-item .badge {
+  position: relative !important;
+  top: 0 !important;
+  right: -5px;
+}
+
+.tabs-list .nav-tabs {
+  border-bottom: 1px solid #e1e8ed;
+}
+
+.tabs-list .nav-tabs li > a {
+  color: #888;
+  padding: 15px 20px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+}
+
+.tabs-list .nav-tabs li > a.active,
+.tabs-list .nav-tabs li > a:hover {
+  color: #333;
+  border-bottom: 2px solid #04a9f4;
+  background-color: transparent;
+}
+
+/* ===== Theme-Specific Nav Tab Styles ===== */
+
+.theme-default .nav-tabs .nav-link.active,
+.theme-default .nav-tabs .nav-link:hover {
+  border-color: #04a9f4;
+  color: #ff6f61;
+}
+
+.theme-purple .nav-tabs .nav-link.active,
+.theme-purple .nav-tabs .nav-link:hover {
+  border-color: #9a56ff;
+  color: #9a56ff;
+}
+
+.theme-light-blue .nav-tabs .nav-link.active,
+.theme-light-blue .nav-tabs .nav-link:hover {
+  border: 1px solid #04a9f4;
+  background: linear-gradient(to bottom, #04c5f8, #048fd8);
+  border-radius: 5px;
+  color: #000;
+  font-weight: 600;
+}
+
+.theme-dimigo .nav-tabs .nav-link.active,
+.theme-dimigo .nav-tabs .nav-link:hover {
+  color: #ec008c;
+}
+
+.theme-bluelagoo .nav-tabs .nav-link.active,
+.theme-bluelagoo .nav-tabs .nav-link:hover {
+  color: #fff;
+  background: #000;
+  font-weight: 500;
+  border: 0.1px solid none;
+  border-radius: 30px 0px 0px 30px;
+}
+
+.theme-twitch .nav-tabs .nav-link.active,
+.theme-twitch .nav-tabs .nav-link:hover {
+  color: #6441a5;
+}
+
+.theme-royal .nav-tabs .nav-link.active,
+.theme-royal .nav-tabs .nav-link:hover {
+  border-color: #141e30;
+  color: #fff;
+}
+
+.theme-cosmic-fusion .nav-tabs .nav-link.active,
+.theme-cosmic-fusion .nav-tabs .nav-link:hover {
+  border-color: #ff00cc;
+  color: #ff00cc;
+}
+
+.theme-lawrencium .nav-tabs .nav-link.active,
+.theme-lawrencium .nav-tabs .nav-link:hover {
+  border-color: #0f0c29;
+  color: #0f0c29;
+}
+
+.theme-cool-sky .nav-tabs .nav-link.active,
+.theme-cool-sky .nav-tabs .nav-link:hover {
+  border-color: #2980b9;
+  color: #2980b9;
+}
+
+.theme-dark-ocean .nav-tabs .nav-link.active,
+.theme-dark-ocean .nav-tabs .nav-link:hover {
+  border-color: #373b44;
+  color: #373b44;
+}
+
+/* ===== Currency Switcher in Sidenav ===== */
+
+.currency-switcher-sidenav {
+  margin: 15px 15px 15px 15px;
+  position: relative;
+}
+
+.currency-switcher-sidenav label {
+  display: block;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.currency-switcher-sidenav select {
+  background: #ffffff !important;
+  color: #000000 !important;
+  border: 2px solid #000000 !important;
+  border-radius: 6px;
+  padding: 8px 28px 8px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 100%;
+  height: 40px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.currency-switcher-sidenav select:hover {
+  background: #f5f5f5 !important;
+  border-color: #333333 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+}
+
+.currency-switcher-sidenav select:focus {
+  background: #ffffff !important;
+  border-color: #000000 !important;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+  outline: none;
+}
+
+.currency-switcher-sidenav select option {
+  background: #ffffff;
+  color: #000000;
+  padding: 10px 12px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.currency-switcher-sidenav select option:hover {
+  background: #e0e0e0;
+  color: #000000;
+}
+
+.currency-switcher-sidenav select option:checked {
+  background: #000000;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* Custom select wrapper */
+.currency-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.currency-select-wrapper::after {
+  content: "";
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid #000000;
+  pointer-events: none;
+  transition: transform 0.2s ease;
+}
+
+.currency-switcher-sidenav select:focus ~ .currency-select-wrapper::after,
+.currency-select-wrapper:has(select:focus)::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Divider */
+.currency-switcher-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0 5px 0;
+}
+
+/* ===== Search Box Styles ===== */
+
+.search-box input.form-control {
+  margin: -1px;
+}
+
+.search-box select.form-control {
+  border-radius: 0px;
+  border: 1px solid #fff;
+}
+
+/* ===== Mobile Responsive ===== */
+
+@media (max-width: 768px) {
+  .currency-switcher-sidenav {
+    margin: 12px 12px 12px 12px;
+  }
+
+  .currency-switcher-sidenav select {
+    padding: 7px 24px 7px 8px;
+    font-size: 13px;
+    height: 38px;
+  }
+
+  .currency-switcher-sidenav label {
+    font-size: 11px;
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .currency-switcher-sidenav {
+    margin: 10px 10px 10px 10px;
+  }
+
+  .currency-switcher-sidenav select {
+    padding: 6px 22px 6px 8px;
+    font-size: 12px;
+    height: 36px;
+  }
+}
