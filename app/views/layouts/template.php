@@ -60,6 +60,7 @@
     
     <!-- Organized CSS Structure -->
     <link href="<?php echo BASE; ?>assets/css/common.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/layout.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/header.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/footer.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/themes.css" rel="stylesheet">

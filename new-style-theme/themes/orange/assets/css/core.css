@@ -14,7 +14,7 @@ Dashboard UI
   --purple: #a55eea;
   --pink: #f66d9b;
   --red: #cd201f;
-  --orange: #00FFFF;
+  --orange: #fd9644;
   --yellow: #f1c40f;
   --green: #5eba00;
   --teal: #2bcbba;
@@ -2399,13 +2399,13 @@ fieldset:disabled a.btn {
   color: #fff;
   font-weight: bold;
   width: 100%;
-  background-color: #00FFFF;
+  background-color: #e95420;
 }
 
 .btn-primary:hover {
   color: #fff;
   font-weight: bold;
-  background-color: #00CCCC;
+  background-color: #c34113;
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
@@ -2424,12 +2424,12 @@ fieldset:disabled a.btn {
 
 .btn-prim {
   color: #fff;
-  background-color: #00FFFF;
+  background-color: #e95420;
 }
 
 .btn-prim:hover {
   color: #fff;
-  background-color: #00CCCC;
+  background-color: #c34113;
 }
 
 .btn-prim:focus, .btn-prim.focus {
@@ -2555,15 +2555,15 @@ fieldset:disabled a.btn {
 
 .my-button {
   color: #fff;
-  background-color: #00FFFF;
-  border-color: #00CCCC;
+  background-color: #e95420;
+  border-color: #c34113;
 }
 
 .my-button:hover {
   font-weight: bold;
   color: #fff;
-  background: #00CCCC;
-  border-color: #00CCCC;
+  background: #c34113;
+  border-color: #c34113;
 }
 
 .btn-info-status {
@@ -4855,7 +4855,7 @@ input[type="button"].btn-block {
 .page-item.active .page-link {
   z-index: 1;
   color: #fff;
-  background-color: #00FFFF;
+  background-color: #e95420;
   border-color: #ddd;
 }
 
@@ -5603,7 +5603,7 @@ button.close {
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 1rem;
-  border-bottom: 1px solid #00FFFF;
+  border-bottom: 1px solid #e95420;
   border-top-left-radius: 3px;
   border-top-right-radius: 3px;
 }
@@ -5615,7 +5615,7 @@ button.close {
 
 .modal-title {
   font-weight: bold;
-  color: #00FFFF;
+  color: #e95420;
   margin-bottom: 0;
   line-height: 1.5;
 }
@@ -11622,7 +11622,7 @@ button.bg-red:focus {
 }
 
 .bg-orange {
-  background-color: #00FFFF !important;
+  background-color: #fd9644 !important;
 }
 
 a.bg-orange:hover, a.bg-orange:focus,
@@ -11632,7 +11632,7 @@ button.bg-orange:focus {
 }
 
 .text-orange {
-  color: #00FFFF !important;
+  color: #fd9644 !important;
 }
 
 .bg-yellow {
@@ -12574,8 +12574,8 @@ a.icon:hover {
 
 .btn-orange {
   color: #fff;
-  background-color: #00FFFF;
-  border-color: #00FFFF;
+  background-color: #fd9644;
+  border-color: #fd9644;
 }
 
 .btn-orange:hover {
@@ -12590,8 +12590,8 @@ a.icon:hover {
 
 .btn-orange.disabled, .btn-orange:disabled {
   color: #fff;
-  background-color: #00FFFF;
-  border-color: #00FFFF;
+  background-color: #fd9644;
+  border-color: #fd9644;
 }
 
 .btn-orange:not(:disabled):not(.disabled):active, .btn-orange:not(:disabled):not(.disabled).active,
@@ -13340,7 +13340,7 @@ a.icon:hover {
 }
 
 .card-header .service-cate {
-  color: #00FFFF;
+  color: #e95420;
 }
 
 .card-title small,
@@ -13889,7 +13889,7 @@ Card alert
 
 .avatar-orange {
   background-color: #fee0c7;
-  color: #00FFFF;
+  color: #fd9644;
 }
 
 .avatar-yellow {
@@ -14839,7 +14839,7 @@ a.tag-addon:hover {
 }
 
 .tag-orange {
-  background-color: #00FFFF;
+  background-color: #fd9644;
   color: #fff;
 }
 
@@ -19089,13 +19089,13 @@ svg {
 }
 
 .forgot-password {
-	color: #00FFFF;
+	color: #e95420;
     float: right !important;
 }
 
 
 .forgot-password:hover {
-	color: #00FFFF;
+	color: #e95420;
     float: right !important;
 }
 

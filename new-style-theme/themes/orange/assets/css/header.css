@@ -1,10 +1,10 @@
 .header-section {
     padding: 0 20px;
-    background: #00FFFF;
+    background: #e95420;
 }
 
 .main-nav {
-    background: #00FFFF;
+    background: #e95420;
     display: flex;
     justify-content: space-between;
     color: #fff;
@@ -51,7 +51,7 @@
 }
 
 .menu-link:hover {
-    background-color: #00CCCC; 
+    background-color: #c34113; 
     color: #fff; 
     border-radius: 2px;0
 }
@@ -69,19 +69,19 @@
 }
 
 .dropdown-link:hover {
-    background-color: #00CCCC;
+    background-color: #c34113;
     color: #fff;
 }
 
 /* Active Menu Item */
 .menu-item.active .menu-link {
     color: #fff;
-    background-color: #00CCCC;
+    background-color: #c34113;
 }
 
 
 .menu-item.active .menu-link:hover {
-    background-color: #00CCCC;
+    background-color: #c34113;
 }
 
 
@@ -90,7 +90,7 @@
 	padding: 0 12px;
     display: none;
     background: none;
-    border: 1px solid #009999;
+    border: 1px solid #ac3911;
 	border-radius: 4px;
     color: #fff;
     font-size: 22px;
@@ -100,7 +100,7 @@
 }
 
 .menu-toggle:hover {
-	background: #009999;
+	background: #ac3911;
 }
 
 .menu-toggle i {
@@ -144,7 +144,7 @@
         transform: translateY(-20px);
         display: flex;
         flex-direction: column;
-        background: #00FFFF;
+        background: #e95420;
         position: absolute;
         top: 100%;
         min-width: 100%;
@@ -168,11 +168,11 @@
     /* Active Menu Item */
     .menu-item.active .menu-link {
         color: #fff; 
-        background-color: #00CCCC; 
+        background-color: #c34113; 
     }
     
     .menu-item.active .menu-link:hover {
-        background-color: #00CCCC; /* Slightly brighter on hover */
+        background-color: #c34113; /* Slightly brighter on hover */
     }
 
     .menu-link {
@@ -238,7 +238,7 @@
     padding: 10px 10px;
     border: 1px solid #fff;
 	border-radius: 4px;
-    background-color: #00FFFF;
+    background-color: #e95420;
 	margin: 0 10px;
 }
 
@@ -274,14 +274,14 @@
 
 
 .currency-dropdown .dropdown-currency-item:hover {
-    background-color: #00CCCC;
+    background-color: #c34113;
     color: #fff;
 }
 
 .currency-dropdown .dropdown-currency-item.active {
     font-weight: bold;
     color: #fff;
-    background-color: #00FFFF;
+    background-color: #e95420;
 }
 
 /* Show dropdown menu */

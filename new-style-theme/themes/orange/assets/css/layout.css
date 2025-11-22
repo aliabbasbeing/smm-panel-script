@@ -507,7 +507,7 @@ stroke-width: 2px;
   padding: 0.5rem 0.75rem;
   margin-left: -1px;
   line-height: 1.25;
-  color: #00FFFF;
+  color: #e95420;
   background-color: #fff;
   border: 1px solid #ddd;
 }
@@ -815,14 +815,14 @@ stroke-width: 2px;
     position: absolute;
     padding: 10px;
     border-radius: 3px;
-    background-color: #00FFFF;
+    background-color: #e95420;
     color: #fff;
     display: none;
     z-index: 9999;
 }
 
 .copy_Order_IDBtn{
-    color: #00FFFF;  
+    color: #e95420;  
     margin-right: 10px;
 }
 
@@ -839,7 +839,7 @@ stroke-width: 2px;
   display: inline-flex;
   align-items: center;
   padding: 6px 10px;
-  color: #00FFFF; /* black text */
+  color: #e95420; /* black text */
   text-decoration: none;
   border: none;
   background: none;
@@ -850,14 +850,14 @@ stroke-width: 2px;
 }
 
 .status-links:hover {
-  color: #00FFFF;
+  color: #e95420;
   font-weight: 550;
   background-color: #F0F0F0;
 }
 
 /* Active state */
 .status-links.active {
-  background-color: #00FFFF;
+  background-color: #e95420;
   color: #fff;
   text-decoration: none;
   font-weight: 550;
@@ -897,7 +897,7 @@ stroke-width: 2px;
     min-width: 100%;
     border: none;
     border: 1px solid #cccccc;
-    background: #00FFFF;
+    background: #e95420;
     max-height: 400px !important;
     overflow-y: auto !important;
 }
@@ -917,7 +917,7 @@ stroke-width: 2px;
     left: 0; 
     right: 0;
     font-size: 12.8pt;
-    background :#00FFFF; 
+    background :#e95420; 
     border: 1px solid #ddd; 
     border-radius: 4px;
     padding: 8px; 
@@ -1031,13 +1031,13 @@ stroke-width: 2px;
 
 .platform-card:hover {
   color: #fff;
-  background: #00FFFF;
-  border-color: #00FFFF;
+  background: #e95420;
+  border-color: #e95420;
 }
 
 .platform-card.active {
   color: #fff;
-  background: #00FFFF;
+  background: #e95420;
   border-color: #CCCCCC;
 }
 
@@ -1069,7 +1069,7 @@ stroke-width: 2px;
     width: 50px;
     height: 50px;
     border: 3px solid #f3f3f3;
-    border-top: 3px solid #00FFFF;
+    border-top: 3px solid #e95420;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
