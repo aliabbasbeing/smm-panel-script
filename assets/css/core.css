@@ -18966,7 +18966,7 @@ svg {
   left: 78px;
   border-radius: 50%;
   border: 4px solid #000;
-  border-color: #2196f3 transparent #2196f3 transparent;
+  border-color: #00FFFF transparent #00FFFF transparent;
   -webkit-animation: lds-double-ring 1s linear infinite;
   animation: lds-double-ring 1s linear infinite;
 }

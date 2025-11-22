@@ -323,44 +323,7 @@ hr {
   justify-content: center;
 }
 
-.loader-wrapper-outer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.loader-wrapper-inner {
-  text-align: center;
-}
-
-.lds-double-ring {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-
-.lds-double-ring div {
-  box-sizing: border-box;
-  display: block;
-  position: absolute;
-  width: 64px;
-  height: 64px;
-  margin: 8px;
-  border: 8px solid #fff;
-  border-radius: 50%;
-  animation: lds-double-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: #fff transparent transparent transparent;
-}
-
-@keyframes lds-double-ring {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
+/* Loader styles moved to core.css to avoid conflicts */
 
 /* ===== Icon Buttons (WhatsApp, Bell) ===== */
 

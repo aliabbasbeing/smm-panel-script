@@ -1,22 +1,29 @@
 .header-section {
     padding: 0 20px;
-    background: #00FFFF;
+    background: linear-gradient(135deg, #00FFFF 0%, #00CCCC 100%);
+    box-shadow: 0 2px 8px rgba(0, 255, 255, 0.3);
 }
 
 .main-nav {
-    background: #00FFFF;
+    background: transparent;
     display: flex;
     justify-content: space-between;
     color: #fff;
     position: relative;
     z-index: 999;
-    min-height: 40px;
+    min-height: 60px;
+    align-items: center;
 }
 
 .logo img {
-    height: 45px; 
+    height: 45px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
 }
 
+.logo img:hover {
+    transform: scale(1.05);
+}
 
 /* Logo */
 .logo a {
@@ -25,6 +32,11 @@
     font-size: 20px;
     font-weight: bold;
     color: #1323b2;
+    transition: color 0.3s ease;
+}
+
+.logo a:hover {
+    color: #0a1570;
 }
 
 /* Menu */
@@ -34,6 +46,8 @@
     flex-direction: row;
     transition: all 0.3s ease-in-out;
     max-width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .menu-item {
@@ -43,17 +57,20 @@
 
 .menu-link {
     text-decoration: none;
-    color: #fff;
-    font-size: 16px;
+    color: #000;
+    font-size: 15px;
+    font-weight: 500;
     padding: 10px 15px;
-    border-radius: 2px;
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    display: block;
 }
 
 .menu-link:hover {
-    background-color: #00CCCC; 
-    color: #fff; 
-    border-radius: 2px;0
+    background-color: rgba(0, 204, 204, 0.8);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-item {
@@ -63,40 +80,47 @@
 .dropdown-link {
     text-decoration: none;
     color: #1323b2;
-    padding: 10px 20px;
+    padding: 12px 20px;
     display: block;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
+    font-size: 14px;
 }
 
 .dropdown-link:hover {
     background-color: #00CCCC;
     color: #fff;
+    padding-left: 25px;
 }
 
 /* Active Menu Item */
 .menu-item.active .menu-link {
     color: #fff;
     background-color: #00CCCC;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
-
 
 .menu-item.active .menu-link:hover {
-    background-color: #00CCCC;
+    background-color: #009999;
 }
-
 
 .menu-toggle {
 	margin: 14px 0;
 	padding: 0 12px;
     display: none;
-    background: none;
-    border: 1px solid #009999;
-	border-radius: 4px;
-    color: #fff;
+    background: rgba(0, 204, 204, 0.2);
+    border: 2px solid #009999;
+	border-radius: 6px;
+    color: #000;
     font-size: 22px;
     font-weight: 400;
     cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
+}
+
+.menu-toggle:hover {
+	background: #009999;
+    color: #fff;
+    transform: scale(1.05);
 }
 
 .menu-toggle:hover {
@@ -144,13 +168,14 @@
         transform: translateY(-20px);
         display: flex;
         flex-direction: column;
-        background: #00FFFF;
+        background: linear-gradient(180deg, #00FFFF 0%, #00CCCC 100%);
         position: absolute;
         top: 100%;
         min-width: 100%;
-		border-top: 1px solid transparent;
-        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        transition: opacity 0.5s ease, transform 0.5s ease, visibility 0.5s ease;
+		border-top: 3px solid #009999;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s ease;
+        border-radius: 0 0 8px 8px;
     }
 
     .menu.show {
@@ -163,24 +188,38 @@
         margin: 0; 
         text-align: left;
 		border-radius: 0px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .menu-item:last-child {
+        border-bottom: none;
     }
     
     /* Active Menu Item */
     .menu-item.active .menu-link {
         color: #fff; 
-        background-color: #00CCCC; 
+        background-color: rgba(0, 153, 153, 0.5);
+        border-left: 4px solid #fff;
     }
     
     .menu-item.active .menu-link:hover {
-        background-color: #00CCCC; /* Slightly brighter on hover */
+        background-color: rgba(0, 153, 153, 0.7);
     }
 
     .menu-link {
         margin: 0; 
         display: block;
-        width: 100%; /* Ensure the link spans the full width */
-        padding: 8px 15px; /* Add padding for better touch interaction */
-        text-align: left; /* Align text to the left */
+        width: 100%;
+        padding: 12px 20px;
+        text-align: left;
+        color: #000;
+        font-weight: 500;
+    }
+    
+    .menu-link:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding-left: 25px;
+        color: #fff;
     }
 
     .menu-toggle {
@@ -220,39 +259,50 @@
     white-space: nowrap;
 }
 
-	.currency-text {
-		color: #000;
-		background-color: #fff;
-		padding: 0 7px;
-		border-radius: 25px;
-    }
+.currency-text {
+    color: #00FFFF;
+    background-color: #fff;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
 	
 .currency-dropdown .dropdown-toggle {
     text-decoration: none;
-    color: #fff;
-    font-weight: bold; /* Make text bold */
-    font-size: 15px;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
-    padding: 10px 10px;
-    border: 1px solid #fff;
-	border-radius: 4px;
-    background-color: #00FFFF;
-	margin: 0 10px;
+    padding: 8px 16px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.9);
+    margin: 0 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.currency-dropdown .dropdown-toggle:hover {
+    background-color: #fff;
+    border-color: #009999;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .currency-dropdown .currency-dropdown-menu {
-    display: none; /* Initially hidden */
+    display: none;
     position: absolute;
-    top: 100%; /* Align directly below toggle */
+    top: calc(100% + 5px);
     left: 0;
     background-color: white;
-    border-radius: 5px;
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    z-index: 9999; /* Ensure it appears above other elements */
-    padding: 0;
-    min-width: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    padding: 8px 0;
+    min-width: 150px;
     max-height: 300px;
     overflow-y: auto;
     margin: 0 10px;
@@ -266,37 +316,56 @@
 .currency-dropdown .dropdown-currency-item {
     display: block;
     text-decoration: none;
-    padding: 10px 15px;
-    color: #000;
+    padding: 10px 20px;
+    color: #333;
     font-size: 14px;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
 }
 
-
 .currency-dropdown .dropdown-currency-item:hover {
-    background-color: #00CCCC;
-    color: #fff;
+    background-color: rgba(0, 204, 204, 0.1);
+    color: #00CCCC;
+    border-left-color: #00CCCC;
+    padding-left: 25px;
 }
 
 .currency-dropdown .dropdown-currency-item.active {
-    font-weight: bold;
-    color: #fff;
-    background-color: #00FFFF;
+    font-weight: 700;
+    color: #00FFFF;
+    background-color: rgba(0, 255, 255, 0.15);
+    border-left-color: #00FFFF;
 }
 
 /* Show dropdown menu */
 .currency-dropdown.dropdown-show .currency-dropdown-menu {
     display: block;
+    animation: slideDown 0.3s ease;
 }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .user-balance {
-    font-size: 16px;
-    color: #fff;
+    font-size: 14px;
+    color: #000;
     margin-top: 10px;
     text-align: left;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 5px 10px;
-    border-radius: 5px;
-    display: none; 
+    background: rgba(255, 255, 255, 0.9);
+    padding: 8px 15px;
+    border-radius: 6px;
+    display: none;
+    font-weight: 600;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 3px solid #00FFFF;
 }
 
 @media (min-width: 768px) { 
