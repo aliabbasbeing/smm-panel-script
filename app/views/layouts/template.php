@@ -57,11 +57,15 @@
     <script type="text/javascript" src="<?=BASE?>assets/plugins/emoji/emojionearea.min.js"></script>
     <?php }?>
     <link href="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/css/emoji.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/util.css" rel="stylesheet">
+    
+    <!-- Organized CSS Structure -->
+    <link href="<?php echo BASE; ?>assets/css/common.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/header.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>assets/css/footer.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/slide.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/layout.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/new-style1.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/themes.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/auth.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/new-style.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/css/util.css" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?php echo $this->security->get_csrf_hash(); ?>',
@@ -79,7 +83,7 @@
     }
   ?>
   <body class="theme-<?php echo $theme_name; ?>">
-  <div id="page-overlay" class="visible incoming">
+  <div id="page-overlay">
   <div class="loader-wrapper-outer">
     <div class="loader-wrapper-inner">
       <div class="lds-double-ring">

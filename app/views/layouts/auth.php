@@ -27,8 +27,8 @@
     <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/layout.css" rel="stylesheet">
-    <link href="https://hqsmmscripts.com/script_data/for_all/layout.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
+    <link href="<?=BASE?>assets/css/auth.css" rel="stylesheet">
     
 
     <script type="text/javascript">
@@ -42,7 +42,7 @@
   </head>
   <body>
 
-    <div id="page-overlay" class="visible incoming">
+    <div id="page-overlay">
       <div class="loader-wrapper-outer">
         <div class="loader-wrapper-inner">
           <div class="lds-double-ring">
