@@ -11832,7 +11832,7 @@ a.icon:hover {
 
 .nav-tabs .nav-link {
   border: 0;
-  color: 000;
+  color: #000;
   transition: .3s border-color;
   font-weight: 400;
   padding: 0.3rem 0;
