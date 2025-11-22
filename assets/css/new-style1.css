@@ -920,7 +920,7 @@ td.order-details {
   }
   /* Add Funds Button */
 .btn-add-funds {
-    background: #00FFFF !important; /* Slightly softer green */
+    background: #00FFFF !important; /* Slightly softer cyan */
     color: #fff !important;
     font-weight: bold !important;
     padding: 11px 18px !important; /* Smaller padding */
