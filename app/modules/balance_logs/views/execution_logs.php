@@ -34,9 +34,9 @@
 <!-- Filter Section -->
 <div class="row">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-header">
-        <h3 class="card-title"><?=lang("Filter_Cron_Logs")?></h3>
+        <h3 class="card-title" style="color: #fff !important;"><?=lang("Filter_Cron_Logs")?></h3>
       </div>
       <div class="card-body">
         <form method="GET" action="<?=cn($module.'/view_execution_logs')?>">
@@ -74,7 +74,7 @@
 <!-- Statistics Summary -->
 <div class="row">
   <div class="col-md-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-body text-center">
         <div class="text-muted mb-2">
           <i class="fe fe-zap" style="font-size: 2rem;"></i>
@@ -96,7 +96,7 @@
     </div>
   </div>
   <div class="col-md-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-body text-center">
         <div class="text-success mb-2">
           <i class="fe fe-check-circle" style="font-size: 2rem;"></i>
@@ -107,7 +107,7 @@
     </div>
   </div>
   <div class="col-md-3 col-sm-6">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-body text-center">
         <div class="text-danger mb-2">
           <i class="fe fe-x-circle" style="font-size: 2rem;"></i>
@@ -123,7 +123,7 @@
 <?php if (!empty($cron_summary)) { ?>
 <div class="row">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-header">
         <h3 class="card-title"><?=lang('Last_Run_Summary')?></h3>
         <div class="card-options">
@@ -199,7 +199,7 @@
 <!-- Detailed Information -->
 <div class="row">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-header">
         <h3 class="card-title"><?=lang('Detailed_Last_Execution_Info')?></h3>
       </div>
@@ -275,7 +275,7 @@
 <?php } else { ?>
 <div class="row">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-body">
         <div class="text-center py-5">
           <i class="fe fe-info text-muted" style="font-size: 48px;"></i>

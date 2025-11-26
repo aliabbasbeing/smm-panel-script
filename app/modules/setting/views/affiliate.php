@@ -1,6 +1,6 @@
-<div class="card content">
-  <div class="card-header">
-    <h3 class="card-title"><i class="fe fe-sliders"></i> <?= lang("affiliate_settings") ?></h3>
+<div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-sliders"></i> <?= lang("affiliate_settings") ?></h3>
   </div>
   <div class="card-body">
     <form class="actionForm" action="<?= cn("$module/ajax_general_settings") ?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">

@@ -39,9 +39,9 @@
 
 <div class="row justify-content-end">
   <div class="col-md-5 d-none d-sm-block">
-    <div class="card">
-      <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-        <h3 class="card-title">
+    <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;">
           <h4 class="modal-title"><i class="fe fe-edit"></i> <?=lang("add_new_ticket")?></h4>
         </h3>
         <div class="card-options">
@@ -115,9 +115,9 @@
   <div class="col-md-7">
     <div class="row" id="result_ajaxSearch">
       <div class="col-md-12">
-        <div class="card">
-          <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-            <h3 class="card-title"><i class="fe fe-list"></i> <?=lang("Lists")?>
+        <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-list"></i> <?=lang("Lists")?>
             </h3>
             <div class="card-options">
               <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>

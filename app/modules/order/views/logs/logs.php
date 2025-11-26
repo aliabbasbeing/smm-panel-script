@@ -48,19 +48,19 @@
 <?php if ($order_status == 'all' && get_role("admin")): ?>
   <!-- Total Profit Card -->
   <div id="total-profit-card" class="card summary-card">
-    <h4><?=lang("Total Profit")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
+    <h4><?=lang("Total Profit")?> <small style="font-size:1rem; color: #000000ff;">(100 orders)</small></h4>
     <p id="total-profit-value" class="summary-value" style="color: #27ae60; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 
   <!-- Total Sell Card -->
   <div id="total-sell-card" class="card summary-card">
-    <h4><?=lang("Total Sell")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
+    <h4><?=lang("Total Sell")?> <small style="font-size:1rem; color: #000;">(100 orders)</small></h4>
     <p id="total-sell-value" class="summary-value" style="color: #f39c12; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 
   <!-- Profit Today Card -->
   <div id="profit-today-card" class="card summary-card">
-    <h4><?=lang("Profit Today")?> <small style="font-size:1rem; color:#bfc9d1;">(100 orders)</small></h4>
+    <h4><?=lang("Profit Today")?> <small style="font-size:1rem; color:#000;">(100 orders)</small></h4>
     <p id="profit-today-value" class="summary-value" style="color: #2980b9; font-size:2rem; font-weight:bold; margin:0;"></p>
   </div>
 <?php endif; ?>
@@ -82,8 +82,8 @@
     <?php if(!empty($order_logs)){ ?>
       <div class="col-md-12">
         <div>
-          <div class="card-header bg-gradient text-white">
-              <h3 class="card-title"><?=lang("Your Orders")?></h3>
+          <div class="card-header" style="border: 0.1px solid #003a75; border-radius: 3.5px 3.5px 0px 0px; background: #003a75 !important;">
+              <h3 class="card-title" style="color: #ffffffff !important;"><?=lang("Your Orders")?></h3>
               <div class="card-options">
                   <?php if (get_role("admin")) { ?>
                   <div class="dropdown">
@@ -362,4 +362,8 @@ function copyTextToClipboard(text) {
   font-size: 18px;
   font-weight: bold;
 }
+li {
+  color: #000 !important; /* black text */
+}
+
 </style>

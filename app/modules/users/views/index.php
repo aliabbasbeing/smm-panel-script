@@ -12,7 +12,7 @@
   <div class="col-md-12 col-xl-12">
     <div class="">
       <div class="card-header">
-        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <h3 class="card-title" style="color: #fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
         <div class="dropdown1" style="position: relative; display: inline-block;">
   <button type="button" class="btn btn-outline-info dropdown-toggle" onclick="toggleDropdown()" style="color: #04a9f4; border-color: #04a9f4; background-color: transparent;">
@@ -115,15 +115,15 @@
               <td>
     <div class="title"><h6><?php _echo($row->first_name) . " " . _echo($row->last_name); ?></h6></div>
     <div class="sub" style="margin-right: 15px; margin-bottom: 10px;">
-        <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #3f51b5; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
+        <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #fdfdfdff; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
             <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
-            <small style="color:#fff;"><?php _echo($row->email); ?></small>
+            <small style="color:#000;"><?php _echo($row->email); ?></small>
         </a>
     </div>
 
     <div class="sub" style="margin-bottom: 10px;">
         <small>
-            <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #3f51b5; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
+            <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #000 !important; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
                 <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
                 <?php echo $row->whatsapp_number; ?>
             </a>

@@ -188,26 +188,34 @@
     </div>
   </div>
 
-  <?php if (!empty($payments)): ?>
-    <section class="add-funds m-t-30">
-      <div class="row justify-content-md-center" id="result_ajaxSearch">
-        <div class="col-md-8">
-          <div class="card">
-            <div class="d-flex align-items-center justify-content-center">
-              <div class="tabs-list w-100 p-3">
-                <div class="form-group mb-0 w-100">
-                  <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
-                  <select id="paymentTypeDropdown" class="form-control">
-                    <option value="">Select Payment Type</option>
-                    <?php foreach ($payments as $row): ?>
-                      <option value="<?php echo htmlspecialchars($row->type); ?>">
-                        <?php echo htmlspecialchars($row->name); ?>
-                      </option>
-                    <?php endforeach; ?>
-                  </select>
-                </div>
-              </div>
+ <?php if (!empty($payments)): ?>
+<section class="add-funds m-t-30">
+  <div class="row justify-content-md-center" id="result_ajaxSearch">
+    <div class="col-md-8">
+      <div class="card p-0">
+
+        <!-- Added header section similar to your first code -->
+        <div class="card-header" style="border: 0.1px solid #003a75; border-radius: 3.5px 3.5px 0 0; background: #003a75 !important;">
+          <h3 class="card-title" style="color: #ffffff !important;">Add Funds</h3>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center">
+          <div class="tabs-list w-100 p-3">
+            <div class="form-group mb-0 w-100">
+              <label for="paymentTypeDropdown" class="mb-2"><b>Please select a payment Method</b></label>
+              <select id="paymentTypeDropdown" class="form-control">
+                <option value="">Select Payment Type</option>
+                <?php foreach ($payments as $row): ?>
+                  <option value="<?php echo htmlspecialchars($row->type); ?>">
+                    <?php echo htmlspecialchars($row->name); ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
             </div>
+          </div>
+        </div>
+
+     
 
             <div class="card-body">
               <div class="tab-content">
@@ -229,7 +237,7 @@
     <div class="row justify-content-md-center">
       <div class="col-md-8 p-0">
         <div class="transaction-card">
-          <div class="transaction-card-header">
+          <div class="transaction-card-header1 p-3" style="background: #003a75; border-radius: 8px 8px 0 0;">
             <h5 class="transaction-card-title text-white">Last 5 Transactions</h5>
           </div>
           <div class="transaction-card-body p-0">

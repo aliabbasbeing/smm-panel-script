@@ -1,6 +1,6 @@
-<div class="card content">
-  <div class="card-header" style="border:0.1px solid #1B78FC;border-radius:3.5px 3.5px 0 0;background:#1B78FC;">
-    <h3 class="card-title"><i class="fa fa-question-circle"></i> <?= lang("Modules") ?></h3>
+<div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><i class="fa fa-question-circle"></i> <?= lang("Modules") ?></h3>
   </div>
 
   <div class="card-body">

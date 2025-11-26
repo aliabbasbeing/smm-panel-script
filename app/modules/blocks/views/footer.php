@@ -23,7 +23,7 @@
 
       <!-- Quick Links -->
       <div class="col-lg-4">
-        <h4 class="title"><?=lang("Quick_links")?></h4>
+        <h4 class="title" style="color: #fff !important;"><?=lang("Quick_links")?></h4>
         <div class="row">
           <div class="col-6 col-md-3">
             <ul class="list-unstyled quick-link">
@@ -54,7 +54,7 @@
 
       <!-- Contact Info -->
       <div class="col-lg-4">
-        <h4 class="title"><?=lang("contact_informations")?></h4>
+        <h4 class="title" style="color: #fff !important;"><?=lang("contact_informations")?></h4>
         <ul class="list-unstyled">
           <li><?=lang("Whatsapp Number")?>: <?=get_option('whatsapp_number',"+12345678")?></li>
           <li><?=lang("Email")?>: <?=get_option('contact_email',"do-not-reply@smartpanel.com")?></li>
@@ -87,14 +87,6 @@
         </ul>
       </div>
 
-      <!-- Copyright Info -->
-      <div class="col-auto text-center text-lg-right">
-        <span><?=get_option('copy_right_content', "Copyright &copy; 2020 - SmartPanel")?> <?=(get_role("admin")) ? $version : "" ?></span>
-        <?php if(get_role("admin")): ?>
-          <div><a href="https://beastsmm.xyz" target="_blank">Powered By <span>beastsmm.xyz</span></a></div>
-        <?php endif; ?>
-      </div>
-    </div>
-  </div>
+      
 </footer>
 <!-- Footer End -->

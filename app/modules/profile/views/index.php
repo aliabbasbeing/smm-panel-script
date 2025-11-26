@@ -6,9 +6,9 @@
 
 <div class="row">
   <div class="col-md-6">
-    <div class="card">
-      <div class="card-header" >
-        <h3 class="card-title"><?=lang("basic_information")?></h3>
+    <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><?=lang("basic_information")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
@@ -85,9 +85,9 @@
 
 
   <div class="col-md-6">
-    <div class="card">
-      <div class="card-header" >
-        <h3 class="card-title"><?=lang("more_informations")?></h3>
+    <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><?=lang("more_informations")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
@@ -156,9 +156,9 @@
     </div>
   </div>  
   <div class="col-md-6">
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title"><?= lang("whatsapp_number") ?></h3>
+  <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><?= lang("whatsapp_number") ?></h3>
       <div class="card-options">
         <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
@@ -191,9 +191,9 @@
   </div>
 </div>
   <div class="col-md-6">
-    <div class="card">
-      <div class="card-header" >
-        <h3 class="card-title"><?=lang('your_api_key')?></h3>
+    <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><?=lang('your_api_key')?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>

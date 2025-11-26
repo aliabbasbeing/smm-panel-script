@@ -12,7 +12,7 @@
   justify-content:space-between;
   align-items:center;
   padding:18px 22px 14px;
-  background:linear-gradient(135deg,#042636,#052d40 55%,#041d28);
+  background: #003a75;
   border-bottom:1px solid #0e3b4e;
 }
 .balance-logs-card-title{
@@ -20,7 +20,7 @@
   font-size:20px;
   font-weight:600;
   letter-spacing:.5px;
-  color:#e9f6ff;
+  color:#fff !important;
   text-shadow:0 1px 2px rgba(0,0,0,.65);
 }
 .badge-action-deduction {

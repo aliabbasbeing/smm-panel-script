@@ -179,27 +179,29 @@ function validateWhatsappNumber(event) {
 
 <?=Modules::run(get_theme()."/footer", false)?>
 <style>
- /* Main Container */
+/* Main Container – same feel as login page */
 .auth-signup-form {
   width: 100%;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 10px;
-  background: rgba(0, 0, 0, 0.7);
+  padding: 15px;
+  background: #d1e8ff; /* same as body/login */
 }
 
-/* Sign-Up Form Container */
+/* Sign-Up Form Container – same card style as .form-login */
 .form-signup {
   width: 100%;
   max-width: 500px;
   border-radius: 8px;
-  padding: 20px;
-  background: #061d2b;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  padding: 24px 28px;
+  margin: 80px auto;
+  background: #f4f2f0;              /* same as login card */
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid #d4d4d4 !important;
   transition: all 0.3s ease;
-  margin: 30px auto;
+  color: #111827;
 }
 
 /* Site Logo */
@@ -213,52 +215,55 @@ function validateWhatsappNumber(event) {
   width: auto;
 }
 
-/* Section Title */
+/* Section Title – like login heading */
 .form-signup h4 {
-  color: #ffffff;
-  font-weight: bold;
+  color: #111827 !important;
+  font-weight: 700;
   margin-bottom: 15px;
   text-align: center;
-  font-size: 18px;
+  font-size: 19px;
 }
 
-/* Input Fields */
+/* Input Fields – same as login inputs */
 .form-signup input[type="text"],
 .form-signup input[type="password"],
 .form-signup input[type="email"],
 .form-signup input[type="tel"],
 .form-signup select {
   width: 100%;
-  height: 40px;
-  border: 1px solid #04a9f4;
-  border-radius: 6px;
-  padding: 0 12px;
-  background: transparent;
-  color: #ffffff;
+  height: 45px;
+  border: 1px solid #c5ccd8;
+  border-radius: 4px;
+  padding: 0 14px;
+  background: #e6f0ff;            /* light blue like login */
+  color: #111827;
   font-size: 14px;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
 .form-signup input::placeholder {
-  color: #b1b1b1;
+  color: #9aa2b1;
   font-size: 13px;
 }
 
-.form-signup input:focus {
-  border-color: #0082be;
+.form-signup input:focus,
+.form-signup select:focus {
+  background: #ffffff;
+  border-color: #04a9f4;
+  box-shadow: 0 0 0 2px rgba(4, 169, 244, 0.25);
 }
 
-/* Submit Button */
+/* Submit Button – same blue style as login */
 .form-signup .btn-submit {
   width: 100%;
   height: 45px;
   font-size: 15px;
-  font-weight: bold;
+  font-weight: 600;
   color: #ffffff;
   background: #04a9f4;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;             /* match login btn radius */
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
@@ -288,7 +293,7 @@ function validateWhatsappNumber(event) {
 }
 
 .form-signup .custom-control-label {
-  color: #ffffff;
+  color: #111827;
   font-size: 13px;
 }
 
@@ -306,11 +311,11 @@ function validateWhatsappNumber(event) {
   margin-bottom: 15px;
 }
 
-/* Already Have Account Link */
+/* Already Have Account Link – same tone as login bottom text */
 .form-signup .signup-link {
   text-align: center;
   margin-top: 15px;
-  color: #ffffff;
+  color: #111827;
   font-size: 13px;
 }
 
@@ -326,9 +331,31 @@ function validateWhatsappNumber(event) {
 
 /* Responsive Styles */
 @media (max-width: 768px) {
+  .auth-signup-form {
+    padding: 10px;
+  }
+
   .form-signup {
-    padding: 15px;
-    margin: 20px;
+    max-width: 100%;
+    padding: 18px 18px;
+    margin: 40px 15px;
+  }
+
+  .form-signup h4 {
+    font-size: 17px;
+  }
+
+  .form-signup input,
+  .form-signup .btn-submit {
+    height: 40px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-signup {
+    padding: 14px 12px;
+    margin: 30px 10px;
   }
 
   .form-signup h4 {
@@ -337,28 +364,7 @@ function validateWhatsappNumber(event) {
 
   .form-signup input,
   .form-signup .btn-submit {
-    height: 40px;
-    font-size: 13px;
-  }
-
-  .auth-signup-form {
-    padding: 5px;
-  }
-}
-
-@media (max-width: 480px) {
-  .form-signup {
-    max-width: 100%;
-    padding: 10px;
-  }
-
-  .form-signup h4 {
-    font-size: 15px;
-  }
-
-  .form-signup input,
-  .form-signup .btn-submit {
-    height: 35px;
+    height: 38px;
     font-size: 12px;
   }
 
@@ -366,6 +372,5 @@ function validateWhatsappNumber(event) {
     font-size: 12px;
   }
 }
-
 
 </style>

@@ -10,9 +10,9 @@
   <?php if(!empty($users)){
   ?>
   <div class="col-md-12 col-xl-12">
-    <div class="card">
+   <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
           <div class="dropdown">
             <button type="button" class="btn btn-outline-info  dropdown-toggle" data-toggle="dropdown">

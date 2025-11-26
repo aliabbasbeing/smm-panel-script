@@ -1,7 +1,7 @@
 
-<div class="card content">
-  <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-    <h3 class="card-title"><i class="fe fe-life-buoy"></i> <?=lang("website_logo")?></h3>
+<div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-life-buoy"></i> <?=lang("website_logo")?></h3>
   </div>
   <div class="card-body">
     <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">

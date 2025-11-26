@@ -68,58 +68,57 @@
     </div>
     <?php if($display_html){?>
       <header class="header fixed-top" id="headerNav">
-  <div class="container">
-    <nav class="navbar navbar-expand-lg">
-      <a class="navbar-brand" href="#">
-        <img class="site-logo d-none" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Website logo">
-        <img class="site-logo-white" src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="Website logo">
-      </a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span><i class="fe fe-menu"></i></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link js-scroll-trigger" href="#home">
-              <i class="fa fa-home"></i> <?=lang("Home")?>
+        <div class="container">
+          <nav class="navbar navbar-expand-lg">
+            <a class="navbar-brand" href="#">
+              <img class="site-logo d-none" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Website logo">
+              <img class="site-logo-white" src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="Website logo">
             </a>
-          </li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span><i class="fe fe-menu"></i></span>
+            </button>
 
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="#features">
-              <i class="fa fa-cogs"></i> <?=lang("What_we_offer")?>
-            </a>
-          </li>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                  <a class="nav-link js-scroll-trigger" href="#home">
+                    <i class="fa fa-home"></i> <?=lang("Home")?>
+                  </a>
+                </li>
 
-          <?php if (get_option("enable_service_list_no_login") == 1) { ?>
-            <li class="nav-item">
-              <a class="nav-link" href="<?=cn("services")?>">
-                <i class="fa fa-briefcase"></i> <?=lang("Services")?>
-              </a>
-            </li>
-          <?php } ?>
-        </ul>
 
-        <div class="nav-item d-md-flex btn-login-signup">
-          <?php if (!session('uid')) { ?>
-            <a class="link btn-login" href="<?=cn('auth/login')?>">
-              <i class="fa fa-sign-in"></i> <?=lang("Login")?>
-            </a>
-            <?php if(!get_option('disable_signup_page')) { ?>
-              <a href="<?=cn('auth/signup')?>" class="btn btn-pill btn-outline-primary sign-up">
-                <i class="fa fa-user-plus"></i> <?=lang("Sign_Up")?>
-              </a>
-            <?php } ?>
-          <?php } else { ?>
-            <a href="<?=cn('statistics')?>" class="btn btn-pill btn-outline-primary btn-statistics text-uppercase">
-              <i class="fa fa-chart-bar"></i> <?=lang("Statistics")?>
-            </a>
-          <?php } ?>
+                <?php if (get_option("enable_service_list_no_login") == 1) { ?>
+                  <li class="nav-item">
+                    <a class="nav-link" href="<?=cn("services")?>">
+                      <i class="fa fa-briefcase"></i> <?=lang("Services")?>
+                    </a>
+                  </li>
+                <?php } ?>
+
+                <?php if (!session('uid')) { ?>
+                  <!-- Login / Sign Up as nav items for better mobile behaviour -->
+                  <li class="nav-item btn-nav-item">
+                    <a class="btn btn-login" href="<?=cn('auth/login')?>">
+                      <i class="fa fa-sign-in"></i> <?=lang("Login")?>
+                    </a>
+                  </li>
+                  <?php if(!get_option('disable_signup_page')) { ?>
+                    <li class="nav-item btn-nav-item">
+                      <a href="<?=cn('auth/signup')?>" class="btn btn-pill btn-outline-primary sign-up">
+                        <i class="fa fa-user-plus"></i> <?=lang("Sign_Up")?>
+                      </a>
+                    </li>
+                  <?php } ?>
+                <?php } else { ?>
+                  <li class="nav-item btn-nav-item">
+                    <a href="<?=cn('statistics')?>" class="btn btn-pill btn-outline-primary btn-statistics text-uppercase">
+                      <i class="fa fa-chart-bar"></i> <?=lang("Statistics")?>
+                    </a>
+                  </li>
+                <?php } ?>
+              </ul>
+            </div>
+          </nav>
         </div>
-      </div>
-    </nav>
-  </div>
-</header>
-
+      </header>
     <?php }?>

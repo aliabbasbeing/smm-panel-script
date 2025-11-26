@@ -16,7 +16,7 @@
 
 <div class="row justify-content-md-center justify-content-xl-center m-t-30" id="result_ajaxSearch">
   <div class="col-md-10 col-xl-10 ">
-    <div class="card">
+    <div class="card p-0">
     <div class="card-header d-flex align-items-center" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
         <div class="tabs-list">
           <ul class="nav nav-tabs">
@@ -40,7 +40,7 @@
         <div class="col-md-12">
     
       <div class="card-header">
-        <h3 class="card-title"><?=lang("Lists")?></h3>
+        <h3 class="card-title" style="color:#fff !important"><?=lang("Lists")?></h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>

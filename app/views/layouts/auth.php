@@ -42,7 +42,7 @@
   </head>
   <body>
 
-    <div id="page-overlay" class="visible incoming">
+    <div id="page-overlay">
       <div class="loader-wrapper-outer">
         <div class="loader-wrapper-inner">
           <div class="lds-double-ring">

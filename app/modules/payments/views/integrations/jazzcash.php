@@ -117,9 +117,23 @@
                   </div>
 
                   <div class="form-group">
-                    <label class="form-label">IMAP Password</label>
-                    <input class="form-control" name="payment_params[option][imap_pass]" type="password" value="<?php echo (isset($option->imap_pass)) ? $option->imap_pass : ''; ?>">
-                  </div>
+  <label class="form-label">IMAP Password</label>
+  <div class="input-group">
+    <input 
+      class="form-control" 
+      name="payment_params[option][imap_pass]" 
+      type="password" 
+      id="imap_pass"
+      value="<?php echo (isset($option->imap_pass)) ? $option->imap_pass : ''; ?>"
+    >
+    <div class="input-group-append">
+      <span class="input-group-text" style="cursor:pointer;" id="togglePass">
+        <i class="fa fa-eye"></i>
+      </span>
+    </div>
+  </div>
+</div>
+ 
 
                   <div class="form-group">
                     <div class="form-group">
@@ -152,3 +166,20 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    $("#togglePass").on("click", function () {
+      const passInput = $("#imap_pass");
+      const icon = $(this).find("i");
+
+      if (passInput.attr("type") === "password") {
+        passInput.attr("type", "text");
+        icon.removeClass("fa-eye").addClass("fa-eye-slash");
+      } else {
+        passInput.attr("type", "password");
+        icon.removeClass("fa-eye-slash").addClass("fa-eye");
+      }
+    });
+  });
+</script>

@@ -14,7 +14,7 @@
 /* ---------- Custom Styling Add Funds Button + Card Header (matches dark theme) ---------- */
 .transaction-card {
   background: #06141b;
-  border: 1px solid #0d3242;
+  border: 1px solid #003a75;
   border-radius: 14px;
   box-shadow: 0 8px 18px -8px rgba(0,0,0,.6), 0 2px 6px -2px rgba(0,0,0,.5);
   overflow: hidden;
@@ -24,8 +24,8 @@
   justify-content:space-between;
   align-items:center;
   padding:18px 22px 14px;
-  background:linear-gradient(135deg,#042636,#052d40 55%,#041d28);
-  border-bottom:1px solid #0e3b4e;
+  background: #003a75 !important;
+  border-bottom:1px solid #003a75;
 }
 .transaction-card-title{
   margin:0;
@@ -130,7 +130,13 @@
           <?php
             if (!empty($transactions)) {
               $i = 0;
-              $currency_symbol = get_option("currency_symbol", '$');
+              // Multi-currency support setup
+              $current_currency = get_current_currency();
+              $currency_symbol = $current_currency ? $current_currency->symbol : get_option("currency_symbol", "$");
+              $decimal_places = get_option('currency_decimal', 2);
+              $decimalpoint = get_option('currency_decimal_separator', 'dot') == 'comma' ? ',' : '.';
+              $separator = get_option('currency_thousand_separator', 'space') == 'space' ? ' ' : (get_option('currency_thousand_separator', 'comma') == 'comma' ? ',' : '.');
+              
               foreach ($transactions as $key => $row) {
                 $i++;
           ?>
@@ -167,8 +173,8 @@
                 <img class="payment" src="<?=BASE?>/assets/images/payments/<?=strtolower($row->type); ?>.png" alt="<?=$row->type?> icon">
               <?php } ?>
             </td>
-            <td><?=$currency_symbol.$row->amount?></td>
-            <td><?=$row->txn_fee?></td>
+            <td><?= $currency_symbol . currency_format(convert_currency($row->amount), $decimal_places, $decimalpoint, $separator) ?></td>
+            <td><?= $currency_symbol . currency_format(convert_currency($row->txn_fee), $decimal_places, $decimalpoint, $separator) ?></td>
             <?php if (get_role("admin")) { ?>
               <td><?=$row->note;?></td>
             <?php } ?>

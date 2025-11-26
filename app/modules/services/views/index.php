@@ -92,9 +92,9 @@
       foreach ($all_services as $key => $category) {
     ?>
     <div class="col-md-12 col-xl-12">
-      <div class="card">
-        <div class="card-header" style="border: 0.1px solid #05d0a0; border-radius: 3.5px 3.5px 0px 0px; background: #05d0a0;">
-          <h3 class="card-title"><?php echo $key; ?></h3>
+      <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;"><?php echo $key; ?></h3>
           <div class="card-options">
             <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           </div>
