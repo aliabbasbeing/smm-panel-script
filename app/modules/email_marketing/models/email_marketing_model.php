@@ -318,6 +318,108 @@ class Email_marketing_model extends MY_Model {
         return $query->num_rows() > 0 ? $query->row() : null;
     }
     
+    /**
+     * Get SMTP config by ID (numeric ID)
+     * @param int $id SMTP config ID
+     * @return object|null SMTP config or null
+     */
+    public function get_smtp_config_by_id($id) {
+        $this->db->where('id', (int)$id);
+        $this->db->where('status', 1);
+        $query = $this->db->get($this->tb_smtp_configs);
+        return $query->num_rows() > 0 ? $query->row() : null;
+    }
+    
+    /**
+     * Get the next SMTP config for round-robin rotation
+     * @param object $campaign Campaign object
+     * @return object|null SMTP config or null
+     */
+    public function get_next_smtp_for_campaign($campaign) {
+        // Get the list of SMTP IDs from the campaign
+        $smtp_ids = array();
+        if (!empty($campaign->smtp_config_ids)) {
+            $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            if (!is_array($smtp_ids)) {
+                $smtp_ids = array();
+            }
+        }
+        
+        // Fallback to single smtp_config_id if no multi-SMTP configured
+        if (empty($smtp_ids) && !empty($campaign->smtp_config_id)) {
+            $smtp_ids = array($campaign->smtp_config_id);
+        }
+        
+        if (empty($smtp_ids)) {
+            return null;
+        }
+        
+        // Get current rotation index
+        $rotation_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
+        
+        // Try each SMTP starting from current index
+        $smtp_count = count($smtp_ids);
+        for ($attempt = 0; $attempt < $smtp_count; $attempt++) {
+            $current_index = ($rotation_index + $attempt) % $smtp_count;
+            $smtp_id = $smtp_ids[$current_index];
+            
+            $smtp = $this->get_smtp_config_by_id($smtp_id);
+            if ($smtp && $smtp->status == 1) {
+                return (object)[
+                    'smtp' => $smtp,
+                    'index' => $current_index,
+                    'smtp_ids' => $smtp_ids
+                ];
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Update the SMTP rotation index for a campaign
+     * @param int $campaign_id Campaign ID
+     * @param int $current_index Current index used
+     * @param int $smtp_count Total number of SMTPs
+     * @return bool Success
+     */
+    public function update_smtp_rotation_index($campaign_id, $current_index, $smtp_count) {
+        $next_index = ($current_index + 1) % $smtp_count;
+        $this->db->where('id', $campaign_id);
+        return $this->db->update($this->tb_campaigns, [
+            'smtp_rotation_index' => $next_index,
+            'updated_at' => NOW
+        ]);
+    }
+    
+    /**
+     * Get SMTP names for a campaign's configured SMTPs
+     * @param object $campaign Campaign object
+     * @return array Array of SMTP names
+     */
+    public function get_campaign_smtp_names($campaign) {
+        $smtp_names = array();
+        
+        if(!empty($campaign->smtp_config_ids)){
+            $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            if(is_array($smtp_ids)){
+                foreach($smtp_ids as $smtp_id){
+                    $smtp_info = $this->get_smtp_config_by_id($smtp_id);
+                    if($smtp_info){
+                        $smtp_names[] = $smtp_info->name;
+                    }
+                }
+            }
+        }
+        
+        // Fallback to single SMTP
+        if(empty($smtp_names) && !empty($campaign->smtp_name)){
+            $smtp_names[] = $campaign->smtp_name;
+        }
+        
+        return $smtp_names;
+    }
+    
     public function get_default_smtp() {
         $this->db->where('is_default', 1);
         $this->db->where('status', 1);
@@ -558,11 +660,12 @@ class Email_marketing_model extends MY_Model {
     // LOG METHODS
     // ========================================
     
-    public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null) {
+    public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
         $data = [
             'ids' => ids(),
             'campaign_id' => $campaign_id,
             'recipient_id' => $recipient_id,
+            'smtp_config_id' => $smtp_config_id,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -580,17 +683,18 @@ class Email_marketing_model extends MY_Model {
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
         } else {
-            $this->db->select('*');
+            $this->db->select('l.*, s.name as smtp_name');
         }
         
-        $this->db->from($this->tb_logs);
-        $this->db->where('campaign_id', $campaign_id);
+        $this->db->from($this->tb_logs . ' l');
+        $this->db->join($this->tb_smtp_configs . ' s', 'l.smtp_config_id = s.id', 'left');
+        $this->db->where('l.campaign_id', $campaign_id);
         
         if ($limit != -1) {
             $this->db->limit($limit, $page);
         }
         
-        $this->db->order_by('created_at', 'DESC');
+        $this->db->order_by('l.created_at', 'DESC');
         $query = $this->db->get();
         
         if ($query->num_rows() > 0) {

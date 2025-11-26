@@ -81,7 +81,7 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
-        $smtp_config_id = post("smtp_config_id");
+        $smtp_config_ids = $this->input->post("smtp_config_ids"); // Array of SMTP IDs
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
@@ -93,17 +93,33 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        if(empty($template_id) || empty($smtp_config_id)){
+        if(empty($template_id) || empty($smtp_config_ids)){
             ms(array(
                 "status" => "error",
-                "message" => "Please select template and SMTP configuration"
+                "message" => "Please select template and at least one SMTP configuration"
+            ));
+        }
+        
+        // Ensure smtp_config_ids is an array of integers
+        if(!is_array($smtp_config_ids)){
+            $smtp_config_ids = array($smtp_config_ids);
+        }
+        $smtp_config_ids = array_map('intval', $smtp_config_ids);
+        $smtp_config_ids = array_filter($smtp_config_ids); // Remove zeros
+        
+        if(empty($smtp_config_ids)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please select at least one valid SMTP configuration"
             ));
         }
         
         $campaign_data = array(
             'name' => $name,
             'template_id' => $template_id,
-            'smtp_config_id' => $smtp_config_id,
+            'smtp_config_id' => $smtp_config_ids[0], // Primary SMTP (first selected) for backward compatibility
+            'smtp_config_ids' => json_encode($smtp_config_ids), // All selected SMTPs for rotation
+            'smtp_rotation_index' => 0,
             'status' => 'pending',
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
@@ -148,7 +164,7 @@ class Email_marketing extends MX_Controller {
         
         $name = post("name");
         $template_id = post("template_id");
-        $smtp_config_id = post("smtp_config_id");
+        $smtp_config_ids = $this->input->post("smtp_config_ids"); // Array of SMTP IDs
         $sending_limit_hourly = post("sending_limit_hourly");
         $sending_limit_daily = post("sending_limit_daily");
         
@@ -159,10 +175,32 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
+        if(empty($smtp_config_ids)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please select at least one SMTP configuration"
+            ));
+        }
+        
+        // Ensure smtp_config_ids is an array of integers
+        if(!is_array($smtp_config_ids)){
+            $smtp_config_ids = array($smtp_config_ids);
+        }
+        $smtp_config_ids = array_map('intval', $smtp_config_ids);
+        $smtp_config_ids = array_filter($smtp_config_ids); // Remove zeros
+        
+        if(empty($smtp_config_ids)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please select at least one valid SMTP configuration"
+            ));
+        }
+        
         $update_data = array(
             'name' => $name,
             'template_id' => $template_id,
-            'smtp_config_id' => $smtp_config_id,
+            'smtp_config_id' => $smtp_config_ids[0], // Primary SMTP for backward compatibility
+            'smtp_config_ids' => json_encode($smtp_config_ids), // All selected SMTPs for rotation
             'sending_limit_hourly' => $sending_limit_hourly ? (int)$sending_limit_hourly : null,
             'sending_limit_daily' => $sending_limit_daily ? (int)$sending_limit_daily : null
         );
@@ -356,12 +394,16 @@ class Email_marketing extends MX_Controller {
         $this->model->update_campaign_stats($campaign->id);
         $campaign = $this->model->get_campaign($ids); // Refresh data
         
+        // Get SMTP names for campaign
+        $smtp_names = $this->model->get_campaign_smtp_names($campaign);
+        
         $recipients = $this->model->get_recipients($campaign->id, 100, 0);
         $logs = $this->model->get_logs($campaign->id, 50, 0);
         
         $data = array(
             "module" => $this->module,
             "campaign" => $campaign,
+            "smtp_names" => $smtp_names,
             "recipients" => $recipients,
             "logs" => $logs
         );

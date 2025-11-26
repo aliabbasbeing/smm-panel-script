@@ -180,7 +180,7 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Send individual email
+     * Send individual email with SMTP rotation and fallback
      */
     private function send_email($campaign, $recipient){
         try {
@@ -189,18 +189,22 @@ class Email_cron extends CI_Controller {
             $template = $this->email_model->db->get('email_templates')->row();
             
             if(!$template){
-                $this->log_failed($campaign, $recipient, 'Template not found');
+                $this->log_failed($campaign, $recipient, 'Template not found', null);
                 return false;
             }
             
-            // Get SMTP config
-            $this->email_model->db->where('id', $campaign->smtp_config_id);
-            $smtp = $this->email_model->db->get('email_smtp_configs')->row();
+            // Get SMTP config using rotation
+            $smtp_rotation = $this->email_model->get_next_smtp_for_campaign($campaign);
             
-            if(!$smtp || $smtp->status != 1){
-                $this->log_failed($campaign, $recipient, 'SMTP configuration not found or disabled');
+            if(!$smtp_rotation || !$smtp_rotation->smtp){
+                $this->log_failed($campaign, $recipient, 'No valid SMTP configuration available', null);
                 return false;
             }
+            
+            $smtp = $smtp_rotation->smtp;
+            $smtp_index = $smtp_rotation->index;
+            $smtp_ids = $smtp_rotation->smtp_ids;
+            $smtp_count = count($smtp_ids);
             
             // Prepare template variables
             $variables = [];
@@ -231,57 +235,97 @@ class Email_cron extends CI_Controller {
                 $body .= $variables['tracking_pixel'];
             }
             
-            // Configure email
-            $config = [
-                'protocol' => 'smtp',
-                'smtp_host' => $smtp->host,
-                'smtp_port' => $smtp->port,
-                'smtp_user' => $smtp->username,
-                'smtp_pass' => $smtp->password,
-                'smtp_crypto' => $smtp->encryption,
-                'mailtype' => 'html',
-                'charset' => 'utf-8',
-                'newline' => "\r\n",       // Fix for RFC compliance
-                'crlf' => "\r\n",          // Fix for RFC compliance  
-                'wordwrap' => TRUE,        // Enable word wrapping to prevent long lines
-                'wrapchars' => 78          // Wrap at 78 characters (RFC recommended)
-            ];
+            // Try to send with SMTP rotation and fallback
+            $max_attempts = $smtp_count; // Try each SMTP at most once
+            $current_smtp_index = $smtp_index;
+            $last_error = '';
             
-            $this->email->initialize($config);
-            $this->email->from($smtp->from_email, $smtp->from_name);
-            $this->email->to($recipient->email);
-            
-            if($smtp->reply_to){
-                $this->email->reply_to($smtp->reply_to);
+            for($attempt = 0; $attempt < $max_attempts; $attempt++){
+                // Get SMTP for this attempt
+                if($attempt > 0){
+                    // Fallback to next SMTP
+                    $current_smtp_index = ($smtp_index + $attempt) % $smtp_count;
+                    $fallback_smtp_id = $smtp_ids[$current_smtp_index];
+                    $smtp = $this->email_model->get_smtp_config_by_id($fallback_smtp_id);
+                    
+                    if(!$smtp || $smtp->status != 1){
+                        continue; // Skip disabled SMTPs
+                    }
+                    
+                    log_message('info', 'Email Marketing: Attempting fallback SMTP #' . $smtp->id . ' (' . $smtp->name . ') for recipient ' . $recipient->email);
+                }
+                
+                // Configure email
+                $config = [
+                    'protocol' => 'smtp',
+                    'smtp_host' => $smtp->host,
+                    'smtp_port' => $smtp->port,
+                    'smtp_user' => $smtp->username,
+                    'smtp_pass' => $smtp->password,
+                    'smtp_crypto' => $smtp->encryption,
+                    'mailtype' => 'html',
+                    'charset' => 'utf-8',
+                    'newline' => "\r\n",       // Fix for RFC compliance
+                    'crlf' => "\r\n",          // Fix for RFC compliance  
+                    'wordwrap' => TRUE,        // Enable word wrapping to prevent long lines
+                    'wrapchars' => 78          // Wrap at 78 characters (RFC recommended)
+                ];
+                
+                // Clear previous email state
+                $this->email->clear();
+                $this->email->initialize($config);
+                $this->email->from($smtp->from_email, $smtp->from_name);
+                $this->email->to($recipient->email);
+                
+                if($smtp->reply_to){
+                    $this->email->reply_to($smtp->reply_to);
+                }
+                
+                $this->email->subject($subject);
+                $this->email->message($body);
+                
+                // Send email
+                if($this->email->send()){
+                    // Update recipient status
+                    $this->email_model->update_recipient_status($recipient->id, 'sent');
+                    
+                    // Update SMTP rotation index for next email
+                    $this->email_model->update_smtp_rotation_index($campaign->id, $current_smtp_index, $smtp_count);
+                    
+                    // Add log with SMTP info
+                    $this->email_model->add_log(
+                        $campaign->id,
+                        $recipient->id,
+                        $recipient->email,
+                        $subject,
+                        'sent',
+                        null,
+                        $smtp->id
+                    );
+                    
+                    return true;
+                } else {
+                    // Get error - only include status info, not full debugger output which may contain sensitive data
+                    $debugger_output = $this->email->print_debugger(['headers']);
+                    // Sanitize the error message to remove potential sensitive data
+                    $last_error = preg_replace('/smtp_pass[^\s]*/i', 'smtp_pass: [REDACTED]', $debugger_output);
+                    $last_error = preg_replace('/password[^\s]*/i', 'password: [REDACTED]', $last_error);
+                    log_message('error', 'Email Marketing: SMTP #' . $smtp->id . ' (' . $smtp->name . ') failed: ' . substr($last_error, 0, 300));
+                    
+                    // Continue to try next SMTP (fallback)
+                }
             }
             
-            $this->email->subject($subject);
-            $this->email->message($body);
-            
-            // Send email
-            if($this->email->send()){
-                // Update recipient status
-                $this->email_model->update_recipient_status($recipient->id, 'sent');
-                
-                // Add log
-                $this->email_model->add_log(
-                    $campaign->id,
-                    $recipient->id,
-                    $recipient->email,
-                    $subject,
-                    'sent'
-                );
-                
-                return true;
-            } else {
-                // Get error
-                $error = $this->email->print_debugger();
-                $this->log_failed($campaign, $recipient, $error);
-                return false;
-            }
+            // All SMTPs failed - store sanitized error
+            $sanitized_error = 'All SMTP servers failed. Check SMTP configurations and server connectivity.';
+            $this->log_failed($campaign, $recipient, $sanitized_error, isset($smtp) ? $smtp->id : null);
+            return false;
             
         } catch(Exception $e){
-            $this->log_failed($campaign, $recipient, $e->getMessage());
+            // Sanitize exception message to avoid storing sensitive data
+            $sanitized_message = preg_replace('/smtp_pass[^\s]*/i', 'smtp_pass: [REDACTED]', $e->getMessage());
+            $sanitized_message = preg_replace('/password[^\s]*/i', 'password: [REDACTED]', $sanitized_message);
+            $this->log_failed($campaign, $recipient, substr($sanitized_message, 0, 300), isset($smtp) ? $smtp->id : null);
             return false;
         }
     }
@@ -289,7 +333,7 @@ class Email_cron extends CI_Controller {
     /**
      * Log failed email
      */
-    private function log_failed($campaign, $recipient, $error){
+    private function log_failed($campaign, $recipient, $error, $smtp_config_id = null){
         // Update recipient status
         $this->email_model->update_recipient_status($recipient->id, 'failed', $error);
         
@@ -300,7 +344,8 @@ class Email_cron extends CI_Controller {
             $recipient->email,
             'Failed',
             'failed',
-            $error
+            $error,
+            $smtp_config_id
         );
     }
     
