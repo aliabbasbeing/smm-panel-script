@@ -245,4 +245,226 @@ class Whatsapp_notification {
             return false;
         }
     }
+
+    /**
+     * Send order status change notification
+     * 
+     * This method sends WhatsApp notifications when an order's status changes.
+     * It supports completed, partial, cancelled, and refunded statuses.
+     * 
+     * @param object $order     Order object with order details
+     * @param string $old_status Previous status of the order
+     * @param string $new_status New status of the order
+     * @param string $phone     User's phone number (optional, will fetch from user if not provided)
+     * @return bool|string      Returns true on success, error message on failure
+     */
+    public function send_order_status_notification($order, $old_status, $new_status, $phone = null) {
+        // Only send notification if status actually changed
+        if (strtolower($old_status) === strtolower($new_status)) {
+            return 'Status unchanged';
+        }
+
+        // Determine the event type based on the new status
+        $event_type = $this->_get_event_type_from_status($new_status);
+        if (!$event_type) {
+            log_message('info', 'WhatsApp Notification: No notification configured for status - ' . $new_status);
+            return 'No notification for this status';
+        }
+
+        // Get user details if phone not provided
+        if (empty($phone) && isset($order->uid)) {
+            $user = $this->_get_user_details($order->uid);
+            if ($user && !empty($user->whatsapp_number)) {
+                $phone = $user->whatsapp_number;
+            }
+        }
+
+        if (empty($phone)) {
+            log_message('info', 'WhatsApp Notification: No phone number for order ID ' . $order->id);
+            return 'No phone number available';
+        }
+
+        // Get service name
+        $service_name = '';
+        if (isset($order->service_id)) {
+            $service = $this->_get_service_details($order->service_id);
+            if ($service && isset($service->name)) {
+                $service_name = $service->name;
+            }
+        }
+
+        // Get username
+        $username = '';
+        if (isset($order->uid)) {
+            $user = $this->_get_user_details($order->uid);
+            if ($user) {
+                $username = isset($user->first_name) ? $user->first_name : (isset($user->username) ? $user->username : '');
+            }
+        }
+
+        // Prepare variables for template
+        $variables = array(
+            'order_id' => isset($order->id) ? $order->id : '',
+            'service_name' => $service_name,
+            'quantity' => isset($order->quantity) ? $order->quantity : '',
+            'link' => isset($order->link) ? $order->link : '',
+            'charge' => isset($order->charge) ? number_format($order->charge, 4) : '0.0000',
+            'old_status' => ucfirst($old_status),
+            'new_status' => ucfirst($new_status),
+            'username' => $username,
+            'remains' => isset($order->remains) ? $order->remains : '',
+            'delivered_quantity' => isset($order->quantity) && isset($order->remains) 
+                ? ($order->quantity - (is_numeric($order->remains) ? $order->remains : 0)) 
+                : '',
+            'ordered_quantity' => isset($order->quantity) ? $order->quantity : '',
+            'refund_amount' => isset($order->refund_amount) ? number_format($order->refund_amount, 4) : '',
+            'new_balance' => isset($order->new_balance) ? number_format($order->new_balance, 4) : '',
+        );
+
+        // Send the notification
+        $result = $this->send($event_type, $variables, $phone);
+
+        // Log the notification attempt
+        $this->_log_notification($order->id, $event_type, $old_status, $new_status, is_bool($result) && $result);
+
+        return $result;
+    }
+
+    /**
+     * Send notification for order completed
+     * 
+     * @param object $order     Order object
+     * @param string $old_status Previous status
+     * @param string $phone     User's phone number (optional)
+     * @return bool|string
+     */
+    public function send_order_completed_notification($order, $old_status, $phone = null) {
+        return $this->send_order_status_notification($order, $old_status, 'completed', $phone);
+    }
+
+    /**
+     * Send notification for order partial
+     * 
+     * @param object $order     Order object
+     * @param string $old_status Previous status
+     * @param string $phone     User's phone number (optional)
+     * @return bool|string
+     */
+    public function send_order_partial_notification($order, $old_status, $phone = null) {
+        return $this->send_order_status_notification($order, $old_status, 'partial', $phone);
+    }
+
+    /**
+     * Send notification for order cancelled
+     * 
+     * @param object $order     Order object
+     * @param string $old_status Previous status
+     * @param string $phone     User's phone number (optional)
+     * @return bool|string
+     */
+    public function send_order_cancelled_notification($order, $old_status, $phone = null) {
+        return $this->send_order_status_notification($order, $old_status, 'canceled', $phone);
+    }
+
+    /**
+     * Send notification for order refunded
+     * 
+     * @param object $order     Order object
+     * @param string $old_status Previous status
+     * @param string $phone     User's phone number (optional)
+     * @return bool|string
+     */
+    public function send_order_refunded_notification($order, $old_status, $phone = null) {
+        return $this->send_order_status_notification($order, $old_status, 'refunded', $phone);
+    }
+
+    /**
+     * Get event type from order status
+     * 
+     * @param string $status
+     * @return string|null
+     */
+    private function _get_event_type_from_status($status) {
+        $status = strtolower($status);
+        $status_map = array(
+            'completed' => 'order_completed',
+            'partial' => 'order_partial',
+            'canceled' => 'order_cancelled',
+            'cancelled' => 'order_cancelled',
+            'refunded' => 'order_refunded',
+        );
+
+        return isset($status_map[$status]) ? $status_map[$status] : null;
+    }
+
+    /**
+     * Get user details by user ID
+     * 
+     * @param int $user_id
+     * @return object|null
+     */
+    private function _get_user_details($user_id) {
+        try {
+            $this->CI->db->select('id, first_name, last_name, email, whatsapp_number, balance');
+            $this->CI->db->where('id', $user_id);
+            return $this->CI->db->get('users')->row();
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Notification: Failed to get user details - ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Get service details by service ID
+     * 
+     * @param int $service_id
+     * @return object|null
+     */
+    private function _get_service_details($service_id) {
+        try {
+            $this->CI->db->select('id, name');
+            $this->CI->db->where('id', $service_id);
+            return $this->CI->db->get('services')->row();
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Notification: Failed to get service details - ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Log notification event (optional logging)
+     * 
+     * @param int    $order_id
+     * @param string $event_type
+     * @param string $old_status
+     * @param string $new_status
+     * @param bool   $success
+     */
+    private function _log_notification($order_id, $event_type, $old_status, $new_status, $success) {
+        $log_message = sprintf(
+            'WhatsApp Notification: Order #%d status changed from %s to %s, event: %s, sent: %s',
+            $order_id,
+            $old_status,
+            $new_status,
+            $event_type,
+            $success ? 'YES' : 'NO'
+        );
+        log_message('info', $log_message);
+    }
+
+    /**
+     * Check if notification is enabled for a specific status
+     * 
+     * @param string $status
+     * @return bool
+     */
+    public function is_status_notification_enabled($status) {
+        $event_type = $this->_get_event_type_from_status($status);
+        if (!$event_type) {
+            return false;
+        }
+
+        $notification = $this->_get_notification_settings($event_type);
+        return $notification && $notification->status == 1;
+    }
 }
