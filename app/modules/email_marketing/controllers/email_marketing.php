@@ -394,12 +394,16 @@ class Email_marketing extends MX_Controller {
         $this->model->update_campaign_stats($campaign->id);
         $campaign = $this->model->get_campaign($ids); // Refresh data
         
+        // Get SMTP names for campaign
+        $smtp_names = $this->model->get_campaign_smtp_names($campaign);
+        
         $recipients = $this->model->get_recipients($campaign->id, 100, 0);
         $logs = $this->model->get_logs($campaign->id, 50, 0);
         
         $data = array(
             "module" => $this->module,
             "campaign" => $campaign,
+            "smtp_names" => $smtp_names,
             "recipients" => $recipients,
             "logs" => $logs
         );

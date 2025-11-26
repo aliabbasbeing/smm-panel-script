@@ -392,6 +392,34 @@ class Email_marketing_model extends MY_Model {
         ]);
     }
     
+    /**
+     * Get SMTP names for a campaign's configured SMTPs
+     * @param object $campaign Campaign object
+     * @return array Array of SMTP names
+     */
+    public function get_campaign_smtp_names($campaign) {
+        $smtp_names = array();
+        
+        if(!empty($campaign->smtp_config_ids)){
+            $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            if(is_array($smtp_ids)){
+                foreach($smtp_ids as $smtp_id){
+                    $smtp_info = $this->get_smtp_config_by_id($smtp_id);
+                    if($smtp_info){
+                        $smtp_names[] = $smtp_info->name;
+                    }
+                }
+            }
+        }
+        
+        // Fallback to single SMTP
+        if(empty($smtp_names) && !empty($campaign->smtp_name)){
+            $smtp_names[] = $campaign->smtp_name;
+        }
+        
+        return $smtp_names;
+    }
+    
     public function get_default_smtp() {
         $this->db->where('is_default', 1);
         $this->db->where('status', 1);

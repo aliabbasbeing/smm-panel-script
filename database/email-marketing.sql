@@ -75,7 +75,10 @@ CREATE TABLE IF NOT EXISTS `email_campaigns` (
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add columns for multi-SMTP support to existing tables (for upgrades)
+-- =====================================================
+-- UPGRADE NOTES: For existing installations, uncomment and run the following ALTER statements
+-- These are only needed if you already have the email_campaigns table without the new columns
+-- =====================================================
 -- ALTER TABLE `email_campaigns` ADD COLUMN `smtp_config_ids` TEXT DEFAULT NULL COMMENT 'JSON array of multiple SMTP config IDs for rotation' AFTER `smtp_config_id`;
 -- ALTER TABLE `email_campaigns` ADD COLUMN `smtp_rotation_index` INT(11) NOT NULL DEFAULT 0 COMMENT 'Current index for round-robin SMTP rotation' AFTER `smtp_config_ids`;
 
@@ -135,7 +138,10 @@ CREATE TABLE IF NOT EXISTS `email_logs` (
   KEY `sent_at` (`sent_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Add smtp_config_id column to existing tables (for upgrades)
+-- =====================================================
+-- UPGRADE NOTES: For existing installations, uncomment and run the following ALTER statements
+-- These are only needed if you already have the email_logs table without the smtp_config_id column
+-- =====================================================
 -- ALTER TABLE `email_logs` ADD COLUMN `smtp_config_id` INT(11) DEFAULT NULL COMMENT 'SMTP configuration used for sending' AFTER `recipient_id`;
 -- ALTER TABLE `email_logs` ADD INDEX `smtp_config_id` (`smtp_config_id`);
 

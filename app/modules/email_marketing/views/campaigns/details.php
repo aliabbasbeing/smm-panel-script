@@ -118,31 +118,12 @@
             <td><strong>SMTP Configuration(s):</strong></td>
             <td>
               <?php 
-              // Display multiple SMTP configurations
-              $smtp_names = array();
-              if(!empty($campaign->smtp_config_ids)){
-                $smtp_ids = json_decode($campaign->smtp_config_ids, true);
-                if(is_array($smtp_ids)){
-                  foreach($smtp_ids as $smtp_id){
-                    $CI = &get_instance();
-                    $CI->db->where('id', $smtp_id);
-                    $smtp_info = $CI->db->get('email_smtp_configs')->row();
-                    if($smtp_info){
-                      $smtp_names[] = htmlspecialchars($smtp_info->name);
-                    }
-                  }
-                }
-              }
-              // Fallback to single SMTP
-              if(empty($smtp_names) && !empty($campaign->smtp_name)){
-                $smtp_names[] = htmlspecialchars($campaign->smtp_name);
-              }
-              
+              // Display multiple SMTP configurations (passed from controller)
               if(count($smtp_names) > 1){
                 echo '<span class="badge badge-info">' . count($smtp_names) . ' SMTPs (Rotation)</span><br>';
-                echo '<small>' . implode(', ', $smtp_names) . '</small>';
+                echo '<small>' . htmlspecialchars(implode(', ', $smtp_names)) . '</small>';
               } else {
-                echo !empty($smtp_names) ? $smtp_names[0] : '-';
+                echo !empty($smtp_names) ? htmlspecialchars($smtp_names[0]) : '-';
               }
               ?>
             </td>

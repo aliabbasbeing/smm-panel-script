@@ -305,20 +305,27 @@ class Email_cron extends CI_Controller {
                     
                     return true;
                 } else {
-                    // Get error
-                    $last_error = $this->email->print_debugger(['headers', 'subject', 'body']);
-                    log_message('error', 'Email Marketing: SMTP #' . $smtp->id . ' failed for ' . $recipient->email . ': ' . substr($last_error, 0, 500));
+                    // Get error - only include status info, not full debugger output which may contain sensitive data
+                    $debugger_output = $this->email->print_debugger(['headers']);
+                    // Sanitize the error message to remove potential sensitive data
+                    $last_error = preg_replace('/smtp_pass[^\s]*/i', 'smtp_pass: [REDACTED]', $debugger_output);
+                    $last_error = preg_replace('/password[^\s]*/i', 'password: [REDACTED]', $last_error);
+                    log_message('error', 'Email Marketing: SMTP #' . $smtp->id . ' (' . $smtp->name . ') failed: ' . substr($last_error, 0, 300));
                     
                     // Continue to try next SMTP (fallback)
                 }
             }
             
-            // All SMTPs failed
-            $this->log_failed($campaign, $recipient, 'All SMTP servers failed. Last error: ' . substr($last_error, 0, 500), $smtp->id);
+            // All SMTPs failed - store sanitized error
+            $sanitized_error = 'All SMTP servers failed. Check SMTP configurations and server connectivity.';
+            $this->log_failed($campaign, $recipient, $sanitized_error, isset($smtp) ? $smtp->id : null);
             return false;
             
         } catch(Exception $e){
-            $this->log_failed($campaign, $recipient, $e->getMessage(), isset($smtp) ? $smtp->id : null);
+            // Sanitize exception message to avoid storing sensitive data
+            $sanitized_message = preg_replace('/smtp_pass[^\s]*/i', 'smtp_pass: [REDACTED]', $e->getMessage());
+            $sanitized_message = preg_replace('/password[^\s]*/i', 'password: [REDACTED]', $sanitized_message);
+            $this->log_failed($campaign, $recipient, substr($sanitized_message, 0, 300), isset($smtp) ? $smtp->id : null);
             return false;
         }
     }
