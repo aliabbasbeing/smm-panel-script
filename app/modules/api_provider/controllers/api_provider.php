@@ -968,6 +968,10 @@ class api_provider extends MX_Controller {
 		}
 
 		$processed = 0;
+		$notifications_sent = 0;
+
+		// Load WhatsApp notification library for status change notifications
+		$this->load->library('whatsapp_notification');
 
 		foreach ($orders as $row) {
 			$api = $this->model->get("id, url, key", $this->tb_api_providers, ["id" => $row->api_provider_id] );
@@ -988,6 +992,7 @@ class api_provider extends MX_Controller {
 
 			if (!empty($response->status)) {
 				$rand_time = get_random_time();
+				$old_status = $row->status; // Store old status for notification
 				$data = [
 					"sub_status"         => $response->status,
 					"sub_response_orders"=> json_encode($response->orders),
@@ -1020,13 +1025,31 @@ class api_provider extends MX_Controller {
 				}
 				$this->db->update($this->tb_orders, $data, ["id" => $row->id]);
 				$processed++;
+
+				// Send WhatsApp notification if status changed to a notifiable status
+				$final_new_status = isset($data['status']) ? $data['status'] : '';
+				if ($old_status !== $final_new_status && in_array($final_new_status, ['completed', 'partial', 'canceled', 'refunded'])) {
+					// Check if notification is enabled before sending
+					if ($this->whatsapp_notification->is_status_notification_enabled($final_new_status)) {
+						$notification_result = $this->whatsapp_notification->send_order_status_notification($row, $old_status, $final_new_status);
+						if ($notification_result === true) {
+							$notifications_sent++;
+							echo $row->id." → WhatsApp notification sent for status: ".$final_new_status."<br>";
+						} else {
+							echo $row->id." → WhatsApp notification skipped: ".(is_string($notification_result) ? $notification_result : 'Unknown error')."<br>";
+						}
+					} else {
+						echo $row->id." → WhatsApp notification disabled for status: ".$final_new_status."<br>";
+					}
+				}
 			}
 		}
 		echo "Successfully";
 		
 		// Log the result
 		if ($log_id) {
-			$this->cron_logger->end($log_id, 'Success', 200, "Checked {$processed} subscriptions");
+			$message = "Checked {$processed} subscriptions, sent {$notifications_sent} WhatsApp notifications";
+			$this->cron_logger->end($log_id, 'Success', 200, $message);
 		}
 	}
 
@@ -1046,6 +1069,10 @@ class api_provider extends MX_Controller {
     if ($new_currency_rate == 0) $new_currency_rate = 1;
 
     $processed = 0;
+    $notifications_sent = 0;
+
+    // Load WhatsApp notification library for status change notifications
+    $this->load->library('whatsapp_notification');
 
     foreach ($orders as $row) {
         echo "Checking Order ID: {$row->id}<br>"; // ✅ log every checked order
@@ -1076,6 +1103,7 @@ class api_provider extends MX_Controller {
 
             $data = [];
             $rand_time = get_random_time();
+            $old_status = $row->status; // Store old status for notification
 
             if ($row->is_drip_feed) {
                 $status_dripfeed = (strrpos($response->status, 'progress') || strrpos(strtolower($response->status), 'active')) ? 'inprogress'
@@ -1141,6 +1169,9 @@ class api_provider extends MX_Controller {
             }
 
             if (!empty($data)) {
+                $return_funds = 0;
+                $new_balance = 0;
+                
                 // Refund / Partial / Canceled compensation
                 if ($row->sub_response_posts != 1 && in_array($response->status, ["Refunded","Canceled","Partial"])) {
                     $data['charge'] = 0;
@@ -1167,11 +1198,36 @@ class api_provider extends MX_Controller {
                     $user = $this->model->get("id, balance", $this->tb_users, ["id"=> $row->uid]);
                     if (!empty($user)) {
                         $balance = $user->balance + $return_funds;
+                        $new_balance = $balance;
                         $this->db->update($this->tb_users, ["balance" => $balance], ["id"=> $row->uid]);
                     }
                 }
                 $this->db->update($this->tb_orders, $data, ["id" => $row->id]);
                 $processed++;
+
+                // Send WhatsApp notification if status changed to a notifiable status
+                $final_new_status = isset($data['status']) ? $data['status'] : '';
+                if ($old_status !== $final_new_status && in_array($final_new_status, ['completed', 'partial', 'canceled', 'refunded'])) {
+                    // Add additional data for notification
+                    $row->refund_amount = $return_funds;
+                    $row->new_balance = $new_balance;
+                    if (isset($response->remains)) {
+                        $row->remains = $response->remains;
+                    }
+                    
+                    // Check if notification is enabled before sending
+                    if ($this->whatsapp_notification->is_status_notification_enabled($final_new_status)) {
+                        $notification_result = $this->whatsapp_notification->send_order_status_notification($row, $old_status, $final_new_status);
+                        if ($notification_result === true) {
+                            $notifications_sent++;
+                            echo $row->id." → WhatsApp notification sent for status: ".$final_new_status."<br>";
+                        } else {
+                            echo $row->id." → WhatsApp notification skipped: ".(is_string($notification_result) ? $notification_result : 'Unknown error')."<br>";
+                        }
+                    } else {
+                        echo $row->id." → WhatsApp notification disabled for status: ".$final_new_status."<br>";
+                    }
+                }
             }
         }
     }
@@ -1180,7 +1236,8 @@ class api_provider extends MX_Controller {
     
     // Log the result
     if ($log_id) {
-        $this->cron_logger->end($log_id, 'Success', 200, "Checked {$processed} orders");
+        $message = "Checked {$processed} orders, sent {$notifications_sent} WhatsApp notifications";
+        $this->cron_logger->end($log_id, 'Success', 200, $message);
     }
 }
 
