@@ -180,7 +180,7 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Send individual email
+     * Send individual email with SMTP rotation and fallback
      */
     private function send_email($campaign, $recipient){
         try {
@@ -193,34 +193,16 @@ class Email_cron extends CI_Controller {
                 return false;
             }
             
-            // Get SMTP config
-            $this->email_model->db->where('id', $campaign->smtp_config_id);
-            $smtp = $this->email_model->db->get('email_smtp_configs')->row();
+            // Get SMTP configs for rotation
+            $smtp_ids = $this->get_smtp_ids_for_campaign($campaign);
             
-            if(!$smtp || $smtp->status != 1){
-                $this->log_failed($campaign, $recipient, 'SMTP configuration not found or disabled');
+            if(empty($smtp_ids)){
+                $this->log_failed($campaign, $recipient, 'No SMTP configurations available');
                 return false;
             }
             
-            // Prepare template variables
-            $variables = [];
-            
-            // Add custom data if available
-            if($recipient->custom_data){
-                $customData = json_decode($recipient->custom_data, true);
-                if(is_array($customData)){
-                    $variables = $customData;
-                }
-            }
-            
-            // Add default recipient data
-            $variables['email'] = $recipient->email;
-            $variables['name'] = $recipient->name ?: 'User';
-            $variables['username'] = $recipient->name ?: 'User';
-            
-            // Add tracking link
-            $trackingUrl = base_url('email_marketing/track/' . $recipient->tracking_token);
-            $variables['tracking_pixel'] = '<img src="' . $trackingUrl . '" width="1" height="1" />';
+            // Prepare template variables (done once, reused for retries)
+            $variables = $this->prepare_template_variables($recipient);
             
             // Process template
             $subject = $this->email_model->process_template_variables($template->subject, $variables);
@@ -231,6 +213,118 @@ class Email_cron extends CI_Controller {
                 $body .= $variables['tracking_pixel'];
             }
             
+            // Try sending with rotation and fallback
+            $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
+            $total_smtps = count($smtp_ids);
+            $attempts = 0;
+            $last_error = '';
+            
+            // Try each SMTP in rotation order, starting from current_index
+            while($attempts < $total_smtps){
+                $smtp_index = ($current_index + $attempts) % $total_smtps;
+                $smtp_id = $smtp_ids[$smtp_index];
+                
+                // Get SMTP config
+                $this->email_model->db->where('id', $smtp_id);
+                $smtp = $this->email_model->db->get('email_smtp_configs')->row();
+                
+                if(!$smtp || $smtp->status != 1){
+                    $attempts++;
+                    $last_error = "SMTP ID {$smtp_id} not found or disabled";
+                    continue; // Skip to next SMTP
+                }
+                
+                // Try sending with this SMTP
+                $result = $this->try_send_email($smtp, $recipient, $subject, $body);
+                
+                if($result['success']){
+                    // Update recipient status
+                    $this->email_model->update_recipient_status($recipient->id, 'sent');
+                    
+                    // Add log with SMTP info
+                    $this->email_model->add_log(
+                        $campaign->id,
+                        $recipient->id,
+                        $recipient->email,
+                        $subject,
+                        'sent',
+                        null,
+                        $smtp->id
+                    );
+                    
+                    // Update rotation index to next SMTP for next email (round-robin)
+                    $next_index = ($smtp_index + 1) % $total_smtps;
+                    $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
+                    
+                    return true;
+                } else {
+                    $last_error = "SMTP '{$smtp->name}': " . $result['error'];
+                    $attempts++;
+                    // Continue to try next SMTP as fallback
+                }
+            }
+            
+            // All SMTPs failed
+            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error);
+            return false;
+            
+        } catch(Exception $e){
+            $this->log_failed($campaign, $recipient, $e->getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * Get SMTP IDs for a campaign (supports both new multi-SMTP and legacy single SMTP)
+     */
+    private function get_smtp_ids_for_campaign($campaign){
+        // Try to get multiple SMTP IDs first
+        if(!empty($campaign->smtp_config_ids)){
+            $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            if(is_array($smtp_ids) && !empty($smtp_ids)){
+                return array_map('intval', $smtp_ids);
+            }
+        }
+        
+        // Fallback to single SMTP ID for backward compatibility
+        if(!empty($campaign->smtp_config_id)){
+            return array((int)$campaign->smtp_config_id);
+        }
+        
+        return array();
+    }
+    
+    /**
+     * Prepare template variables for a recipient
+     */
+    private function prepare_template_variables($recipient){
+        $variables = [];
+        
+        // Add custom data if available
+        if($recipient->custom_data){
+            $customData = json_decode($recipient->custom_data, true);
+            if(is_array($customData)){
+                $variables = $customData;
+            }
+        }
+        
+        // Add default recipient data
+        $variables['email'] = $recipient->email;
+        $variables['name'] = $recipient->name ?: 'User';
+        $variables['username'] = $recipient->name ?: 'User';
+        
+        // Add tracking link
+        $trackingUrl = base_url('email_marketing/track/' . $recipient->tracking_token);
+        $variables['tracking_pixel'] = '<img src="' . $trackingUrl . '" width="1" height="1" />';
+        
+        return $variables;
+    }
+    
+    /**
+     * Try to send email using a specific SMTP configuration
+     */
+    private function try_send_email($smtp, $recipient, $subject, $body){
+        try {
             // Configure email
             $config = [
                 'protocol' => 'smtp',
@@ -248,6 +342,7 @@ class Email_cron extends CI_Controller {
             ];
             
             $this->email->initialize($config);
+            $this->email->clear(); // Clear any previous email data
             $this->email->from($smtp->from_email, $smtp->from_name);
             $this->email->to($recipient->email);
             
@@ -260,29 +355,14 @@ class Email_cron extends CI_Controller {
             
             // Send email
             if($this->email->send()){
-                // Update recipient status
-                $this->email_model->update_recipient_status($recipient->id, 'sent');
-                
-                // Add log
-                $this->email_model->add_log(
-                    $campaign->id,
-                    $recipient->id,
-                    $recipient->email,
-                    $subject,
-                    'sent'
-                );
-                
-                return true;
+                return ['success' => true, 'error' => null];
             } else {
                 // Get error
-                $error = $this->email->print_debugger();
-                $this->log_failed($campaign, $recipient, $error);
-                return false;
+                $error = $this->email->print_debugger(['headers', 'subject', 'body']);
+                return ['success' => false, 'error' => $error];
             }
-            
         } catch(Exception $e){
-            $this->log_failed($campaign, $recipient, $e->getMessage());
-            return false;
+            return ['success' => false, 'error' => $e->getMessage()];
         }
     }
     

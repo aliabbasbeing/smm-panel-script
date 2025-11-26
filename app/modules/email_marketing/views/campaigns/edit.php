@@ -33,21 +33,34 @@
                     <small class="text-muted">Choose an email template for this campaign</small>
                   </div>
                   
+                  <?php 
+                  // Parse existing SMTP IDs
+                  $selected_smtp_ids = array();
+                  if(!empty($campaign->smtp_config_ids)){
+                    $selected_smtp_ids = json_decode($campaign->smtp_config_ids, true);
+                    if(!is_array($selected_smtp_ids)){
+                      $selected_smtp_ids = array();
+                    }
+                  }
+                  // Fallback to single smtp_config_id if smtp_config_ids is empty
+                  if(empty($selected_smtp_ids) && !empty($campaign->smtp_config_id)){
+                    $selected_smtp_ids = array($campaign->smtp_config_id);
+                  }
+                  ?>
                   <div class="form-group">
-                    <label>SMTP Configuration <span class="text-danger">*</span></label>
-                    <select class="form-control square" name="smtp_config_id" required>
-                      <option value="">Select SMTP</option>
+                    <label>SMTP Configurations <span class="text-danger">*</span></label>
+                    <select class="form-control square" name="smtp_config_ids[]" id="smtp_config_ids" multiple required style="height: 120px;">
                       <?php if(!empty($smtp_configs)){ 
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
                       ?>
-                      <option value="<?php echo $smtp->id; ?>" <?php echo ($campaign->smtp_config_id == $smtp->id) ? 'selected' : ''; ?>>
+                      <option value="<?php echo $smtp->id; ?>" <?php echo in_array($smtp->id, $selected_smtp_ids) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($smtp->name); ?>
                         <?php echo $smtp->is_default ? ' (Default)' : ''; ?>
                       </option>
                       <?php }}} ?>
                     </select>
-                    <small class="text-muted">Select SMTP server to send emails</small>
+                    <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending. Hold Ctrl/Cmd to select multiple.</small>
                   </div>
                   
                   <div class="row">

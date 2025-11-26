@@ -115,8 +115,48 @@
             <td><?php echo htmlspecialchars($campaign->template_name); ?></td>
           </tr>
           <tr>
-            <td><strong>SMTP:</strong></td>
-            <td><?php echo htmlspecialchars($campaign->smtp_name); ?></td>
+            <td><strong>SMTP Server(s):</strong></td>
+            <td>
+              <?php 
+              // Get SMTP names from IDs
+              $smtp_names = array();
+              $selected_smtp_ids = array();
+              
+              // Parse SMTP IDs from JSON
+              if(!empty($campaign->smtp_config_ids)){
+                $selected_smtp_ids = json_decode($campaign->smtp_config_ids, true);
+                if(!is_array($selected_smtp_ids)){
+                  $selected_smtp_ids = array();
+                }
+              }
+              
+              // Fallback to single smtp_config_id if smtp_config_ids is empty
+              if(empty($selected_smtp_ids) && !empty($campaign->smtp_config_id)){
+                $selected_smtp_ids = array($campaign->smtp_config_id);
+              }
+              
+              // Get SMTP names
+              if(!empty($smtp_configs) && !empty($selected_smtp_ids)){
+                foreach($smtp_configs as $smtp){
+                  if(in_array($smtp->id, $selected_smtp_ids)){
+                    $smtp_names[] = htmlspecialchars($smtp->name);
+                  }
+                }
+              }
+              
+              if(!empty($smtp_names)){
+                if(count($smtp_names) > 1){
+                  echo '<span class="badge badge-info mr-1">Round-Robin</span>';
+                }
+                echo implode(', ', $smtp_names);
+                if(count($smtp_names) > 1){
+                  echo '<br><small class="text-muted">Emails are rotated between ' . count($smtp_names) . ' SMTP servers</small>';
+                }
+              } else {
+                echo htmlspecialchars($campaign->smtp_name ?: 'Not set');
+              }
+              ?>
+            </td>
           </tr>
           <tr>
             <td><strong>Hourly Limit:</strong></td>
@@ -397,6 +437,7 @@ $(document).ready(function(){
             <tr>
               <th>Email</th>
               <th>Subject</th>
+              <th>SMTP Used</th>
               <th>Status</th>
               <th>Timestamp</th>
               <th>Error</th>
@@ -412,10 +453,22 @@ $(document).ready(function(){
                   case 'opened': $status_badge = 'info'; break;
                   case 'failed': $status_badge = 'danger'; break;
                 }
+                
+                // Get SMTP name from log
+                $smtp_name_used = '-';
+                if(!empty($log->smtp_config_id) && !empty($smtp_configs)){
+                  foreach($smtp_configs as $smtp){
+                    if($smtp->id == $log->smtp_config_id){
+                      $smtp_name_used = htmlspecialchars($smtp->name);
+                      break;
+                    }
+                  }
+                }
             ?>
             <tr>
               <td><?php echo htmlspecialchars($log->email); ?></td>
               <td><?php echo htmlspecialchars($log->subject); ?></td>
+              <td><small><?php echo $smtp_name_used; ?></small></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
@@ -431,7 +484,7 @@ $(document).ready(function(){
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="6" class="text-center">No activity logs yet</td>
+              <td colspan="7" class="text-center">No activity logs yet</td>
             </tr>
             <?php } ?>
           </tbody>

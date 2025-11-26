@@ -32,9 +32,8 @@
                   </div>
                   
                   <div class="form-group">
-                    <label>SMTP Configuration <span class="text-danger">*</span></label>
-                    <select class="form-control square" name="smtp_config_id" required>
-                      <option value="">Select SMTP</option>
+                    <label>SMTP Configurations <span class="text-danger">*</span></label>
+                    <select class="form-control square" name="smtp_config_ids[]" id="smtp_config_ids" multiple required style="height: 120px;">
                       <?php if(!empty($smtp_configs)){ 
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
@@ -45,7 +44,7 @@
                       </option>
                       <?php }}} ?>
                     </select>
-                    <small class="text-muted">Select SMTP server to send emails</small>
+                    <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending. Hold Ctrl/Cmd to select multiple.</small>
                   </div>
                   
                   <div class="row">
