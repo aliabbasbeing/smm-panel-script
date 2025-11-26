@@ -53,6 +53,8 @@ CREATE TABLE IF NOT EXISTS `email_campaigns` (
   `name` VARCHAR(255) NOT NULL,
   `template_id` INT(11) NOT NULL,
   `smtp_config_id` INT(11) NOT NULL,
+  `smtp_config_ids` TEXT DEFAULT NULL COMMENT 'JSON array of multiple SMTP config IDs for rotation',
+  `smtp_rotation_index` INT(11) NOT NULL DEFAULT 0 COMMENT 'Current index for round-robin SMTP rotation',
   `status` ENUM('pending', 'running', 'paused', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
   `total_emails` INT(11) NOT NULL DEFAULT 0,
   `sent_emails` INT(11) NOT NULL DEFAULT 0,
@@ -72,6 +74,10 @@ CREATE TABLE IF NOT EXISTS `email_campaigns` (
   KEY `smtp_config_id` (`smtp_config_id`),
   KEY `status` (`status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Add columns for multi-SMTP support to existing tables (for upgrades)
+-- ALTER TABLE `email_campaigns` ADD COLUMN `smtp_config_ids` TEXT DEFAULT NULL COMMENT 'JSON array of multiple SMTP config IDs for rotation' AFTER `smtp_config_id`;
+-- ALTER TABLE `email_campaigns` ADD COLUMN `smtp_rotation_index` INT(11) NOT NULL DEFAULT 0 COMMENT 'Current index for round-robin SMTP rotation' AFTER `smtp_config_ids`;
 
 -- =====================================================
 -- TABLE: email_recipients
@@ -109,6 +115,7 @@ CREATE TABLE IF NOT EXISTS `email_logs` (
   `ids` VARCHAR(32) NOT NULL,
   `campaign_id` INT(11) NOT NULL,
   `recipient_id` INT(11) NOT NULL,
+  `smtp_config_id` INT(11) DEFAULT NULL COMMENT 'SMTP configuration used for sending',
   `email` VARCHAR(255) NOT NULL,
   `subject` VARCHAR(500) NOT NULL,
   `status` ENUM('queued', 'sent', 'failed', 'opened', 'bounced') NOT NULL DEFAULT 'queued',
@@ -122,10 +129,15 @@ CREATE TABLE IF NOT EXISTS `email_logs` (
   UNIQUE KEY `ids` (`ids`),
   KEY `campaign_id` (`campaign_id`),
   KEY `recipient_id` (`recipient_id`),
+  KEY `smtp_config_id` (`smtp_config_id`),
   KEY `email` (`email`),
   KEY `status` (`status`),
   KEY `sent_at` (`sent_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Add smtp_config_id column to existing tables (for upgrades)
+-- ALTER TABLE `email_logs` ADD COLUMN `smtp_config_id` INT(11) DEFAULT NULL COMMENT 'SMTP configuration used for sending' AFTER `recipient_id`;
+-- ALTER TABLE `email_logs` ADD INDEX `smtp_config_id` (`smtp_config_id`);
 
 -- =====================================================
 -- TABLE: email_settings

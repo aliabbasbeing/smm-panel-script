@@ -115,8 +115,37 @@
             <td><?php echo htmlspecialchars($campaign->template_name); ?></td>
           </tr>
           <tr>
-            <td><strong>SMTP:</strong></td>
-            <td><?php echo htmlspecialchars($campaign->smtp_name); ?></td>
+            <td><strong>SMTP Configuration(s):</strong></td>
+            <td>
+              <?php 
+              // Display multiple SMTP configurations
+              $smtp_names = array();
+              if(!empty($campaign->smtp_config_ids)){
+                $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+                if(is_array($smtp_ids)){
+                  foreach($smtp_ids as $smtp_id){
+                    $CI = &get_instance();
+                    $CI->db->where('id', $smtp_id);
+                    $smtp_info = $CI->db->get('email_smtp_configs')->row();
+                    if($smtp_info){
+                      $smtp_names[] = htmlspecialchars($smtp_info->name);
+                    }
+                  }
+                }
+              }
+              // Fallback to single SMTP
+              if(empty($smtp_names) && !empty($campaign->smtp_name)){
+                $smtp_names[] = htmlspecialchars($campaign->smtp_name);
+              }
+              
+              if(count($smtp_names) > 1){
+                echo '<span class="badge badge-info">' . count($smtp_names) . ' SMTPs (Rotation)</span><br>';
+                echo '<small>' . implode(', ', $smtp_names) . '</small>';
+              } else {
+                echo !empty($smtp_names) ? $smtp_names[0] : '-';
+              }
+              ?>
+            </td>
           </tr>
           <tr>
             <td><strong>Hourly Limit:</strong></td>
@@ -397,6 +426,7 @@ $(document).ready(function(){
             <tr>
               <th>Email</th>
               <th>Subject</th>
+              <th>SMTP Used</th>
               <th>Status</th>
               <th>Timestamp</th>
               <th>Error</th>
@@ -416,6 +446,15 @@ $(document).ready(function(){
             <tr>
               <td><?php echo htmlspecialchars($log->email); ?></td>
               <td><?php echo htmlspecialchars($log->subject); ?></td>
+              <td>
+                <?php 
+                if(!empty($log->smtp_name)){
+                  echo '<span class="badge badge-secondary">' . htmlspecialchars($log->smtp_name) . '</span>';
+                } else {
+                  echo '<span class="text-muted">-</span>';
+                }
+                ?>
+              </td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>
@@ -431,7 +470,7 @@ $(document).ready(function(){
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="6" class="text-center">No activity logs yet</td>
+              <td colspan="7" class="text-center">No activity logs yet</td>
             </tr>
             <?php } ?>
           </tbody>

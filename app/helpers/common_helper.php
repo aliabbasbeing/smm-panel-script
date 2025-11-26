@@ -24,13 +24,17 @@ if(!function_exists('get')){
 
 
 if(!function_exists('post')){
-	function post($name = ""){
+	function post($name = "", $xss_clean = true){
 		$CI = &get_instance();
 		if($name != ""){
 			$post = $CI->input->post(trim($name));
 			if(is_string($post)){
 				$result =  addslashes($CI->input->post(trim($name)));
-				$result =  strip_tags($result);
+				// Only strip tags if xss_clean is true (default behavior)
+				// Pass false to preserve HTML content (e.g., for email templates)
+				if($xss_clean){
+					$result =  strip_tags($result);
+				}
 			}else{
 				$result = $post;
 			}
