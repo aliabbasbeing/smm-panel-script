@@ -153,7 +153,7 @@
                   echo '<br><small class="text-muted">Emails are rotated between ' . count($smtp_names) . ' SMTP servers</small>';
                 }
               } else {
-                echo htmlspecialchars($campaign->smtp_name ?: 'Not set');
+                echo htmlspecialchars(isset($campaign->smtp_name) ? $campaign->smtp_name : 'Not set');
               }
               ?>
             </td>

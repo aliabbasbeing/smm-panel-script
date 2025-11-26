@@ -341,8 +341,8 @@ class Email_cron extends CI_Controller {
                 'wrapchars' => 78          // Wrap at 78 characters (RFC recommended)
             ];
             
+            $this->email->clear(); // Clear any previous email data before initialize
             $this->email->initialize($config);
-            $this->email->clear(); // Clear any previous email data
             $this->email->from($smtp->from_email, $smtp->from_name);
             $this->email->to($recipient->email);
             
@@ -357,8 +357,8 @@ class Email_cron extends CI_Controller {
             if($this->email->send()){
                 return ['success' => true, 'error' => null];
             } else {
-                // Get error
-                $error = $this->email->print_debugger(['headers', 'subject', 'body']);
+                // Get error (using print_debugger without params for compatibility)
+                $error = $this->email->print_debugger();
                 return ['success' => false, 'error' => $error];
             }
         } catch(Exception $e){
