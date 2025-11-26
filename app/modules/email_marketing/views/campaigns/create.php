@@ -32,20 +32,22 @@
                   </div>
                   
                   <div class="form-group">
-                    <label>SMTP Configuration <span class="text-danger">*</span></label>
-                    <select class="form-control square" name="smtp_config_id" required>
-                      <option value="">Select SMTP</option>
+                    <label>SMTP Configurations <span class="text-danger">*</span></label>
+                    <div class="smtp-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
                       <?php if(!empty($smtp_configs)){ 
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
                       ?>
-                      <option value="<?php echo $smtp->id; ?>" <?php echo $smtp->is_default ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($smtp->name); ?>
-                        <?php echo $smtp->is_default ? ' (Default)' : ''; ?>
-                      </option>
+                      <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" name="smtp_config_ids[]" value="<?php echo $smtp->id; ?>" id="smtp_<?php echo $smtp->id; ?>" <?php echo $smtp->is_default ? 'checked' : ''; ?>>
+                        <label class="custom-control-label" for="smtp_<?php echo $smtp->id; ?>">
+                          <?php echo htmlspecialchars($smtp->name); ?>
+                          <?php echo $smtp->is_default ? ' <span class="badge badge-primary">Default</span>' : ''; ?>
+                        </label>
+                      </div>
                       <?php }}} ?>
-                    </select>
-                    <small class="text-muted">Select SMTP server to send emails</small>
+                    </div>
+                    <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending.</small>
                   </div>
                   
                   <div class="row">

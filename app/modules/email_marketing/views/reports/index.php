@@ -83,9 +83,9 @@
 <!-- Campaign Performance Table -->
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign Performance Summary</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign Performance Summary</h3>
         <div class="card-options">
           <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
@@ -176,9 +176,9 @@
 <!-- Email Statistics Breakdown -->
 <div class="row mt-4">
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Email Delivery Statistics</h3>
+        <h3 class="card-title" style="color:#fff !important;">Email Delivery Statistics</h3>
       </div>
       <div class="card-body">
         <div class="row mb-3">
@@ -236,9 +236,9 @@
   </div>
   
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign Status Distribution</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign Status Distribution</h3>
       </div>
       <div class="card-body">
         <div class="mb-3">
@@ -288,9 +288,9 @@
 <!-- Export Options -->
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Export Options</h3>
+        <h3 class="card-title" style="color:#fff !important;">Export Options</h3>
       </div>
       <div class="card-body">
         <h4>Individual Campaign Reports</h4>

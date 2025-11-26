@@ -16,9 +16,9 @@
 <!-- Import Options -->
 <div class="row">
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-database"></i> Import from User Database</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-database"></i> Import from User Database</h3>
       </div>
       <div class="card-body">
         <p>Import active users who have placed at least 1 order</p>
@@ -36,9 +36,9 @@
   </div>
   
   <div class="col-md-6">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-upload"></i> Import from CSV/TXT File</h3>
       </div>
       <div class="card-body">
         <p>Upload a CSV file with email addresses (format: email,name)</p>
@@ -59,9 +59,9 @@
 <!-- Recipients List -->
 <div class="row mt-3">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Recipients List (Showing last 100)</h3>
+        <h3 class="card-title" style="color:#fff !important;">Recipients List (Showing last 100)</h3>
         <div class="card-options">
           <span class="badge badge-primary">Total: <?php echo number_format($campaign->total_emails); ?></span>
         </div>

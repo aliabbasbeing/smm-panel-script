@@ -24,13 +24,17 @@ if(!function_exists('get')){
 
 
 if(!function_exists('post')){
-	function post($name = ""){
+	function post($name = "", $xss_clean = true){
 		$CI = &get_instance();
 		if($name != ""){
-			$post = $CI->input->post(trim($name));
+			// Pass xss_clean to CI input to control XSS filtering at source
+			$post = $CI->input->post(trim($name), $xss_clean);
 			if(is_string($post)){
-				$result =  addslashes($CI->input->post(trim($name)));
-				$result =  strip_tags($result);
+				$result = addslashes($post);
+				// Only strip tags if xss_clean is true (default behavior)
+				if($xss_clean){
+					$result = strip_tags($result);
+				}
 			}else{
 				$result = $post;
 			}

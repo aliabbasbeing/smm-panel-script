@@ -196,9 +196,9 @@
 
 <div class="row">
   <div class="col-lg-8">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title">Campaign Status Distribution</h3>
+        <h3 class="card-title" style="color:#fff !important;">Campaign Status Distribution</h3>
       </div>
       <div class="card-body">
         <div class="row">
@@ -274,9 +274,9 @@
   </div>
   
   <div class="col-lg-4">
-  <div class="card">
-    <div class="card-header">
-      <h3 class="card-title">Quick Stats</h3>
+  <div class="card p-0 content">
+      <div class="card-header">
+        <h3 class="card-title" style="color:#fff !important;">Quick Stats</h3>
     </div>
     <div class="card-body">
       <div class="list-group list-group-flush">
@@ -310,9 +310,9 @@
 <?php if(!empty($recent_logs)){ ?>
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-activity"></i> Recent Activity</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-activity"></i> Recent Activity</h3>
       </div>
       <div class="table-responsive">
         <table class="table table-hover table-vcenter card-table table-sm">
@@ -354,9 +354,9 @@
 
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="card">
+    <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title"><i class="fe fe-info"></i> Getting Started</h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-info"></i> Getting Started</h3>
       </div>
       <div class="card-body">
         <div class="row">
