@@ -49,18 +49,21 @@
                   ?>
                   <div class="form-group">
                     <label>SMTP Configurations <span class="text-danger">*</span></label>
-                    <select class="form-control square" name="smtp_config_ids[]" id="smtp_config_ids" multiple required style="height: 120px;">
+                    <div class="smtp-checkboxes" style="max-height: 200px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; border-radius: 4px;">
                       <?php if(!empty($smtp_configs)){ 
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
                       ?>
-                      <option value="<?php echo $smtp->id; ?>" <?php echo in_array($smtp->id, $selected_smtp_ids) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($smtp->name); ?>
-                        <?php echo $smtp->is_default ? ' (Default)' : ''; ?>
-                      </option>
+                      <div class="custom-control custom-checkbox mb-2">
+                        <input type="checkbox" class="custom-control-input" name="smtp_config_ids[]" value="<?php echo $smtp->id; ?>" id="smtp_edit_<?php echo $smtp->id; ?>" <?php echo in_array($smtp->id, $selected_smtp_ids) ? 'checked' : ''; ?>>
+                        <label class="custom-control-label" for="smtp_edit_<?php echo $smtp->id; ?>">
+                          <?php echo htmlspecialchars($smtp->name); ?>
+                          <?php echo $smtp->is_default ? ' <span class="badge badge-primary">Default</span>' : ''; ?>
+                        </label>
+                      </div>
                       <?php }}} ?>
-                    </select>
-                    <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending. Hold Ctrl/Cmd to select multiple.</small>
+                    </div>
+                    <small class="text-muted">Select one or more SMTP servers. Multiple SMTPs will be rotated round-robin during sending.</small>
                   </div>
                   
                   <div class="row">
