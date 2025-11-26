@@ -168,6 +168,14 @@ class setting extends MX_Controller {
             ]);
         }
 
+        // Check if table exists
+        if (!$this->db->table_exists('whatsapp_config')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'WhatsApp config table not found. Please check your database setup.'
+            ]);
+        }
+
         // Ensure single row pattern
         $existing = $this->db->get('whatsapp_config')->row();
         $data = [
@@ -183,24 +191,18 @@ class setting extends MX_Controller {
             $this->db->insert('whatsapp_config', $data);
         }
 
-        if ($this->db->affected_rows() >= 0) {
-            ms([
-                'status'  => 'success',
-                'message' => lang('Update_successfully'),
-                'data'    => $data
-            ]);
-        } else {
-            ms([
-                'status'  => 'error',
-                'message' => 'No changes detected'
-            ]);
-        }
+        ms([
+            'status'  => 'success',
+            'message' => lang('Update_successfully'),
+            'data'    => $data
+        ]);
     }
 
     /**
      * Save WhatsApp notification settings
      */
     public function ajax_whatsapp_notifications() {
+        // Check if it's a POST request
         if ($this->input->method() !== 'post') {
             ms([
                 'status'  => 'error',
@@ -218,13 +220,26 @@ class setting extends MX_Controller {
             $notification_template = array();
         }
 
-        // Load WhatsApp notification library
-        $this->load->library('whatsapp_notification');
+        // Check if table exists first
+        if (!$this->db->table_exists('whatsapp_notifications')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'WhatsApp notifications table not found. Please run the database migration: /database/whatsapp-notifications.sql'
+            ]);
+        }
 
         // Get all notifications from database
-        $all_notifications = $this->whatsapp_notification->get_all_notifications();
+        $all_notifications = $this->db->order_by('id', 'ASC')->get('whatsapp_notifications')->result();
+
+        if (empty($all_notifications)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'No notification templates found. Please run the database migration.'
+            ]);
+        }
 
         $updated_count = 0;
+        $total_count = count($all_notifications);
 
         foreach ($all_notifications as $notification) {
             $event_type = $notification->event_type;
@@ -244,14 +259,13 @@ class setting extends MX_Controller {
             $this->db->where('event_type', $event_type);
             $this->db->update('whatsapp_notifications', $update_data);
 
-            if ($this->db->affected_rows() > 0) {
-                $updated_count++;
-            }
+            // Count as updated even if no rows changed (same data)
+            $updated_count++;
         }
 
         ms([
             'status'  => 'success',
-            'message' => lang('Update_successfully') . " ($updated_count notifications updated)"
+            'message' => lang('Update_successfully') . " ({$updated_count}/{$total_count} notifications processed)"
         ]);
     }
 }

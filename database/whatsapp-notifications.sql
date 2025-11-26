@@ -87,6 +87,22 @@ INSERT INTO `whatsapp_notifications` (`event_type`, `event_name`, `status`, `tem
 '["username", "reset_link", "expiry_minutes", "website_name"]')
 ON DUPLICATE KEY UPDATE `template` = VALUES(`template`);
 
+-- 9. Order Completed (for cron status updates)
+INSERT INTO `whatsapp_notifications` (`event_type`, `event_name`, `status`, `template`, `description`, `variables`) VALUES
+('order_completed', 'Order Completed', 1,
+'*✅ Order Completed*\n\nHello *{username}*,\n\nGreat news! Your order has been completed successfully.\n\n🔢 *Order ID:* #{order_id}\n📦 *Service:* {service_name}\n📋 *Quantity:* {quantity}\n🔗 *Link:* {link}\n💰 *Charge:* {currency_symbol}{charge}\n\n📊 *Status:* {old_status} → {new_status}\n\nThank you for using our service!\n\n{website_name}',
+'Notification when order status changes to completed',
+'["order_id", "service_name", "quantity", "link", "charge", "old_status", "new_status", "username", "currency_symbol", "website_name"]')
+ON DUPLICATE KEY UPDATE `template` = VALUES(`template`);
+
+-- 10. Order Refunded (for cron status updates)
+INSERT INTO `whatsapp_notifications` (`event_type`, `event_name`, `status`, `template`, `description`, `variables`) VALUES
+('order_refunded', 'Order Refunded', 1,
+'*💰 Order Refunded*\n\nHello *{username}*,\n\nYour order has been refunded.\n\n🔢 *Order ID:* #{order_id}\n📦 *Service:* {service_name}\n📋 *Quantity:* {quantity}\n🔗 *Link:* {link}\n💵 *Refund Amount:* {currency_symbol}{charge}\n\n📊 *Status:* {old_status} → {new_status}\n\nThe amount has been credited back to your account.\n\nThank you,\n{website_name}',
+'Notification when order status changes to refunded',
+'["order_id", "service_name", "quantity", "link", "charge", "old_status", "new_status", "username", "currency_symbol", "website_name"]')
+ON DUPLICATE KEY UPDATE `template` = VALUES(`template`);
+
 -- =====================================================
 -- END OF SCHEMA
 -- =====================================================

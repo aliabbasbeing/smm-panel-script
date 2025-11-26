@@ -137,6 +137,38 @@ The system supports the following notification types:
   - `{expiry_minutes}` - Link expiry time in minutes
   - `{website_name}` - Website name
 
+### 9. Order Completed (Cron Status Updates)
+- **Event Type:** `order_completed`
+- **Sent To:** User
+- **Trigger:** When order status changes to completed (via cron/status)
+- **Variables:**
+  - `{order_id}` - Order ID
+  - `{service_name}` - Service name
+  - `{quantity}` - Order quantity
+  - `{link}` - Order link/URL
+  - `{charge}` - Order charge amount
+  - `{old_status}` - Previous status
+  - `{new_status}` - New status (Completed)
+  - `{username}` - User's name
+  - `{currency_symbol}` - Currency symbol
+  - `{website_name}` - Website name
+
+### 10. Order Refunded (Cron Status Updates)
+- **Event Type:** `order_refunded`
+- **Sent To:** User
+- **Trigger:** When order status changes to refunded (via cron/status)
+- **Variables:**
+  - `{order_id}` - Order ID
+  - `{service_name}` - Service name
+  - `{quantity}` - Order quantity
+  - `{link}` - Order link/URL
+  - `{charge}` - Refund amount
+  - `{old_status}` - Previous status
+  - `{new_status}` - New status (Refunded)
+  - `{username}` - User's name
+  - `{currency_symbol}` - Currency symbol
+  - `{website_name}` - Website name
+
 ## Usage Guide
 
 ### For Developers
@@ -202,6 +234,47 @@ $this->whatsapp_notification->send('order_cancelled', array(
     'service_name' => $service_name,
     'new_balance' => $new_balance
 ), $user->whatsapp_number);
+```
+
+#### Example: Order Status Change from Cron (Automatic)
+
+The cron/status endpoint automatically sends WhatsApp notifications when order statuses change. This is integrated in `api_provider.php`:
+
+```php
+// In cron_status_orders function (automatic)
+// Load WhatsApp notification library
+$this->load->library('whatsapp_notification');
+
+// When status changes to completed, partial, canceled, or refunded
+if ($old_status !== $new_status && in_array($new_status, ['completed', 'partial', 'canceled', 'refunded'])) {
+    // Check if notification is enabled before sending
+    if ($this->whatsapp_notification->is_status_notification_enabled($new_status)) {
+        $notification_result = $this->whatsapp_notification->send_order_status_notification(
+            $order,      // Order object
+            $old_status, // Previous status
+            $new_status  // New status
+        );
+    }
+}
+```
+
+The following convenience methods are also available:
+
+```php
+// Send order completed notification
+$this->whatsapp_notification->send_order_completed_notification($order, $old_status);
+
+// Send order partial notification
+$this->whatsapp_notification->send_order_partial_notification($order, $old_status);
+
+// Send order cancelled notification
+$this->whatsapp_notification->send_order_cancelled_notification($order, $old_status);
+
+// Send order refunded notification
+$this->whatsapp_notification->send_order_refunded_notification($order, $old_status);
+
+// Check if notification is enabled for a status
+$is_enabled = $this->whatsapp_notification->is_status_notification_enabled('completed');
 ```
 
 ### For Administrators
