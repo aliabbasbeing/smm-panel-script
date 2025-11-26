@@ -1028,7 +1028,7 @@ class api_provider extends MX_Controller {
 
 				// Send WhatsApp notification if status changed to a notifiable status
 				$final_new_status = isset($data['status']) ? $data['status'] : '';
-				if ($old_status !== $final_new_status && in_array($final_new_status, ['completed', 'canceled'])) {
+				if ($old_status !== $final_new_status && in_array($final_new_status, ['completed', 'partial', 'canceled', 'refunded'])) {
 					// Check if notification is enabled before sending
 					if ($this->whatsapp_notification->is_status_notification_enabled($final_new_status)) {
 						$notification_result = $this->whatsapp_notification->send_order_status_notification($row, $old_status, $final_new_status);

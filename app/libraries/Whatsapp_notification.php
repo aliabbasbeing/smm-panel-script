@@ -298,9 +298,16 @@ class Whatsapp_notification {
         if (isset($order->uid)) {
             $user = $this->_get_user_details($order->uid);
             if ($user) {
-                $username = isset($user->first_name) ? $user->first_name : (isset($user->username) ? $user->username : '');
+                if (isset($user->first_name) && !empty($user->first_name)) {
+                    $username = $user->first_name;
+                } elseif (isset($user->username) && !empty($user->username)) {
+                    $username = $user->username;
+                }
             }
         }
+
+        // Get decimal places from settings for consistent formatting
+        $decimal_places = function_exists('get_option') ? (int)get_option('currency_decimal', 4) : 4;
 
         // Prepare variables for template
         $variables = array(
@@ -308,17 +315,15 @@ class Whatsapp_notification {
             'service_name' => $service_name,
             'quantity' => isset($order->quantity) ? $order->quantity : '',
             'link' => isset($order->link) ? $order->link : '',
-            'charge' => isset($order->charge) ? number_format($order->charge, 4) : '0.0000',
+            'charge' => isset($order->charge) ? number_format($order->charge, $decimal_places) : number_format(0, $decimal_places),
             'old_status' => ucfirst($old_status),
             'new_status' => ucfirst($new_status),
             'username' => $username,
             'remains' => isset($order->remains) ? $order->remains : '',
-            'delivered_quantity' => isset($order->quantity) && isset($order->remains) 
-                ? ($order->quantity - (is_numeric($order->remains) ? $order->remains : 0)) 
-                : '',
+            'delivered_quantity' => $this->_calculate_delivered_quantity($order),
             'ordered_quantity' => isset($order->quantity) ? $order->quantity : '',
-            'refund_amount' => isset($order->refund_amount) ? number_format($order->refund_amount, 4) : '',
-            'new_balance' => isset($order->new_balance) ? number_format($order->new_balance, 4) : '',
+            'refund_amount' => isset($order->refund_amount) ? number_format($order->refund_amount, $decimal_places) : number_format(0, $decimal_places),
+            'new_balance' => isset($order->new_balance) ? number_format($order->new_balance, $decimal_places) : number_format(0, $decimal_places),
         );
 
         // Send the notification
@@ -429,6 +434,25 @@ class Whatsapp_notification {
             log_message('error', 'WhatsApp Notification: Failed to get service details - ' . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Calculate delivered quantity from order
+     * 
+     * @param object $order
+     * @return int|string
+     */
+    private function _calculate_delivered_quantity($order) {
+        if (!isset($order->quantity)) {
+            return '';
+        }
+        
+        if (!isset($order->remains)) {
+            return $order->quantity;
+        }
+        
+        $remains = is_numeric($order->remains) ? (int)$order->remains : 0;
+        return $order->quantity - $remains;
     }
 
     /**
