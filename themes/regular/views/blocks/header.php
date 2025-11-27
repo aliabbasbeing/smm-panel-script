@@ -17,23 +17,23 @@
     <meta name="MobileOptimized" content="320">
 
     
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/font-awesome/css/font-awesome.min.css')?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
-    <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
     <script src="https://eduactionsmm.site/data_files/general.js"></script>
     <link href="https://eduactionsmm.site/data_files/layout.css" rel="stylesheet">
 
     <!-- Core -->
-    <link href="<?=BASE?>assets/css/core.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/core.css')?>" rel="stylesheet">
       
     <!-- toast -->
-    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
-    <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
-    <link href="<?=BASE?>themes/regular/assets/css/theme_style.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/jquery-toast/css/jquery.toast.css')?>">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/boostrap/colors.css')?>" id="theme-stylesheet">
+    <link href="<?=asset_url('assets/css/util.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/regular/assets/css/theme_style.css')?>" rel="stylesheet">
     <!-- AOS -->
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/aos/dist/aos.css" />
-    <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/aos/dist/aos.css')?>" />
+    <link href="<?=asset_url('assets/css/footer.css')?>" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',

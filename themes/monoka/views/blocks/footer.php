@@ -179,20 +179,20 @@
 
     <?php } ?>
    
-    <script type="text/javascript" src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script type="text/javascript" src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js"></script>
-    <script type="text/javascript" src="<?php echo BASE; ?>assets/js/core.js"></script>
-    <script type="text/javascript" src="<?php echo BASE; ?>themes/monoka/assets/js/swiper.min.js"></script> 
-    <script type="text/javascript" src="<?php echo BASE; ?>themes/monoka/assets/js/monoka.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/aos/dist/aos.js"></script>
+    <script type="text/javascript" src="<?=asset_url('assets/js/vendors/bootstrap.bundle.min.js')?>"></script>
+    <script type="text/javascript" src="<?=asset_url('assets/js/vendors/jquery.sparkline.min.js')?>"></script>
+    <script type="text/javascript" src="<?=asset_url('assets/js/core.js')?>"></script>
+    <script type="text/javascript" src="<?=asset_url('themes/monoka/assets/js/swiper.min.js')?>"></script> 
+    <script type="text/javascript" src="<?=asset_url('themes/monoka/assets/js/monoka.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/aos/dist/aos.js')?>"></script>
 
     <script>
       AOS.init();
     </script>
 
     <!-- Script js -->
-    <script src="<?php echo BASE; ?>assets/js/process.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/general.js"></script>
+    <script src="<?=asset_url('assets/js/process.js')?>"></script>
+    <script src="<?=asset_url('assets/js/general.js')?>"></script>
     <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
     <script>
       $(document).ready(function(){

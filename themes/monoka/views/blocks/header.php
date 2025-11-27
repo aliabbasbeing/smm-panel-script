@@ -15,15 +15,15 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700&display=swap&subset=latin-ext" rel="stylesheet">
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-3.2.1.min.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
     <script src="https://eduactionsmm.site/data_files/general.js"></script>
     <link href="https://eduactionsmm.site/data_files/layout.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>themes/monoka/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>themes/monoka/assets/css/fontawesome-all.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>themes/monoka/assets/css/swiper.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>themes/monoka/assets/css/monoka.css" rel="stylesheet">
+    <link href="<?=asset_url('themes/monoka/assets/css/bootstrap.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/monoka/assets/css/fontawesome-all.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/monoka/assets/css/swiper.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/monoka/assets/css/monoka.css')?>" rel="stylesheet">
     <!-- AOS -->
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/aos/dist/aos.css" />
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/aos/dist/aos.css')?>" />
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',
           PATH  = '<?php echo PATH; ?>',

@@ -1838,3 +1838,42 @@ if (!function_exists('_is_ajax')) {
 		}
 	}
 }
+
+/**
+ * Generate asset URL with cache-busting version parameter
+ * This ensures users see updated styles/scripts after deployments
+ * without needing to clear their browser cache
+ * 
+ * @param string $path The asset path relative to BASE
+ * @return string The full URL with version query parameter
+ */
+if (!function_exists('asset_url')) {
+	function asset_url($path) {
+		// Get the asset version from options, default to current timestamp if not set
+		$version = get_option('asset_version', '1.0.0');
+		
+		// Build the full URL with version query parameter
+		$url = BASE . $path;
+		
+		// Add version parameter for cache busting
+		$separator = (strpos($url, '?') !== false) ? '&' : '?';
+		return $url . $separator . 'v=' . $version;
+	}
+}
+
+/**
+ * Update the asset version (call this when deploying updates)
+ * This will force all users' browsers to fetch fresh CSS/JS files
+ * 
+ * @param string $version Optional specific version, defaults to timestamp
+ * @return void
+ */
+if (!function_exists('update_asset_version')) {
+	function update_asset_version($version = '') {
+		if (empty($version)) {
+			// Use timestamp to ensure uniqueness on each update
+			$version = time();
+		}
+		update_option('asset_version', $version);
+	}
+}

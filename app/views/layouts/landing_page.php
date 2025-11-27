@@ -20,19 +20,19 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
-    <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
 
     <!-- Core -->
-    <link href="<?=BASE?>assets/css/core.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/core.css')?>" rel="stylesheet">
       
     <!-- toast -->
-    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
-    <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/landing_page.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/footer.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/header.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/jquery-toast/css/jquery.toast.css')?>">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/boostrap/colors.css')?>" id="theme-stylesheet">
+    <link href="<?=asset_url('assets/css/util.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/landing_page.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/footer.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/common.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/header.css')?>" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',
@@ -224,18 +224,18 @@
     </div>
 
     <?=Modules::run("blocks/footer");?>
-    <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
-    <script src="<?=BASE?>assets/js/core.js"></script>
-    <script src="<?=BASE?>assets/plugins/particles-js/particles.js"></script>
-    <script src="<?=BASE?>assets/plugins/particles-js/app.js"></script>
-    <script src="<?=BASE?>assets/plugins/particles-js/stats.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/slide.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/bootstrap.bundle.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery.sparkline.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/core.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/particles-js/particles.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/particles-js/app.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/particles-js/stats.js')?>"></script>
+    <script src="<?=asset_url('assets/js/slide.js')?>"></script>
 
-    <script src="<?=BASE?>assets/js/landing_page.js"></script>
-    <script src="<?=BASE?>assets/js/process.js"></script>
-    <script src="<?=BASE?>assets/js/general.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/general.js"></script>
+    <script src="<?=asset_url('assets/js/landing_page.js')?>"></script>
+    <script src="<?=asset_url('assets/js/process.js')?>"></script>
+    <script src="<?=asset_url('assets/js/general.js')?>"></script>
+    <script src="<?=asset_url('assets/js/general.js')?>"></script>
     <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
     <script>
       $(document).ready(function(){

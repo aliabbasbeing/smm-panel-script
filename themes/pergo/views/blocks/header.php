@@ -16,28 +16,28 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/font-awesome/css/font-awesome.min.css')?>">
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
     
-    <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/genearal.js"></script>
-    <link href="<?php echo BASE; ?>assets/css/layout.css" rel="stylesheet">
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/genearal.js')?>"></script>
+    <link href="<?=asset_url('assets/css/layout.css')?>" rel="stylesheet">
 
     <!-- Core -->
-    <link href="<?=BASE?>assets/css/core.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/core.css')?>" rel="stylesheet">
 
     <!-- AOS -->
-    <link rel="stylesheet" href="<?=BASE?>themes/pergo/assets/plugins/aos/dist/aos.css" />
+    <link rel="stylesheet" href="<?=asset_url('themes/pergo/assets/plugins/aos/dist/aos.css')?>" />
       
     <!-- toast -->
-    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/jquery-toast/css/jquery.toast.css')?>">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/boostrap/colors.css')?>" id="theme-stylesheet">
 
-    <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/keyframes.css" rel="stylesheet">
-    <link href="<?=BASE?>themes/pergo/assets/css/theme_style.css" rel="stylesheet">
-    <link href="<?=BASE?>themes/pergo/assets/css/theme_footer.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/util.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/keyframes.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/pergo/assets/css/theme_style.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('themes/pergo/assets/css/theme_footer.css')?>" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?=$this->security->get_csrf_hash()?>',
