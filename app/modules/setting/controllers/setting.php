@@ -91,6 +91,11 @@ class setting extends MX_Controller {
                 if (in_array($key, ['embed_javascript', 'embed_head_javascript', 'manual_payment_content'])) {
                     $value = htmlspecialchars(@$_POST[$key], ENT_QUOTES);
                 }
+                
+                // Handle code parts - get raw HTML without XSS filtering
+                if (strpos($key, '_code_part') !== false) {
+                    $value = @$_POST[$key];
+                }
 
                 if (in_array($key, ['midtrans_payment_channels', 'coinpayments_acceptance', 'freekassa_acceptance'], true)) {
                     $value = json_encode($value);

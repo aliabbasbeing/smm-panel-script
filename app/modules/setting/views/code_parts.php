@@ -11,7 +11,15 @@
     border-radius: 3px;
     margin-right: 5px;
   }
+  .CodeMirror {
+    border: 1px solid #ddd;
+    height: 250px;
+  }
 </style>
+
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>assets/plugins/codemirror/lib/codemirror.css">
+<link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>assets/plugins/codemirror/theme/monokai.css">
 
 <div class="row m-t-5">
   <div class="col-sm-12 col-sm-12">
@@ -60,8 +68,8 @@
           <div class="card-body">
             <div class="alert alert-info">
               <i class="fe fe-info"></i> 
-              <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
-              HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
+              <strong><?=lang("Info")?>:</strong> Use the HTML code editor below to create styled HTML blocks for different pages. 
+              Write raw HTML/CSS code directly - it will be saved and rendered exactly as you write it.
             </div>
             
             <div class="alert alert-success">
@@ -102,8 +110,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="dashboard_code_part" value="<?=get_option('dashboard_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="dashboard_code_part" id="dashboard_code_part"><?=htmlspecialchars(get_option('dashboard_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -126,8 +134,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="new_order_code_part" value="<?=get_option('new_order_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="new_order_code_part" id="new_order_code_part"><?=htmlspecialchars(get_option('new_order_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -150,8 +158,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="orders_code_part" value="<?=get_option('orders_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="orders_code_part" id="orders_code_part"><?=htmlspecialchars(get_option('orders_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -174,8 +182,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="services_code_part" value="<?=get_option('services_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="services_code_part" id="services_code_part"><?=htmlspecialchars(get_option('services_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -198,8 +206,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="add_funds_code_part" value="<?=get_option('add_funds_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="add_funds_code_part" id="add_funds_code_part"><?=htmlspecialchars(get_option('add_funds_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -222,8 +230,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="api_code_part" value="<?=get_option('api_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="api_code_part" id="api_code_part"><?=htmlspecialchars(get_option('api_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -246,8 +254,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="tickets_code_part" value="<?=get_option('tickets_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="tickets_code_part" id="tickets_code_part"><?=htmlspecialchars(get_option('tickets_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -270,8 +278,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="child_panel_code_part" value="<?=get_option('child_panel_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="child_panel_code_part" id="child_panel_code_part"><?=htmlspecialchars(get_option('child_panel_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -294,8 +302,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="transactions_code_part" value="<?=get_option('transactions_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="transactions_code_part" id="transactions_code_part"><?=htmlspecialchars(get_option('transactions_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -318,8 +326,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="signin_code_part" value="<?=get_option('signin_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="signin_code_part" id="signin_code_part"><?=htmlspecialchars(get_option('signin_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -342,8 +350,8 @@
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="signup_code_part" value="<?=get_option('signup_code_part')?>">
+                            <label class="form-label"><?=lang("Content")?> (HTML)</label>
+                            <textarea rows="8" name="signup_code_part" id="signup_code_part"><?=htmlspecialchars(get_option('signup_code_part', ''), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -365,8 +373,66 @@
   </div>
 </div>
 
+<!-- CodeMirror JS -->
+<script src="<?php echo BASE; ?>assets/plugins/codemirror/lib/codemirror.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?php echo BASE; ?>assets/plugins/codemirror/mode/xml/xml.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?php echo BASE; ?>assets/plugins/codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?php echo BASE; ?>assets/plugins/codemirror/mode/css/css.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?php echo BASE; ?>assets/plugins/codemirror/mode/htmlmixed/htmlmixed.js" type="text/javascript" charset="utf-8"></script>
+
 <script>
-   $(document).ready(function() {
-       plugin_editor('.plugin_editor', {height: 200});
-   });
+$(document).ready(function() {
+  // Initialize CodeMirror for all textareas
+  var editors = {};
+  var textareaIds = [
+    'dashboard_code_part',
+    'new_order_code_part',
+    'orders_code_part',
+    'services_code_part',
+    'add_funds_code_part',
+    'api_code_part',
+    'tickets_code_part',
+    'child_panel_code_part',
+    'transactions_code_part',
+    'signin_code_part',
+    'signup_code_part'
+  ];
+  
+  setTimeout(function() {
+    textareaIds.forEach(function(id) {
+      var textarea = document.getElementById(id);
+      if (textarea) {
+        editors[id] = CodeMirror.fromTextArea(textarea, {
+          lineNumbers: true,
+          mode: 'htmlmixed',
+          theme: 'monokai',
+          lineWrapping: true
+        });
+      }
+    });
+  }, 200);
+  
+  // Update textarea before form submission so the value is saved
+  $('form.actionForm').on('submit', function(e) {
+    var form = $(this);
+    var textarea = form.find('textarea');
+    if (textarea.length > 0) {
+      var id = textarea.attr('id');
+      if (editors[id]) {
+        editors[id].save();
+      }
+    }
+  });
+  
+  // Refresh editors when tab is shown (to fix display issues)
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+    setTimeout(function() {
+      for (var id in editors) {
+        if (editors[id]) {
+          editors[id].refresh();
+        }
+      }
+    }, 100);
+  });
+});
 </script>
