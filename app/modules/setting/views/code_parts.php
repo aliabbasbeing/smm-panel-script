@@ -292,23 +292,21 @@
 
 <script>
   $(document).ready(function() {
-    // Initialize TinyMCE for all code parts editors with full HTML support
+    // Initialize TinyMCE for all code parts editors with HTML support
+    // Note: Server-side sanitization removes dangerous elements (scripts, iframes, event handlers)
     plugin_editor('.code-parts-editor', {
       height: 350,
       plugins: [
         "advlist autolink lists link image charmap print preview hr anchor pagebreak",
         "searchreplace wordcount visualblocks visualchars code fullscreen",
-        "insertdatetime media nonbreaking save table contextmenu directionality",
-        "emoticons template paste textcolor colorpicker textpattern codesample"
+        "insertdatetime nonbreaking save table contextmenu directionality",
+        "emoticons template paste textcolor colorpicker textpattern"
       ],
-      toolbar1: "code | undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image media | removeformat | fullscreen",
-      valid_elements: '*[*]',
-      extended_valid_elements: '*[*]',
-      valid_children: '+body[style],+body[script]',
-      verify_html: false,
-      cleanup: false,
-      allow_script_urls: true,
-      allow_html_in_named_anchor: true,
+      toolbar1: "code | undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | fullscreen",
+      // Allow common HTML elements for styling
+      valid_elements: 'div[*],span[*],p[*],br,hr,h1[*],h2[*],h3[*],h4[*],h5[*],h6[*],a[*],img[*],ul[*],ol[*],li[*],table[*],thead[*],tbody[*],tr[*],td[*],th[*],strong,em,b,i,u,s,small,big,sup,sub,pre,code,blockquote[*],section[*],article[*],header[*],footer[*],nav[*],aside[*],figure[*],figcaption[*],main[*],address,dl[*],dt[*],dd[*],abbr[*],cite,q[*],time[*],mark,ins,del,style[*]',
+      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base',
+      verify_html: true,
       force_br_newlines: false,
       force_p_newlines: false,
       forced_root_block: ''

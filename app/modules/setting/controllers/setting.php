@@ -271,13 +271,22 @@ class setting extends MX_Controller {
 
     /**
      * Save Code Parts HTML settings.
-     * Stores HTML content without escaping for full HTML rendering on frontend pages.
+     * Stores sanitized HTML content for rendering on frontend pages.
+     * Only accessible by admin users.
      */
     public function ajax_code_parts() {
         if ($this->input->method() !== 'post') {
             ms([
                 'status'  => 'error',
                 'message' => 'Invalid method'
+            ]);
+        }
+
+        // Ensure only admin can access this feature
+        if (!get_role('admin')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Access denied. Admin only.'
             ]);
         }
 
@@ -296,7 +305,7 @@ class setting extends MX_Controller {
             'signup_code_part'
         ];
 
-        $data = $this->input->post(NULL, false); // Get raw POST data without XSS filtering for HTML content
+        $data = $this->input->post(NULL, false); // Get raw POST data for HTML content
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -307,8 +316,9 @@ class setting extends MX_Controller {
 
                 // Only process valid code parts keys
                 if (in_array($key, $valid_code_parts, true)) {
-                    // Store the HTML content (allow full HTML)
-                    update_option($key, $value);
+                    // Sanitize HTML: remove dangerous tags while allowing styling elements
+                    $sanitized_value = $this->sanitize_html_code_part($value);
+                    update_option($key, $sanitized_value);
                 }
             }
         }
@@ -317,5 +327,45 @@ class setting extends MX_Controller {
             "status"  => "success",
             "message" => lang('Update_successfully')
         ]);
+    }
+
+    /**
+     * Sanitize HTML code parts - remove dangerous elements while allowing styling.
+     * @param string $html The HTML content to sanitize
+     * @return string Sanitized HTML
+     */
+    private function sanitize_html_code_part($html) {
+        if (empty($html)) {
+            return '';
+        }
+
+        // Remove script tags and their content
+        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+        
+        // Remove javascript: protocol from href/src attributes
+        $html = preg_replace('/\s+(href|src)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '', $html);
+        
+        // Remove on* event handlers (onclick, onload, onerror, etc.)
+        $html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
+        
+        // Remove data: protocol from src attributes (can be used for XSS)
+        $html = preg_replace('/\s+src\s*=\s*["\']?\s*data:[^"\'>\s]*/i', '', $html);
+        
+        // Remove iframe tags
+        $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $html);
+        $html = preg_replace('/<iframe\b[^>]*\/?>/i', '', $html);
+        
+        // Remove object and embed tags
+        $html = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is', '', $html);
+        $html = preg_replace('/<embed\b[^>]*\/?>/i', '', $html);
+        
+        // Remove form tags
+        $html = preg_replace('/<form\b[^>]*>(.*?)<\/form>/is', '$1', $html);
+        
+        // Remove base tag
+        $html = preg_replace('/<base\b[^>]*\/?>/i', '', $html);
+        
+        return trim($html);
     }
 }
