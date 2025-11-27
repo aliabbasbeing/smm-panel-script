@@ -2,6 +2,15 @@
   .code-parts-tab {
     margin: 3px;
   }
+  .variables-list {
+    font-size: 12px;
+  }
+  .variables-list code {
+    background: #e9ecef;
+    padding: 2px 5px;
+    border-radius: 3px;
+    margin-right: 5px;
+  }
 </style>
 
 <div class="row m-t-5">
@@ -55,6 +64,33 @@
               HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
             </div>
             
+            <div class="alert alert-success">
+              <i class="fe fe-code"></i> 
+              <strong>Supported Variables:</strong>
+              <div class="variables-list mt-2">
+                <strong>User:</strong> 
+                <code>{{user.balance}}</code>
+                <code>{{user.name}}</code>
+                <code>{{user.email}}</code>
+                <code>{{user.orders}}</code>
+                <code>{{user.spent}}</code>
+                <code>{{user.pending_orders}}</code>
+                <code>{{user.completed_orders}}</code>
+                <code>{{user.tickets}}</code>
+                <br><br>
+                <strong>Site:</strong>
+                <code>{{site.name}}</code>
+                <code>{{site.url}}</code>
+                <code>{{site.currency}}</code>
+                <code>{{site.currency_code}}</code>
+                <br><br>
+                <strong>Date:</strong>
+                <code>{{date.today}}</code>
+                <code>{{date.now}}</code>
+                <code>{{date.year}}</code>
+              </div>
+            </div>
+            
             <div class="tab-content mt-3">
               
               <!-- Dashboard Page Code Part -->
@@ -68,7 +104,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('dashboard')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('dashboard'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -93,7 +129,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('new_order')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('new_order'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -118,7 +154,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('orders')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('orders'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -143,7 +179,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('services')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('services'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -168,7 +204,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('add_funds')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('add_funds'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -193,7 +229,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('api')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('api'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -218,7 +254,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('tickets')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('tickets'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -243,7 +279,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('child_panel')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('child_panel'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -268,7 +304,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('transactions')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('transactions'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -293,7 +329,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('signin')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('signin'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
@@ -318,7 +354,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('signup')?>">
+                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('signup'), ENT_QUOTES, 'UTF-8')?>">
                           </div>
                         </div>
                       </div>
