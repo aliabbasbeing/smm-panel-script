@@ -235,7 +235,6 @@
     <script src="<?=asset_url('assets/js/landing_page.js')?>"></script>
     <script src="<?=asset_url('assets/js/process.js')?>"></script>
     <script src="<?=asset_url('assets/js/general.js')?>"></script>
-    <script src="<?=asset_url('assets/js/general.js')?>"></script>
     <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
     <script>
       $(document).ready(function(){
