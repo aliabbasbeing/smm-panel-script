@@ -7,7 +7,7 @@
 <div class="row m-t-5">
   <div class="col-sm-12 col-sm-12">
     <div class="row">
-	  <div class="col-sm-7 col-lg-7 item">
+	  <div class="col-sm-10 col-lg-10 item">
        <div class="card">
           <div class="card-header d-flex align-items-center" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
             <div class="tabs-list">
@@ -39,6 +39,12 @@
                 <li class="mmm">
                   <a data-toggle="tab" href="#transactions"><i class="fa fa-book"></i> Transactions Page Text</a>
                 </li>
+                <li class="mmm">
+                  <a data-toggle="tab" href="#sign_in"><i class="fa fa-sign-in"></i> Sign In Page Text</a>
+                </li>
+                <li class="mmm">
+                  <a data-toggle="tab" href="#sign_up"><i class="fa fa-user-plus"></i> Sign Up Page Text</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -54,7 +60,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="dashboard_text" value="<?=get_option('dashboard_text')?>">
+                            <textarea rows="5" name="dashboard_text" class="form-control plugin_editor"><?=get_option('dashboard_text')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -77,7 +83,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="new_order_text" value="<?=get_option('new_order_text')?>">
+                              <textarea rows="5" name="new_order_text" class="form-control plugin_editor"><?=get_option('new_order_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -100,7 +106,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="orders_text" value="<?=get_option('orders_text')?>">
+                              <textarea rows="5" name="orders_text" class="form-control plugin_editor"><?=get_option('orders_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -123,7 +129,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="services_text" value="<?=get_option('services_text')?>">
+                              <textarea rows="5" name="services_text" class="form-control plugin_editor"><?=get_option('services_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -146,7 +152,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="add_funds_text" value="<?=get_option('add_funds_text')?>">
+                              <textarea rows="5" name="add_funds_text" class="form-control plugin_editor"><?=get_option('add_funds_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -169,7 +175,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="api_text" value="<?=get_option('api_text')?>">
+                              <textarea rows="5" name="api_text" class="form-control plugin_editor"><?=get_option('api_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -192,7 +198,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="tickets_text" value="<?=get_option('tickets_text')?>">
+                              <textarea rows="5" name="tickets_text" class="form-control plugin_editor"><?=get_option('tickets_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -215,7 +221,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="child_panel_text" value="<?=get_option('child_panel_text')?>">
+                              <textarea rows="5" name="child_panel_text" class="form-control plugin_editor"><?=get_option('child_panel_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -238,7 +244,53 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="transactions_text" value="<?=get_option('transactions_text')?>">
+                              <textarea rows="5" name="transactions_text" class="form-control plugin_editor"><?=get_option('transactions_text')?></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div> 
+                      <div class="col-md-12">
+                        <div class="form-footer">
+                          <button class="btn btn-primary btn-min-width btn-lg text-uppercase"><?=lang("Save")?></button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+              <div id="sign_in" class="tab-pane fade">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                      <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page</h5>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="form-label"><?=lang("Content")?></label>
+                              <textarea rows="5" name="sign_in_text" class="form-control plugin_editor"><?=get_option('sign_in_text')?></textarea>
+                            </div>
+                          </div>
+                        </div>
+                      </div> 
+                      <div class="col-md-12">
+                        <div class="form-footer">
+                          <button class="btn btn-primary btn-min-width btn-lg text-uppercase"><?=lang("Save")?></button>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+              <div id="sign_up" class="tab-pane fade">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <div class="row">
+                    <div class="col-md-12 col-lg-12">
+                      <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page</h5>
+                        <div class="row">
+                          <div class="col-md-12">
+                            <div class="form-group">
+                              <label class="form-label"><?=lang("Content")?></label>
+                              <textarea rows="5" name="sign_up_text" class="form-control plugin_editor"><?=get_option('sign_up_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -263,6 +315,6 @@
 
     <script>
       $(document).ready(function() {
-        plugin_editor('.plugin_editor', {height: 200});
+        plugin_editor('.plugin_editor', {height: 300, toolbar: 'code'});
       });
     </script>

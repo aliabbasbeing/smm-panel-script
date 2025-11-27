@@ -5,6 +5,21 @@
         margin-bottom: 1rem;
       }
     </style>
+
+    <?php if (get_option('sign_up_text','') != '') { ?>
+    <div class="container" style="margin-top: 20px;">
+      <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12">
+          <div class="card">
+            <div class="card-body">
+              <?=get_option('sign_up_text','')?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php }?>
+
     <section class="sign-up-form">
       <div class="container">
         <div class="row">

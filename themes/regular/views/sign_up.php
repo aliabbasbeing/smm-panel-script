@@ -8,6 +8,17 @@ hr {
 <div class="login-bg-image"></div>
 <div class="page auth-login-form">
   <div class="container h-100">
+    <?php if (get_option('sign_up_text','') != '') { ?>
+    <div class="row justify-content-center" style="margin-bottom: 20px;">
+      <div class="col-md-8 col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <?=get_option('sign_up_text','')?>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php }?>
     <div class="row">
       <div class="col-md-6 col-login mx-auto auth-form">
         <form class="card actionForm" action="<?= cn("auth/ajax_sign_up") ?>" data-redirect="<?= cn('statistics') ?>" method="POST">

@@ -61,9 +61,9 @@
         <span><?=lang("Modules")?></span>
       </a>
 
-      <a href="<?php echo cn($module. "/pages")?>" class="sidebar-link <?php echo (segment(2) == 'pages') ? 'active' : ''?>">
-        <i class="fe fe-book"></i>
-        <span>Pages & Text</span>
+      <a href="<?php echo cn($module. "/code_parts")?>" class="sidebar-link <?php echo (segment(2) == 'code_parts') ? 'active' : ''?>">
+        <i class="fe fe-code"></i>
+        <span>Code Parts</span>
       </a>
 
       <a href="<?php echo cn($module."/rules_updates")?>" class="sidebar-link <?php echo (segment(2) == 'rules_updates') ?  'active' : ''?>">
