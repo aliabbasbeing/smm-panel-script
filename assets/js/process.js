@@ -135,6 +135,12 @@ function plugin_editor(selector, settings){
     verify_html: false,
     cleanup: false,
     autoresize_bottom_margin: 25,
+    // Preserve all inline styles and attributes
+    valid_elements: '*[*]',
+    extended_valid_elements: '*[*]',
+    valid_styles: {
+      '*': 'font-size,font-family,color,text-decoration,text-align,background,background-color,border,border-radius,box-shadow,padding,padding-top,padding-right,padding-bottom,padding-left,margin,margin-top,margin-right,margin-bottom,margin-left,width,height,min-width,min-height,max-width,max-height,display,flex,flex-direction,flex-wrap,flex-grow,flex-shrink,flex-basis,align-items,justify-content,gap,position,top,right,bottom,left,z-index,overflow,box-sizing,font-weight,font-style,line-height,letter-spacing,text-transform,vertical-align,white-space,opacity,transform,transition,cursor,outline,list-style,list-style-type,visibility,float,clear'
+    },
     plugins: [
       "advlist autolink lists link charmap print preview hr anchor pagebreak",
       "searchreplace wordcount visualblocks visualchars code fullscreen",
