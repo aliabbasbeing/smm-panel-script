@@ -19,7 +19,7 @@
             <div class="alert alert-info">
               <i class="fe fe-info"></i> 
               <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
-              The HTML content will be rendered exactly as written on the respective pages.
+              HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
             </div>
             
             <div class="tabs-list">

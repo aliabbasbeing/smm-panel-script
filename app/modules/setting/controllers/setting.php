@@ -305,7 +305,9 @@ class setting extends MX_Controller {
             'signup_code_part'
         ];
 
-        $data = $this->input->post(NULL, false); // Get raw POST data for HTML content
+        // Get POST data - using false for XSS filter because we apply custom HTML sanitization
+        // that allows safe HTML tags while removing dangerous ones
+        $data = $this->input->post(NULL, false);
 
         if (is_array($data)) {
             foreach ($data as $key => $value) {
@@ -391,14 +393,15 @@ class setting extends MX_Controller {
      * @return string Sanitized HTML
      */
     private function sanitize_with_dom($html) {
-        // Suppress libxml errors
+        // Suppress libxml errors - we handle failures gracefully
         libxml_use_internal_errors(true);
         
         $dom = new DOMDocument();
         // Wrap in a div to handle fragments and preserve encoding
         $wrapped = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="sanitize-wrapper">' . $html . '</div></body></html>';
         
-        if (!@$dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
+        $loaded = $dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        if (!$loaded) {
             libxml_clear_errors();
             // Return empty string if parsing fails - this prevents malicious content bypass
             return '';
