@@ -331,6 +331,7 @@ class setting extends MX_Controller {
 
     /**
      * Sanitize HTML code parts - remove dangerous elements while allowing styling.
+     * Uses DOMDocument for robust HTML parsing and sanitization.
      * @param string $html The HTML content to sanitize
      * @return string Sanitized HTML
      */
@@ -339,33 +340,117 @@ class setting extends MX_Controller {
             return '';
         }
 
-        // Remove script tags and their content
-        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+        // First pass: regex-based removal of common attack vectors
+        // Remove script tags and their content (handles malformed HTML too)
+        $html = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $html);
+        $html = preg_replace('/<script[^>]*>/i', '', $html);
+        $html = preg_replace('/<\/script>/i', '', $html);
         
-        // Remove javascript: protocol from href/src attributes
-        $html = preg_replace('/\s+(href|src)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '', $html);
+        // Remove noscript tags
+        $html = preg_replace('/<noscript[^>]*>.*?<\/noscript>/is', '', $html);
         
-        // Remove on* event handlers (onclick, onload, onerror, etc.)
-        $html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
-        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
+        // Remove various dangerous protocols from any attribute
+        $html = preg_replace('/\b(href|src|action|formaction|data|poster|background)\s*=\s*["\']?\s*(javascript|vbscript|data):/i', '$1="#"', $html);
         
-        // Remove data: protocol from src attributes (can be used for XSS)
-        $html = preg_replace('/\s+src\s*=\s*["\']?\s*data:[^"\'>\s]*/i', '', $html);
+        // Remove event handlers - comprehensive patterns for various encodings
+        $html = preg_replace('/\s+on[a-z]+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+        $html = preg_replace('/\s+on[a-z]+\s*=\s*[^\s>]*/i', '', $html);
         
-        // Remove iframe tags
-        $html = preg_replace('/<iframe\b[^>]*>(.*?)<\/iframe>/is', '', $html);
-        $html = preg_replace('/<iframe\b[^>]*\/?>/i', '', $html);
+        // Remove style expressions (IE-specific XSS vector)
+        $html = preg_replace('/expression\s*\([^)]*\)/i', '', $html);
+        $html = preg_replace('/behavior\s*:[^;}"\']+/i', '', $html);
+        $html = preg_replace('/-moz-binding\s*:[^;}"\']+/i', '', $html);
         
-        // Remove object and embed tags
-        $html = preg_replace('/<object\b[^>]*>(.*?)<\/object>/is', '', $html);
-        $html = preg_replace('/<embed\b[^>]*\/?>/i', '', $html);
+        // Remove iframe, object, embed, applet tags
+        $html = preg_replace('/<(iframe|object|embed|applet)[^>]*>.*?<\/\1>/is', '', $html);
+        $html = preg_replace('/<(iframe|object|embed|applet)[^>]*\/?>/i', '', $html);
         
-        // Remove form tags
-        $html = preg_replace('/<form\b[^>]*>(.*?)<\/form>/is', '$1', $html);
+        // Remove form elements (forms themselves and input elements)
+        $html = preg_replace('/<form[^>]*>(.*?)<\/form>/is', '$1', $html);
+        $html = preg_replace('/<(input|button|select|textarea)[^>]*\/?>/i', '', $html);
+        $html = preg_replace('/<\/(input|button|select|textarea)>/i', '', $html);
         
-        // Remove base tag
-        $html = preg_replace('/<base\b[^>]*\/?>/i', '', $html);
+        // Remove base and meta refresh tags
+        $html = preg_replace('/<base[^>]*\/?>/i', '', $html);
+        $html = preg_replace('/<meta[^>]*http-equiv\s*=\s*["\']?refresh[^>]*>/i', '', $html);
+        
+        // Remove XML/HTML comments that might contain exploits
+        $html = preg_replace('/<!--.*?-->/s', '', $html);
+        
+        // Second pass: Use DOMDocument for thorough attribute cleaning
+        if (class_exists('DOMDocument')) {
+            $html = $this->sanitize_with_dom($html);
+        }
         
         return trim($html);
+    }
+
+    /**
+     * Additional sanitization using DOMDocument for thorough attribute cleaning.
+     * @param string $html The HTML to process
+     * @return string Sanitized HTML
+     */
+    private function sanitize_with_dom($html) {
+        // Suppress libxml errors
+        libxml_use_internal_errors(true);
+        
+        $dom = new DOMDocument();
+        // Wrap in a div to handle fragments and preserve encoding
+        $wrapped = '<!DOCTYPE html><html><head><meta charset="UTF-8"></head><body><div id="sanitize-wrapper">' . $html . '</div></body></html>';
+        
+        if (!@$dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
+            libxml_clear_errors();
+            return $html; // Return original if parsing fails
+        }
+        
+        $xpath = new DOMXPath($dom);
+        
+        // Remove all event handler attributes
+        $dangerous_attrs = ['onclick', 'ondblclick', 'onmousedown', 'onmouseup', 'onmouseover', 
+            'onmousemove', 'onmouseout', 'onmouseenter', 'onmouseleave', 'onkeydown', 'onkeyup', 
+            'onkeypress', 'onload', 'onunload', 'onerror', 'onabort', 'onblur', 'onfocus', 
+            'onchange', 'onsubmit', 'onreset', 'onselect', 'oninput', 'oncontextmenu',
+            'ondrag', 'ondragend', 'ondragenter', 'ondragleave', 'ondragover', 'ondragstart', 
+            'ondrop', 'onscroll', 'onwheel', 'oncopy', 'oncut', 'onpaste', 'onbeforeunload',
+            'onhashchange', 'onmessage', 'onoffline', 'ononline', 'onpagehide', 'onpageshow',
+            'onpopstate', 'onstorage', 'onresize', 'ontouchstart', 'ontouchmove', 'ontouchend',
+            'ontouchcancel', 'onanimationstart', 'onanimationend', 'onanimationiteration',
+            'ontransitionend', 'onpointerdown', 'onpointerup', 'onpointermove', 'onpointerenter',
+            'onpointerleave', 'onpointerover', 'onpointerout', 'onpointercancel', 'ongotpointercapture',
+            'onlostpointercapture', 'formaction'];
+        
+        foreach ($dangerous_attrs as $attr) {
+            $nodes = $xpath->query('//*[@' . $attr . ']');
+            foreach ($nodes as $node) {
+                $node->removeAttribute($attr);
+            }
+        }
+        
+        // Remove javascript: and data: from href/src attributes
+        $link_nodes = $xpath->query('//*[@href or @src or @action]');
+        foreach ($link_nodes as $node) {
+            foreach (['href', 'src', 'action'] as $attr) {
+                if ($node->hasAttribute($attr)) {
+                    $value = $node->getAttribute($attr);
+                    if (preg_match('/^\s*(javascript|vbscript|data):/i', $value)) {
+                        $node->removeAttribute($attr);
+                    }
+                }
+            }
+        }
+        
+        // Get sanitized content from wrapper div
+        $wrapper = $dom->getElementById('sanitize-wrapper');
+        if ($wrapper) {
+            $result = '';
+            foreach ($wrapper->childNodes as $child) {
+                $result .= $dom->saveHTML($child);
+            }
+            libxml_clear_errors();
+            return $result;
+        }
+        
+        libxml_clear_errors();
+        return $html;
     }
 }

@@ -303,9 +303,9 @@
         "emoticons template paste textcolor colorpicker textpattern"
       ],
       toolbar1: "code | undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | fullscreen",
-      // Allow common HTML elements for styling
-      valid_elements: 'div[*],span[*],p[*],br,hr,h1[*],h2[*],h3[*],h4[*],h5[*],h6[*],a[*],img[*],ul[*],ol[*],li[*],table[*],thead[*],tbody[*],tr[*],td[*],th[*],strong,em,b,i,u,s,small,big,sup,sub,pre,code,blockquote[*],section[*],article[*],header[*],footer[*],nav[*],aside[*],figure[*],figcaption[*],main[*],address,dl[*],dt[*],dd[*],abbr[*],cite,q[*],time[*],mark,ins,del,style[*]',
-      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base',
+      // Allow common HTML elements for styling (style element restricted to type attribute only)
+      valid_elements: 'div[id|class|style|data-*],span[id|class|style],p[id|class|style],br,hr[class|style],h1[id|class|style],h2[id|class|style],h3[id|class|style],h4[id|class|style],h5[id|class|style],h6[id|class|style],a[href|target|title|class|style|rel],img[src|alt|title|width|height|class|style],ul[id|class|style],ol[id|class|style],li[class|style],table[id|class|style|border|cellpadding|cellspacing|width],thead,tbody,tr[class|style],td[class|style|colspan|rowspan|width],th[class|style|colspan|rowspan|width],strong,em,b,i,u,s,small,big,sup,sub,pre[class|style],code[class],blockquote[class|style|cite],section[id|class|style],article[id|class|style],header[id|class|style],footer[id|class|style],nav[id|class|style],aside[id|class|style],figure[class|style],figcaption,main[id|class|style],address,dl[class|style],dt,dd,abbr[title],cite,q[cite],time[datetime],mark,ins,del,style[type]',
+      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base,noscript,applet,meta,link',
       verify_html: true,
       force_br_newlines: false,
       force_p_newlines: false,
