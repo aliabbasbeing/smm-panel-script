@@ -741,7 +741,7 @@ class Whatsapp_notification {
         // Get decimal places for formatting
         $decimal_places = function_exists('get_option') ? (int)get_option('currency_decimal', 4) : 4;
 
-        // Prepare variables for template
+        // Prepare variables for template (currency_symbol and website_name are added by _process_template as defaults)
         $variables = array(
             'order_id' => isset($order->id) ? $order->id : '',
             'service_name' => $service_name,
@@ -752,6 +752,8 @@ class Whatsapp_notification {
             'quantity' => isset($order->quantity) ? $order->quantity : '',
             'charge' => isset($order->charge) ? number_format($order->charge, $decimal_places) : number_format(0, $decimal_places),
             'error_time' => date('Y-m-d H:i:s'),
+            'currency_symbol' => function_exists('get_option') ? get_option('currency_symbol', '$') : '$',
+            'website_name' => function_exists('get_option') ? get_option('website_name', 'SmartPanel') : 'SmartPanel',
         );
 
         // Queue the notification for admin (uses admin phone by default)
