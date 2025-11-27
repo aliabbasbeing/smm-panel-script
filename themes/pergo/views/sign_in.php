@@ -3,7 +3,18 @@
 <section class="banner">
   <div class="container">
     <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-8 col-sm-10 col-xs-12" data-aos="fade-down" data-aos-easing="ease-in" data-aos-delay="300">
+      
+      <!-- Single main column for both: signin code part + login form -->
+      <div class="col-lg-6 col-md-8 col-sm-10 col-12" data-aos="fade-down" data-aos-easing="ease-in" data-aos-delay="300">
+
+        <!-- Auto-fetched signin code part (welcome box, inline CSS, etc.) -->
+        <?php if (get_code_part('signin','') != '') { ?>
+          <div class="mb-4">
+            <?=get_code_part('signin','')?>
+          </div>
+        <?php }?>
+
+        <!-- Login form -->
         <div class="form-login">
           <form class="actionForm" action="<?=cn("auth/ajax_sign_in")?>" data-redirect="<?=cn('order/add')?>" method="POST">
             <div>
@@ -39,20 +50,20 @@
               </div>
 
               <!-- Remember / Forgot row -->
-<div class="form-group remember-row">
-  <div class="remember-left">
-    <label class="custom-control custom-checkbox mb-0">
-      <input type="checkbox" name="remember" class="custom-control-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
-      <span class="custom-control-label"><?=lang("remember_me")?></span>
-    </label>
-  </div>
+              <div class="form-group remember-row d-flex justify-content-between align-items-center">
+                <div class="remember-left">
+                  <label class="custom-control custom-checkbox mb-0">
+                    <input type="checkbox" name="remember" class="custom-control-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
+                    <span class="custom-control-label"><?=lang("remember_me")?></span>
+                  </label>
+                </div>
 
-  <div class="remember-right">
-    <a href="<?=cn("auth/forgot_password")?>" class="small btn-forgot-pass">
-      <?=lang("forgot_password")?>
-    </a>
-  </div>
-</div>
+                <div class="remember-right">
+                  <a href="<?=cn("auth/forgot_password")?>" class="small btn-forgot-pass">
+                    <?=lang("forgot_password")?>
+                  </a>
+                </div>
+              </div>
 
               <div class="form-footer">
                 <button type="submit" class="btn-submit btn-gradient btn-hover color-6">
@@ -92,6 +103,8 @@
           <?php }; ?>
         </div>
       </div>
+      <!-- /single main column -->
+
     </div>
   </div>
 </section>

@@ -9,6 +9,17 @@
   </div>
 </div>
 <?php }?>
+
+<?php if (get_code_part('orders','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('orders','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="container-fluid">
   <div class="search-box m-r-30 d-none d-lg-block">
       <?php

@@ -18,6 +18,16 @@
 </div>
 <?php }?>
 
+<?php if (get_code_part('api','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('api','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="row justify-content-center api-documentation">
   <div class="col-md-8">
     <div class="card">

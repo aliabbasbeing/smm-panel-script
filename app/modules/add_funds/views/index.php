@@ -176,6 +176,12 @@
     </div></div>
   <?php endif; ?>
 
+  <?php if (get_code_part('add_funds','') != ''): ?>
+    <div class="row"><div class="col-sm-12">
+      <?= get_code_part('add_funds','') ?>
+    </div></div>
+  <?php endif; ?>
+
 <!-- Red rounded YouTube button instead of accordion -->
 <br>
   <div class="row mb-3">

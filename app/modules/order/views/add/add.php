@@ -19,6 +19,16 @@ $services = isset($services) ? $services : array();
 $service_item_default = !empty($services) ? $services[0] : null;
 ?>
 
+<?php if (get_code_part('new_order','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('new_order','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="container-cards">
 <?php if (isset($_SESSION['message'])): ?>
     <div class="alert alert-<?= $_SESSION['message_type'] ?> mt-3">
@@ -709,8 +719,9 @@ if (!empty($announcement_text)):
     transition: all 0.3s ease;
     border: 1px solid rgba(255, 255, 255, 0.12);
     position: relative;
+    color: #ffffff !important;
     overflow: hidden;">
-                              <?=lang("total_charge")?> <span class="charge_number" style="color: #ffffffff; font-weight: 700;"><?=$currency_symbol?> 0</span>
+                              <?=lang("total_charge")?> <span class="charge_number" style="color: #ffffff !important; font-weight: 700;"><?=$currency_symbol?> 0</span>
                             </p>
                           </center>
                           

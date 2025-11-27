@@ -1292,6 +1292,160 @@ if(!function_exists("update_option")){
 	}
 }
 
+/**
+ * Get code part content from the code_parts table
+ * @param string $page_key The unique page identifier
+ * @param string $default Default value if not found
+ * @param bool $process_variables Whether to process template variables
+ * @return string The HTML content for the code part
+ */
+if(!function_exists("get_code_part")){
+	function get_code_part($page_key, $default = '', $process_variables = true){
+		try {
+			$CI = &get_instance();
+			
+			// Check if database is loaded and table exists
+			if (!isset($CI->db) || !$CI->db) {
+				return $default;
+			}
+			
+			// Check if table exists - with error suppression
+			if (!$CI->db->table_exists('code_parts')) {
+				return $default;
+			}
+			
+			$result = $CI->db->select('content')
+				->where('page_key', $page_key)
+				->where('status', 1)
+				->get('code_parts')
+				->row();
+			
+			$content = ($result && !empty($result->content)) ? $result->content : $default;
+			
+			// Process template variables if enabled and user is logged in
+			if ($process_variables && !empty($content) && session('uid')) {
+				$content = process_code_part_variables($content);
+			}
+			
+			return $content;
+		} catch (Exception $e) {
+			// Return default on any error to prevent page breakage
+			return $default;
+		}
+	}
+}
+
+/**
+ * Process template variables in code part content
+ * Supports variables like {{user.balance}}, {{user.orders}}, {{site.name}}, etc.
+ * @param string $content The HTML content with template variables
+ * @return string Content with variables replaced
+ */
+if(!function_exists("process_code_part_variables")){
+	function process_code_part_variables($content){
+		try {
+			$CI = &get_instance();
+			$uid = session('uid');
+			
+			// User-related variables (only if logged in)
+			$user_vars = [];
+			if ($uid && isset($CI->db) && $CI->db) {
+				// Get user data - using USERS constant or 'general_users' as fallback
+				$users_table = defined('USERS') ? USERS : 'general_users';
+				$user = $CI->db->where('id', $uid)->get($users_table)->row();
+				if ($user) {
+					$user_vars = [
+						'{{user.id}}' => $user->id,
+						'{{user.email}}' => isset($user->email) ? $user->email : '',
+						'{{user.balance}}' => number_format((float)(isset($user->balance) ? $user->balance : 0), 2),
+						'{{user.first_name}}' => isset($user->first_name) ? $user->first_name : '',
+						'{{user.last_name}}' => isset($user->last_name) ? $user->last_name : '',
+						'{{user.name}}' => (isset($user->first_name) ? $user->first_name : '') . ' ' . (isset($user->last_name) ? $user->last_name : ''),
+						'{{user.api_key}}' => isset($user->api_key) ? $user->api_key : '',
+						'{{user.created}}' => isset($user->created) ? date('Y-m-d', strtotime($user->created)) : '',
+					];
+					
+					// Get user orders count - using ORDER constant or 'orders' as fallback
+					$orders_table = defined('ORDER') ? ORDER : 'orders';
+					$orders_count = $CI->db->where('uid', $uid)->count_all_results($orders_table);
+					$user_vars['{{user.orders}}'] = $orders_count;
+					$user_vars['{{user.total_orders}}'] = $orders_count;
+					
+					// Get user total spent - using 'charge' column from orders table
+					$spent_result = $CI->db->select_sum('charge', 'total')
+						->where('uid', $uid)
+						->where('status !=', 'canceled')
+						->get($orders_table)
+						->row();
+					$user_vars['{{user.spent}}'] = number_format((float)(isset($spent_result->total) ? $spent_result->total : 0), 2);
+					$user_vars['{{user.total_spent}}'] = $user_vars['{{user.spent}}'];
+					
+					// Get pending orders count
+					$pending_orders = $CI->db->where('uid', $uid)
+						->where_in('status', ['pending', 'processing', 'inprogress'])
+						->count_all_results($orders_table);
+					$user_vars['{{user.pending_orders}}'] = $pending_orders;
+					
+					// Get completed orders count
+					$completed_orders = $CI->db->where('uid', $uid)
+						->where('status', 'completed')
+						->count_all_results($orders_table);
+					$user_vars['{{user.completed_orders}}'] = $completed_orders;
+					
+					// Get tickets count - using TICKETS constant or 'tickets' as fallback
+					$tickets_table = defined('TICKETS') ? TICKETS : 'tickets';
+					if ($CI->db->table_exists($tickets_table)) {
+						$tickets_count = $CI->db->where('uid', $uid)->count_all_results($tickets_table);
+						$user_vars['{{user.tickets}}'] = $tickets_count;
+					} else {
+						$user_vars['{{user.tickets}}'] = 0;
+					}
+				}
+			}
+			
+			// Site-related variables
+			$site_vars = [
+				'{{site.name}}' => get_option('website_name', ''),
+				'{{site.url}}' => cn(),
+				'{{site.currency}}' => get_option('currency_symbol', '$'),
+				'{{site.currency_code}}' => get_option('currency_code', 'USD'),
+			];
+			
+			// Date/time variables
+			$date_vars = [
+				'{{date.today}}' => date('Y-m-d'),
+				'{{date.now}}' => date('Y-m-d H:i:s'),
+				'{{date.year}}' => date('Y'),
+				'{{date.month}}' => date('m'),
+				'{{date.day}}' => date('d'),
+			];
+			
+			// Merge all variables
+			$all_vars = array_merge($user_vars, $site_vars, $date_vars);
+			
+			// Replace variables in content
+			$content = str_replace(array_keys($all_vars), array_values($all_vars), $content);
+			
+			return $content;
+		} catch (Exception $e) {
+			// Return original content on error
+			return $content;
+		}
+	}
+}
+
+/**
+ * Get code part content for editing (without variable processing)
+ * @param string $page_key The unique page identifier
+ * @param string $default Default value if not found
+ * @return string The raw HTML content for editing
+ */
+if(!function_exists("get_code_part_raw")){
+	function get_code_part_raw($page_key, $default = ''){
+		return get_code_part($page_key, $default, false);
+	}
+}
+
 if(!function_exists("get_upload_folder")){
 	function get_upload_folder(){
 		$path = APPPATH."../assets/uploads/user" . sha1(session("uid"))."/";

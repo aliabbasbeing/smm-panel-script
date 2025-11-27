@@ -1,4 +1,12 @@
 
+<?php if (get_code_part('signup','') != '') { ?>
+<div class="row">
+  <div class="col-sm-12">
+    <?=get_code_part('signup','')?>
+  </div>
+</div>
+<?php }?>
+
 <div class="row">
   <div class="col-md-6 col-login mx-auto auth-form">
     <form class="card actionForm" action="<?=cn("auth/ajax_sign_up")?>" data-redirect="<?=cn()?>" method="POST">

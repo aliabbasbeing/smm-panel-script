@@ -1,4 +1,12 @@
 
+<?php if (get_code_part('signin','') != '') { ?>
+<div class="row">
+  <div class="col-sm-12">
+    <?=get_code_part('signin','')?>
+  </div>
+</div>
+<?php }?>
+
 <div class="row h-100 align-items-center auth-form">
   <div class="col-md-6 col-login mx-auto ">
     <form class="card actionForm" action="<?=cn("auth/ajax_sign_in")?>" data-redirect="<?=cn('statistics')?>" method="POST">

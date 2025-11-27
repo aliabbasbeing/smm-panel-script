@@ -10,6 +10,16 @@
 </div>
 <?php }?>
 
+<?php if (get_code_part('transactions','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('transactions','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <style>
 /* ---------- Custom Styling Add Funds Button + Card Header (matches dark theme) ---------- */
 .transaction-card {

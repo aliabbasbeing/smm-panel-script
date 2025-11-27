@@ -268,4 +268,108 @@ class setting extends MX_Controller {
             'message' => lang('Update_successfully') . " ({$updated_count}/{$total_count} notifications processed)"
         ]);
     }
+
+    /**
+     * Save Code Parts HTML settings.
+     * Stores sanitized HTML content in the code_parts database table.
+     * Only accessible by admin users.
+     */
+    public function ajax_code_parts() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+            return;
+        }
+
+        // Ensure only admin can access this feature
+        if (!get_role('admin')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Access denied. Admin only.'
+            ]);
+            return;
+        }
+
+        // Check if code_parts table exists
+        if (!$this->db->table_exists('code_parts')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Code parts table not found. Please run the database migration: /database/code-parts.sql'
+            ]);
+            return;
+        }
+
+        // Get page_key and content from POST
+        $page_key = $this->input->post('page_key', true);
+        $content = $this->input->post('content', false); // false to allow HTML
+
+        if (empty($page_key)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Page key is required'
+            ]);
+            return;
+        }
+
+        // Basic sanitization - remove dangerous scripts but keep styling
+        $sanitized_content = $this->sanitize_html_code_part($content);
+
+        // Check if page_key exists in database
+        $existing = $this->db->where('page_key', $page_key)->get('code_parts')->row();
+
+        if ($existing) {
+            // Update existing record
+            $this->db->where('page_key', $page_key)->update('code_parts', [
+                'content' => $sanitized_content,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            // Insert new record
+            $this->db->insert('code_parts', [
+                'page_key' => $page_key,
+                'page_name' => ucwords(str_replace('_', ' ', $page_key)) . ' Page',
+                'content' => $sanitized_content,
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        ms([
+            "status"  => "success",
+            "message" => lang('Update_successfully')
+        ]);
+    }
+
+    /**
+     * Sanitize HTML code parts - remove dangerous elements while allowing styling.
+     * @param string $html The HTML content to sanitize
+     * @return string Sanitized HTML
+     */
+    private function sanitize_html_code_part($html) {
+        if (empty($html)) {
+            return '';
+        }
+
+        // Remove script tags and their content
+        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+        
+        // Remove noscript tags
+        $html = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $html);
+        
+        // Remove javascript: protocol from attributes
+        $html = preg_replace('/\b(href|src|action)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '$1="#"', $html);
+        
+        // Remove event handlers (onclick, onload, etc.)
+        $html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
+        
+        // Remove iframe, object, embed tags
+        $html = preg_replace('/<(iframe|object|embed)\b[^>]*>(.*?)<\/\1>/is', '', $html);
+        $html = preg_replace('/<(iframe|object|embed)\b[^>]*\/?>/i', '', $html);
+        
+        return trim($html);
+    }
 }

@@ -20,6 +20,16 @@
 </div>
 <?php }?>
 
+<?php if (get_code_part('services','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('services','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <form class="actionForm"  method="POST">
   <section class="page-title">
     <div class="row justify-content-between">
