@@ -17,7 +17,7 @@ When the cron job runs to check order statuses from API providers, it automatica
 
 - The order status changes to **Completed**
 - The order status changes to **Partial**
-- The order status changes to **Canceled** (or Refunded)
+- The order status changes to **Canceled/Cancelled** (or Refunded)
 
 **Flow:**
 1. Cron job fetches order status from external API provider
@@ -74,11 +74,13 @@ The library maps order statuses to event types:
 $status_map = array(
     'completed' => 'order_completed',
     'partial'   => 'order_partial',
-    'canceled'  => 'order_cancelled',
-    'cancelled' => 'order_cancelled',
+    'canceled'  => 'order_cancelled',  // American spelling (from API)
+    'cancelled' => 'order_cancelled',  // British spelling (both accepted)
     'refunded'  => 'order_refunded',
 );
 ```
+
+> **Note:** The system accepts both "canceled" (American spelling from external APIs) and "cancelled" (British spelling). Both are mapped to the same `order_cancelled` event type.
 
 ### 3. Notification Process
 
