@@ -19,6 +19,16 @@ $services = isset($services) ? $services : array();
 $service_item_default = !empty($services) ? $services[0] : null;
 ?>
 
+<?php if (get_code_part('new_order','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_code_part('new_order','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="container-cards">
 <?php if (isset($_SESSION['message'])): ?>
     <div class="alert alert-<?= $_SESSION['message_type'] ?> mt-3">
