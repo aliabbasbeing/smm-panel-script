@@ -10,11 +10,11 @@
 </div>
 <?php }?>
 
-<?php if (get_option('orders_code_part','') != '') { ?>
+<?php if (get_code_part('orders','') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
     <div class="col-sm-12">
-      <?=get_option('orders_code_part','')?>
+      <?=get_code_part('orders','')?>
     </div>
   </div>
 </div>

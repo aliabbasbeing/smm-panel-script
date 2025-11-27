@@ -271,7 +271,7 @@ class setting extends MX_Controller {
 
     /**
      * Save Code Parts HTML settings.
-     * Stores sanitized HTML content for rendering on frontend pages.
+     * Stores sanitized HTML content in the code_parts database table.
      * Only accessible by admin users.
      */
     public function ajax_code_parts() {
@@ -290,39 +290,47 @@ class setting extends MX_Controller {
             ]);
         }
 
-        // List of valid code parts option keys
-        $valid_code_parts = [
-            'dashboard_code_part',
-            'new_order_code_part',
-            'orders_code_part',
-            'services_code_part',
-            'add_funds_code_part',
-            'api_code_part',
-            'tickets_code_part',
-            'child_panel_code_part',
-            'transactions_code_part',
-            'signin_code_part',
-            'signup_code_part'
-        ];
+        // Check if code_parts table exists
+        if (!$this->db->table_exists('code_parts')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Code parts table not found. Please run the database migration: /database/code-parts.sql'
+            ]);
+        }
 
-        // Get POST data - using false for XSS filter because we apply custom HTML sanitization
-        // that allows safe HTML tags while removing dangerous ones
-        $data = $this->input->post(NULL, false);
+        // Get page_key and content from POST
+        $page_key = $this->input->post('page_key', true);
+        $content = $this->input->post('content', false); // false to allow HTML
 
-        if (is_array($data)) {
-            foreach ($data as $key => $value) {
-                // Skip CSRF token
-                if (in_array($key, ['csrf_token_name', 'csrf_test_name'], true)) {
-                    continue;
-                }
+        if (empty($page_key)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Page key is required'
+            ]);
+        }
 
-                // Only process valid code parts keys
-                if (in_array($key, $valid_code_parts, true)) {
-                    // Sanitize HTML: remove dangerous tags while allowing styling elements
-                    $sanitized_value = $this->sanitize_html_code_part($value);
-                    update_option($key, $sanitized_value);
-                }
-            }
+        // Sanitize HTML content
+        $sanitized_content = $this->sanitize_html_code_part($content);
+
+        // Check if page_key exists in database
+        $existing = $this->db->where('page_key', $page_key)->get('code_parts')->row();
+
+        if ($existing) {
+            // Update existing record
+            $this->db->where('page_key', $page_key)->update('code_parts', [
+                'content' => $sanitized_content,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            // Insert new record
+            $this->db->insert('code_parts', [
+                'page_key' => $page_key,
+                'page_name' => ucwords(str_replace('_', ' ', $page_key)) . ' Page',
+                'content' => $sanitized_content,
+                'status' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
         }
 
         ms([

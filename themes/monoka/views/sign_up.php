@@ -6,12 +6,12 @@
       }
     </style>
     
-    <?php if (get_option('signup_code_part','') != '') { ?>
+    <?php if (get_code_part('signup','') != '') { ?>
     <section class="code-part-section">
       <div class="container">
         <div class="row">
           <div class="col-lg-12">
-            <?=get_option('signup_code_part','')?>
+            <?=get_code_part('signup','')?>
           </div>
         </div>
       </div>

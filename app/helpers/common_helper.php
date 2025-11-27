@@ -1292,6 +1292,35 @@ if(!function_exists("update_option")){
 	}
 }
 
+/**
+ * Get code part content from the code_parts table
+ * @param string $page_key The unique page identifier
+ * @param string $default Default value if not found
+ * @return string The HTML content for the code part
+ */
+if(!function_exists("get_code_part")){
+	function get_code_part($page_key, $default = ''){
+		$CI = &get_instance();
+		
+		// Check if table exists
+		if (!$CI->db->table_exists('code_parts')) {
+			return $default;
+		}
+		
+		$result = $CI->db->select('content')
+			->where('page_key', $page_key)
+			->where('status', 1)
+			->get('code_parts')
+			->row();
+		
+		if ($result && !empty($result->content)) {
+			return $result->content;
+		}
+		
+		return $default;
+	}
+}
+
 if(!function_exists("get_upload_folder")){
 	function get_upload_folder(){
 		$path = APPPATH."../assets/uploads/user" . sha1(session("uid"))."/";

@@ -2,9 +2,6 @@
   .code-parts-tab {
     margin: 3px;
   }
-  .code-parts-editor {
-    min-height: 300px;
-  }
 </style>
 
 <div class="row m-t-5">
@@ -13,15 +10,6 @@
       <div class="col-sm-12 col-lg-12 item">
         <div class="card">
           <div class="card-header d-flex align-items-center" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
-            <h3 class="card-title text-white"><i class="fe fe-code"></i> <?=lang("Code Parts")?></h3>
-          </div>
-          <div class="card-body">
-            <div class="alert alert-info">
-              <i class="fe fe-info"></i> 
-              <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
-              HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
-            </div>
-            
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="code-parts-tab">
@@ -59,18 +47,30 @@
                 </li>
               </ul>
             </div>
+          </div>
+          <div class="card-body">
+            <div class="alert alert-info">
+              <i class="fe fe-info"></i> 
+              <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
+              HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
+            </div>
             
             <div class="tab-content mt-3">
               
               <!-- Dashboard Page Code Part -->
               <div id="code_dashboard" class="tab-pane fade in active show">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="dashboard">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-bar-chart-2"></i> Dashboard Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Dashboard/Statistics page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="dashboard_code_part" id="dashboard_code_part"><?=htmlspecialchars(get_option('dashboard_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fe fe-bar-chart-2"></i> <?=lang("dashboard")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('dashboard')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -85,12 +85,17 @@
               <!-- New Order Page Code Part -->
               <div id="code_new_order" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="new_order">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-shopping-cart"></i> New Order Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the New Order page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="new_order_code_part" id="new_order_code_part"><?=htmlspecialchars(get_option('new_order_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fe fe-shopping-cart"></i> <?=lang("New_Order")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('new_order')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -105,12 +110,17 @@
               <!-- Order Logs Page Code Part -->
               <div id="code_orders" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="orders">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-shopping-cart"></i> Order Logs Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Order Logs page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="orders_code_part" id="orders_code_part"><?=htmlspecialchars(get_option('orders_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-shopping-cart"></i> <?=lang("Orders")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('orders')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -125,12 +135,17 @@
               <!-- Services Page Code Part -->
               <div id="code_services" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="services">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-list"></i> Services Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Services page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="services_code_part" id="services_code_part"><?=htmlspecialchars(get_option('services_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fe fe-list"></i> <?=lang("Services")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('services')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -145,12 +160,17 @@
               <!-- Add Funds Page Code Part -->
               <div id="code_add_funds" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="add_funds">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-money"></i> Add Funds Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Add Funds page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="add_funds_code_part" id="add_funds_code_part"><?=htmlspecialchars(get_option('add_funds_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-money"></i> <?=lang("Add_Funds")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('add_funds')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -165,12 +185,17 @@
               <!-- API Page Code Part -->
               <div id="code_api" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="api">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-share-2"></i> API Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the API page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="api_code_part" id="api_code_part"><?=htmlspecialchars(get_option('api_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fe fe-share-2"></i> <?=lang("API")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('api')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -185,12 +210,17 @@
               <!-- Tickets Page Code Part -->
               <div id="code_tickets" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="tickets">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-comments-o"></i> Tickets Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Tickets page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="tickets_code_part" id="tickets_code_part"><?=htmlspecialchars(get_option('tickets_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-comments-o"></i> <?=lang("Tickets")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('tickets')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -205,12 +235,17 @@
               <!-- Child Panel Page Code Part -->
               <div id="code_child_panel" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="child_panel">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-child"></i> Child Panel Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Child Panel page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="child_panel_code_part" id="child_panel_code_part"><?=htmlspecialchars(get_option('child_panel_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-child"></i> <?=lang("Child_Panel")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('child_panel')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -225,12 +260,17 @@
               <!-- Transactions Page Code Part -->
               <div id="code_transactions" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="transactions">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-calendar"></i> Transactions Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Transactions page.</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="transactions_code_part" id="transactions_code_part"><?=htmlspecialchars(get_option('transactions_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transsactions")?></h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('transactions')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -245,12 +285,17 @@
               <!-- Sign In Page Code Part -->
               <div id="code_signin" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="signin">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Sign In (Login) page. (themes/signin)</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="signin_code_part" id="signin_code_part"><?=htmlspecialchars(get_option('signin_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page</h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('signin')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -265,12 +310,17 @@
               <!-- Sign Up Page Code Part -->
               <div id="code_signup" class="tab-pane fade">
                 <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                  <input type="hidden" name="page_key" value="signup">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page HTML Block</h5>
-                      <p class="text-muted small">This HTML block will be displayed on the Sign Up (Registration) page. (themes/signup)</p>
-                      <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="signup_code_part" id="signup_code_part"><?=htmlspecialchars(get_option('signup_code_part',''))?></textarea>
+                      <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page</h5>
+                      <div class="row">
+                        <div class="col-md-12">
+                          <div class="form-group">
+                            <label class="form-label"><?=lang("Content")?></label>
+                            <input class="form-control plugin_editor" name="content" value="<?=get_code_part('signup')?>">
+                          </div>
+                        </div>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -292,24 +342,6 @@
 
 <script>
   $(document).ready(function() {
-    // Initialize TinyMCE for all code parts editors with HTML support
-    // Note: Server-side sanitization removes dangerous elements (scripts, iframes, event handlers)
-    plugin_editor('.code-parts-editor', {
-      height: 350,
-      plugins: [
-        "advlist autolink lists link image charmap print preview hr anchor pagebreak",
-        "searchreplace wordcount visualblocks visualchars code fullscreen",
-        "insertdatetime nonbreaking save table contextmenu directionality",
-        "emoticons template paste textcolor colorpicker textpattern"
-      ],
-      toolbar1: "code | undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | fullscreen",
-      // Allow common HTML elements for styling (inline style attributes allowed, style element removed for security)
-      valid_elements: 'div[id|class|style|data-*],span[id|class|style],p[id|class|style],br,hr[class|style],h1[id|class|style],h2[id|class|style],h3[id|class|style],h4[id|class|style],h5[id|class|style],h6[id|class|style],a[href|target|title|class|style|rel],img[src|alt|title|width|height|class|style],ul[id|class|style],ol[id|class|style],li[class|style],table[id|class|style|border|cellpadding|cellspacing|width],thead,tbody,tr[class|style],td[class|style|colspan|rowspan|width],th[class|style|colspan|rowspan|width],strong,em,b,i,u,s,small,big,sup,sub,pre[class|style],code[class],blockquote[class|style|cite],section[id|class|style],article[id|class|style],header[id|class|style],footer[id|class|style],nav[id|class|style],aside[id|class|style],figure[class|style],figcaption,main[id|class|style],address,dl[class|style],dt,dd,abbr[title],cite,q[cite],time[datetime],mark,ins,del',
-      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base,noscript,applet,meta,link,style',
-      verify_html: true,
-      force_br_newlines: false,
-      force_p_newlines: false,
-      forced_root_block: ''
-    });
+    plugin_editor('.plugin_editor', {height: 200});
   });
 </script>

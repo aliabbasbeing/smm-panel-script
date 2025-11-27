@@ -11,11 +11,11 @@
 </div>
 <?php }?>
 
-<?php if (get_option('tickets_code_part','') != '') { ?>
+<?php if (get_code_part('tickets','') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
     <div class="col-sm-12">
-      <?=get_option('tickets_code_part','')?>
+      <?=get_code_part('tickets','')?>
     </div>
   </div>
 </div>

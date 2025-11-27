@@ -176,9 +176,9 @@
     </div></div>
   <?php endif; ?>
 
-  <?php if (get_option('add_funds_code_part','') != ''): ?>
+  <?php if (get_code_part('add_funds','') != ''): ?>
     <div class="row"><div class="col-sm-12">
-      <?= get_option('add_funds_code_part','') ?>
+      <?= get_code_part('add_funds','') ?>
     </div></div>
   <?php endif; ?>
 

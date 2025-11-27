@@ -54,11 +54,11 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
 </div>
 <?php }?>
 
-<?php if (get_option('dashboard_code_part','') != '') { ?>
+<?php if (get_code_part('dashboard','') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
     <div class="col-sm-12">
-      <?=get_option('dashboard_code_part','')?>
+      <?=get_code_part('dashboard','')?>
     </div>
   </div>
 </div>

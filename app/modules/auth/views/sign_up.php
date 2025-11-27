@@ -1,8 +1,8 @@
 
-<?php if (get_option('signup_code_part','') != '') { ?>
+<?php if (get_code_part('signup','') != '') { ?>
 <div class="row">
   <div class="col-sm-12">
-    <?=get_option('signup_code_part','')?>
+    <?=get_code_part('signup','')?>
   </div>
 </div>
 <?php }?>

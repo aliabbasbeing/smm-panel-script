@@ -19,11 +19,11 @@ $services = isset($services) ? $services : array();
 $service_item_default = !empty($services) ? $services[0] : null;
 ?>
 
-<?php if (get_option('new_order_code_part','') != '') { ?>
+<?php if (get_code_part('new_order','') != '') { ?>
 <div class="col-sm-12">
   <div class="row">
     <div class="col-sm-12">
-      <?=get_option('new_order_code_part','')?>
+      <?=get_code_part('new_order','')?>
     </div>
   </div>
 </div>
