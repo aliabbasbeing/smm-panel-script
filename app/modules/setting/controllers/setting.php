@@ -268,4 +268,54 @@ class setting extends MX_Controller {
             'message' => lang('Update_successfully') . " ({$updated_count}/{$total_count} notifications processed)"
         ]);
     }
+
+    /**
+     * Save Code Parts HTML settings.
+     * Stores HTML content without escaping for full HTML rendering on frontend pages.
+     */
+    public function ajax_code_parts() {
+        if ($this->input->method() !== 'post') {
+            ms([
+                'status'  => 'error',
+                'message' => 'Invalid method'
+            ]);
+        }
+
+        // List of valid code parts option keys
+        $valid_code_parts = [
+            'dashboard_code_part',
+            'new_order_code_part',
+            'orders_code_part',
+            'services_code_part',
+            'add_funds_code_part',
+            'api_code_part',
+            'tickets_code_part',
+            'child_panel_code_part',
+            'transactions_code_part',
+            'signin_code_part',
+            'signup_code_part'
+        ];
+
+        $data = $this->input->post(NULL, false); // Get raw POST data without XSS filtering for HTML content
+
+        if (is_array($data)) {
+            foreach ($data as $key => $value) {
+                // Skip CSRF token
+                if (in_array($key, ['csrf_token_name', 'csrf_test_name'], true)) {
+                    continue;
+                }
+
+                // Only process valid code parts keys
+                if (in_array($key, $valid_code_parts, true)) {
+                    // Store the HTML content (allow full HTML)
+                    update_option($key, $value);
+                }
+            }
+        }
+
+        ms([
+            "status"  => "success",
+            "message" => lang('Update_successfully')
+        ]);
+    }
 }

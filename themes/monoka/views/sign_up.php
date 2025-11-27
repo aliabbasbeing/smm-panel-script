@@ -5,6 +5,19 @@
         margin-bottom: 1rem;
       }
     </style>
+    
+    <?php if (get_option('signup_code_part','') != '') { ?>
+    <section class="code-part-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <?=get_option('signup_code_part','')?>
+          </div>
+        </div>
+      </div>
+    </section>
+    <?php }?>
+    
     <section class="sign-up-form">
       <div class="container">
         <div class="row">

@@ -10,6 +10,16 @@
 </div>
 <?php }?>
 
+<?php if (get_option('child_panel_code_part','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row mb-4">
+    <div class="col-sm-12">
+      <?=get_option('child_panel_code_part','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="row justify-content-center mt-5" id="result_ajaxSearch">
   <div class="col-md-10 col-lg-8">
     <div class="card child-panel-card">

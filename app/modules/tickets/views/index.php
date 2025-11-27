@@ -11,6 +11,16 @@
 </div>
 <?php }?>
 
+<?php if (get_option('tickets_code_part','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_option('tickets_code_part','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <section class="page-title">
   <div class="row justify-content-between">
     <div class="col-md-6">

@@ -54,6 +54,16 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
 </div>
 <?php }?>
 
+<?php if (get_option('dashboard_code_part','') != '') { ?>
+<div class="col-sm-12">
+  <div class="row">
+    <div class="col-sm-12">
+      <?=get_option('dashboard_code_part','')?>
+    </div>
+  </div>
+</div>
+<?php }?>
+
 <div class="row justify-content-center row-card2 statistics">
   <div class="col-sm-12">
     <div class="row">
