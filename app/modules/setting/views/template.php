@@ -91,10 +91,12 @@
     </div>
 
     <script>
+        // Note: This editor allows all HTML elements (*[*]) to preserve custom inline styles.
+        // This is used for email templates with custom styling.
         tinymce.init({
     selector: '.plugin_editor',
     height: 400,
-    // Preserve inline styles and all attributes
+    // Preserve inline styles and all attributes for custom HTML content
     verify_html: false,
     cleanup: false,
     valid_elements: '*[*]',

@@ -151,11 +151,13 @@
 
     <script type="text/javascript" id="tinymce-js" src="<?= BASE ?>assets/plugins/tinymce/tinymce.min.js"></script>
     <script type="text/javascript">
+  // Note: This editor allows all HTML elements (*[*]) to preserve custom inline styles.
+  // This is used in admin areas for custom HTML content like dashboard widgets.
   tinymce.init({
     selector: '.plugin_editor', // Target the textarea by its ID
     height: 300,
     menubar: true,
-    // Preserve inline styles and all attributes
+    // Preserve inline styles and all attributes for custom HTML content
     verify_html: false,
     cleanup: false,
     valid_elements: '*[*]',

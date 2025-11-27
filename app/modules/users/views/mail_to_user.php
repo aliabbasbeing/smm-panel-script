@@ -58,11 +58,13 @@
     </div>
 </div>
 <script type="text/javascript">
+  // Note: This editor allows all HTML elements (*[*]) to preserve custom inline styles.
+  // This is used for sending styled emails to users.
   tinymce.init({
     selector: '.plugin_editor', // Target the textarea by its ID
     height: 300,
     menubar: true,
-    // Preserve inline styles and all attributes
+    // Preserve inline styles and all attributes for custom HTML content
     verify_html: false,
     cleanup: false,
     valid_elements: '*[*]',

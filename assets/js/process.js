@@ -121,6 +121,10 @@
 }
 
 /*----------  Configure tinymce editor  ----------*/
+// Note: This editor configuration allows all HTML elements and attributes (*[*])
+// to preserve custom inline styles. This is intentional for admin use cases
+// where users need to enter custom styled HTML (e.g., dashboard widgets).
+// Ensure this editor is only used in admin-protected areas.
 function plugin_editor(selector, settings){
   selector = typeof(selector) == 'undefined' ? '.tinymce' : selector;
   var _settings = {
@@ -135,7 +139,7 @@ function plugin_editor(selector, settings){
     verify_html: false,
     cleanup: false,
     autoresize_bottom_margin: 25,
-    // Preserve all inline styles and attributes
+    // Preserve all inline styles and attributes for custom HTML content
     valid_elements: '*[*]',
     extended_valid_elements: '*[*]',
     valid_styles: {
