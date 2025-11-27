@@ -95,8 +95,7 @@
               
               <!-- Dashboard Page Code Part -->
               <div id="code_dashboard" class="tab-pane fade in active show">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="dashboard">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-bar-chart-2"></i> <?=lang("dashboard")?></h5>
@@ -104,7 +103,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('dashboard'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="dashboard_code_part" value="<?=get_option('dashboard_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -120,8 +119,7 @@
               
               <!-- New Order Page Code Part -->
               <div id="code_new_order" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="new_order">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-shopping-cart"></i> <?=lang("New_Order")?></h5>
@@ -129,7 +127,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('new_order'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="new_order_code_part" value="<?=get_option('new_order_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -145,8 +143,7 @@
               
               <!-- Order Logs Page Code Part -->
               <div id="code_orders" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="orders">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-shopping-cart"></i> <?=lang("Orders")?></h5>
@@ -154,7 +151,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('orders'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="orders_code_part" value="<?=get_option('orders_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -170,8 +167,7 @@
               
               <!-- Services Page Code Part -->
               <div id="code_services" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="services">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-list"></i> <?=lang("Services")?></h5>
@@ -179,7 +175,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('services'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="services_code_part" value="<?=get_option('services_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -195,8 +191,7 @@
               
               <!-- Add Funds Page Code Part -->
               <div id="code_add_funds" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="add_funds">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-money"></i> <?=lang("Add_Funds")?></h5>
@@ -204,7 +199,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('add_funds'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="add_funds_code_part" value="<?=get_option('add_funds_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -220,8 +215,7 @@
               
               <!-- API Page Code Part -->
               <div id="code_api" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="api">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-share-2"></i> <?=lang("API")?></h5>
@@ -229,7 +223,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('api'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="api_code_part" value="<?=get_option('api_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -245,8 +239,7 @@
               
               <!-- Tickets Page Code Part -->
               <div id="code_tickets" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="tickets">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-comments-o"></i> <?=lang("Tickets")?></h5>
@@ -254,7 +247,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('tickets'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="tickets_code_part" value="<?=get_option('tickets_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -270,8 +263,7 @@
               
               <!-- Child Panel Page Code Part -->
               <div id="code_child_panel" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="child_panel">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-child"></i> <?=lang("Child_Panel")?></h5>
@@ -279,7 +271,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('child_panel'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="child_panel_code_part" value="<?=get_option('child_panel_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -295,8 +287,7 @@
               
               <!-- Transactions Page Code Part -->
               <div id="code_transactions" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="transactions">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transsactions")?></h5>
@@ -304,7 +295,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('transactions'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="transactions_code_part" value="<?=get_option('transactions_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -320,8 +311,7 @@
               
               <!-- Sign In Page Code Part -->
               <div id="code_signin" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="signin">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page</h5>
@@ -329,7 +319,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('signin'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="signin_code_part" value="<?=get_option('signin_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -345,8 +335,7 @@
               
               <!-- Sign Up Page Code Part -->
               <div id="code_signup" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
-                  <input type="hidden" name="page_key" value="signup">
+                <form class="actionForm" action="<?=cn("$module/ajax_general_settings")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page</h5>
@@ -354,7 +343,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="content" value="<?=htmlspecialchars(get_code_part_raw('signup'), ENT_QUOTES, 'UTF-8')?>">
+                            <input class="form-control plugin_editor" name="signup_code_part" value="<?=get_option('signup_code_part')?>">
                           </div>
                         </div>
                       </div>
@@ -377,7 +366,7 @@
 </div>
 
 <script>
-  $(document).ready(function() {
-    plugin_editor('.plugin_editor', {height: 200});
-  });
+   $(document).ready(function() {
+       plugin_editor('.plugin_editor', {height: 200});
+   });
 </script>

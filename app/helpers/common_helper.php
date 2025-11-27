@@ -1293,8 +1293,8 @@ if(!function_exists("update_option")){
 }
 
 /**
- * Get code part content from the code_parts table
- * @param string $page_key The unique page identifier
+ * Get code part content from general_options table
+ * @param string $page_key The unique page identifier (e.g., 'dashboard', 'new_order')
  * @param string $default Default value if not found
  * @param bool $process_variables Whether to process template variables
  * @return string The HTML content for the code part
@@ -1302,28 +1302,12 @@ if(!function_exists("update_option")){
 if(!function_exists("get_code_part")){
 	function get_code_part($page_key, $default = '', $process_variables = true){
 		try {
-			$CI = &get_instance();
+			// Get the code part content from options table using _code_part suffix
+			$option_key = $page_key . '_code_part';
+			$content = get_option($option_key, $default);
 			
-			// Check if database is loaded and table exists
-			if (!isset($CI->db) || !$CI->db) {
-				return $default;
-			}
-			
-			// Check if table exists - with error suppression
-			if (!$CI->db->table_exists('code_parts')) {
-				return $default;
-			}
-			
-			$result = $CI->db->select('content')
-				->where('page_key', $page_key)
-				->where('status', 1)
-				->get('code_parts')
-				->row();
-			
-			$content = ($result && !empty($result->content)) ? $result->content : $default;
-			
-			// Process template variables if enabled and user is logged in
-			if ($process_variables && !empty($content) && session('uid')) {
+			// Process template variables if enabled and content exists
+			if ($process_variables && !empty($content)) {
 				$content = process_code_part_variables($content);
 			}
 			
