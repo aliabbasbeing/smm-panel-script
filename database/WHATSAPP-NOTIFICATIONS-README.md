@@ -137,6 +137,56 @@ The system supports the following notification types:
   - `{expiry_minutes}` - Link expiry time in minutes
   - `{website_name}` - Website name
 
+### 9. Order Error (Admin Notification)
+- **Event Type:** `order_error`
+- **Sent To:** Admin
+- **Trigger:** When an order encounters an error during processing (via cron)
+- **Variables:**
+  - `{order_id}` - Order ID
+  - `{service_name}` - Service name
+  - `{username}` - User's name
+  - `{user_email}` - User's email
+  - `{error_message}` - The error message from API
+  - `{link}` - Order link/URL
+  - `{quantity}` - Order quantity
+  - `{charge}` - Order charge amount
+  - `{error_time}` - Timestamp of the error
+  - `{currency_symbol}` - Currency symbol
+  - `{website_name}` - Website name
+
+## Cron-based Notification Queue
+
+To ensure that order processing is not delayed by slow or unavailable WhatsApp API, error notifications are queued and sent via a separate cron job.
+
+### Queue Table
+
+The `whatsapp_notification_queue` table stores pending notifications:
+- `pending` - Waiting to be sent
+- `sent` - Successfully sent
+- `failed` - Failed after 3 attempts
+- `skipped` - Skipped (notification disabled or not configured)
+
+### Cron Jobs
+
+1. **Process Queue**: `/cron/whatsapp_notifications`
+   - Processes pending notifications in the queue
+   - Uses short timeouts to prevent delays
+   - Retries failed notifications up to 3 times
+
+2. **Cleanup Queue**: `/cron/whatsapp_notifications_cleanup`
+   - Removes old processed entries (default: 7 days)
+   - Run periodically to prevent database growth
+
+### Add to Crontab
+
+```bash
+# Process WhatsApp notification queue (every minute or as needed)
+* * * * * wget --spider -o - https://domain.com/cron/whatsapp_notifications >/dev/null 2>&1
+
+# Cleanup old queue entries (daily)
+0 0 * * * wget --spider -o - https://domain.com/cron/whatsapp_notifications_cleanup >/dev/null 2>&1
+```
+
 ## Usage Guide
 
 ### For Developers
@@ -250,6 +300,7 @@ Best regards,
 
 - `whatsapp_config` - WhatsApp API configuration
 - `whatsapp_notifications` - Notification templates and settings
+- `whatsapp_notification_queue` - Queue for cron-based notification sending
 
 ## API Configuration
 

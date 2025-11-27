@@ -840,11 +840,19 @@ class api_provider extends MX_Controller {
 
 		$processed = 0;
 		$errors = 0;
+		$error_notifications_queued = 0;
+
+		// Load WhatsApp notification library for error notifications
+		$this->load->library('whatsapp_notification');
 
 		foreach ($orders as $row) {
 			$api = $this->model->get("url, key", $this->tb_api_providers, ["id" => $row->api_provider_id]);
 			if (empty($api)) {
 				echo "API Provider does not exists.<br>";
+				// Queue error notification to admin
+				if ($this->whatsapp_notification->queue_order_error_notification($row, 'API Provider does not exist')) {
+					$error_notifications_queued++;
+				}
 				$errors++;
 				continue;
 			}
@@ -919,11 +927,16 @@ class api_provider extends MX_Controller {
 			$response = json_decode($this->connect_api($api->url, $data_post));
 			if (!$response) {
 				echo "OrderID - ". $row->id."<br>";
+				$error_message = 'Troubleshooting API requests';
 				$this->db->update($this->tb_orders, [
 					"status"  => 'error',
-					"note"    => 'Troubleshooting API requests',
+					"note"    => $error_message,
 					"changed" => NOW,
 				], ["id" => $row->id]);
+				// Queue error notification to admin
+				if ($this->whatsapp_notification->queue_order_error_notification($row, $error_message)) {
+					$error_notifications_queued++;
+				}
 				$errors++;
 				continue;
 			}
@@ -935,6 +948,10 @@ class api_provider extends MX_Controller {
 					"note"    => $response->error,
 					"changed" => NOW,
 				], ["id" => $row->id]);
+				// Queue error notification to admin
+				if ($this->whatsapp_notification->queue_order_error_notification($row, $response->error)) {
+					$error_notifications_queued++;
+				}
 				$errors++;
 				continue;
 			}
@@ -948,7 +965,7 @@ class api_provider extends MX_Controller {
 		
 		// Log the result
 		if ($log_id) {
-			$message = "Processed {$processed} orders" . ($errors > 0 ? ", {$errors} errors" : "");
+			$message = "Processed {$processed} orders" . ($errors > 0 ? ", {$errors} errors" : "") . ($error_notifications_queued > 0 ? ", {$error_notifications_queued} error notifications queued" : "");
 			$status = ($errors == 0 || $processed > 0) ? 'Success' : 'Failed';
 			$this->cron_logger->end($log_id, $status, 200, $message);
 		}

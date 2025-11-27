@@ -87,6 +87,34 @@ INSERT INTO `whatsapp_notifications` (`event_type`, `event_name`, `status`, `tem
 '["username", "reset_link", "expiry_minutes", "website_name"]')
 ON DUPLICATE KEY UPDATE `template` = VALUES(`template`);
 
+-- 9. Order Error (Admin Notification)
+INSERT INTO `whatsapp_notifications` (`event_type`, `event_name`, `status`, `template`, `description`, `variables`) VALUES
+('order_error', 'Order Error (Admin)', 1,
+'*⚠️ Order Error Alert*\n\n🔢 *Order ID:* #{order_id}\n📦 *Service:* {service_name}\n👤 *User:* {username}\n📧 *Email:* {user_email}\n\n❌ *Error:* {error_message}\n\n🔗 *Link:* {link}\n📋 *Quantity:* {quantity}\n💰 *Charge:* {currency_symbol}{charge}\n\n⏰ *Time:* {error_time}\n\nPlease check and resolve this order issue.\n\n{website_name}',
+'Admin notification when an order encounters an error',
+'["order_id", "service_name", "username", "user_email", "error_message", "link", "quantity", "charge", "error_time", "currency_symbol", "website_name"]')
+ON DUPLICATE KEY UPDATE `template` = VALUES(`template`);
+
+-- =====================================================
+-- TABLE: whatsapp_notification_queue
+-- Purpose: Queue WhatsApp notifications for cron-based sending
+-- This ensures order processing continues even if WhatsApp is slow/unavailable
+-- =====================================================
+CREATE TABLE IF NOT EXISTS `whatsapp_notification_queue` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `event_type` VARCHAR(100) NOT NULL,
+  `phone` VARCHAR(50) NOT NULL,
+  `variables` TEXT NOT NULL COMMENT 'JSON encoded variables for template',
+  `status` ENUM('pending', 'sent', 'failed', 'skipped') NOT NULL DEFAULT 'pending',
+  `attempts` TINYINT(3) NOT NULL DEFAULT 0,
+  `error_message` VARCHAR(500) DEFAULT NULL,
+  `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `processed_at` DATETIME DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_status` (`status`),
+  KEY `idx_created` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- =====================================================
 -- END OF SCHEMA
 -- =====================================================

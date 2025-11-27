@@ -491,4 +491,305 @@ class Whatsapp_notification {
         $notification = $this->_get_notification_settings($event_type);
         return $notification && $notification->status == 1;
     }
+
+    /**
+     * Queue a notification for cron-based sending
+     * This ensures order processing continues even if WhatsApp is slow/unavailable
+     * 
+     * @param string $event_type Event type identifier
+     * @param array  $variables  Variables to replace in template
+     * @param string $phone      Phone number (optional, defaults to admin phone)
+     * @return bool
+     */
+    public function queue($event_type, $variables = array(), $phone = null) {
+        try {
+            // Check if queue table exists
+            if (!$this->CI->db->table_exists('whatsapp_notification_queue')) {
+                log_message('error', 'WhatsApp Notification: Queue table not found');
+                return false;
+            }
+
+            // Use admin phone if no phone provided
+            if (empty($phone)) {
+                $phone = $this->admin_phone;
+            }
+
+            if (empty($phone)) {
+                log_message('error', 'WhatsApp Notification: No phone number for queue');
+                return false;
+            }
+
+            $data = array(
+                'event_type' => $event_type,
+                'phone' => $phone,
+                'variables' => json_encode($variables),
+                'status' => 'pending',
+                'attempts' => 0,
+                'created_at' => date('Y-m-d H:i:s')
+            );
+
+            $this->CI->db->insert('whatsapp_notification_queue', $data);
+            
+            if ($this->CI->db->affected_rows() > 0) {
+                log_message('info', 'WhatsApp Notification: Queued ' . $event_type . ' for ' . $phone);
+                return true;
+            }
+            
+            return false;
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Notification: Failed to queue - ' . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Process queued notifications (called by cron)
+     * 
+     * @param int $limit Maximum number of notifications to process
+     * @param int $timeout Maximum seconds per API call
+     * @return array Processing results
+     */
+    public function process_queue($limit = 20, $timeout = 3) {
+        $results = array(
+            'processed' => 0,
+            'sent' => 0,
+            'failed' => 0,
+            'skipped' => 0
+        );
+
+        try {
+            // Check if queue table exists
+            if (!$this->CI->db->table_exists('whatsapp_notification_queue')) {
+                log_message('error', 'WhatsApp Notification: Queue table not found');
+                return $results;
+            }
+
+            // Get pending notifications
+            $this->CI->db->where('status', 'pending');
+            $this->CI->db->where('attempts <', 3);
+            $this->CI->db->order_by('created_at', 'ASC');
+            $this->CI->db->limit($limit);
+            $queue_items = $this->CI->db->get('whatsapp_notification_queue')->result();
+
+            if (empty($queue_items)) {
+                return $results;
+            }
+
+            // Store original timeout
+            $original_timeout = ini_get('default_socket_timeout');
+
+            foreach ($queue_items as $item) {
+                $results['processed']++;
+
+                // Check if configured
+                if (!$this->is_configured) {
+                    $this->_update_queue_status($item->id, 'skipped', 'WhatsApp not configured');
+                    $results['skipped']++;
+                    continue;
+                }
+
+                // Get notification settings
+                $notification = $this->_get_notification_settings($item->event_type);
+                if (!$notification || $notification->status != 1) {
+                    $this->_update_queue_status($item->id, 'skipped', 'Notification disabled');
+                    $results['skipped']++;
+                    continue;
+                }
+
+                // Decode variables
+                $variables = json_decode($item->variables, true);
+                if (!is_array($variables)) {
+                    $variables = array();
+                }
+
+                // Process template
+                $message = $this->_process_template($notification->template, $variables);
+
+                // Send with timeout protection
+                $send_result = $this->_send_message_with_timeout($item->phone, $message, $timeout);
+
+                if ($send_result === true) {
+                    $this->_update_queue_status($item->id, 'sent');
+                    $results['sent']++;
+                } else {
+                    // Increment attempts
+                    $attempts = $item->attempts + 1;
+                    $status = ($attempts >= 3) ? 'failed' : 'pending';
+                    $this->_update_queue_status($item->id, $status, $send_result, $attempts);
+                    if ($status == 'failed') {
+                        $results['failed']++;
+                    }
+                }
+            }
+
+            // Restore original timeout
+            ini_set('default_socket_timeout', $original_timeout);
+
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Notification: Queue processing error - ' . $e->getMessage());
+        }
+
+        return $results;
+    }
+
+    /**
+     * Send message with timeout protection
+     * 
+     * @param string $phone
+     * @param string $message
+     * @param int $timeout
+     * @return bool|string
+     */
+    private function _send_message_with_timeout($phone, $message, $timeout = 3) {
+        // Remove + from phone number if present
+        $phone = ltrim($phone, '+');
+
+        $data = array(
+            'apiKey' => $this->api_key,
+            'phoneNumber' => $phone,
+            'message' => $message
+        );
+
+        $ch = curl_init($this->api_url);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            $error = curl_error($ch);
+            curl_close($ch);
+            log_message('error', 'WhatsApp Notification: Timeout/Error - ' . $error);
+            return 'cURL error: ' . $error;
+        }
+
+        curl_close($ch);
+        log_message('info', 'WhatsApp Notification: Sent to ' . $phone . ' - Response: ' . $response);
+        return true;
+    }
+
+    /**
+     * Update queue item status
+     * 
+     * @param int $id
+     * @param string $status
+     * @param string $error_message
+     * @param int $attempts
+     */
+    private function _update_queue_status($id, $status, $error_message = null, $attempts = null) {
+        $data = array(
+            'status' => $status,
+            'processed_at' => date('Y-m-d H:i:s')
+        );
+
+        if ($error_message !== null) {
+            $data['error_message'] = substr($error_message, 0, 500);
+        }
+
+        if ($attempts !== null) {
+            $data['attempts'] = $attempts;
+        }
+
+        $this->CI->db->where('id', $id);
+        $this->CI->db->update('whatsapp_notification_queue', $data);
+    }
+
+    /**
+     * Queue order error notification for admin
+     * This is sent via cron to ensure order processing is not delayed
+     * 
+     * @param object $order Order object with order details
+     * @param string $error_message The error message from API
+     * @return bool
+     */
+    public function queue_order_error_notification($order, $error_message) {
+        // Check if order_error notification is enabled
+        $notification = $this->_get_notification_settings('order_error');
+        if (!$notification || $notification->status != 1) {
+            log_message('info', 'WhatsApp Notification: order_error notification is disabled');
+            return false;
+        }
+
+        // Get service name
+        $service_name = '';
+        if (isset($order->service_id)) {
+            $service = $this->_get_service_details($order->service_id);
+            if ($service && isset($service->name)) {
+                $service_name = $service->name;
+            }
+        }
+
+        // Get user details
+        $username = '';
+        $user_email = '';
+        if (isset($order->uid)) {
+            $user = $this->_get_user_details($order->uid);
+            if ($user) {
+                if (isset($user->first_name) && !empty($user->first_name)) {
+                    $username = $user->first_name;
+                }
+                if (isset($user->email) && !empty($user->email)) {
+                    $user_email = $user->email;
+                }
+            }
+        }
+
+        // Get decimal places for formatting
+        $decimal_places = function_exists('get_option') ? (int)get_option('currency_decimal', 4) : 4;
+
+        // Prepare variables for template
+        $variables = array(
+            'order_id' => isset($order->id) ? $order->id : '',
+            'service_name' => $service_name,
+            'username' => $username,
+            'user_email' => $user_email,
+            'error_message' => $error_message,
+            'link' => isset($order->link) ? $order->link : '',
+            'quantity' => isset($order->quantity) ? $order->quantity : '',
+            'charge' => isset($order->charge) ? number_format($order->charge, $decimal_places) : number_format(0, $decimal_places),
+            'error_time' => date('Y-m-d H:i:s'),
+        );
+
+        // Queue the notification for admin (uses admin phone by default)
+        return $this->queue('order_error', $variables);
+    }
+
+    /**
+     * Check if order error notification is enabled
+     * 
+     * @return bool
+     */
+    public function is_order_error_notification_enabled() {
+        $notification = $this->_get_notification_settings('order_error');
+        return $notification && $notification->status == 1;
+    }
+
+    /**
+     * Clean up old processed queue items
+     * 
+     * @param int $days Number of days to keep
+     * @return int Number of deleted items
+     */
+    public function cleanup_queue($days = 7) {
+        try {
+            if (!$this->CI->db->table_exists('whatsapp_notification_queue')) {
+                return 0;
+            }
+
+            $cutoff_date = date('Y-m-d H:i:s', strtotime("-{$days} days"));
+            
+            $this->CI->db->where('status !=', 'pending');
+            $this->CI->db->where('created_at <', $cutoff_date);
+            $this->CI->db->delete('whatsapp_notification_queue');
+            
+            return $this->CI->db->affected_rows();
+        } catch (Exception $e) {
+            log_message('error', 'WhatsApp Notification: Queue cleanup error - ' . $e->getMessage());
+            return 0;
+        }
+    }
 }
