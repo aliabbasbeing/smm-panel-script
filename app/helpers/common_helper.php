@@ -1350,8 +1350,9 @@ if(!function_exists("process_code_part_variables")){
 			// User-related variables (only if logged in)
 			$user_vars = [];
 			if ($uid && isset($CI->db) && $CI->db) {
-				// Get user data
-				$user = $CI->db->where('id', $uid)->get('general_users')->row();
+				// Get user data - using USERS constant or 'general_users' as fallback
+				$users_table = defined('USERS') ? USERS : 'general_users';
+				$user = $CI->db->where('id', $uid)->get($users_table)->row();
 				if ($user) {
 					$user_vars = [
 						'{{user.id}}' => $user->id,
@@ -1364,16 +1365,17 @@ if(!function_exists("process_code_part_variables")){
 						'{{user.created}}' => isset($user->created) ? date('Y-m-d', strtotime($user->created)) : '',
 					];
 					
-					// Get user orders count
-					$orders_count = $CI->db->where('uid', $uid)->count_all_results('general_orders');
+					// Get user orders count - using ORDER constant or 'orders' as fallback
+					$orders_table = defined('ORDER') ? ORDER : 'orders';
+					$orders_count = $CI->db->where('uid', $uid)->count_all_results($orders_table);
 					$user_vars['{{user.orders}}'] = $orders_count;
 					$user_vars['{{user.total_orders}}'] = $orders_count;
 					
-					// Get user total spent
-					$spent_result = $CI->db->select_sum('total_charge', 'total')
+					// Get user total spent - using 'charge' column from orders table
+					$spent_result = $CI->db->select_sum('charge', 'total')
 						->where('uid', $uid)
 						->where('status !=', 'canceled')
-						->get('general_orders')
+						->get($orders_table)
 						->row();
 					$user_vars['{{user.spent}}'] = number_format((float)(isset($spent_result->total) ? $spent_result->total : 0), 2);
 					$user_vars['{{user.total_spent}}'] = $user_vars['{{user.spent}}'];
@@ -1381,18 +1383,19 @@ if(!function_exists("process_code_part_variables")){
 					// Get pending orders count
 					$pending_orders = $CI->db->where('uid', $uid)
 						->where_in('status', ['pending', 'processing', 'inprogress'])
-						->count_all_results('general_orders');
+						->count_all_results($orders_table);
 					$user_vars['{{user.pending_orders}}'] = $pending_orders;
 					
 					// Get completed orders count
 					$completed_orders = $CI->db->where('uid', $uid)
 						->where('status', 'completed')
-						->count_all_results('general_orders');
+						->count_all_results($orders_table);
 					$user_vars['{{user.completed_orders}}'] = $completed_orders;
 					
-					// Get tickets count
-					if ($CI->db->table_exists('general_tickets')) {
-						$tickets_count = $CI->db->where('uid', $uid)->count_all_results('general_tickets');
+					// Get tickets count - using TICKETS constant or 'tickets' as fallback
+					$tickets_table = defined('TICKETS') ? TICKETS : 'tickets';
+					if ($CI->db->table_exists($tickets_table)) {
+						$tickets_count = $CI->db->where('uid', $uid)->count_all_results($tickets_table);
 						$user_vars['{{user.tickets}}'] = $tickets_count;
 					} else {
 						$user_vars['{{user.tickets}}'] = 0;
