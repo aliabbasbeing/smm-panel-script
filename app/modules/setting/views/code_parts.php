@@ -70,7 +70,7 @@
                       <h5 class="text-info"><i class="fe fe-bar-chart-2"></i> Dashboard Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Dashboard/Statistics page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="dashboard_code_part" id="dashboard_code_part"><?=htmlspecialchars_decode(get_option('dashboard_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="dashboard_code_part" id="dashboard_code_part"><?=htmlspecialchars(get_option('dashboard_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -90,7 +90,7 @@
                       <h5 class="text-info"><i class="fe fe-shopping-cart"></i> New Order Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the New Order page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="new_order_code_part" id="new_order_code_part"><?=htmlspecialchars_decode(get_option('new_order_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="new_order_code_part" id="new_order_code_part"><?=htmlspecialchars(get_option('new_order_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -110,7 +110,7 @@
                       <h5 class="text-info"><i class="fa fa-shopping-cart"></i> Order Logs Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Order Logs page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="orders_code_part" id="orders_code_part"><?=htmlspecialchars_decode(get_option('orders_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="orders_code_part" id="orders_code_part"><?=htmlspecialchars(get_option('orders_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -130,7 +130,7 @@
                       <h5 class="text-info"><i class="fe fe-list"></i> Services Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Services page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="services_code_part" id="services_code_part"><?=htmlspecialchars_decode(get_option('services_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="services_code_part" id="services_code_part"><?=htmlspecialchars(get_option('services_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -150,7 +150,7 @@
                       <h5 class="text-info"><i class="fa fa-money"></i> Add Funds Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Add Funds page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="add_funds_code_part" id="add_funds_code_part"><?=htmlspecialchars_decode(get_option('add_funds_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="add_funds_code_part" id="add_funds_code_part"><?=htmlspecialchars(get_option('add_funds_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -170,7 +170,7 @@
                       <h5 class="text-info"><i class="fe fe-share-2"></i> API Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the API page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="api_code_part" id="api_code_part"><?=htmlspecialchars_decode(get_option('api_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="api_code_part" id="api_code_part"><?=htmlspecialchars(get_option('api_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -190,7 +190,7 @@
                       <h5 class="text-info"><i class="fa fa-comments-o"></i> Tickets Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Tickets page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="tickets_code_part" id="tickets_code_part"><?=htmlspecialchars_decode(get_option('tickets_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="tickets_code_part" id="tickets_code_part"><?=htmlspecialchars(get_option('tickets_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -210,7 +210,7 @@
                       <h5 class="text-info"><i class="fa fa-child"></i> Child Panel Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Child Panel page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="child_panel_code_part" id="child_panel_code_part"><?=htmlspecialchars_decode(get_option('child_panel_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="child_panel_code_part" id="child_panel_code_part"><?=htmlspecialchars(get_option('child_panel_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -230,7 +230,7 @@
                       <h5 class="text-info"><i class="fe fe-calendar"></i> Transactions Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Transactions page.</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="transactions_code_part" id="transactions_code_part"><?=htmlspecialchars_decode(get_option('transactions_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="transactions_code_part" id="transactions_code_part"><?=htmlspecialchars(get_option('transactions_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -250,7 +250,7 @@
                       <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Sign In (Login) page. (themes/signin)</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="signin_code_part" id="signin_code_part"><?=htmlspecialchars_decode(get_option('signin_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="signin_code_part" id="signin_code_part"><?=htmlspecialchars(get_option('signin_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -270,7 +270,7 @@
                       <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page HTML Block</h5>
                       <p class="text-muted small">This HTML block will be displayed on the Sign Up (Registration) page. (themes/signup)</p>
                       <div class="form-group">
-                        <textarea class="form-control code-parts-editor" name="signup_code_part" id="signup_code_part"><?=htmlspecialchars_decode(get_option('signup_code_part',''))?></textarea>
+                        <textarea class="form-control code-parts-editor" name="signup_code_part" id="signup_code_part"><?=htmlspecialchars(get_option('signup_code_part',''))?></textarea>
                       </div>
                     </div> 
                     <div class="col-md-12">
@@ -303,9 +303,9 @@
         "emoticons template paste textcolor colorpicker textpattern"
       ],
       toolbar1: "code | undo redo | formatselect | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image | removeformat | fullscreen",
-      // Allow common HTML elements for styling (style element restricted to type attribute only)
-      valid_elements: 'div[id|class|style|data-*],span[id|class|style],p[id|class|style],br,hr[class|style],h1[id|class|style],h2[id|class|style],h3[id|class|style],h4[id|class|style],h5[id|class|style],h6[id|class|style],a[href|target|title|class|style|rel],img[src|alt|title|width|height|class|style],ul[id|class|style],ol[id|class|style],li[class|style],table[id|class|style|border|cellpadding|cellspacing|width],thead,tbody,tr[class|style],td[class|style|colspan|rowspan|width],th[class|style|colspan|rowspan|width],strong,em,b,i,u,s,small,big,sup,sub,pre[class|style],code[class],blockquote[class|style|cite],section[id|class|style],article[id|class|style],header[id|class|style],footer[id|class|style],nav[id|class|style],aside[id|class|style],figure[class|style],figcaption,main[id|class|style],address,dl[class|style],dt,dd,abbr[title],cite,q[cite],time[datetime],mark,ins,del,style[type]',
-      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base,noscript,applet,meta,link',
+      // Allow common HTML elements for styling (inline style attributes allowed, style element removed for security)
+      valid_elements: 'div[id|class|style|data-*],span[id|class|style],p[id|class|style],br,hr[class|style],h1[id|class|style],h2[id|class|style],h3[id|class|style],h4[id|class|style],h5[id|class|style],h6[id|class|style],a[href|target|title|class|style|rel],img[src|alt|title|width|height|class|style],ul[id|class|style],ol[id|class|style],li[class|style],table[id|class|style|border|cellpadding|cellspacing|width],thead,tbody,tr[class|style],td[class|style|colspan|rowspan|width],th[class|style|colspan|rowspan|width],strong,em,b,i,u,s,small,big,sup,sub,pre[class|style],code[class],blockquote[class|style|cite],section[id|class|style],article[id|class|style],header[id|class|style],footer[id|class|style],nav[id|class|style],aside[id|class|style],figure[class|style],figcaption,main[id|class|style],address,dl[class|style],dt,dd,abbr[title],cite,q[cite],time[datetime],mark,ins,del',
+      invalid_elements: 'script,iframe,object,embed,form,input,button,select,textarea,base,noscript,applet,meta,link,style',
       verify_html: true,
       force_br_newlines: false,
       force_p_newlines: false,

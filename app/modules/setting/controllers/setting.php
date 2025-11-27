@@ -400,7 +400,8 @@ class setting extends MX_Controller {
         
         if (!@$dom->loadHTML($wrapped, LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD)) {
             libxml_clear_errors();
-            return $html; // Return original if parsing fails
+            // Return empty string if parsing fails - this prevents malicious content bypass
+            return '';
         }
         
         $xpath = new DOMXPath($dom);
