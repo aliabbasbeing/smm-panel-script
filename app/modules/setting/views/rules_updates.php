@@ -28,7 +28,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="updates_text" value="<?=get_option('updates_text')?>">
+                            <textarea class="form-control plugin_editor" name="updates_text" rows="5"><?=get_option('updates_text')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -74,7 +74,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="order_rules" value="<?=get_option('order_rules')?>">
+                            <textarea class="form-control plugin_editor" name="order_rules" rows="5"><?=get_option('order_rules')?></textarea>
                           </div>
                         </div>
                       </div>

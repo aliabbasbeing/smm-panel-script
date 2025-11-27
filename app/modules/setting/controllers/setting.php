@@ -112,7 +112,9 @@ class setting extends MX_Controller {
                     'email_new_registration_content',
                     'email_password_recovery_content',
                     'email_payment_notice_content',
-                    'childpanel_desc'
+                    'childpanel_desc',
+                    'updates_text',
+                    'order_rules'
                 ];
                 
                 if (in_array($key, $html_content_fields)) {

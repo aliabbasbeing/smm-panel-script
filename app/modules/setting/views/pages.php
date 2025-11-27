@@ -54,7 +54,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <input class="form-control plugin_editor" name="dashboard_text" value="<?=get_option('dashboard_text')?>">
+                            <textarea class="form-control plugin_editor" name="dashboard_text" rows="5"><?=get_option('dashboard_text')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -77,7 +77,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="new_order_text" value="<?=get_option('new_order_text')?>">
+                              <textarea class="form-control plugin_editor" name="new_order_text" rows="5"><?=get_option('new_order_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -100,7 +100,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="orders_text" value="<?=get_option('orders_text')?>">
+                              <textarea class="form-control plugin_editor" name="orders_text" rows="5"><?=get_option('orders_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -123,7 +123,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="services_text" value="<?=get_option('services_text')?>">
+                              <textarea class="form-control plugin_editor" name="services_text" rows="5"><?=get_option('services_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -146,7 +146,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="add_funds_text" value="<?=get_option('add_funds_text')?>">
+                              <textarea class="form-control plugin_editor" name="add_funds_text" rows="5"><?=get_option('add_funds_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -169,7 +169,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="api_text" value="<?=get_option('api_text')?>">
+                              <textarea class="form-control plugin_editor" name="api_text" rows="5"><?=get_option('api_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -192,7 +192,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="tickets_text" value="<?=get_option('tickets_text')?>">
+                              <textarea class="form-control plugin_editor" name="tickets_text" rows="5"><?=get_option('tickets_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -215,7 +215,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="child_panel_text" value="<?=get_option('child_panel_text')?>">
+                              <textarea class="form-control plugin_editor" name="child_panel_text" rows="5"><?=get_option('child_panel_text')?></textarea>
                             </div>
                           </div>
                         </div>
@@ -238,7 +238,7 @@
                           <div class="col-md-12">
                             <div class="form-group">
                               <label class="form-label"><?=lang("Content")?></label>
-                              <input class="form-control plugin_editor" name="transactions_text" value="<?=get_option('transactions_text')?>">
+                              <textarea class="form-control plugin_editor" name="transactions_text" rows="5"><?=get_option('transactions_text')?></textarea>
                             </div>
                           </div>
                         </div>
