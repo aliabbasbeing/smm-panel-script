@@ -807,6 +807,98 @@ class Email_marketing extends MX_Controller {
         }
     }
     
+    public function ajax_import_all_users(){
+        _is_ajax($this->module);
+        
+        // Increase PHP timeout for this operation (importing all users may take longer)
+        @set_time_limit(300);
+        @ini_set('max_execution_time', 300);
+        @ini_set('memory_limit', '256M');
+        
+        $campaign_ids = post("campaign_ids");
+        $campaign = $this->model->get_campaign($campaign_ids);
+        
+        if(!$campaign){
+            ms(array(
+                "status" => "error",
+                "message" => "Campaign not found"
+            ));
+        }
+        
+        try {
+            // Import ALL users from general_users table (no order filtering)
+            $imported = $this->model->import_all_users($campaign->id, [], 0);
+            
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            if ($imported > 0) {
+                ms(array(
+                    "status" => "success",
+                    "message" => "Successfully imported {$imported} users from database"
+                ));
+            } else {
+                ms(array(
+                    "status" => "error",
+                    "message" => "No users found or all users already imported"
+                ));
+            }
+        } catch (Exception $e) {
+            log_message('error', 'Email Marketing Import All Users Error: ' . $e->getMessage());
+            ms(array(
+                "status" => "error",
+                "message" => "Error importing users: " . $e->getMessage()
+            ));
+        }
+    }
+    
+    public function ajax_add_manual_email(){
+        _is_ajax($this->module);
+        
+        $campaign_ids = post("campaign_ids");
+        $email = post("email");
+        $name = post("name");
+        
+        $campaign = $this->model->get_campaign($campaign_ids);
+        
+        if(!$campaign){
+            ms(array(
+                "status" => "error",
+                "message" => "Campaign not found"
+            ));
+        }
+        
+        // Validate email
+        if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please enter a valid email address"
+            ));
+        }
+        
+        // Add recipient
+        $custom_data = [
+            'username' => $name ? $name : 'User',
+            'email' => $email,
+            'source' => 'manual'
+        ];
+        
+        if($this->model->add_recipient($campaign->id, $email, $name, null, $custom_data)){
+            // Update campaign stats
+            $this->model->update_campaign_stats($campaign->id);
+            
+            ms(array(
+                "status" => "success",
+                "message" => "Email address added successfully"
+            ));
+        } else {
+            ms(array(
+                "status" => "error",
+                "message" => "Email address already exists in this campaign"
+            ));
+        }
+    }
+    
     // ========================================
     // TRACKING
     // ========================================
