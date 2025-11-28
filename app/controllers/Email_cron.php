@@ -260,7 +260,7 @@ class Email_cron extends CI_Controller {
             // Try sending with the selected SMTP first, then fallback to others if it fails
             $attempts = 0;
             $last_error = '';
-            $smtp_used = null;
+            $last_attempted_smtp_id = null;
             
             // Try each SMTP starting from current_index, with fallback to others
             while($attempts < $total_smtps){
@@ -283,17 +283,17 @@ class Email_cron extends CI_Controller {
                     continue; // Skip to next SMTP
                 }
                 
+                // Track the last attempted SMTP for logging if all fail
+                $last_attempted_smtp_id = (int)$smtp->id;
+                
                 // Try sending with this SMTP
                 $result = $this->try_send_email($smtp, $recipient, $subject, $body);
                 
                 if($result['success']){
-                    $smtp_used = $smtp;
-                    
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
                     // Add log with SMTP info
-                    $smtp_id_for_log = (int)$smtp->id;
                     $this->email_model->add_log(
                         $campaign->id,
                         $recipient->id,
@@ -301,7 +301,7 @@ class Email_cron extends CI_Controller {
                         $subject,
                         'sent',
                         null,
-                        $smtp_id_for_log
+                        $last_attempted_smtp_id
                     );
                     
                     // Update SMTP usage statistics
@@ -338,7 +338,7 @@ class Email_cron extends CI_Controller {
             }
             
             // All SMTPs failed - log with the last attempted SMTP
-            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error, $smtp_used ? (int)$smtp_used->id : null);
+            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error, $last_attempted_smtp_id);
             return false;
             
         } catch(Exception $e){

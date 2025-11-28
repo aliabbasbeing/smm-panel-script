@@ -985,7 +985,7 @@ ALTER TABLE `email_recipients`
   ADD KEY `email` (`email`),
   ADD KEY `status` (`status`),
   ADD KEY `tracking_token` (`tracking_token`),
-  ADD KEY `idx_pending_priority` (`campaign_id`, `status`, `priority`, `id`) COMMENT 'Optimized index for fetching next pending recipient with priority ordering';
+  ADD KEY `idx_pending_priority` (`campaign_id`, `status`, `priority`) COMMENT 'Optimized index for fetching next pending recipient with priority ordering';
 
 --
 -- Indexes for table `email_settings`

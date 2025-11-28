@@ -384,6 +384,7 @@ class Email_marketing_model extends MY_Model {
     
     /**
      * Increment SMTP usage statistics
+     * Uses a helper method to check column existence for cleaner code
      * @param int $smtp_id SMTP config ID
      * @param bool $success Whether the email was sent successfully
      * @return bool Success
@@ -400,24 +401,23 @@ class Email_marketing_model extends MY_Model {
         // Build update data based on what columns exist
         $update_data = ['updated_at' => NOW];
         
-        // Check if usage tracking columns exist by checking if properties are set
-        if (property_exists($smtp, 'total_sent')) {
-            $update_data['total_sent'] = ($smtp->total_sent ?? 0) + 1;
-        }
+        // Helper array mapping column names to update values
+        $column_updates = [
+            'total_sent' => ($smtp->total_sent ?? 0) + 1
+        ];
         
         if ($success) {
-            if (property_exists($smtp, 'successful_sent')) {
-                $update_data['successful_sent'] = ($smtp->successful_sent ?? 0) + 1;
-            }
-            if (property_exists($smtp, 'last_success_at')) {
-                $update_data['last_success_at'] = NOW;
-            }
+            $column_updates['successful_sent'] = ($smtp->successful_sent ?? 0) + 1;
+            $column_updates['last_success_at'] = NOW;
         } else {
-            if (property_exists($smtp, 'failed_sent')) {
-                $update_data['failed_sent'] = ($smtp->failed_sent ?? 0) + 1;
-            }
-            if (property_exists($smtp, 'last_failure_at')) {
-                $update_data['last_failure_at'] = NOW;
+            $column_updates['failed_sent'] = ($smtp->failed_sent ?? 0) + 1;
+            $column_updates['last_failure_at'] = NOW;
+        }
+        
+        // Only add columns that exist in the SMTP object
+        foreach ($column_updates as $column => $value) {
+            if (property_exists($smtp, $column)) {
+                $update_data[$column] = $value;
             }
         }
         
@@ -432,21 +432,23 @@ class Email_marketing_model extends MY_Model {
     
     /**
      * Get SMTP usage statistics for a specific SMTP config
+     * Gracefully handles missing columns for existing installations
      * @param int $smtp_id SMTP config ID
      * @return object|null Statistics object or null if not found
      */
     public function get_smtp_usage_stats($smtp_id) {
-        $this->db->select('id, name, total_sent, successful_sent, failed_sent, last_success_at, last_failure_at');
+        // Use SELECT * to avoid errors if new columns don't exist
         $this->db->where('id', $smtp_id);
         $query = $this->db->get($this->tb_smtp_configs);
         
         if ($query->num_rows() > 0) {
             $smtp = $query->row();
             
-            // Calculate success rate
+            // Calculate success rate if tracking columns exist
             $smtp->success_rate = 0;
-            if (isset($smtp->total_sent) && $smtp->total_sent > 0) {
-                $smtp->success_rate = round(($smtp->successful_sent / $smtp->total_sent) * 100, 2);
+            if (property_exists($smtp, 'total_sent') && isset($smtp->total_sent) && $smtp->total_sent > 0) {
+                $successful = property_exists($smtp, 'successful_sent') ? ($smtp->successful_sent ?? 0) : 0;
+                $smtp->success_rate = round(($successful / $smtp->total_sent) * 100, 2);
             }
             
             return $smtp;
