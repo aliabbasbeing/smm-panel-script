@@ -257,15 +257,19 @@ class Email_cron extends CI_Controller {
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
-                    // Add log with SMTP info - ensure smtp_id is integer
-                    $smtp_id_for_log = (int)$smtp->id;
+                    // Add log with SMTP info - ensure smtp_id is valid integer
+                    $smtp_id_for_log = isset($smtp->id) ? (int)$smtp->id : null;
+                    
+                    // Debug log to trace the SMTP ID
+                    log_message('info', "Email sent successfully. SMTP ID: {$smtp_id_for_log}, SMTP Name: {$smtp->name}, Recipient: {$recipient->email}");
+                    
                     $this->email_model->add_log(
                         $campaign->id,
                         $recipient->id,
                         $recipient->email,
                         $subject,
                         'sent',
-                        null,
+                        "Sent via SMTP: {$smtp->name} (ID: {$smtp_id_for_log})",  // Include SMTP info in message for visibility
                         $smtp_id_for_log
                     );
                     

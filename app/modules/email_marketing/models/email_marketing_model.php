@@ -639,12 +639,33 @@ class Email_marketing_model extends MY_Model {
     // LOG METHODS
     // ========================================
     
+    /**
+     * Ensure smtp_config_id column exists in email_logs table
+     * This handles upgrades from older versions
+     */
+    private function ensure_smtp_config_id_column() {
+        static $checked = false;
+        if ($checked) return;
+        
+        // Check if column exists
+        $query = $this->db->query("SHOW COLUMNS FROM `{$this->tb_logs}` LIKE 'smtp_config_id'");
+        if ($query->num_rows() == 0) {
+            // Add the column if it doesn't exist
+            $this->db->query("ALTER TABLE `{$this->tb_logs}` ADD COLUMN `smtp_config_id` INT(11) DEFAULT NULL COMMENT 'SMTP config used to send this email' AFTER `recipient_id`");
+            log_message('info', 'Email Marketing: Added smtp_config_id column to email_logs table');
+        }
+        $checked = true;
+    }
+    
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        // Ensure the smtp_config_id column exists (handles database upgrades)
+        $this->ensure_smtp_config_id_column();
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
-            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+            'smtp_config_id' => ($smtp_config_id !== null && $smtp_config_id > 0) ? (int)$smtp_config_id : null,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -656,12 +677,23 @@ class Email_marketing_model extends MY_Model {
         ];
         
         // Log the insert for debugging
-        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
+        log_message('debug', 'Email Log Insert: smtp_config_id=' . var_export($data['smtp_config_id'], true) . ', campaign_id=' . $campaign_id . ', email=' . $email . ', status=' . $status);
         
-        return $this->db->insert($this->tb_logs, $data);
+        $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log any database errors
+        if (!$result) {
+            $error = $this->db->error();
+            log_message('error', 'Email Log Insert Failed: ' . json_encode($error));
+        }
+        
+        return $result;
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
+        // Ensure the smtp_config_id column exists
+        $this->ensure_smtp_config_id_column();
+        
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
             $this->db->from($this->tb_logs);
