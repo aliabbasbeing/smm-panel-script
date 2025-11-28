@@ -736,6 +736,20 @@ class Email_marketing_model extends MY_Model {
     
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
         $this->em_log("=== ADD_LOG START ===");
+        
+        // Log the call stack to see where this is being called from
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
+        $caller_info = [];
+        foreach ($backtrace as $i => $frame) {
+            if ($i == 0) continue; // Skip add_log itself
+            $file = isset($frame['file']) ? basename($frame['file']) : 'unknown';
+            $line = isset($frame['line']) ? $frame['line'] : '?';
+            $func = isset($frame['function']) ? $frame['function'] : 'unknown';
+            $class = isset($frame['class']) ? $frame['class'] . '->' : '';
+            $caller_info[] = "#{$i}: {$class}{$func}() in {$file}:{$line}";
+        }
+        $this->em_log("CALL STACK: " . implode(' <- ', $caller_info));
+        
         $this->em_log("Input params: campaign_id={$campaign_id}, recipient_id={$recipient_id}, email={$email}, status={$status}");
         $this->em_log("Input smtp_config_id: " . var_export($smtp_config_id, true) . " (type: " . gettype($smtp_config_id) . ")");
         
