@@ -257,7 +257,8 @@ class Email_cron extends CI_Controller {
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
-                    // Add log with SMTP info
+                    // Add log with SMTP info - ensure smtp_id is integer
+                    $smtp_id_for_log = (int)$smtp->id;
                     $this->email_model->add_log(
                         $campaign->id,
                         $recipient->id,
@@ -265,7 +266,7 @@ class Email_cron extends CI_Controller {
                         $subject,
                         'sent',
                         null,
-                        $smtp->id
+                        $smtp_id_for_log
                     );
                     
                     // Update rotation index to next SMTP for next email (round-robin)

@@ -642,9 +642,9 @@ class Email_marketing_model extends MY_Model {
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
         $data = [
             'ids' => ids(),
-            'campaign_id' => $campaign_id,
-            'recipient_id' => $recipient_id,
-            'smtp_config_id' => $smtp_config_id,
+            'campaign_id' => (int)$campaign_id,
+            'recipient_id' => (int)$recipient_id,
+            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -654,6 +654,9 @@ class Email_marketing_model extends MY_Model {
             'user_agent' => $this->input->user_agent(),
             'created_at' => NOW
         ];
+        
+        // Log the insert for debugging
+        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
         
         return $this->db->insert($this->tb_logs, $data);
     }
