@@ -234,6 +234,7 @@ class Email_cron extends CI_Controller {
             $total_smtps = count($smtp_ids);
             $attempts = 0;
             $last_error = '';
+            $last_smtp_id = null; // Track last used SMTP ID for logging
             
             // Try each SMTP in rotation order, starting from current_index
             while($attempts < $total_smtps){
@@ -247,8 +248,12 @@ class Email_cron extends CI_Controller {
                 if(!$smtp || $smtp->status != 1){
                     $attempts++;
                     $last_error = "SMTP ID {$smtp_id} not found or disabled";
+                    $last_smtp_id = $smtp_id;
                     continue; // Skip to next SMTP
                 }
+                
+                // Track this SMTP ID
+                $last_smtp_id = (int)$smtp->id;
                 
                 // Try sending with this SMTP
                 $result = $this->try_send_email($smtp, $recipient, $subject, $body);
@@ -281,8 +286,8 @@ class Email_cron extends CI_Controller {
                 }
             }
             
-            // All SMTPs failed
-            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error);
+            // All SMTPs failed - log with last used SMTP ID
+            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error, $last_smtp_id);
             return false;
             
         } catch(Exception $e){
@@ -399,19 +404,24 @@ class Email_cron extends CI_Controller {
     
     /**
      * Log failed email
+     * @param object $campaign Campaign object
+     * @param object $recipient Recipient object
+     * @param string $error Error message
+     * @param int|null $smtp_id SMTP config ID that was used (if known)
      */
-    private function log_failed($campaign, $recipient, $error){
+    private function log_failed($campaign, $recipient, $error, $smtp_id = null){
         // Update recipient status
         $this->email_model->update_recipient_status($recipient->id, 'failed', $error);
         
-        // Add log
+        // Add log with SMTP config ID for tracking
         $this->email_model->add_log(
             $campaign->id,
             $recipient->id,
             $recipient->email,
             'Failed',
             'failed',
-            $error
+            $error,
+            $smtp_id
         );
     }
     
