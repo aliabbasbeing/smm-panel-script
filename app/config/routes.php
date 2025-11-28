@@ -121,6 +121,10 @@ $route['cron/completion_time']          = 'order_completion_cron/calculate_avg_c
 // Email Marketing cron
 $route['cron/email_marketing'] = 'email_cron/run';
 
+// WhatsApp notification queue cron
+$route['cron/whatsapp_notifications'] = 'whatsapp_notification_cron/process';
+$route['cron/whatsapp_notifications_cleanup'] = 'whatsapp_notification_cron/cleanup';
+
 // Email Marketing tracking (public endpoint)
 $route['email_marketing/track/(:any)'] = 'email_marketing/track/$1';
 

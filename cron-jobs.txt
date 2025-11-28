@@ -1,2 +1,4 @@
-wget --spider -o - https://domain.com/cron/order >/dev/null 2>&1
-wget --spider -o - https://domain.com/cron/status >/dev/null 2>&13. wget --spider -o - https://domain.com/cron/completion_time >/dev/null 2>&1
+1. wget --spider -o - https://domain.com/cron/order >/dev/null 2>&1
+2. wget --spider -o - https://domain.com/cron/status >/dev/null 2>&1
+3. wget --spider -o - https://domain.com/cron/completion_time >/dev/null 2>&1
+4. wget --spider -o - https://domain.com/cron/whatsapp_notifications >/dev/null 2>&1
