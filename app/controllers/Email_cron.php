@@ -392,7 +392,8 @@ class Email_cron extends CI_Controller {
             return false;
         }
         $email = strtolower(trim($email));
-        return (substr($email, -10) === '@gmail.com');
+        $gmail_domain = '@gmail.com';
+        return (substr($email, -strlen($gmail_domain)) === $gmail_domain);
     }
     
     /**

@@ -663,6 +663,7 @@ class Email_marketing_model extends MY_Model {
             $this->db->select('count(*) as sum');
             $this->db->from($this->tb_logs);
             $this->db->where('campaign_id', $campaign_id);
+            $this->db->order_by('created_at', 'DESC');
         } else {
             // Select all log fields plus SMTP name via JOIN
             $this->db->select('l.*, s.name as smtp_name');
@@ -670,9 +671,9 @@ class Email_marketing_model extends MY_Model {
             $this->db->join($this->tb_smtp_configs . ' s', 'l.smtp_config_id = s.id', 'left');
             $this->db->where('l.campaign_id', $campaign_id);
             $this->db->limit($limit, $page);
+            $this->db->order_by('l.created_at', 'DESC');
         }
         
-        $this->db->order_by($limit == -1 ? 'created_at' : 'l.created_at', 'DESC');
         $query = $this->db->get();
         
         if ($query->num_rows() > 0) {
