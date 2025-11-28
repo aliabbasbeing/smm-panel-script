@@ -283,8 +283,17 @@ class Email_cron extends CI_Controller {
                     continue; // Skip to next SMTP
                 }
                 
-                // Track the last attempted SMTP for logging if all fail
+                // Track the SMTP ID for logging - capture immediately after successful SMTP load
                 $last_attempted_smtp_id = (int)$smtp->id;
+                
+                // Log the SMTP selection for debugging
+                log_message('info', sprintf(
+                    'Email Marketing: Campaign %d - Selected SMTP "%s" (ID: %d) for email to %s',
+                    $campaign->id,
+                    $smtp->name,
+                    $last_attempted_smtp_id,
+                    $recipient->email
+                ));
                 
                 // Try sending with this SMTP
                 $result = $this->try_send_email($smtp, $recipient, $subject, $body);
@@ -293,7 +302,14 @@ class Email_cron extends CI_Controller {
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
-                    // Add log with SMTP info
+                    // Add log with SMTP info - use the captured SMTP ID
+                    log_message('info', sprintf(
+                        'Email Marketing: Campaign %d - Logging email to %s with smtp_config_id=%d',
+                        $campaign->id,
+                        $recipient->email,
+                        $last_attempted_smtp_id
+                    ));
+                    
                     $this->email_model->add_log(
                         $campaign->id,
                         $recipient->id,

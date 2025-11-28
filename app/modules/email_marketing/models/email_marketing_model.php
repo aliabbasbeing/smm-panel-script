@@ -715,11 +715,17 @@ class Email_marketing_model extends MY_Model {
     // ========================================
     
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        // Ensure smtp_config_id is properly cast to integer if provided
+        $smtp_id_value = null;
+        if ($smtp_config_id !== null && $smtp_config_id !== '' && $smtp_config_id !== 0) {
+            $smtp_id_value = (int)$smtp_config_id;
+        }
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
-            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+            'smtp_config_id' => $smtp_id_value,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -730,10 +736,21 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
-        // Log the insert for debugging
-        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
+        // Log the insert data for debugging
+        log_message('info', 'Email Log Insert: smtp_config_id=' . var_export($smtp_id_value, true) . ', campaign_id=' . $campaign_id . ', email=' . $email . ', status=' . $status);
         
-        return $this->db->insert($this->tb_logs, $data);
+        $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log any database errors
+        if (!$result) {
+            $error = $this->db->error();
+            log_message('error', 'Email Log Insert FAILED: ' . json_encode($error) . ' - Data: ' . json_encode($data));
+        } else {
+            $insert_id = $this->db->insert_id();
+            log_message('info', 'Email Log Insert SUCCESS: ID=' . $insert_id . ', smtp_config_id=' . var_export($smtp_id_value, true));
+        }
+        
+        return $result;
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
