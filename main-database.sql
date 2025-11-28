@@ -243,6 +243,11 @@ CREATE TABLE `email_smtp_configs` (
   `reply_to` varchar(255) DEFAULT NULL,
   `is_default` tinyint(1) NOT NULL DEFAULT 0,
   `status` tinyint(1) NOT NULL DEFAULT 1,
+  `total_sent` int(11) NOT NULL DEFAULT 0 COMMENT 'Total emails attempted through this SMTP',
+  `successful_sent` int(11) NOT NULL DEFAULT 0 COMMENT 'Successfully sent emails count',
+  `failed_sent` int(11) NOT NULL DEFAULT 0 COMMENT 'Failed emails count',
+  `last_success_at` datetime DEFAULT NULL COMMENT 'Last successful send timestamp',
+  `last_failure_at` datetime DEFAULT NULL COMMENT 'Last failed send timestamp',
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -966,7 +971,8 @@ ALTER TABLE `email_logs`
   ADD KEY `recipient_id` (`recipient_id`),
   ADD KEY `email` (`email`),
   ADD KEY `status` (`status`),
-  ADD KEY `sent_at` (`sent_at`);
+  ADD KEY `sent_at` (`sent_at`),
+  ADD KEY `smtp_config_id` (`smtp_config_id`) COMMENT 'Index for SMTP usage tracking and reporting';
 
 --
 -- Indexes for table `email_recipients`
@@ -978,7 +984,8 @@ ALTER TABLE `email_recipients`
   ADD KEY `campaign_id` (`campaign_id`),
   ADD KEY `email` (`email`),
   ADD KEY `status` (`status`),
-  ADD KEY `tracking_token` (`tracking_token`);
+  ADD KEY `tracking_token` (`tracking_token`),
+  ADD KEY `idx_pending_priority` (`campaign_id`, `status`, `priority`) COMMENT 'Optimized index for fetching next pending recipient with priority ordering';
 
 --
 -- Indexes for table `email_settings`
@@ -992,7 +999,8 @@ ALTER TABLE `email_settings`
 --
 ALTER TABLE `email_smtp_configs`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `ids` (`ids`);
+  ADD UNIQUE KEY `ids` (`ids`),
+  ADD KEY `status` (`status`) COMMENT 'Index for filtering active SMTPs';
 
 --
 -- Indexes for table `email_templates`

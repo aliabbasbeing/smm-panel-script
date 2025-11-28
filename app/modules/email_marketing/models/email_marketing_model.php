@@ -10,6 +10,9 @@ class Email_marketing_model extends MY_Model {
     protected $tb_logs;
     protected $tb_settings;
     
+    // Track the last used SMTP ID for automatic logging
+    protected $last_used_smtp_id = null;
+    
     public function __construct(){
         parent::__construct();
         
@@ -20,6 +23,31 @@ class Email_marketing_model extends MY_Model {
         $this->tb_recipients = 'email_recipients';
         $this->tb_logs = 'email_logs';
         $this->tb_settings = 'email_settings';
+    }
+    
+    /**
+     * Set the last used SMTP ID for automatic logging
+     * Call this before sending an email to track which SMTP is being used
+     * @param int $smtp_id The SMTP config ID
+     */
+    public function set_last_used_smtp($smtp_id) {
+        $this->last_used_smtp_id = (int)$smtp_id;
+        $this->em_log("set_last_used_smtp called with ID: {$smtp_id}");
+    }
+    
+    /**
+     * Get the last used SMTP ID
+     * @return int|null The last used SMTP config ID
+     */
+    public function get_last_used_smtp() {
+        return $this->last_used_smtp_id;
+    }
+    
+    /**
+     * Clear the last used SMTP ID
+     */
+    public function clear_last_used_smtp() {
+        $this->last_used_smtp_id = null;
     }
     
     // ========================================
@@ -91,11 +119,31 @@ class Email_marketing_model extends MY_Model {
      * @return bool Success
      */
     public function update_campaign_rotation_index($campaign_id, $new_index) {
+        $this->em_log("=== ROTATION UPDATE START ===");
+        $this->em_log("Input: campaign_id={$campaign_id}, new_index={$new_index}");
+        
         $this->db->where('id', $campaign_id);
-        return $this->db->update($this->tb_campaigns, [
+        $result = $this->db->update($this->tb_campaigns, [
             'smtp_rotation_index' => $new_index,
             'updated_at' => NOW
         ]);
+        
+        $last_query = $this->db->last_query();
+        $this->em_log("SQL: {$last_query}");
+        $this->em_log("Result: " . ($result ? 'SUCCESS' : 'FAILED'));
+        
+        // Verify the update
+        $this->db->select('smtp_rotation_index');
+        $this->db->where('id', $campaign_id);
+        $verify = $this->db->get($this->tb_campaigns)->row();
+        if ($verify) {
+            $this->em_log("Verify: smtp_rotation_index in DB = " . var_export($verify->smtp_rotation_index, true));
+        } else {
+            $this->em_log("Verify: FAILED - Could not read campaign", "ERROR");
+        }
+        $this->em_log("=== ROTATION UPDATE END ===");
+        
+        return $result;
     }
     
     public function delete_campaign($ids) {
@@ -382,6 +430,81 @@ class Email_marketing_model extends MY_Model {
         return false;
     }
     
+    /**
+     * Increment SMTP usage statistics
+     * Uses a helper method to check column existence for cleaner code
+     * @param int $smtp_id SMTP config ID
+     * @param bool $success Whether the email was sent successfully
+     * @return bool Success
+     */
+    public function increment_smtp_usage($smtp_id, $success = true) {
+        // Check if columns exist (graceful handling for existing installations)
+        $this->db->where('id', $smtp_id);
+        $smtp = $this->db->get($this->tb_smtp_configs)->row();
+        
+        if (!$smtp) {
+            return false;
+        }
+        
+        // Build update data based on what columns exist
+        $update_data = ['updated_at' => NOW];
+        
+        // Helper array mapping column names to update values
+        $column_updates = [
+            'total_sent' => ($smtp->total_sent ?? 0) + 1
+        ];
+        
+        if ($success) {
+            $column_updates['successful_sent'] = ($smtp->successful_sent ?? 0) + 1;
+            $column_updates['last_success_at'] = NOW;
+        } else {
+            $column_updates['failed_sent'] = ($smtp->failed_sent ?? 0) + 1;
+            $column_updates['last_failure_at'] = NOW;
+        }
+        
+        // Only add columns that exist in the SMTP object
+        foreach ($column_updates as $column => $value) {
+            if (property_exists($smtp, $column)) {
+                $update_data[$column] = $value;
+            }
+        }
+        
+        // Only update if we have something meaningful to update
+        if (count($update_data) > 1) { // More than just updated_at
+            $this->db->where('id', $smtp_id);
+            return $this->db->update($this->tb_smtp_configs, $update_data);
+        }
+        
+        return true; // Gracefully succeed if columns don't exist yet
+    }
+    
+    /**
+     * Get SMTP usage statistics for a specific SMTP config
+     * Gracefully handles missing columns for existing installations
+     * @param int $smtp_id SMTP config ID
+     * @return object|null Statistics object or null if not found
+     */
+    public function get_smtp_usage_stats($smtp_id) {
+        // Use SELECT * to avoid errors if new columns don't exist
+        $this->db->where('id', $smtp_id);
+        $query = $this->db->get($this->tb_smtp_configs);
+        
+        if ($query->num_rows() > 0) {
+            $smtp = $query->row();
+            
+            // Calculate success rate if tracking columns exist
+            $smtp->success_rate = 0;
+            if (property_exists($smtp, 'total_sent') && isset($smtp->total_sent) && $smtp->total_sent > 0) {
+                $successful = property_exists($smtp, 'successful_sent') ? ($smtp->successful_sent ?? 0) : 0;
+                $smtp->success_rate = round(($successful / $smtp->total_sent) * 100, 2);
+            }
+            
+            return $smtp;
+        }
+        
+        return null;
+    }
+    
     // ========================================
     // RECIPIENT METHODS
     // ========================================
@@ -640,11 +763,49 @@ class Email_marketing_model extends MY_Model {
     // ========================================
     
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        $this->em_log("=== ADD_LOG START ===");
+        
+        // Log the call stack to see where this is being called from
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
+        $caller_info = [];
+        foreach ($backtrace as $i => $frame) {
+            if ($i == 0) continue; // Skip add_log itself
+            $file = isset($frame['file']) ? basename($frame['file']) : 'unknown';
+            $line = isset($frame['line']) ? $frame['line'] : '?';
+            $func = isset($frame['function']) ? $frame['function'] : 'unknown';
+            $class = isset($frame['class']) ? $frame['class'] . '->' : '';
+            $caller_info[] = "#{$i}: {$class}{$func}() in {$file}:{$line}";
+        }
+        $this->em_log("CALL STACK: " . implode(' <- ', $caller_info));
+        
+        $this->em_log("Input params: campaign_id={$campaign_id}, recipient_id={$recipient_id}, email={$email}, status={$status}");
+        $this->em_log("Input smtp_config_id: " . var_export($smtp_config_id, true) . " (type: " . gettype($smtp_config_id) . ")");
+        
+        // FALLBACK: If smtp_config_id is not passed, try to use last_used_smtp_id
+        if ($smtp_config_id === null && $this->last_used_smtp_id !== null) {
+            $smtp_config_id = $this->last_used_smtp_id;
+            $this->em_log("FALLBACK: Using last_used_smtp_id = {$smtp_config_id}");
+        }
+        
+        // Ensure smtp_config_id is properly cast to integer if provided
+        // Note: MySQL auto-increment IDs start at 1, so 0 is not a valid SMTP config ID
+        // We filter out null, empty string, and 0 to prevent invalid values
+        $smtp_id_value = null;
+        if ($smtp_config_id !== null && $smtp_config_id !== '' && (int)$smtp_config_id > 0) {
+            $smtp_id_value = (int)$smtp_config_id;
+            $this->em_log("Computed smtp_id_value: {$smtp_id_value}");
+        } else {
+            $this->em_log("smtp_config_id validation FAILED - will insert NULL", "WARNING");
+            $this->em_log("  - smtp_config_id !== null: " . var_export($smtp_config_id !== null, true));
+            $this->em_log("  - smtp_config_id !== '': " . var_export($smtp_config_id !== '', true));
+            $this->em_log("  - (int)smtp_config_id > 0: " . var_export((int)$smtp_config_id > 0, true));
+        }
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
-            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
+            'smtp_config_id' => $smtp_id_value,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -655,10 +816,40 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
-        // Log the insert for debugging
-        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
+        $this->em_log("Data array to insert: " . json_encode($data));
         
-        return $this->db->insert($this->tb_logs, $data);
+        $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log the actual SQL query that was executed
+        $last_query = $this->db->last_query();
+        $this->em_log("SQL executed: {$last_query}");
+        
+        // Clear the last_used_smtp_id after logging (one-time use)
+        $this->last_used_smtp_id = null;
+        
+        // Log any database errors
+        if (!$result) {
+            $error = $this->db->error();
+            $this->em_log("INSERT FAILED: " . json_encode($error), "ERROR");
+        } else {
+            $insert_id = $this->db->insert_id();
+            $this->em_log("INSERT SUCCESS: new record ID = {$insert_id}");
+            
+            // Verify the insert by reading back the record
+            $this->db->where('id', $insert_id);
+            $verify = $this->db->get($this->tb_logs)->row();
+            if ($verify) {
+                $this->em_log("VERIFY: smtp_config_id in DB = " . var_export($verify->smtp_config_id, true));
+                if ($verify->smtp_config_id != $smtp_id_value) {
+                    $this->em_log("VERIFY MISMATCH! Expected: {$smtp_id_value}, Got: " . var_export($verify->smtp_config_id, true), "ERROR");
+                }
+            } else {
+                $this->em_log("VERIFY FAILED: Could not read back inserted record", "ERROR");
+            }
+        }
+        
+        $this->em_log("=== ADD_LOG END ===");
+        return $result;
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
@@ -747,5 +938,30 @@ class Email_marketing_model extends MY_Model {
         }
         
         return $body;
+    }
+    
+    // ========================================
+    // DEDICATED EMAIL MARKETING LOG FILE
+    // ========================================
+    
+    /**
+     * Write to dedicated email marketing log file
+     * This creates a separate log file for easier debugging
+     * @param string $message The message to log
+     * @param string $level Log level (INFO, ERROR, DEBUG, etc.)
+     */
+    public function em_log($message, $level = 'INFO') {
+        $log_file = APPPATH . 'logs/email_marketing.txt';
+        $timestamp = date('Y-m-d H:i:s');
+        $log_entry = "[{$timestamp}] [{$level}] {$message}" . PHP_EOL;
+        
+        // Ensure logs directory exists and is writable
+        $log_dir = APPPATH . 'logs';
+        if (!is_dir($log_dir)) {
+            @mkdir($log_dir, 0755, true);
+        }
+        
+        // Append to log file
+        @file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
     }
 }
