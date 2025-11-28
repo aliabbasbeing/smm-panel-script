@@ -300,6 +300,10 @@ class Email_cron extends CI_Controller {
                 // Track the SMTP ID for logging - capture immediately after successful SMTP load
                 $last_attempted_smtp_id = (int)$smtp->id;
                 
+                // IMPORTANT: Set the last used SMTP in the model for fallback logging
+                // This ensures smtp_config_id is logged even if the caller doesn't pass it
+                $this->email_model->set_last_used_smtp($last_attempted_smtp_id);
+                
                 $this->email_model->em_log("SMTP loaded: name='{$smtp->name}', id={$last_attempted_smtp_id}");
                 
                 // Try sending with this SMTP

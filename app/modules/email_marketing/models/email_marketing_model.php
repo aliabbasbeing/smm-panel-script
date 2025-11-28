@@ -10,6 +10,9 @@ class Email_marketing_model extends MY_Model {
     protected $tb_logs;
     protected $tb_settings;
     
+    // Track the last used SMTP ID for automatic logging
+    protected $last_used_smtp_id = null;
+    
     public function __construct(){
         parent::__construct();
         
@@ -20,6 +23,31 @@ class Email_marketing_model extends MY_Model {
         $this->tb_recipients = 'email_recipients';
         $this->tb_logs = 'email_logs';
         $this->tb_settings = 'email_settings';
+    }
+    
+    /**
+     * Set the last used SMTP ID for automatic logging
+     * Call this before sending an email to track which SMTP is being used
+     * @param int $smtp_id The SMTP config ID
+     */
+    public function set_last_used_smtp($smtp_id) {
+        $this->last_used_smtp_id = (int)$smtp_id;
+        $this->em_log("set_last_used_smtp called with ID: {$smtp_id}");
+    }
+    
+    /**
+     * Get the last used SMTP ID
+     * @return int|null The last used SMTP config ID
+     */
+    public function get_last_used_smtp() {
+        return $this->last_used_smtp_id;
+    }
+    
+    /**
+     * Clear the last used SMTP ID
+     */
+    public function clear_last_used_smtp() {
+        $this->last_used_smtp_id = null;
     }
     
     // ========================================
@@ -753,6 +781,12 @@ class Email_marketing_model extends MY_Model {
         $this->em_log("Input params: campaign_id={$campaign_id}, recipient_id={$recipient_id}, email={$email}, status={$status}");
         $this->em_log("Input smtp_config_id: " . var_export($smtp_config_id, true) . " (type: " . gettype($smtp_config_id) . ")");
         
+        // FALLBACK: If smtp_config_id is not passed, try to use last_used_smtp_id
+        if ($smtp_config_id === null && $this->last_used_smtp_id !== null) {
+            $smtp_config_id = $this->last_used_smtp_id;
+            $this->em_log("FALLBACK: Using last_used_smtp_id = {$smtp_config_id}");
+        }
+        
         // Ensure smtp_config_id is properly cast to integer if provided
         // Note: MySQL auto-increment IDs start at 1, so 0 is not a valid SMTP config ID
         // We filter out null, empty string, and 0 to prevent invalid values
@@ -789,6 +823,9 @@ class Email_marketing_model extends MY_Model {
         // Log the actual SQL query that was executed
         $last_query = $this->db->last_query();
         $this->em_log("SQL executed: {$last_query}");
+        
+        // Clear the last_used_smtp_id after logging (one-time use)
+        $this->last_used_smtp_id = null;
         
         // Log any database errors
         if (!$result) {
