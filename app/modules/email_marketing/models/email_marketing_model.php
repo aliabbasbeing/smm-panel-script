@@ -418,7 +418,7 @@ class Email_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null) {
+    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
         // Check if recipient already exists to prevent duplicates
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('email', $email);
@@ -436,6 +436,7 @@ class Email_marketing_model extends MY_Model {
             'name' => $name,
             'user_id' => $user_id,
             'custom_data' => $custom_data ? json_encode($custom_data) : null,
+            'priority' => $priority,
             'tracking_token' => md5($campaign_id . $email . time() . rand(1000, 9999)),
             'status' => 'pending',
             'created_at' => NOW,
@@ -604,6 +605,9 @@ class Email_marketing_model extends MY_Model {
     public function get_next_pending_recipient($campaign_id) {
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('status', 'pending');
+        // Order by priority first (lower = higher priority), then by id
+        // Manual emails have priority=1, imported have priority=100
+        $this->db->order_by('priority', 'ASC');
         $this->db->order_by('id', 'ASC');
         $this->db->limit(1);
         $query = $this->db->get($this->tb_recipients);
@@ -657,18 +661,18 @@ class Email_marketing_model extends MY_Model {
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
+            $this->db->from($this->tb_logs);
+            $this->db->where('campaign_id', $campaign_id);
         } else {
-            $this->db->select('*');
-        }
-        
-        $this->db->from($this->tb_logs);
-        $this->db->where('campaign_id', $campaign_id);
-        
-        if ($limit != -1) {
+            // Select all log fields plus SMTP name via JOIN
+            $this->db->select('l.*, s.name as smtp_name');
+            $this->db->from($this->tb_logs . ' l');
+            $this->db->join($this->tb_smtp_configs . ' s', 'l.smtp_config_id = s.id', 'left');
+            $this->db->where('l.campaign_id', $campaign_id);
             $this->db->limit($limit, $page);
         }
         
-        $this->db->order_by('created_at', 'DESC');
+        $this->db->order_by($limit == -1 ? 'created_at' : 'l.created_at', 'DESC');
         $query = $this->db->get();
         
         if ($query->num_rows() > 0) {

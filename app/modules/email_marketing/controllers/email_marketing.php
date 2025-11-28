@@ -876,20 +876,21 @@ class Email_marketing extends MX_Controller {
             ));
         }
         
-        // Add recipient
+        // Add recipient with priority=1 (manual emails get highest priority)
         $custom_data = [
             'username' => !empty($name) ? $name : 'User',
             'email' => $email,
             'source' => 'manual'
         ];
         
-        if($this->model->add_recipient($campaign->id, $email, $name, null, $custom_data)){
+        // Priority 1 = highest priority (manual), 100 = default (imported)
+        if($this->model->add_recipient($campaign->id, $email, $name, null, $custom_data, 1)){
             // Update campaign stats
             $this->model->update_campaign_stats($campaign->id);
             
             ms(array(
                 "status" => "success",
-                "message" => "Email address added successfully"
+                "message" => "Email address added successfully (Priority: Manual/High)"
             ));
         } else {
             ms(array(

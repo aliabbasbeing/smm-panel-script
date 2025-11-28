@@ -118,6 +118,7 @@
         <table class="table table-hover table-vcenter card-table table-sm">
           <thead>
             <tr>
+              <th>Priority</th>
               <th>Email</th>
               <th>Name</th>
               <th>Status</th>
@@ -135,8 +136,16 @@
                   case 'failed': $status_badge = 'danger'; break;
                   case 'bounced': $status_badge = 'warning'; break;
                 }
+                // Determine priority label
+                $priority_label = 'Imported';
+                $priority_badge = 'secondary';
+                if(isset($recipient->priority) && $recipient->priority == 1){
+                  $priority_label = 'Manual';
+                  $priority_badge = 'success';
+                }
             ?>
             <tr>
+              <td><span class="badge badge-<?php echo $priority_badge; ?>"><?php echo $priority_label; ?></span></td>
               <td><?php echo htmlspecialchars($recipient->email); ?></td>
               <td><?php echo htmlspecialchars($recipient->name ?: '-'); ?></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($recipient->status); ?></span></td>
@@ -145,7 +154,7 @@
             </tr>
             <?php }} else { ?>
             <tr>
-              <td colspan="5" class="text-center">
+              <td colspan="6" class="text-center">
                 <p class="text-muted">No recipients added yet. Import users or upload a CSV file above.</p>
               </td>
             </tr>

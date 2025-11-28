@@ -184,6 +184,7 @@ CREATE TABLE `email_recipients` (
   `name` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL COMMENT 'Reference to general_users if imported from DB',
   `custom_data` text DEFAULT NULL COMMENT 'JSON data for template variables',
+  `priority` int(11) NOT NULL DEFAULT 100 COMMENT 'Lower value = higher priority. Manual=1, Imported=100',
   `status` enum('pending','sent','failed','opened','bounced') NOT NULL DEFAULT 'pending',
   `sent_at` datetime DEFAULT NULL,
   `opened_at` datetime DEFAULT NULL,
