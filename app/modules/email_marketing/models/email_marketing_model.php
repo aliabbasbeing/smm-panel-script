@@ -716,8 +716,10 @@ class Email_marketing_model extends MY_Model {
     
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
         // Ensure smtp_config_id is properly cast to integer if provided
+        // Note: MySQL auto-increment IDs start at 1, so 0 is not a valid SMTP config ID
+        // We filter out null, empty string, and 0 to prevent invalid values
         $smtp_id_value = null;
-        if ($smtp_config_id !== null && $smtp_config_id !== '' && $smtp_config_id !== 0) {
+        if ($smtp_config_id !== null && $smtp_config_id !== '' && (int)$smtp_config_id > 0) {
             $smtp_id_value = (int)$smtp_config_id;
         }
         
