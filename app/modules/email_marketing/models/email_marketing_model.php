@@ -91,7 +91,8 @@ class Email_marketing_model extends MY_Model {
      * @return bool Success
      */
     public function update_campaign_rotation_index($campaign_id, $new_index) {
-        log_message('error', 'ROTATION UPDATE: campaign_id=' . $campaign_id . ', new_index=' . $new_index);
+        $this->em_log("=== ROTATION UPDATE START ===");
+        $this->em_log("Input: campaign_id={$campaign_id}, new_index={$new_index}");
         
         $this->db->where('id', $campaign_id);
         $result = $this->db->update($this->tb_campaigns, [
@@ -100,16 +101,19 @@ class Email_marketing_model extends MY_Model {
         ]);
         
         $last_query = $this->db->last_query();
-        log_message('error', 'ROTATION SQL: ' . $last_query);
-        log_message('error', 'ROTATION RESULT: ' . ($result ? 'SUCCESS' : 'FAILED'));
+        $this->em_log("SQL: {$last_query}");
+        $this->em_log("Result: " . ($result ? 'SUCCESS' : 'FAILED'));
         
         // Verify the update
         $this->db->select('smtp_rotation_index');
         $this->db->where('id', $campaign_id);
         $verify = $this->db->get($this->tb_campaigns)->row();
         if ($verify) {
-            log_message('error', 'ROTATION VERIFY: smtp_rotation_index in DB=' . var_export($verify->smtp_rotation_index, true));
+            $this->em_log("Verify: smtp_rotation_index in DB = " . var_export($verify->smtp_rotation_index, true));
+        } else {
+            $this->em_log("Verify: FAILED - Could not read campaign", "ERROR");
         }
+        $this->em_log("=== ROTATION UPDATE END ===");
         
         return $result;
     }
@@ -731,16 +735,23 @@ class Email_marketing_model extends MY_Model {
     // ========================================
     
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        $this->em_log("=== ADD_LOG START ===");
+        $this->em_log("Input params: campaign_id={$campaign_id}, recipient_id={$recipient_id}, email={$email}, status={$status}");
+        $this->em_log("Input smtp_config_id: " . var_export($smtp_config_id, true) . " (type: " . gettype($smtp_config_id) . ")");
+        
         // Ensure smtp_config_id is properly cast to integer if provided
         // Note: MySQL auto-increment IDs start at 1, so 0 is not a valid SMTP config ID
         // We filter out null, empty string, and 0 to prevent invalid values
         $smtp_id_value = null;
         if ($smtp_config_id !== null && $smtp_config_id !== '' && (int)$smtp_config_id > 0) {
             $smtp_id_value = (int)$smtp_config_id;
+            $this->em_log("Computed smtp_id_value: {$smtp_id_value}");
+        } else {
+            $this->em_log("smtp_config_id validation FAILED - will insert NULL", "WARNING");
+            $this->em_log("  - smtp_config_id !== null: " . var_export($smtp_config_id !== null, true));
+            $this->em_log("  - smtp_config_id !== '': " . var_export($smtp_config_id !== '', true));
+            $this->em_log("  - (int)smtp_config_id > 0: " . var_export((int)$smtp_config_id > 0, true));
         }
-        
-        // Log the incoming parameter for debugging
-        log_message('error', 'ADD_LOG CALLED: smtp_config_id param=' . var_export($smtp_config_id, true) . ', computed smtp_id_value=' . var_export($smtp_id_value, true));
         
         $data = [
             'ids' => ids(),
@@ -757,31 +768,36 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
-        // Log the full data array being inserted
-        log_message('error', 'ADD_LOG DATA: ' . json_encode($data));
+        $this->em_log("Data array to insert: " . json_encode($data));
         
         $result = $this->db->insert($this->tb_logs, $data);
         
         // Log the actual SQL query that was executed
         $last_query = $this->db->last_query();
-        log_message('error', 'ADD_LOG SQL: ' . $last_query);
+        $this->em_log("SQL executed: {$last_query}");
         
         // Log any database errors
         if (!$result) {
             $error = $this->db->error();
-            log_message('error', 'ADD_LOG FAILED: ' . json_encode($error));
+            $this->em_log("INSERT FAILED: " . json_encode($error), "ERROR");
         } else {
             $insert_id = $this->db->insert_id();
-            log_message('error', 'ADD_LOG SUCCESS: ID=' . $insert_id);
+            $this->em_log("INSERT SUCCESS: new record ID = {$insert_id}");
             
             // Verify the insert by reading back the record
             $this->db->where('id', $insert_id);
             $verify = $this->db->get($this->tb_logs)->row();
             if ($verify) {
-                log_message('error', 'ADD_LOG VERIFY: smtp_config_id in DB=' . var_export($verify->smtp_config_id, true));
+                $this->em_log("VERIFY: smtp_config_id in DB = " . var_export($verify->smtp_config_id, true));
+                if ($verify->smtp_config_id != $smtp_id_value) {
+                    $this->em_log("VERIFY MISMATCH! Expected: {$smtp_id_value}, Got: " . var_export($verify->smtp_config_id, true), "ERROR");
+                }
+            } else {
+                $this->em_log("VERIFY FAILED: Could not read back inserted record", "ERROR");
             }
         }
         
+        $this->em_log("=== ADD_LOG END ===");
         return $result;
     }
     
@@ -871,5 +887,30 @@ class Email_marketing_model extends MY_Model {
         }
         
         return $body;
+    }
+    
+    // ========================================
+    // DEDICATED EMAIL MARKETING LOG FILE
+    // ========================================
+    
+    /**
+     * Write to dedicated email marketing log file
+     * This creates a separate log file for easier debugging
+     * @param string $message The message to log
+     * @param string $level Log level (INFO, ERROR, DEBUG, etc.)
+     */
+    public function em_log($message, $level = 'INFO') {
+        $log_file = APPPATH . 'logs/email_marketing.txt';
+        $timestamp = date('Y-m-d H:i:s');
+        $log_entry = "[{$timestamp}] [{$level}] {$message}" . PHP_EOL;
+        
+        // Ensure logs directory exists and is writable
+        $log_dir = APPPATH . 'logs';
+        if (!is_dir($log_dir)) {
+            @mkdir($log_dir, 0755, true);
+        }
+        
+        // Append to log file
+        @file_put_contents($log_file, $log_entry, FILE_APPEND | LOCK_EX);
     }
 }

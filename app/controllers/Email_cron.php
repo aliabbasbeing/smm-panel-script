@@ -23,16 +23,26 @@ class Email_cron extends CI_Controller {
      */
     public function run(){
         $log_id = $this->cron_logger->start('cron/email_marketing');
+        
+        // Log start to dedicated file
+        $this->email_model->em_log("========================================");
+        $this->email_model->em_log("EMAIL CRON RUN STARTED");
+        $this->email_model->em_log("========================================");
+        
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            $this->email_model->em_log("Token verification FAILED", "ERROR");
             $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
             show_404();
             return;
         }
         
+        $this->email_model->em_log("Token verified OK");
+        
         // Get optional campaign_id for campaign-specific cron
         $campaign_id = $this->input->get('campaign_id', true);
+        $this->email_model->em_log("Campaign ID filter: " . ($campaign_id ?: 'ALL'));
         
         // Rate limiting - prevent running too frequently
         $lockFileKey = $campaign_id ? 'campaign_' . $campaign_id : 'all';
@@ -43,6 +53,7 @@ class Email_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
+                $this->email_model->em_log("Rate limited - last run was " . ($now - $lastRun) . " seconds ago", "WARNING");
                 $this->respond([
                     'status' => 'rate_limited',
                     'message' => 'Cron is rate limited. Please wait.',
@@ -59,6 +70,12 @@ class Email_cron extends CI_Controller {
         
         // Process emails
         $result = $this->process_emails($campaign_id);
+        
+        $this->email_model->em_log("Cron result: " . json_encode($result));
+        $this->email_model->em_log("========================================");
+        $this->email_model->em_log("EMAIL CRON RUN ENDED");
+        $this->email_model->em_log("========================================");
+        
         // Log the result
         $status = ($result['status'] == 'success' || $result['status'] == 'info') ? 'Success' : 'Failed';
         $response_code = ($status == 'Success') ? 200 : 500;
@@ -236,12 +253,15 @@ class Email_cron extends CI_Controller {
             }
             
             // Get current rotation index - this determines which SMTP to use for THIS email
-            log_message('error', 'CAMPAIGN OBJECT: smtp_rotation_index=' . var_export(isset($campaign->smtp_rotation_index) ? $campaign->smtp_rotation_index : 'NOT SET', true));
+            $this->email_model->em_log("=== SEND EMAIL START ===");
+            $this->email_model->em_log("Campaign ID: {$campaign->id}, Recipient: {$recipient->email}");
+            $this->email_model->em_log("Campaign smtp_rotation_index: " . var_export(isset($campaign->smtp_rotation_index) ? $campaign->smtp_rotation_index : 'NOT SET', true));
             
             $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
             $total_smtps = count($smtp_ids);
             
-            log_message('error', 'ROTATION CALC: current_index=' . $current_index . ', total_smtps=' . $total_smtps . ', smtp_ids=' . json_encode($smtp_ids));
+            $this->email_model->em_log("Rotation calc: current_index={$current_index}, total_smtps={$total_smtps}");
+            $this->email_model->em_log("SMTP IDs array: " . json_encode($smtp_ids));
             
             // Ensure index is within bounds
             $current_index = $current_index % $total_smtps;
@@ -250,19 +270,9 @@ class Email_cron extends CI_Controller {
             // This ensures the next email will use the next SMTP regardless of success/failure
             $next_rotation_index = ($current_index + 1) % $total_smtps;
             
-            log_message('error', 'ROTATION: Using index ' . $current_index . ', will update to ' . $next_rotation_index);
+            $this->email_model->em_log("Will use SMTP at index {$current_index} (ID: {$smtp_ids[$current_index]}), next index will be {$next_rotation_index}");
             
             $this->email_model->update_campaign_rotation_index($campaign->id, $next_rotation_index);
-            
-            // Log the rotation decision
-            log_message('info', sprintf(
-                'Email Marketing: Campaign %d - Using SMTP index %d (ID: %d) for email to %s. Next email will use index %d.',
-                $campaign->id,
-                $current_index,
-                $smtp_ids[$current_index],
-                $recipient->email,
-                $next_rotation_index
-            ));
             
             // Try sending with the selected SMTP first, then fallback to others if it fails
             $attempts = 0;
@@ -274,6 +284,8 @@ class Email_cron extends CI_Controller {
                 $smtp_index = ($current_index + $attempts) % $total_smtps;
                 $smtp_id = $smtp_ids[$smtp_index];
                 
+                $this->email_model->em_log("Attempt #{$attempts}: trying SMTP ID {$smtp_id} at index {$smtp_index}");
+                
                 // Get SMTP config
                 $this->email_model->db->where('id', $smtp_id);
                 $smtp = $this->email_model->db->get('email_smtp_configs')->row();
@@ -281,41 +293,26 @@ class Email_cron extends CI_Controller {
                 if(!$smtp || $smtp->status != 1){
                     $attempts++;
                     $last_error = "SMTP ID {$smtp_id} not found or disabled";
-                    log_message('warning', sprintf(
-                        'Email Marketing: Campaign %d - SMTP ID %d unavailable, trying fallback. Error: %s',
-                        $campaign->id,
-                        $smtp_id,
-                        $last_error
-                    ));
+                    $this->email_model->em_log("SMTP {$smtp_id} unavailable: {$last_error}", "WARNING");
                     continue; // Skip to next SMTP
                 }
                 
                 // Track the SMTP ID for logging - capture immediately after successful SMTP load
                 $last_attempted_smtp_id = (int)$smtp->id;
                 
-                // Log the SMTP selection for debugging
-                log_message('info', sprintf(
-                    'Email Marketing: Campaign %d - Selected SMTP "%s" (ID: %d) for email to %s',
-                    $campaign->id,
-                    $smtp->name,
-                    $last_attempted_smtp_id,
-                    $recipient->email
-                ));
+                $this->email_model->em_log("SMTP loaded: name='{$smtp->name}', id={$last_attempted_smtp_id}");
                 
                 // Try sending with this SMTP
                 $result = $this->try_send_email($smtp, $recipient, $subject, $body);
                 
                 if($result['success']){
+                    $this->email_model->em_log("Email SENT successfully via SMTP {$smtp->name} (ID: {$last_attempted_smtp_id})");
+                    
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
                     // Add log with SMTP info - use the captured SMTP ID
-                    log_message('info', sprintf(
-                        'Email Marketing: Campaign %d - Logging email to %s with smtp_config_id=%d',
-                        $campaign->id,
-                        $recipient->email,
-                        $last_attempted_smtp_id
-                    ));
+                    $this->email_model->em_log("Calling add_log with smtp_config_id={$last_attempted_smtp_id}");
                     
                     $this->email_model->add_log(
                         $campaign->id,
@@ -330,30 +327,16 @@ class Email_cron extends CI_Controller {
                     // Update SMTP usage statistics
                     $this->email_model->increment_smtp_usage($smtp->id, true);
                     
-                    // Log success with SMTP details
-                    log_message('info', sprintf(
-                        'Email Marketing: Campaign %d - Email sent successfully to %s using SMTP "%s" (ID: %d)',
-                        $campaign->id,
-                        $recipient->email,
-                        $smtp->name,
-                        $smtp->id
-                    ));
+                    $this->email_model->em_log("=== SEND EMAIL END (SUCCESS) ===");
                     
                     return true;
                 } else {
                     $last_error = "SMTP '{$smtp->name}' (ID: {$smtp->id}): " . $result['error'];
                     
+                    $this->email_model->em_log("SMTP {$smtp->name} FAILED: {$result['error']}", "ERROR");
+                    
                     // Update SMTP failure statistics
                     $this->email_model->increment_smtp_usage($smtp->id, false);
-                    
-                    log_message('error', sprintf(
-                        'Email Marketing: Campaign %d - SMTP "%s" (ID: %d) failed for %s. Error: %s',
-                        $campaign->id,
-                        $smtp->name,
-                        $smtp->id,
-                        $recipient->email,
-                        $result['error']
-                    ));
                     
                     $attempts++;
                     // Continue to try next SMTP as fallback
@@ -361,16 +344,14 @@ class Email_cron extends CI_Controller {
             }
             
             // All SMTPs failed - log with the last attempted SMTP
+            $this->email_model->em_log("ALL SMTP SERVERS FAILED. Last error: {$last_error}", "ERROR");
+            $this->email_model->em_log("=== SEND EMAIL END (FAILED) ===");
             $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error, $last_attempted_smtp_id);
             return false;
             
         } catch(Exception $e){
-            log_message('error', sprintf(
-                'Email Marketing: Campaign %d - Exception while sending to %s: %s',
-                $campaign->id,
-                $recipient->email,
-                $e->getMessage()
-            ));
+            $this->email_model->em_log("EXCEPTION: " . $e->getMessage(), "ERROR");
+            $this->email_model->em_log("=== SEND EMAIL END (EXCEPTION) ===");
             $this->log_failed($campaign, $recipient, $e->getMessage());
             return false;
         }
@@ -380,19 +361,28 @@ class Email_cron extends CI_Controller {
      * Get SMTP IDs for a campaign (supports both new multi-SMTP and legacy single SMTP)
      */
     private function get_smtp_ids_for_campaign($campaign){
+        $this->email_model->em_log("Getting SMTP IDs for campaign {$campaign->id}");
+        $this->email_model->em_log("  smtp_config_ids raw: " . var_export($campaign->smtp_config_ids ?? 'NOT SET', true));
+        $this->email_model->em_log("  smtp_config_id raw: " . var_export($campaign->smtp_config_id ?? 'NOT SET', true));
+        
         // Try to get multiple SMTP IDs first
         if(!empty($campaign->smtp_config_ids)){
             $smtp_ids = json_decode($campaign->smtp_config_ids, true);
             if(is_array($smtp_ids) && !empty($smtp_ids)){
-                return array_map('intval', $smtp_ids);
+                $result = array_map('intval', $smtp_ids);
+                $this->email_model->em_log("  Using multi-SMTP: " . json_encode($result));
+                return $result;
             }
         }
         
         // Fallback to single SMTP ID for backward compatibility
         if(!empty($campaign->smtp_config_id)){
-            return array((int)$campaign->smtp_config_id);
+            $result = array((int)$campaign->smtp_config_id);
+            $this->email_model->em_log("  Using single SMTP: " . json_encode($result));
+            return $result;
         }
         
+        $this->email_model->em_log("  No SMTP IDs found!", "ERROR");
         return array();
     }
     
