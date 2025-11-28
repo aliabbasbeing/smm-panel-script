@@ -184,6 +184,22 @@ class Email_cron extends CI_Controller {
      */
     private function send_email($campaign, $recipient){
         try {
+            // Gmail domain filter: Only allow @gmail.com emails
+            if(!$this->is_gmail_email($recipient->email)){
+                // Delete non-gmail email from queue and log as rejected
+                $this->email_model->update_recipient_status($recipient->id, 'failed', 'Email rejected: Only @gmail.com addresses are allowed');
+                $this->email_model->add_log(
+                    $campaign->id,
+                    $recipient->id,
+                    $recipient->email,
+                    'Domain Filter',
+                    'failed',
+                    'Email rejected: Only @gmail.com addresses are allowed',
+                    null
+                );
+                return false;
+            }
+            
             // Get template
             $this->email_model->db->where('id', $campaign->template_id);
             $template = $this->email_model->db->get('email_templates')->row();
@@ -241,15 +257,20 @@ class Email_cron extends CI_Controller {
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
-                    // Add log with SMTP info
+                    // Add log with SMTP info - ensure smtp_id is valid integer
+                    $smtp_id_for_log = isset($smtp->id) ? (int)$smtp->id : null;
+                    
+                    // Debug log to trace the SMTP ID
+                    log_message('info', "Email sent successfully. SMTP ID: {$smtp_id_for_log}, SMTP Name: {$smtp->name}, Recipient: {$recipient->email}");
+                    
                     $this->email_model->add_log(
                         $campaign->id,
                         $recipient->id,
                         $recipient->email,
                         $subject,
                         'sent',
-                        null,
-                        $smtp->id
+                        "Sent via SMTP: {$smtp->name} (ID: {$smtp_id_for_log})",  // Include SMTP info in message for visibility
+                        $smtp_id_for_log
                     );
                     
                     // Update rotation index to next SMTP for next email (round-robin)
@@ -364,6 +385,20 @@ class Email_cron extends CI_Controller {
         } catch(Exception $e){
             return ['success' => false, 'error' => $e->getMessage()];
         }
+    }
+    
+    /**
+     * Check if email is a Gmail address
+     * @param string $email Email address to check
+     * @return bool True if email ends with @gmail.com
+     */
+    private function is_gmail_email($email){
+        if(empty($email)){
+            return false;
+        }
+        $email = strtolower(trim($email));
+        $gmail_domain = '@gmail.com';
+        return (substr($email, -strlen($gmail_domain)) === $gmail_domain);
     }
     
     /**
