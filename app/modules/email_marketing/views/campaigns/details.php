@@ -454,9 +454,12 @@ $(document).ready(function(){
                   case 'failed': $status_badge = 'danger'; break;
                 }
                 
-                // Get SMTP name from log
+                // Get SMTP name from log (now comes directly from JOIN)
                 $smtp_name_used = '-';
-                if(!empty($log->smtp_config_id) && !empty($smtp_configs)){
+                if(!empty($log->smtp_name)){
+                  $smtp_name_used = htmlspecialchars($log->smtp_name);
+                } elseif(!empty($log->smtp_config_id) && !empty($smtp_configs)){
+                  // Fallback to old method if JOIN didn't work
                   foreach($smtp_configs as $smtp){
                     if($smtp->id == $log->smtp_config_id){
                       $smtp_name_used = htmlspecialchars($smtp->name);
@@ -468,7 +471,7 @@ $(document).ready(function(){
             <tr>
               <td><?php echo htmlspecialchars($log->email); ?></td>
               <td><?php echo htmlspecialchars($log->subject); ?></td>
-              <td><small><?php echo $smtp_name_used; ?></small></td>
+              <td><small class="text-info"><strong><?php echo $smtp_name_used; ?></strong><?php if(!empty($log->smtp_config_id)) echo ' (ID: '.$log->smtp_config_id.')'; ?></small></td>
               <td><span class="badge badge-<?php echo $status_badge; ?>"><?php echo ucfirst($log->status); ?></span></td>
               <td><?php echo date('M d, Y H:i:s', strtotime($log->created_at)); ?></td>
               <td class="text-danger small"><?php echo $log->error_message ? htmlspecialchars(substr($log->error_message, 0, 50)) . '...' : '-'; ?></td>

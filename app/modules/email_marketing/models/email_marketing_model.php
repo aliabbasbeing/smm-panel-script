@@ -418,7 +418,7 @@ class Email_marketing_model extends MY_Model {
         return ($limit == -1) ? 0 : [];
     }
     
-    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null) {
+    public function add_recipient($campaign_id, $email, $name = null, $user_id = null, $custom_data = null, $priority = 100) {
         // Check if recipient already exists to prevent duplicates
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('email', $email);
@@ -436,6 +436,7 @@ class Email_marketing_model extends MY_Model {
             'name' => $name,
             'user_id' => $user_id,
             'custom_data' => $custom_data ? json_encode($custom_data) : null,
+            'priority' => $priority,
             'tracking_token' => md5($campaign_id . $email . time() . rand(1000, 9999)),
             'status' => 'pending',
             'created_at' => NOW,
@@ -512,6 +513,69 @@ class Email_marketing_model extends MY_Model {
         }
     }
     
+    /**
+     * Import ALL users from general_users table (no order filtering)
+     * @param int $campaign_id Campaign ID
+     * @param array $filters Optional filters
+     * @param int $limit Maximum number of users to import (0 = no limit)
+     * @return int Number of imported users
+     */
+    public function import_all_users($campaign_id, $filters = [], $limit = 0) {
+        try {
+            // Import all users from general_users table without order filtering
+            $this->db->select('u.id, u.email, u.first_name as name, u.balance');
+            $this->db->from(USERS . ' u');
+            $this->db->where('u.status', 1);
+            $this->db->where('u.email IS NOT NULL', NULL, FALSE);
+            $this->db->where('u.email !=', '');
+            
+            // Apply filters if provided
+            if (!empty($filters['role'])) {
+                $this->db->where('u.role', $filters['role']);
+            }
+            
+            // Apply limit if specified (0 = no limit)
+            if ($limit > 0) {
+                $this->db->limit($limit);
+            }
+            
+            $query = $this->db->get();
+            
+            // Check for database errors
+            if (!$query) {
+                log_message('error', 'Email Marketing: Failed to query all users - ' . $this->db->error()['message']);
+                return 0;
+            }
+            
+            $users = $query->result();
+            
+            $imported = 0;
+            foreach ($users as $user) {
+                // Skip if email is invalid
+                if (empty($user->email) || !filter_var($user->email, FILTER_VALIDATE_EMAIL)) {
+                    continue;
+                }
+                
+                $custom_data = [
+                    'username' => !empty($user->name) ? $user->name : 'User',
+                    'email' => $user->email,
+                    'balance' => !empty($user->balance) ? $user->balance : 0,
+                    'total_orders' => 0 // Not checking orders for this import type
+                ];
+                
+                // add_recipient now handles duplicate checking
+                if ($this->add_recipient($campaign_id, $user->email, $user->name, $user->id, $custom_data)) {
+                    $imported++;
+                }
+            }
+            
+            return $imported;
+        } catch (Exception $e) {
+            log_message('error', 'Email Marketing: Error in import_all_users - ' . $e->getMessage());
+            return 0;
+        }
+    }
+    
     public function import_from_csv($campaign_id, $file_path) {
         if (!file_exists($file_path)) {
             return 0;
@@ -541,6 +605,9 @@ class Email_marketing_model extends MY_Model {
     public function get_next_pending_recipient($campaign_id) {
         $this->db->where('campaign_id', $campaign_id);
         $this->db->where('status', 'pending');
+        // Order by priority first (lower = higher priority), then by id
+        // Manual emails have priority=1, imported have priority=100
+        $this->db->order_by('priority', 'ASC');
         $this->db->order_by('id', 'ASC');
         $this->db->limit(1);
         $query = $this->db->get($this->tb_recipients);
@@ -575,9 +642,9 @@ class Email_marketing_model extends MY_Model {
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
         $data = [
             'ids' => ids(),
-            'campaign_id' => $campaign_id,
-            'recipient_id' => $recipient_id,
-            'smtp_config_id' => $smtp_config_id,
+            'campaign_id' => (int)$campaign_id,
+            'recipient_id' => (int)$recipient_id,
+            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -588,24 +655,28 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
+        // Log the insert for debugging
+        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
+        
         return $this->db->insert($this->tb_logs, $data);
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
         if ($limit == -1) {
             $this->db->select('count(*) as sum');
+            $this->db->from($this->tb_logs);
+            $this->db->where('campaign_id', $campaign_id);
+            $this->db->order_by('created_at', 'DESC');
         } else {
-            $this->db->select('*');
-        }
-        
-        $this->db->from($this->tb_logs);
-        $this->db->where('campaign_id', $campaign_id);
-        
-        if ($limit != -1) {
+            // Select all log fields plus SMTP name via JOIN
+            $this->db->select('l.*, s.name as smtp_name');
+            $this->db->from($this->tb_logs . ' l');
+            $this->db->join($this->tb_smtp_configs . ' s', 'l.smtp_config_id = s.id', 'left');
+            $this->db->where('l.campaign_id', $campaign_id);
             $this->db->limit($limit, $page);
+            $this->db->order_by('l.created_at', 'DESC');
         }
         
-        $this->db->order_by('created_at', 'DESC');
         $query = $this->db->get();
         
         if ($query->num_rows() > 0) {
