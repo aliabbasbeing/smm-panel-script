@@ -236,8 +236,12 @@ class Email_cron extends CI_Controller {
             }
             
             // Get current rotation index - this determines which SMTP to use for THIS email
+            log_message('error', 'CAMPAIGN OBJECT: smtp_rotation_index=' . var_export(isset($campaign->smtp_rotation_index) ? $campaign->smtp_rotation_index : 'NOT SET', true));
+            
             $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
             $total_smtps = count($smtp_ids);
+            
+            log_message('error', 'ROTATION CALC: current_index=' . $current_index . ', total_smtps=' . $total_smtps . ', smtp_ids=' . json_encode($smtp_ids));
             
             // Ensure index is within bounds
             $current_index = $current_index % $total_smtps;
@@ -245,6 +249,9 @@ class Email_cron extends CI_Controller {
             // IMPORTANT: Advance rotation index IMMEDIATELY for true round-robin
             // This ensures the next email will use the next SMTP regardless of success/failure
             $next_rotation_index = ($current_index + 1) % $total_smtps;
+            
+            log_message('error', 'ROTATION: Using index ' . $current_index . ', will update to ' . $next_rotation_index);
+            
             $this->email_model->update_campaign_rotation_index($campaign->id, $next_rotation_index);
             
             // Log the rotation decision

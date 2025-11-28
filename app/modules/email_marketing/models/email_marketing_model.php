@@ -91,11 +91,27 @@ class Email_marketing_model extends MY_Model {
      * @return bool Success
      */
     public function update_campaign_rotation_index($campaign_id, $new_index) {
+        log_message('error', 'ROTATION UPDATE: campaign_id=' . $campaign_id . ', new_index=' . $new_index);
+        
         $this->db->where('id', $campaign_id);
-        return $this->db->update($this->tb_campaigns, [
+        $result = $this->db->update($this->tb_campaigns, [
             'smtp_rotation_index' => $new_index,
             'updated_at' => NOW
         ]);
+        
+        $last_query = $this->db->last_query();
+        log_message('error', 'ROTATION SQL: ' . $last_query);
+        log_message('error', 'ROTATION RESULT: ' . ($result ? 'SUCCESS' : 'FAILED'));
+        
+        // Verify the update
+        $this->db->select('smtp_rotation_index');
+        $this->db->where('id', $campaign_id);
+        $verify = $this->db->get($this->tb_campaigns)->row();
+        if ($verify) {
+            log_message('error', 'ROTATION VERIFY: smtp_rotation_index in DB=' . var_export($verify->smtp_rotation_index, true));
+        }
+        
+        return $result;
     }
     
     public function delete_campaign($ids) {
@@ -723,6 +739,9 @@ class Email_marketing_model extends MY_Model {
             $smtp_id_value = (int)$smtp_config_id;
         }
         
+        // Log the incoming parameter for debugging
+        log_message('error', 'ADD_LOG CALLED: smtp_config_id param=' . var_export($smtp_config_id, true) . ', computed smtp_id_value=' . var_export($smtp_id_value, true));
+        
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
@@ -738,18 +757,29 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
-        // Log the insert data for debugging
-        log_message('info', 'Email Log Insert: smtp_config_id=' . var_export($smtp_id_value, true) . ', campaign_id=' . $campaign_id . ', email=' . $email . ', status=' . $status);
+        // Log the full data array being inserted
+        log_message('error', 'ADD_LOG DATA: ' . json_encode($data));
         
         $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log the actual SQL query that was executed
+        $last_query = $this->db->last_query();
+        log_message('error', 'ADD_LOG SQL: ' . $last_query);
         
         // Log any database errors
         if (!$result) {
             $error = $this->db->error();
-            log_message('error', 'Email Log Insert FAILED: ' . json_encode($error) . ' - Data: ' . json_encode($data));
+            log_message('error', 'ADD_LOG FAILED: ' . json_encode($error));
         } else {
             $insert_id = $this->db->insert_id();
-            log_message('info', 'Email Log Insert SUCCESS: ID=' . $insert_id . ', smtp_config_id=' . var_export($smtp_id_value, true));
+            log_message('error', 'ADD_LOG SUCCESS: ID=' . $insert_id);
+            
+            // Verify the insert by reading back the record
+            $this->db->where('id', $insert_id);
+            $verify = $this->db->get($this->tb_logs)->row();
+            if ($verify) {
+                log_message('error', 'ADD_LOG VERIFY: smtp_config_id in DB=' . var_export($verify->smtp_config_id, true));
+            }
         }
         
         return $result;
