@@ -180,7 +180,13 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Send individual email with SMTP rotation and fallback
+     * Send individual email with true round-robin SMTP rotation
+     * 
+     * SMTP Rotation Logic:
+     * - Each email uses the next SMTP in the rotation list
+     * - Rotation advances on EVERY email attempt (not just on failure)
+     * - If the selected SMTP fails, it falls back to the next available SMTP
+     * - Rotation index is always updated after each send attempt to ensure fair distribution
      */
     private function send_email($campaign, $recipient){
         try {
@@ -229,13 +235,34 @@ class Email_cron extends CI_Controller {
                 $body .= $variables['tracking_pixel'];
             }
             
-            // Try sending with rotation and fallback
+            // Get current rotation index - this determines which SMTP to use for THIS email
             $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
             $total_smtps = count($smtp_ids);
+            
+            // Ensure index is within bounds
+            $current_index = $current_index % $total_smtps;
+            
+            // IMPORTANT: Advance rotation index IMMEDIATELY for true round-robin
+            // This ensures the next email will use the next SMTP regardless of success/failure
+            $next_rotation_index = ($current_index + 1) % $total_smtps;
+            $this->email_model->update_campaign_rotation_index($campaign->id, $next_rotation_index);
+            
+            // Log the rotation decision
+            log_message('info', sprintf(
+                'Email Marketing: Campaign %d - Using SMTP index %d (ID: %d) for email to %s. Next email will use index %d.',
+                $campaign->id,
+                $current_index,
+                $smtp_ids[$current_index],
+                $recipient->email,
+                $next_rotation_index
+            ));
+            
+            // Try sending with the selected SMTP first, then fallback to others if it fails
             $attempts = 0;
             $last_error = '';
+            $smtp_used = null;
             
-            // Try each SMTP in rotation order, starting from current_index
+            // Try each SMTP starting from current_index, with fallback to others
             while($attempts < $total_smtps){
                 $smtp_index = ($current_index + $attempts) % $total_smtps;
                 $smtp_id = $smtp_ids[$smtp_index];
@@ -247,6 +274,12 @@ class Email_cron extends CI_Controller {
                 if(!$smtp || $smtp->status != 1){
                     $attempts++;
                     $last_error = "SMTP ID {$smtp_id} not found or disabled";
+                    log_message('warning', sprintf(
+                        'Email Marketing: Campaign %d - SMTP ID %d unavailable, trying fallback. Error: %s',
+                        $campaign->id,
+                        $smtp_id,
+                        $last_error
+                    ));
                     continue; // Skip to next SMTP
                 }
                 
@@ -254,10 +287,12 @@ class Email_cron extends CI_Controller {
                 $result = $this->try_send_email($smtp, $recipient, $subject, $body);
                 
                 if($result['success']){
+                    $smtp_used = $smtp;
+                    
                     // Update recipient status
                     $this->email_model->update_recipient_status($recipient->id, 'sent');
                     
-                    // Add log with SMTP info - ensure smtp_id is integer
+                    // Add log with SMTP info
                     $smtp_id_for_log = (int)$smtp->id;
                     $this->email_model->add_log(
                         $campaign->id,
@@ -269,23 +304,50 @@ class Email_cron extends CI_Controller {
                         $smtp_id_for_log
                     );
                     
-                    // Update rotation index to next SMTP for next email (round-robin)
-                    $next_index = ($smtp_index + 1) % $total_smtps;
-                    $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
+                    // Update SMTP usage statistics
+                    $this->email_model->increment_smtp_usage($smtp->id, true);
+                    
+                    // Log success with SMTP details
+                    log_message('info', sprintf(
+                        'Email Marketing: Campaign %d - Email sent successfully to %s using SMTP "%s" (ID: %d)',
+                        $campaign->id,
+                        $recipient->email,
+                        $smtp->name,
+                        $smtp->id
+                    ));
                     
                     return true;
                 } else {
-                    $last_error = "SMTP '{$smtp->name}': " . $result['error'];
+                    $last_error = "SMTP '{$smtp->name}' (ID: {$smtp->id}): " . $result['error'];
+                    
+                    // Update SMTP failure statistics
+                    $this->email_model->increment_smtp_usage($smtp->id, false);
+                    
+                    log_message('error', sprintf(
+                        'Email Marketing: Campaign %d - SMTP "%s" (ID: %d) failed for %s. Error: %s',
+                        $campaign->id,
+                        $smtp->name,
+                        $smtp->id,
+                        $recipient->email,
+                        $result['error']
+                    ));
+                    
                     $attempts++;
                     // Continue to try next SMTP as fallback
                 }
             }
             
-            // All SMTPs failed
-            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error);
+            // All SMTPs failed - log with the last attempted SMTP
+            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error, $smtp_used ? (int)$smtp_used->id : null);
             return false;
             
         } catch(Exception $e){
+            log_message('error', sprintf(
+                'Email Marketing: Campaign %d - Exception while sending to %s: %s',
+                $campaign->id,
+                $recipient->email,
+                $e->getMessage()
+            ));
             $this->log_failed($campaign, $recipient, $e->getMessage());
             return false;
         }
@@ -398,21 +460,35 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Log failed email
+     * Log failed email with optional SMTP ID
+     * @param object $campaign Campaign object
+     * @param object $recipient Recipient object
+     * @param string $error Error message
+     * @param int|null $smtp_id SMTP config ID that was attempted (optional)
      */
-    private function log_failed($campaign, $recipient, $error){
+    private function log_failed($campaign, $recipient, $error, $smtp_id = null){
         // Update recipient status
         $this->email_model->update_recipient_status($recipient->id, 'failed', $error);
         
-        // Add log
+        // Add log with SMTP ID if provided
         $this->email_model->add_log(
             $campaign->id,
             $recipient->id,
             $recipient->email,
             'Failed',
             'failed',
-            $error
+            $error,
+            $smtp_id
         );
+        
+        // Log the failure for monitoring
+        log_message('error', sprintf(
+            'Email Marketing: Campaign %d - Failed to send email to %s. SMTP ID: %s. Error: %s',
+            $campaign->id,
+            $recipient->email,
+            $smtp_id !== null ? $smtp_id : 'N/A',
+            $error
+        ));
     }
     
     /**

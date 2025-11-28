@@ -382,6 +382,79 @@ class Email_marketing_model extends MY_Model {
         return false;
     }
     
+    /**
+     * Increment SMTP usage statistics
+     * @param int $smtp_id SMTP config ID
+     * @param bool $success Whether the email was sent successfully
+     * @return bool Success
+     */
+    public function increment_smtp_usage($smtp_id, $success = true) {
+        // Check if columns exist (graceful handling for existing installations)
+        $this->db->where('id', $smtp_id);
+        $smtp = $this->db->get($this->tb_smtp_configs)->row();
+        
+        if (!$smtp) {
+            return false;
+        }
+        
+        // Build update data based on what columns exist
+        $update_data = ['updated_at' => NOW];
+        
+        // Check if usage tracking columns exist by checking if properties are set
+        if (property_exists($smtp, 'total_sent')) {
+            $update_data['total_sent'] = ($smtp->total_sent ?? 0) + 1;
+        }
+        
+        if ($success) {
+            if (property_exists($smtp, 'successful_sent')) {
+                $update_data['successful_sent'] = ($smtp->successful_sent ?? 0) + 1;
+            }
+            if (property_exists($smtp, 'last_success_at')) {
+                $update_data['last_success_at'] = NOW;
+            }
+        } else {
+            if (property_exists($smtp, 'failed_sent')) {
+                $update_data['failed_sent'] = ($smtp->failed_sent ?? 0) + 1;
+            }
+            if (property_exists($smtp, 'last_failure_at')) {
+                $update_data['last_failure_at'] = NOW;
+            }
+        }
+        
+        // Only update if we have something meaningful to update
+        if (count($update_data) > 1) { // More than just updated_at
+            $this->db->where('id', $smtp_id);
+            return $this->db->update($this->tb_smtp_configs, $update_data);
+        }
+        
+        return true; // Gracefully succeed if columns don't exist yet
+    }
+    
+    /**
+     * Get SMTP usage statistics for a specific SMTP config
+     * @param int $smtp_id SMTP config ID
+     * @return object|null Statistics object or null if not found
+     */
+    public function get_smtp_usage_stats($smtp_id) {
+        $this->db->select('id, name, total_sent, successful_sent, failed_sent, last_success_at, last_failure_at');
+        $this->db->where('id', $smtp_id);
+        $query = $this->db->get($this->tb_smtp_configs);
+        
+        if ($query->num_rows() > 0) {
+            $smtp = $query->row();
+            
+            // Calculate success rate
+            $smtp->success_rate = 0;
+            if (isset($smtp->total_sent) && $smtp->total_sent > 0) {
+                $smtp->success_rate = round(($smtp->successful_sent / $smtp->total_sent) * 100, 2);
+            }
+            
+            return $smtp;
+        }
+        
+        return null;
+    }
+    
     // ========================================
     // RECIPIENT METHODS
     // ========================================
