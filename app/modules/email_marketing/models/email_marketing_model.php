@@ -556,9 +556,9 @@ class Email_marketing_model extends MY_Model {
                 }
                 
                 $custom_data = [
-                    'username' => $user->name ? $user->name : 'User',
+                    'username' => !empty($user->name) ? $user->name : 'User',
                     'email' => $user->email,
-                    'balance' => $user->balance ? $user->balance : 0,
+                    'balance' => !empty($user->balance) ? $user->balance : 0,
                     'total_orders' => 0 // Not checking orders for this import type
                 ];
                 

@@ -878,7 +878,7 @@ class Email_marketing extends MX_Controller {
         
         // Add recipient
         $custom_data = [
-            'username' => $name ? $name : 'User',
+            'username' => !empty($name) ? $name : 'User',
             'email' => $email,
             'source' => 'manual'
         ];
