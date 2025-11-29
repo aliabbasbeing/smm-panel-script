@@ -88,8 +88,38 @@ class setting extends MX_Controller {
                     continue;
                 }
 
-                if (in_array($key, ['embed_javascript', 'embed_head_javascript', 'manual_payment_content'])) {
-                    $value = htmlspecialchars(@$_POST[$key], ENT_QUOTES);
+                // Fields that allow raw HTML with inline styles (admin-only, for custom dashboard widgets, emails, etc.)
+                // These bypass XSS filtering to preserve inline CSS styles
+                $html_content_fields = [
+                    'embed_javascript', 
+                    'embed_head_javascript', 
+                    'manual_payment_content',
+                    'dashboard_text',
+                    'new_order_text',
+                    'orders_text',
+                    'services_text',
+                    'add_funds_text',
+                    'api_text',
+                    'tickets_text',
+                    'child_panel_text',
+                    'transactions_text',
+                    'notification_popup_content',
+                    'terms_content',
+                    'policy_content',
+                    'cookies_policy_page',
+                    'verification_email_content',
+                    'email_welcome_email_content',
+                    'email_new_registration_content',
+                    'email_password_recovery_content',
+                    'email_payment_notice_content',
+                    'childpanel_desc',
+                    'updates_text',
+                    'order_rules'
+                ];
+                
+                if (in_array($key, $html_content_fields)) {
+                    // Get raw value from $_POST to preserve HTML with inline styles
+                    $value = @$_POST[$key];
                 }
 
                 if (in_array($key, ['midtrans_payment_channels', 'coinpayments_acceptance', 'freekassa_acceptance'], true)) {
