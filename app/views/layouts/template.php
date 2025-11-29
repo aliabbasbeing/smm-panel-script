@@ -16,56 +16,56 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
 
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/font-awesome/css/font-awesome.min.css')?>">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-3.2.1.min.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
 
     <?php if(segment('1') == 'gallery' || segment('1') == 'setting'){ ?>
-      <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/jquery-upload/css/style.css">
-      <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/jquery-upload/css/jquery.fileupload.css">
+      <link rel="stylesheet" href="<?=asset_url('assets/plugins/jquery-upload/css/style.css')?>">
+      <link rel="stylesheet" href="<?=asset_url('assets/plugins/jquery-upload/css/jquery.fileupload.css')?>">
     <?php }?>  
     
     <!-- flag icon -->
     <?php if (segment('1') == 'language') {
     ?>
-    <link href="<?php echo BASE; ?>assets/plugins/flags/css/flag-icon.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/plugins/flags/css/flag-icon.css')?>" rel="stylesheet">
     <?php }?>
     <!-- Core -->
-    <link href="<?php echo BASE; ?>assets/css/core.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/core.css')?>" rel="stylesheet">
       
     <!-- c3.js Charts Plugin -->
     <?php if(segment('1') == 'statistics'){ ?>
-    <link href="<?php echo BASE; ?>assets/plugins/charts-c3/c3.css" rel="stylesheet">
-    <script src="<?php echo BASE; ?>assets/plugins/charts-c3/d3.v3.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/charts-c3/c3.min.js"></script>
+    <link href="<?=asset_url('assets/plugins/charts-c3/c3.css')?>" rel="stylesheet">
+    <script src="<?=asset_url('assets/plugins/charts-c3/d3.v3.min.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/charts-c3/c3.min.js')?>"></script>
     <?php }?>
     <!-- toast -->
     
-    <link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>assets/plugins/jquery-toast/css/jquery.toast.css">
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/jquery-toast/css/jquery.toast.css')?>">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/boostrap/colors.css')?>" id="theme-stylesheet">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css')?>" id="theme-stylesheet">
     
     <!-- emoji -->
     <?php
       if (in_array(segment('1'), ['services', 'api_provider', 'provider'])) {
     ?>
-    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/emoji/emojionearea.min.css" media="screen">
-    <script type="text/javascript" src="<?=BASE?>assets/plugins/emoji/emojionearea.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/emoji/emojionearea.min.css')?>" media="screen">
+    <script type="text/javascript" src="<?=asset_url('assets/plugins/emoji/emojionearea.min.js')?>"></script>
     <?php }?>
-    <link href="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/css/emoji.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/plugins/emoji-picker/lib/css/emoji.css')?>" rel="stylesheet">
     
     <!-- Organized CSS Structure -->
-    <link href="<?php echo BASE; ?>assets/css/common.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/header.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/footer.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/themes.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/auth.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/new-style.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>assets/css/util.css" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/common.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/header.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/footer.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/themes.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/auth.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/new-style.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/util.css')?>" rel="stylesheet">
 
     <script type="text/javascript">
       var token = '<?php echo $this->security->get_csrf_hash(); ?>',
@@ -133,23 +133,23 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/standalone/selectize.min.js"></script>
 
-    <script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/selectize.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery.tablesorter.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-2.0.3.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-de-merc.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/jquery-jvectormap-world-mill.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/vendors/circle-progress.min.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/core.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/slide.js"></script>
-    <script src="<?php echo BASE; ?>assets/js/general.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/bootstrap.bundle.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery.sparkline.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/selectize.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery.tablesorter.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-2.0.3.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-de-merc.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-world-mill.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/circle-progress.min.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js')?>"></script>
+    <script src="<?=asset_url('assets/js/core.js')?>"></script>
+    <script src="<?=asset_url('assets/js/slide.js')?>"></script>
+    <script src="<?=asset_url('assets/js/general.js')?>"></script>
     <!-- toast -->
-    <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
+    <script type="text/javascript" src="<?=asset_url('assets/plugins/jquery-toast/js/jquery.toast.js')?>"></script>
     <!-- Tiny Editor -->
 
-    <script type="text/javascript" id="tinymce-js" src="<?= BASE ?>assets/plugins/tinymce/tinymce.min.js"></script>
+    <script type="text/javascript" id="tinymce-js" src="<?=asset_url('assets/plugins/tinymce/tinymce.min.js')?>"></script>
     <script type="text/javascript">
   tinymce.init({
     selector: '.plugin_editor', // Target the textarea by its ID
@@ -168,26 +168,26 @@
 </script>
 
     <!-- emoji picker -->
-    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/util.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/jquery.emojiarea.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/emoji-picker.js"></script>
+    <script src="<?=asset_url('assets/plugins/emoji-picker/lib/js/config.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/emoji-picker/lib/js/util.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/emoji-picker/lib/js/jquery.emojiarea.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/emoji-picker/lib/js/emoji-picker.js')?>"></script>
     <!-- flags icon -->
-    <script src="<?php echo BASE; ?>assets/plugins/flags/js/docs.js"></script>
+    <script src="<?=asset_url('assets/plugins/flags/js/docs.js')?>"></script>
 
     <?php if(segment('1')== 'gallery' || segment('1') =='setting'){ ?>
-    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/vendor/jquery.ui.widget.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/jquery.iframe-transport.js"></script>
-    <script src="<?php echo BASE; ?>assets/plugins/jquery-upload/js/jquery.fileupload.js"></script>
+    <script src="<?=asset_url('assets/plugins/jquery-upload/js/vendor/jquery.ui.widget.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/jquery-upload/js/jquery.iframe-transport.js')?>"></script>
+    <script src="<?=asset_url('assets/plugins/jquery-upload/js/jquery.fileupload.js')?>"></script>
     <?php } ?>
 
     <?php if(segment('1') == 'statistics'){ ?>
-    <script src="<?php echo BASE; ?>assets/js/chart_template.js"></script>
+    <script src="<?=asset_url('assets/js/chart_template.js')?>"></script>
     <?php }?>
     
     
     <!-- general JS -->
-    <script src="<?php echo BASE; ?>assets/js/process.js"></script>
+    <script src="<?=asset_url('assets/js/process.js')?>"></script>
     <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
     
   </body>

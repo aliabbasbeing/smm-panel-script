@@ -22,13 +22,13 @@
     
 
     <!-- Dashboard Core -->
-    <link href="<?=BASE?>assets/css/core.css" rel="stylesheet" />
+    <link href="<?=asset_url('assets/css/core.css')?>" rel="stylesheet" />
     <!-- toast -->
-    <link rel="stylesheet" type="text/css" href="<?=BASE?>assets/plugins/jquery-toast/css/jquery.toast.css">
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
-    <link href="<?=BASE?>assets/css/util.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/common.css" rel="stylesheet">
-    <link href="<?=BASE?>assets/css/auth.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="<?=asset_url('assets/plugins/jquery-toast/css/jquery.toast.css')?>">
+    <link rel="stylesheet" href="<?=asset_url('assets/plugins/boostrap/colors.css')?>" id="theme-stylesheet">
+    <link href="<?=asset_url('assets/css/util.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/common.css')?>" rel="stylesheet">
+    <link href="<?=asset_url('assets/css/auth.css')?>" rel="stylesheet">
     
 
     <script type="text/javascript">
@@ -66,21 +66,21 @@
       </div>
     </div>
 
-    <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/selectize.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery.tablesorter.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery-jvectormap-2.0.3.min.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery-jvectormap-de-merc.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/jquery-jvectormap-world-mill.js"></script>
-    <script src="<?=BASE?>assets/js/vendors/circle-progress.min.js"></script>
-    <script src="<?=BASE?>assets/js/core.js"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-3.2.1.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/bootstrap.bundle.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery.sparkline.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/selectize.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery.tablesorter.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-2.0.3.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-de-merc.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/jquery-jvectormap-world-mill.js')?>"></script>
+    <script src="<?=asset_url('assets/js/vendors/circle-progress.min.js')?>"></script>
+    <script src="<?=asset_url('assets/js/core.js')?>"></script>
     <!-- toast -->
-    <script type="text/javascript" src="<?=BASE?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
+    <script type="text/javascript" src="<?=asset_url('assets/plugins/jquery-toast/js/jquery.toast.js')?>"></script>
     <!-- general JS -->
-    <script src="<?=BASE?>assets/js/process.js"></script>
-    <script src="<?=BASE?>assets/js/general.js"></script>
+    <script src="<?=asset_url('assets/js/process.js')?>"></script>
+    <script src="<?=asset_url('assets/js/general.js')?>"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
   </body>
 </html>
