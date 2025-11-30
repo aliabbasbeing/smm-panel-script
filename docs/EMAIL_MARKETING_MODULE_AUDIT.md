@@ -64,6 +64,7 @@ app/controllers/
 | `app/config/routes.php` | Defines routes for cron and tracking endpoints |
 | `app/config/constants.php` | Database table name constants |
 | `main-database.sql` | Complete database schema |
+| `database/email-marketing-observability.sql` | Database update for observability features |
 
 ---
 
