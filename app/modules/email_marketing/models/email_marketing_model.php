@@ -92,10 +92,20 @@ class Email_marketing_model extends MY_Model {
      */
     public function update_campaign_rotation_index($campaign_id, $new_index) {
         $this->db->where('id', $campaign_id);
-        return $this->db->update($this->tb_campaigns, [
-            'smtp_rotation_index' => $new_index,
+        $result = $this->db->update($this->tb_campaigns, [
+            'smtp_rotation_index' => (int)$new_index,
             'updated_at' => NOW
         ]);
+        
+        // Debug logging
+        log_message('debug', sprintf(
+            'SMTP Rotation Update: campaign_id=%d, new_index=%d, affected_rows=%d',
+            $campaign_id,
+            $new_index,
+            $this->db->affected_rows()
+        ));
+        
+        return $result;
     }
     
     public function delete_campaign($ids) {

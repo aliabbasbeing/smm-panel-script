@@ -383,11 +383,27 @@ class Email_cron extends CI_Controller {
         $last_error = '';
         $last_smtp_id = null;
         
+        // Debug logging for rotation
+        log_message('debug', sprintf(
+            'SMTP Rotation Start: campaign_id=%d, current_index=%d, total_smtps=%d, smtp_ids=%s',
+            $campaign->id,
+            $current_index,
+            $total_smtps,
+            json_encode($smtp_ids)
+        ));
+        
         // Try each SMTP in rotation order, starting from current_index
         while ($attempts < $total_smtps) {
             $smtp_index = ($current_index + $attempts) % $total_smtps;
             $smtp_id = $smtp_ids[$smtp_index];
             $last_smtp_id = $smtp_id;
+            
+            log_message('debug', sprintf(
+                'SMTP Attempt: attempt=%d, smtp_index=%d, smtp_id=%d',
+                $attempts,
+                $smtp_index,
+                $smtp_id
+            ));
             
             // Get SMTP config
             $this->email_model->db->where('id', $smtp_id);
@@ -410,11 +426,25 @@ class Email_cron extends CI_Controller {
             $next_index = ($smtp_index + 1) % $total_smtps;
             $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
             
+            log_message('debug', sprintf(
+                'SMTP Send Result: success=%s, smtp_id=%d, next_rotation_index=%d',
+                $result['success'] ? 'true' : 'false',
+                $smtp->id,
+                $next_index
+            ));
+            
             if ($result['success']) {
                 // Update recipient status
                 $this->email_model->update_recipient_status($recipient->id, 'sent');
                 
                 // Add detailed log with timing and SMTP info
+                log_message('debug', sprintf(
+                    'Logging sent email: campaign_id=%d, recipient_id=%d, smtp_id=%d',
+                    $campaign->id,
+                    $recipient->id,
+                    $smtp->id
+                ));
+                
                 $this->email_model->add_log_with_timing(
                     $campaign->id,
                     $recipient->id,
