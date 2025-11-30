@@ -261,6 +261,13 @@ class Email_cron extends CI_Controller {
     private function process_single_email($campaign, $recipient) {
         $start_time = microtime(true);
         
+        log_message('debug', sprintf(
+            '=== PROCESSING EMAIL: campaign_id=%d, recipient_id=%d, email=%s ===',
+            $campaign->id,
+            $recipient->id,
+            $recipient->email
+        ));
+        
         try {
             // Step 1: Domain filtering - configurable via settings
             if (!$this->validate_email_domain($recipient->email)) {
@@ -283,6 +290,12 @@ class Email_cron extends CI_Controller {
             
             // Step 3: Get SMTP configs for mandatory round-robin rotation
             $smtp_ids = $this->get_smtp_ids_for_campaign($campaign);
+            
+            log_message('debug', sprintf(
+                'SMTP IDs for campaign: %s (count: %d)',
+                implode(',', $smtp_ids),
+                count($smtp_ids)
+            ));
             
             if (empty($smtp_ids)) {
                 $time_taken = round((microtime(true) - $start_time) * 1000, 2);
@@ -309,6 +322,10 @@ class Email_cron extends CI_Controller {
             
         } catch (Exception $e) {
             $time_taken = round((microtime(true) - $start_time) * 1000, 2);
+            log_message('error', sprintf(
+                'Email processing exception: %s',
+                $e->getMessage()
+            ));
             $this->log_failed_with_timing($campaign, $recipient, $e->getMessage(), null, $time_taken);
             $this->metrics['failed']++;
             return false;
@@ -495,19 +512,44 @@ class Email_cron extends CI_Controller {
      * Get SMTP IDs for a campaign (supports both new multi-SMTP and legacy single SMTP)
      */
     private function get_smtp_ids_for_campaign($campaign){
-        // Try to get multiple SMTP IDs first
+        // Debug logging
+        log_message('debug', sprintf(
+            'get_smtp_ids_for_campaign: campaign_id=%d, smtp_config_ids=%s, smtp_config_id=%s',
+            $campaign->id,
+            isset($campaign->smtp_config_ids) ? $campaign->smtp_config_ids : 'NOT_SET',
+            isset($campaign->smtp_config_id) ? $campaign->smtp_config_id : 'NOT_SET'
+        ));
+        
+        // Try to get multiple SMTP IDs first (new multi-SMTP feature)
         if(!empty($campaign->smtp_config_ids)){
             $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            log_message('debug', sprintf(
+                'Parsed smtp_config_ids JSON: %s',
+                json_encode($smtp_ids)
+            ));
             if(is_array($smtp_ids) && !empty($smtp_ids)){
-                return array_map('intval', $smtp_ids);
+                $result = array_map('intval', $smtp_ids);
+                log_message('debug', sprintf(
+                    'Using multi-SMTP IDs: %s',
+                    implode(',', $result)
+                ));
+                return $result;
             }
         }
         
         // Fallback to single SMTP ID for backward compatibility
         if(!empty($campaign->smtp_config_id)){
+            log_message('debug', sprintf(
+                'Using single SMTP ID (fallback): %d',
+                $campaign->smtp_config_id
+            ));
             return array((int)$campaign->smtp_config_id);
         }
         
+        log_message('error', sprintf(
+            'No SMTP IDs found for campaign %d',
+            $campaign->id
+        ));
         return array();
     }
     

@@ -99,11 +99,23 @@ class Email_marketing_model extends MY_Model {
         
         // Debug logging
         log_message('debug', sprintf(
-            'SMTP Rotation Update: campaign_id=%d, new_index=%d, affected_rows=%d',
+            'SMTP Rotation Update: campaign_id=%d, new_index=%d, affected_rows=%d, success=%s',
             $campaign_id,
             $new_index,
-            $this->db->affected_rows()
+            $this->db->affected_rows(),
+            $result ? 'true' : 'false'
         ));
+        
+        // Log any database errors
+        if (!$result || $this->db->affected_rows() == 0) {
+            $error = $this->db->error();
+            log_message('error', sprintf(
+                'SMTP Rotation Update FAILED: campaign_id=%d, error_code=%s, error_message=%s',
+                $campaign_id,
+                $error['code'],
+                $error['message']
+            ));
+        }
         
         return $result;
     }
@@ -672,33 +684,55 @@ class Email_marketing_model extends MY_Model {
      * @return bool Success
      */
     public function add_log_with_timing($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null, $time_taken_ms = 0) {
+        // Build base data
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
-            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
             'error_message' => $error_message,
-            'time_taken_ms' => (float)$time_taken_ms,
             'sent_at' => ($status == 'sent') ? NOW : null,
             'ip_address' => $this->input->ip_address(),
             'user_agent' => $this->input->user_agent(),
             'created_at' => NOW
         ];
         
+        // Add smtp_config_id if provided (column must exist in DB)
+        if ($smtp_config_id !== null) {
+            $data['smtp_config_id'] = (int)$smtp_config_id;
+        }
+        
+        // Add time_taken_ms (column must exist in DB)
+        if ($time_taken_ms > 0) {
+            $data['time_taken_ms'] = (float)$time_taken_ms;
+        }
+        
         // Log the insert for debugging
         log_message('debug', sprintf(
-            'Email Log Insert: smtp_config_id=%s, campaign_id=%d, email=%s, status=%s, time=%0.2fms',
+            'Email Log Insert: smtp_config_id=%s, campaign_id=%d, email=%s, status=%s, time=%0.2fms, data_keys=%s',
             ($smtp_config_id !== null ? $smtp_config_id : 'NULL'),
             $campaign_id,
             $email,
             $status,
-            $time_taken_ms
+            $time_taken_ms,
+            implode(',', array_keys($data))
         ));
         
-        return $this->db->insert($this->tb_logs, $data);
+        $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log any database errors
+        if (!$result) {
+            $error = $this->db->error();
+            log_message('error', sprintf(
+                'Email Log Insert FAILED: error_code=%s, error_message=%s',
+                $error['code'],
+                $error['message']
+            ));
+        }
+        
+        return $result;
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
