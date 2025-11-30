@@ -179,6 +179,7 @@ CREATE TABLE `email_logs` (
   `subject` varchar(500) NOT NULL,
   `status` enum('queued','sent','failed','opened','bounced') NOT NULL DEFAULT 'queued',
   `error_message` text DEFAULT NULL,
+  `time_taken_ms` decimal(10,2) DEFAULT NULL COMMENT 'Time taken to send email in milliseconds',
   `sent_at` datetime DEFAULT NULL,
   `opened_at` datetime DEFAULT NULL,
   `ip_address` varchar(45) DEFAULT NULL,

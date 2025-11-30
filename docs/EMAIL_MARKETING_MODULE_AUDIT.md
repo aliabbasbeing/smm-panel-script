@@ -2,7 +2,9 @@
 
 ## Executive Summary
 
-The `email_marketing` module is a comprehensive bulk email campaign management system built on CodeIgniter's HMVC (Hierarchical Model-View-Controller) architecture. It provides functionality for creating and managing email campaigns, templates, SMTP configurations, recipient lists, and tracking email opens. The module supports SMTP rotation for load balancing and rate limiting to prevent server overload.
+The `email_marketing` module is a comprehensive bulk email campaign management system built on CodeIgniter's HMVC (Hierarchical Model-View-Controller) architecture. It provides functionality for creating and managing email campaigns, templates, SMTP configurations, recipient lists, and tracking email opens. The module supports mandatory SMTP rotation for load balancing, configurable domain filtering, priority-based email queuing, and detailed observability metrics.
+
+**Version:** 2.0.0 (Updated with improvements)
 
 ---
 
@@ -46,8 +48,10 @@ app/modules/email_marketing/
     │   └── edit.php                # SMTP edit modal
     ├── recipients/
     │   └── index.php               # Recipient management for campaigns
-    └── reports/
-        └── index.php               # Overall analytics and reports
+    ├── reports/
+    │   └── index.php               # Overall analytics and reports
+    └── settings/
+        └── index.php               # Domain filter and observability settings
 
 app/controllers/
 └── Email_cron.php                   # Standalone cron controller for email processing
@@ -266,19 +270,21 @@ Extends `MY_Model` and handles all database operations.
 - `delete_smtp_config()` - Delete SMTP config (with usage check)
 
 **Recipient Management:**
-- `get_recipients()` - Retrieve recipients for campaign
-- `add_recipient()` - Add single recipient (with duplicate check)
+- `get_recipients()` - Retrieve recipients for campaign (priority-ordered)
+- `add_recipient()` - Add single recipient (with duplicate check and priority)
 - `import_from_users()` - Import users with order history
 - `import_all_users()` - Import all registered users
 - `import_from_csv()` - Import from CSV file
-- `get_next_pending_recipient()` - Get next email to send (priority-ordered)
+- `get_next_pending_recipient()` - Get next email to send (priority-ordered: manual first, then imported)
 - `update_recipient_status()` - Update recipient send status
 
 **Logging:**
-- `add_log()` - Create activity log entry
+- `add_log()` - Create activity log entry (basic)
+- `add_log_with_timing()` - Create detailed log with timing information
 - `get_logs()` - Retrieve logs for campaign
 - `get_recent_logs()` - Get recent logs across all campaigns
 - `get_overall_stats()` - Calculate overall module statistics
+- `get_queue_metrics()` - Get queue metrics for observability dashboard
 
 **Settings:**
 - `get_setting()` - Get module setting
@@ -289,37 +295,41 @@ Extends `MY_Model` and handles all database operations.
 
 ### 3. Cron Controller (`Email_cron.php`)
 
-Standalone controller for background email processing.
+Standalone controller for background email processing. **Designed for future job worker migration.**
 
 #### Key Features
 
 1. **Token-Based Security:** Requires valid token in URL query string
-2. **Rate Limiting:** Prevents execution more than once per 60 seconds using lock files
+2. **Atomic Rate Limiting:** Uses `flock()` to prevent race conditions
 3. **Campaign-Specific Processing:** Supports optional `campaign_id` parameter
-4. **SMTP Rotation:** Round-robin rotation across multiple SMTP servers
-5. **Fallback Logic:** Tries all configured SMTPs before marking as failed
-6. **Gmail Domain Filter:** Only allows `@gmail.com` addresses (hardcoded)
+4. **Mandatory SMTP Rotation:** Every email uses the next SMTP in rotation (round-robin)
+5. **Fallback Logic:** On SMTP failure, skips to next SMTP instantly
+6. **Configurable Domain Filter:** Controlled via settings (Gmail-only, custom domains, or disabled)
+7. **Detailed Observability:** Logs SMTP ID, time taken, success/failure for each email
+8. **Metrics Tracking:** Queue size, last cron time, failed counts stored in settings
 
 #### Process Flow
 
 ```
 1. Verify token (hash_equals for timing-safe comparison)
-2. Check rate limiting via lock file
+2. Check rate limiting via atomic lock file (flock)
 3. Get running campaigns (optionally filtered by campaign_id)
 4. For each campaign:
    a. Check sending limits (hourly/daily)
-   b. Get next pending recipient (priority-ordered)
+   b. Get next pending recipient (ordered by priority ASC, then created_at)
    c. If no recipients, mark campaign completed
-   d. Validate Gmail domain
-   e. Load template and process variables
-   f. Try sending with SMTP rotation:
+   d. Validate email domain against configurable filter
+   e. If domain invalid, reject + delete from queue
+   f. Load template and process variables
+   g. MANDATORY Round-Robin SMTP rotation:
       - Get list of SMTP IDs for campaign
       - Start from current rotation index
-      - Try each SMTP until success or all fail
-      - On success: log, update rotation index
-      - On failure: try next SMTP
-   g. Update recipient status and campaign stats
-5. Return JSON response with results
+      - Try current SMTP
+      - On success: log with SMTP ID + time, rotate to next SMTP
+      - On failure: skip to next SMTP instantly
+   h. Update recipient status and campaign stats
+5. Update cron metrics (last run, duration, sent/failed counts)
+6. Return JSON response with detailed metrics
 ```
 
 ---
