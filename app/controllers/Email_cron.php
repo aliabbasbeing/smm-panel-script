@@ -374,7 +374,10 @@ class Email_cron extends CI_Controller {
      * Every email uses the next SMTP in rotation, even on success
      */
     private function send_with_smtp_rotation($campaign, $recipient, $subject, $body, $smtp_ids, $start_time) {
-        $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
+        // CRITICAL: Fetch the latest smtp_rotation_index from DB to ensure proper rotation
+        // This ensures correct rotation when multiple emails are sent in one cron run
+        $current_index = $this->get_current_rotation_index($campaign->id);
+        
         $total_smtps = count($smtp_ids);
         $attempts = 0;
         $last_error = '';
@@ -442,6 +445,20 @@ class Email_cron extends CI_Controller {
         );
         $this->metrics['failed']++;
         return false;
+    }
+    
+    /**
+     * Get current SMTP rotation index from database
+     * This fetches only the rotation index field for efficiency
+     * 
+     * @param int $campaign_id Campaign ID
+     * @return int Current rotation index (0 if not found)
+     */
+    private function get_current_rotation_index($campaign_id) {
+        $this->email_model->db->select('smtp_rotation_index');
+        $this->email_model->db->where('id', $campaign_id);
+        $result = $this->email_model->db->get('email_campaigns')->row();
+        return $result ? (int)$result->smtp_rotation_index : 0;
     }
     
     /**
