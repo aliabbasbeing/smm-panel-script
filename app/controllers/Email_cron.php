@@ -45,14 +45,20 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        // Log start of cron
+        log_message('debug', '========== EMAIL CRON START ==========');
+        
         $log_id = $this->cron_logger->start('cron/email_marketing');
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            log_message('debug', 'Token verification failed');
             $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
             show_404();
             return;
         }
+        
+        log_message('debug', 'Token verified OK');
         
         // Get optional campaign_id for campaign-specific cron
         $campaign_id = $this->input->get('campaign_id', true);
@@ -66,6 +72,7 @@ class Email_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
+                log_message('debug', sprintf('Rate limited: last_run=%d, now=%d', $lastRun, $now));
                 $this->respond([
                     'status' => 'rate_limited',
                     'message' => 'Cron is rate limited. Please wait.',
@@ -81,7 +88,9 @@ class Email_cron extends CI_Controller {
         $this->atomic_lock_update($lockFile);
         
         // Process emails
+        log_message('debug', 'Starting process_emails()');
         $result = $this->process_emails($campaign_id);
+        log_message('debug', sprintf('process_emails() completed: %s', json_encode($result)));
         
         // Update metrics
         $this->update_cron_metrics();
@@ -91,6 +100,8 @@ class Email_cron extends CI_Controller {
         $response_code = ($status == 'Success') ? 200 : 500;
         $message = $result['message'] . ' (Sent: ' . $result['emails_sent'] . ', Failed: ' . $this->metrics['failed'] . ')';
         $this->cron_logger->end($log_id, $status, $response_code, $message);
+        
+        log_message('debug', '========== EMAIL CRON END ==========');
         
         $this->respond($result);
     }
@@ -133,6 +144,8 @@ class Email_cron extends CI_Controller {
      * @return array Result array with status and metrics
      */
     private function process_emails($campaign_id = null){
+        log_message('debug', sprintf('process_emails() called with campaign_id=%s', $campaign_id ?: 'ALL'));
+        
         // Get running campaigns
         $this->email_model->db->where('status', 'running');
         
@@ -143,7 +156,10 @@ class Email_cron extends CI_Controller {
         
         $campaigns = $this->email_model->db->get('email_campaigns')->result();
         
+        log_message('debug', sprintf('Found %d running campaigns', count($campaigns)));
+        
         if(empty($campaigns)){
+            log_message('debug', 'No running campaigns found - returning');
             return [
                 'status' => 'info',
                 'message' => $campaign_id ? 'No active campaign found with ID: ' . $campaign_id : 'No active campaign found',
@@ -157,12 +173,26 @@ class Email_cron extends CI_Controller {
             ];
         }
         
+        // Log campaign details
+        foreach($campaigns as $c) {
+            log_message('debug', sprintf(
+                'Campaign: id=%d, ids=%s, name=%s, smtp_config_id=%s, smtp_config_ids=%s, smtp_rotation_index=%s',
+                $c->id,
+                $c->ids,
+                $c->name,
+                isset($c->smtp_config_id) ? $c->smtp_config_id : 'NOT_SET',
+                isset($c->smtp_config_ids) ? $c->smtp_config_ids : 'NOT_SET',
+                isset($c->smtp_rotation_index) ? $c->smtp_rotation_index : 'NOT_SET'
+            ));
+        }
+        
         $totalSent = 0;
         $campaignsProcessed = 0;
         
         foreach($campaigns as $campaign){
             // Check sending limits
             if(!$this->can_send_email($campaign)){
+                log_message('debug', sprintf('Campaign %d: skipped (rate limited)', $campaign->id));
                 continue;
             }
             
@@ -170,6 +200,7 @@ class Email_cron extends CI_Controller {
             $recipient = $this->email_model->get_next_pending_recipient($campaign->id);
             
             if(!$recipient){
+                log_message('debug', sprintf('Campaign %d: no pending recipients, marking as completed', $campaign->id));
                 // No more recipients - mark campaign as completed
                 $this->email_model->update_campaign($campaign->ids, [
                     'status' => 'completed',
@@ -178,6 +209,8 @@ class Email_cron extends CI_Controller {
                 $campaignsProcessed++;
                 continue;
             }
+            
+            log_message('debug', sprintf('Campaign %d: processing recipient %d (%s)', $campaign->id, $recipient->id, $recipient->email));
             
             $this->metrics['queue_size']++;
             
