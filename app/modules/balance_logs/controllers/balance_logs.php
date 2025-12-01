@@ -223,10 +223,14 @@ class balance_logs extends MX_Controller {
         redirect(cn($this->module));
     }
     
-    // Get all cron logs with their last run time (group by cron_name to handle any legacy duplicates)
-    $this->db->select('cron_name, MAX(executed_at) as executed_at');
-    $this->db->from('cron_logs');
-    $this->db->group_by('cron_name');
+    // Get all cron logs with their last run time and status
+    // Use subquery to get the latest record per cron_name
+    $subquery = "(SELECT c1.cron_name, c1.executed_at, c1.status 
+                  FROM cron_logs c1 
+                  WHERE c1.executed_at = (SELECT MAX(c2.executed_at) FROM cron_logs c2 WHERE c2.cron_name = c1.cron_name)
+                  GROUP BY c1.cron_name) as latest_logs";
+    $this->db->select('cron_name, executed_at, status');
+    $this->db->from($subquery);
     $this->db->order_by('cron_name', 'ASC');
     $cron_list = $this->db->get()->result();
     

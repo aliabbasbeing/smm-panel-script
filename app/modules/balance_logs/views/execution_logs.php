@@ -28,6 +28,7 @@
               <th><?=lang('No_')?></th>
               <th><?=lang("Cron_Name")?></th>
               <th><?=lang("Last_Run")?></th>
+              <th><?=lang("Status")?></th>
             </tr>
           </thead>
           <tbody>
@@ -35,11 +36,14 @@
             $i = 0;
             foreach ($cron_list as $item) { 
               $i++;
+              $status = isset($item->status) ? $item->status : 'Success';
+              $status_class = ($status == 'Success') ? 'success' : 'danger';
             ?>
             <tr>
               <td class="text-center"><?=$i?></td>
               <td><strong><?=htmlspecialchars($item->cron_name)?></strong></td>
               <td><?=convert_timezone($item->executed_at, 'user')?></td>
+              <td><span class="badge badge-<?=$status_class?>"><?=$status?></span></td>
             </tr>
             <?php } ?>
           </tbody>
