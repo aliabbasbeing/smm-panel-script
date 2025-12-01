@@ -889,6 +889,8 @@ $lang["Add"] = "Add";
 /*----------  Cron Logs  ----------*/
 $lang["Cron_Logs"] = "Cron Logs";
 $lang["Cron_Name"] = "Cron Name";
+$lang["Cron_List"] = "Cron List";
+$lang["Last_Run"] = "Last Run";
 $lang["Executed_At"] = "Executed At";
 $lang["Response_Code"] = "Response Code";
 $lang["Execution_Time"] = "Execution Time";
