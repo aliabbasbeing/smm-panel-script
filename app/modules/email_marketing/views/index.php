@@ -123,7 +123,7 @@
     <div class="row row-cards">
       
       <!-- Campaigns Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-blue mr-3">
@@ -131,14 +131,14 @@
             </span>
             <div>
               <h4 class="m-0"><a href="<?php echo cn($module . '/campaigns'); ?>" class="text-inherit">Campaigns</a></h4>
-              <small class="text-muted">Manage email campaigns</small>
+              <small class="text-muted">Manage campaigns</small>
             </div>
           </div>
         </div>
       </div>
       
       <!-- Templates Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-green mr-3">
@@ -153,22 +153,22 @@
       </div>
       
       <!-- SMTP Config Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-orange mr-3">
-              <i class="fe fe-settings"></i>
+              <i class="fe fe-server"></i>
             </span>
             <div>
-              <h4 class="m-0"><a href="<?php echo cn($module . '/smtp'); ?>" class="text-inherit">SMTP Config</a></h4>
-              <small class="text-muted">SMTP settings</small>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/smtp'); ?>" class="text-inherit">SMTP</a></h4>
+              <small class="text-muted">SMTP servers</small>
             </div>
           </div>
         </div>
       </div>
       
       <!-- Reports Card -->
-      <div class="col-sm-6 col-lg-3">
+      <div class="col-sm-6 col-lg-2">
         <div class="card p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-purple mr-3">
@@ -176,7 +176,22 @@
             </span>
             <div>
               <h4 class="m-0"><a href="<?php echo cn($module . '/reports'); ?>" class="text-inherit">Reports</a></h4>
-              <small class="text-muted">Analytics & Reports</small>
+              <small class="text-muted">Analytics</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Card -->
+      <div class="col-sm-6 col-lg-2">
+        <div class="card p-3">
+          <div class="d-flex align-items-center">
+            <span class="stamp stamp-md bg-cyan mr-3">
+              <i class="fe fe-settings"></i>
+            </span>
+            <div>
+              <h4 class="m-0"><a href="<?php echo cn($module . '/settings'); ?>" class="text-inherit">Settings</a></h4>
+              <small class="text-muted">Configuration</small>
             </div>
           </div>
         </div>

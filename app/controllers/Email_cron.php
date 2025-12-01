@@ -1,20 +1,43 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+/**
+ * Email Cron Controller
+ * 
+ * Handles background email processing with SMTP rotation, domain filtering,
+ * and detailed observability. Structured for future job worker migration.
+ * 
+ * @package Email Marketing
+ * @version 2.0.0
+ */
 class Email_cron extends CI_Controller {
     
     private $requiredToken;
     private $lockFile;
     
+    // Metrics for observability
+    private $metrics = [
+        'queue_size' => 0,
+        'processed' => 0,
+        'sent' => 0,
+        'failed' => 0,
+        'rejected_domain' => 0,
+        'start_time' => null,
+        'end_time' => null
+    ];
+    
     public function __construct(){
         parent::__construct();
         $this->load->model('email_marketing/email_marketing_model', 'email_model');
         $this->load->library('email');
-                $this->load->library('cron_logger');
+        $this->load->library('cron_logger');
         
         // Security token for cron access
         $this->requiredToken = get_option('email_cron_token', md5('email_marketing_cron_' . ENCRYPTION_KEY));
         $this->lockFile = APPPATH.'cache/email_cron_last_run.lock';
+        
+        // Initialize metrics
+        $this->metrics['start_time'] = microtime(true);
     }
     
     /**
@@ -22,14 +45,20 @@ class Email_cron extends CI_Controller {
      * URL: /cron/email_marketing?token=YOUR_TOKEN&campaign_id=CAMPAIGN_ID (optional)
      */
     public function run(){
+        // Log start of cron
+        log_message('debug', '========== EMAIL CRON START ==========');
+        
         $log_id = $this->cron_logger->start('cron/email_marketing');
         // Verify token
         $token = $this->input->get('token', true);
         if(!$token || !hash_equals($this->requiredToken, $token)){
+            log_message('debug', 'Token verification failed');
             $this->cron_logger->end($log_id, 'Failed', 403, 'Invalid or missing token');
             show_404();
             return;
         }
+        
+        log_message('debug', 'Token verified OK');
         
         // Get optional campaign_id for campaign-specific cron
         $campaign_id = $this->input->get('campaign_id', true);
@@ -43,6 +72,7 @@ class Email_cron extends CI_Controller {
             $lastRun = (int)@file_get_contents($lockFile);
             $now = time();
             if($lastRun && ($now - $lastRun) < $minInterval){
+                log_message('debug', sprintf('Rate limited: last_run=%d, now=%d', $lastRun, $now));
                 $this->respond([
                     'status' => 'rate_limited',
                     'message' => 'Cron is rate limited. Please wait.',
@@ -54,25 +84,68 @@ class Email_cron extends CI_Controller {
             }
         }
         
-        // Update lock file
-        @file_put_contents($lockFile, time());
+        // Update lock file with atomic write
+        $this->atomic_lock_update($lockFile);
         
         // Process emails
+        log_message('debug', 'Starting process_emails()');
         $result = $this->process_emails($campaign_id);
+        log_message('debug', sprintf('process_emails() completed: %s', json_encode($result)));
+        
+        // Update metrics
+        $this->update_cron_metrics();
+        
         // Log the result
         $status = ($result['status'] == 'success' || $result['status'] == 'info') ? 'Success' : 'Failed';
         $response_code = ($status == 'Success') ? 200 : 500;
-        $message = $result['message'] . ' (Sent: ' . $result['emails_sent'] . ')';
+        $message = $result['message'] . ' (Sent: ' . $result['emails_sent'] . ', Failed: ' . $this->metrics['failed'] . ')';
         $this->cron_logger->end($log_id, $status, $response_code, $message);
+        
+        log_message('debug', '========== EMAIL CRON END ==========');
         
         $this->respond($result);
     }
     
     /**
+     * Atomic lock file update to prevent race conditions
+     */
+    private function atomic_lock_update($lockFile) {
+        $fp = @fopen($lockFile, 'c+');
+        if ($fp && flock($fp, LOCK_EX | LOCK_NB)) {
+            ftruncate($fp, 0);
+            fwrite($fp, time());
+            flock($fp, LOCK_UN);
+            fclose($fp);
+        } elseif ($fp) {
+            fclose($fp);
+        }
+    }
+    
+    /**
+     * Update cron metrics in settings table for observability
+     */
+    private function update_cron_metrics() {
+        $this->metrics['end_time'] = microtime(true);
+        $duration = round($this->metrics['end_time'] - $this->metrics['start_time'], 3);
+        
+        $this->email_model->update_setting('last_cron_run', date('Y-m-d H:i:s'));
+        $this->email_model->update_setting('last_cron_duration_sec', $duration);
+        $this->email_model->update_setting('last_cron_sent', $this->metrics['sent']);
+        $this->email_model->update_setting('last_cron_failed', $this->metrics['failed']);
+        $this->email_model->update_setting('last_cron_rejected_domain', $this->metrics['rejected_domain']);
+    }
+    
+    /**
      * Process pending emails
+     * Structured for future job worker migration - this method can be called
+     * from any execution context (cron, queue worker, CLI)
+     * 
      * @param string $campaign_id Optional campaign ID to process specific campaign only
+     * @return array Result array with status and metrics
      */
     private function process_emails($campaign_id = null){
+        log_message('debug', sprintf('process_emails() called with campaign_id=%s', $campaign_id ?: 'ALL'));
+        
         // Get running campaigns
         $this->email_model->db->where('status', 'running');
         
@@ -83,15 +156,34 @@ class Email_cron extends CI_Controller {
         
         $campaigns = $this->email_model->db->get('email_campaigns')->result();
         
+        log_message('debug', sprintf('Found %d running campaigns', count($campaigns)));
+        
         if(empty($campaigns)){
+            log_message('debug', 'No running campaigns found - returning');
             return [
                 'status' => 'info',
                 'message' => $campaign_id ? 'No active campaign found with ID: ' . $campaign_id : 'No active campaign found',
                 'campaign_id' => $campaign_id,
                 'campaigns_checked' => 0,
                 'emails_sent' => 0,
+                'emails_failed' => 0,
+                'emails_rejected_domain' => 0,
+                'metrics' => $this->metrics,
                 'time' => date('c')
             ];
+        }
+        
+        // Log campaign details
+        foreach($campaigns as $c) {
+            log_message('debug', sprintf(
+                'Campaign: id=%d, ids=%s, name=%s, smtp_config_id=%s, smtp_config_ids=%s, smtp_rotation_index=%s',
+                $c->id,
+                $c->ids,
+                $c->name,
+                isset($c->smtp_config_id) ? $c->smtp_config_id : 'NOT_SET',
+                isset($c->smtp_config_ids) ? $c->smtp_config_ids : 'NOT_SET',
+                isset($c->smtp_rotation_index) ? $c->smtp_rotation_index : 'NOT_SET'
+            ));
         }
         
         $totalSent = 0;
@@ -100,13 +192,15 @@ class Email_cron extends CI_Controller {
         foreach($campaigns as $campaign){
             // Check sending limits
             if(!$this->can_send_email($campaign)){
+                log_message('debug', sprintf('Campaign %d: skipped (rate limited)', $campaign->id));
                 continue;
             }
             
-            // Get next pending recipient
+            // Get next pending recipient (already sorted by priority, then created_at)
             $recipient = $this->email_model->get_next_pending_recipient($campaign->id);
             
             if(!$recipient){
+                log_message('debug', sprintf('Campaign %d: no pending recipients, marking as completed', $campaign->id));
                 // No more recipients - mark campaign as completed
                 $this->email_model->update_campaign($campaign->ids, [
                     'status' => 'completed',
@@ -116,21 +210,28 @@ class Email_cron extends CI_Controller {
                 continue;
             }
             
-            // Send email
-            $sent = $this->send_email($campaign, $recipient);
+            log_message('debug', sprintf('Campaign %d: processing recipient %d (%s)', $campaign->id, $recipient->id, $recipient->email));
+            
+            $this->metrics['queue_size']++;
+            
+            // Process the email through our sending engine
+            $sent = $this->process_single_email($campaign, $recipient);
             
             if($sent){
                 $totalSent++;
-                $campaignsProcessed++;
+                $this->metrics['sent']++;
                 
                 // Update campaign last sent time
                 $this->email_model->update_campaign($campaign->ids, [
                     'last_sent_at' => NOW
                 ]);
-                
-                // Update campaign stats
-                $this->email_model->update_campaign_stats($campaign->id);
             }
+            
+            $campaignsProcessed++;
+            $this->metrics['processed']++;
+            
+            // Update campaign stats after each email
+            $this->email_model->update_campaign_stats($campaign->id);
         }
         
         return [
@@ -140,6 +241,9 @@ class Email_cron extends CI_Controller {
             'campaigns_checked' => count($campaigns),
             'campaigns_processed' => $campaignsProcessed,
             'emails_sent' => $totalSent,
+            'emails_failed' => $this->metrics['failed'],
+            'emails_rejected_domain' => $this->metrics['rejected_domain'],
+            'metrics' => $this->metrics,
             'time' => date('c')
         ];
     }
@@ -180,134 +284,305 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Send individual email with SMTP rotation and fallback
+     * Process a single email - this is the core sending engine
+     * Designed to be callable from any context (cron, queue worker, etc.)
+     * 
+     * @param object $campaign Campaign object
+     * @param object $recipient Recipient object
+     * @return bool True if sent successfully
      */
-    private function send_email($campaign, $recipient){
+    private function process_single_email($campaign, $recipient) {
+        $start_time = microtime(true);
+        
+        log_message('debug', sprintf(
+            '=== PROCESSING EMAIL: campaign_id=%d, recipient_id=%d, email=%s ===',
+            $campaign->id,
+            $recipient->id,
+            $recipient->email
+        ));
+        
         try {
-            // Gmail domain filter: Only allow @gmail.com emails
-            if(!$this->is_gmail_email($recipient->email)){
-                // Delete non-gmail email from queue and log as rejected
-                $this->email_model->update_recipient_status($recipient->id, 'failed', 'Email rejected: Only @gmail.com addresses are allowed');
-                $this->email_model->add_log(
-                    $campaign->id,
-                    $recipient->id,
-                    $recipient->email,
-                    'Domain Filter',
-                    'failed',
-                    'Email rejected: Only @gmail.com addresses are allowed',
-                    null
-                );
+            // Step 1: Domain filtering - configurable via settings
+            if (!$this->validate_email_domain($recipient->email)) {
+                $time_taken = round((microtime(true) - $start_time) * 1000, 2); // ms
+                $this->reject_invalid_domain($campaign, $recipient, $time_taken);
+                $this->metrics['rejected_domain']++;
                 return false;
             }
             
-            // Get template
+            // Step 2: Get template
             $this->email_model->db->where('id', $campaign->template_id);
             $template = $this->email_model->db->get('email_templates')->row();
             
-            if(!$template){
-                $this->log_failed($campaign, $recipient, 'Template not found');
+            if (!$template) {
+                $time_taken = round((microtime(true) - $start_time) * 1000, 2);
+                $this->log_failed_with_timing($campaign, $recipient, 'Template not found', null, $time_taken);
+                $this->metrics['failed']++;
                 return false;
             }
             
-            // Get SMTP configs for rotation
+            // Step 3: Get SMTP configs for mandatory round-robin rotation
             $smtp_ids = $this->get_smtp_ids_for_campaign($campaign);
             
-            if(empty($smtp_ids)){
-                $this->log_failed($campaign, $recipient, 'No SMTP configurations available');
+            log_message('debug', sprintf(
+                'SMTP IDs for campaign: %s (count: %d)',
+                implode(',', $smtp_ids),
+                count($smtp_ids)
+            ));
+            
+            if (empty($smtp_ids)) {
+                $time_taken = round((microtime(true) - $start_time) * 1000, 2);
+                $this->log_failed_with_timing($campaign, $recipient, 'No SMTP configurations available', null, $time_taken);
+                $this->metrics['failed']++;
                 return false;
             }
             
-            // Prepare template variables (done once, reused for retries)
+            // Step 4: Prepare template variables
             $variables = $this->prepare_template_variables($recipient);
             
-            // Process template
+            // Step 5: Process template
             $subject = $this->email_model->process_template_variables($template->subject, $variables);
             $body = $this->email_model->process_template_variables($template->body, $variables);
             
-            // Add tracking pixel to body if enabled
-            if($this->email_model->get_setting('enable_open_tracking', 1) == 1){
+            // Step 6: Add tracking pixel if enabled
+            if ($this->email_model->get_setting('enable_open_tracking', 1) == 1) {
                 $body .= $variables['tracking_pixel'];
             }
             
-            // Try sending with rotation and fallback
-            $current_index = isset($campaign->smtp_rotation_index) ? (int)$campaign->smtp_rotation_index : 0;
-            $total_smtps = count($smtp_ids);
-            $attempts = 0;
-            $last_error = '';
+            // Step 7: MANDATORY Round-Robin SMTP rotation
+            // Always rotate to the next SMTP regardless of success/failure
+            return $this->send_with_smtp_rotation($campaign, $recipient, $subject, $body, $smtp_ids, $start_time);
             
-            // Try each SMTP in rotation order, starting from current_index
-            while($attempts < $total_smtps){
-                $smtp_index = ($current_index + $attempts) % $total_smtps;
-                $smtp_id = $smtp_ids[$smtp_index];
-                
-                // Get SMTP config
-                $this->email_model->db->where('id', $smtp_id);
-                $smtp = $this->email_model->db->get('email_smtp_configs')->row();
-                
-                if(!$smtp || $smtp->status != 1){
-                    $attempts++;
-                    $last_error = "SMTP ID {$smtp_id} not found or disabled";
-                    continue; // Skip to next SMTP
-                }
-                
-                // Try sending with this SMTP
-                $result = $this->try_send_email($smtp, $recipient, $subject, $body);
-                
-                if($result['success']){
-                    // Update recipient status
-                    $this->email_model->update_recipient_status($recipient->id, 'sent');
-                    
-                    // Add log with SMTP info - ensure smtp_id is integer
-                    $smtp_id_for_log = (int)$smtp->id;
-                    $this->email_model->add_log(
-                        $campaign->id,
-                        $recipient->id,
-                        $recipient->email,
-                        $subject,
-                        'sent',
-                        null,
-                        $smtp_id_for_log
-                    );
-                    
-                    // Update rotation index to next SMTP for next email (round-robin)
-                    $next_index = ($smtp_index + 1) % $total_smtps;
-                    $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
-                    
-                    return true;
-                } else {
-                    $last_error = "SMTP '{$smtp->name}': " . $result['error'];
-                    $attempts++;
-                    // Continue to try next SMTP as fallback
-                }
-            }
-            
-            // All SMTPs failed
-            $this->log_failed($campaign, $recipient, "All SMTP servers failed. Last error: " . $last_error);
-            return false;
-            
-        } catch(Exception $e){
-            $this->log_failed($campaign, $recipient, $e->getMessage());
+        } catch (Exception $e) {
+            $time_taken = round((microtime(true) - $start_time) * 1000, 2);
+            log_message('error', sprintf(
+                'Email processing exception: %s',
+                $e->getMessage()
+            ));
+            $this->log_failed_with_timing($campaign, $recipient, $e->getMessage(), null, $time_taken);
+            $this->metrics['failed']++;
             return false;
         }
+    }
+    
+    /**
+     * Validate email domain against configured allowed domains
+     * @param string $email Email address to validate
+     * @return bool True if domain is allowed
+     */
+    private function validate_email_domain($email) {
+        if (empty($email)) {
+            return false;
+        }
+        
+        // Get domain filter setting (default: gmail_only for backward compatibility)
+        $domain_filter = $this->email_model->get_setting('email_domain_filter', 'gmail_only');
+        
+        // If filter is disabled, allow all domains
+        if ($domain_filter === 'disabled') {
+            return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
+        }
+        
+        // Get allowed domains from settings (comma-separated)
+        $allowed_domains = $this->email_model->get_setting('email_allowed_domains', 'gmail.com');
+        
+        // Parse allowed domains
+        $domains = array_map('trim', explode(',', strtolower($allowed_domains)));
+        
+        // Extract domain from email
+        $email = strtolower(trim($email));
+        $email_domain = substr(strrchr($email, "@"), 1);
+        
+        return in_array($email_domain, $domains);
+    }
+    
+    /**
+     * Reject and delete email with invalid domain
+     */
+    private function reject_invalid_domain($campaign, $recipient, $time_taken) {
+        $allowed_domains = $this->email_model->get_setting('email_allowed_domains', 'gmail.com');
+        $error_msg = "Email rejected: Domain not in allowed list ({$allowed_domains})";
+        
+        // Update recipient status to failed
+        $this->email_model->update_recipient_status($recipient->id, 'failed', $error_msg);
+        
+        // Add detailed log entry
+        $this->email_model->add_log_with_timing(
+            $campaign->id,
+            $recipient->id,
+            $recipient->email,
+            'Domain Filter',
+            'failed',
+            $error_msg,
+            null,
+            $time_taken
+        );
+    }
+    
+    /**
+     * Send email with mandatory SMTP rotation
+     * Every email uses the next SMTP in rotation, even on success
+     */
+    private function send_with_smtp_rotation($campaign, $recipient, $subject, $body, $smtp_ids, $start_time) {
+        // CRITICAL: Fetch the latest smtp_rotation_index from DB to ensure proper rotation
+        // This ensures correct rotation when multiple emails are sent in one cron run
+        $current_index = $this->get_current_rotation_index($campaign->id);
+        
+        $total_smtps = count($smtp_ids);
+        $attempts = 0;
+        $last_error = '';
+        $last_smtp_id = null;
+        
+        // Debug logging for rotation
+        log_message('debug', sprintf(
+            'SMTP Rotation Start: campaign_id=%d, current_index=%d, total_smtps=%d, smtp_ids=%s',
+            $campaign->id,
+            $current_index,
+            $total_smtps,
+            json_encode($smtp_ids)
+        ));
+        
+        // Try each SMTP in rotation order, starting from current_index
+        while ($attempts < $total_smtps) {
+            $smtp_index = ($current_index + $attempts) % $total_smtps;
+            $smtp_id = $smtp_ids[$smtp_index];
+            $last_smtp_id = $smtp_id;
+            
+            log_message('debug', sprintf(
+                'SMTP Attempt: attempt=%d, smtp_index=%d, smtp_id=%d',
+                $attempts,
+                $smtp_index,
+                $smtp_id
+            ));
+            
+            // Get SMTP config
+            $this->email_model->db->where('id', $smtp_id);
+            $smtp = $this->email_model->db->get('email_smtp_configs')->row();
+            
+            if (!$smtp || $smtp->status != 1) {
+                $attempts++;
+                $last_error = "SMTP ID {$smtp_id} not found or disabled";
+                continue; // Skip to next SMTP
+            }
+            
+            // Try sending with this SMTP
+            $send_start = microtime(true);
+            $result = $this->try_send_email($smtp, $recipient, $subject, $body);
+            $send_time = round((microtime(true) - $send_start) * 1000, 2);
+            $total_time = round((microtime(true) - $start_time) * 1000, 2);
+            
+            // MANDATORY: Always rotate to next SMTP for next email (round-robin)
+            // This happens regardless of success or failure
+            $next_index = ($smtp_index + 1) % $total_smtps;
+            $this->email_model->update_campaign_rotation_index($campaign->id, $next_index);
+            
+            log_message('debug', sprintf(
+                'SMTP Send Result: success=%s, smtp_id=%d, next_rotation_index=%d',
+                $result['success'] ? 'true' : 'false',
+                $smtp->id,
+                $next_index
+            ));
+            
+            if ($result['success']) {
+                // Update recipient status
+                $this->email_model->update_recipient_status($recipient->id, 'sent');
+                
+                // Add detailed log with timing and SMTP info
+                log_message('debug', sprintf(
+                    'Logging sent email: campaign_id=%d, recipient_id=%d, smtp_id=%d',
+                    $campaign->id,
+                    $recipient->id,
+                    $smtp->id
+                ));
+                
+                $this->email_model->add_log_with_timing(
+                    $campaign->id,
+                    $recipient->id,
+                    $recipient->email,
+                    $subject,
+                    'sent',
+                    null,
+                    (int)$smtp->id,
+                    $total_time
+                );
+                
+                return true;
+            } else {
+                $last_error = "SMTP '{$smtp->name}': " . $result['error'];
+                $attempts++;
+                // Continue to try next SMTP as fallback
+            }
+        }
+        
+        // All SMTPs failed
+        $total_time = round((microtime(true) - $start_time) * 1000, 2);
+        $this->log_failed_with_timing(
+            $campaign, 
+            $recipient, 
+            "All SMTP servers failed. Last error: " . $last_error,
+            $last_smtp_id,
+            $total_time
+        );
+        $this->metrics['failed']++;
+        return false;
+    }
+    
+    /**
+     * Get current SMTP rotation index from database
+     * This fetches only the rotation index field for efficiency
+     * 
+     * @param int $campaign_id Campaign ID
+     * @return int Current rotation index (0 if not found)
+     */
+    private function get_current_rotation_index($campaign_id) {
+        $this->email_model->db->select('smtp_rotation_index');
+        $this->email_model->db->where('id', $campaign_id);
+        $result = $this->email_model->db->get('email_campaigns')->row();
+        return $result ? (int)$result->smtp_rotation_index : 0;
     }
     
     /**
      * Get SMTP IDs for a campaign (supports both new multi-SMTP and legacy single SMTP)
      */
     private function get_smtp_ids_for_campaign($campaign){
-        // Try to get multiple SMTP IDs first
+        // Debug logging
+        log_message('debug', sprintf(
+            'get_smtp_ids_for_campaign: campaign_id=%d, smtp_config_ids=%s, smtp_config_id=%s',
+            $campaign->id,
+            isset($campaign->smtp_config_ids) ? $campaign->smtp_config_ids : 'NOT_SET',
+            isset($campaign->smtp_config_id) ? $campaign->smtp_config_id : 'NOT_SET'
+        ));
+        
+        // Try to get multiple SMTP IDs first (new multi-SMTP feature)
         if(!empty($campaign->smtp_config_ids)){
             $smtp_ids = json_decode($campaign->smtp_config_ids, true);
+            log_message('debug', sprintf(
+                'Parsed smtp_config_ids JSON: %s',
+                json_encode($smtp_ids)
+            ));
             if(is_array($smtp_ids) && !empty($smtp_ids)){
-                return array_map('intval', $smtp_ids);
+                $result = array_map('intval', $smtp_ids);
+                log_message('debug', sprintf(
+                    'Using multi-SMTP IDs: %s',
+                    implode(',', $result)
+                ));
+                return $result;
             }
         }
         
         // Fallback to single SMTP ID for backward compatibility
         if(!empty($campaign->smtp_config_id)){
+            log_message('debug', sprintf(
+                'Using single SMTP ID (fallback): %d',
+                $campaign->smtp_config_id
+            ));
             return array((int)$campaign->smtp_config_id);
         }
         
+        log_message('error', sprintf(
+            'No SMTP IDs found for campaign %d',
+            $campaign->id
+        ));
         return array();
     }
     
@@ -339,6 +614,7 @@ class Email_cron extends CI_Controller {
     
     /**
      * Try to send email using a specific SMTP configuration
+     * @return array ['success' => bool, 'error' => string|null]
      */
     private function try_send_email($smtp, $recipient, $subject, $body){
         try {
@@ -384,39 +660,27 @@ class Email_cron extends CI_Controller {
     }
     
     /**
-     * Check if email is a Gmail address
-     * @param string $email Email address to check
-     * @return bool True if email ends with @gmail.com
+     * Log failed email with timing information
      */
-    private function is_gmail_email($email){
-        if(empty($email)){
-            return false;
-        }
-        $email = strtolower(trim($email));
-        $gmail_domain = '@gmail.com';
-        return (substr($email, -strlen($gmail_domain)) === $gmail_domain);
-    }
-    
-    /**
-     * Log failed email
-     */
-    private function log_failed($campaign, $recipient, $error){
+    private function log_failed_with_timing($campaign, $recipient, $error, $smtp_id = null, $time_taken = 0) {
         // Update recipient status
         $this->email_model->update_recipient_status($recipient->id, 'failed', $error);
         
-        // Add log
-        $this->email_model->add_log(
+        // Add log with timing
+        $this->email_model->add_log_with_timing(
             $campaign->id,
             $recipient->id,
             $recipient->email,
             'Failed',
             'failed',
-            $error
+            $error,
+            $smtp_id,
+            $time_taken
         );
     }
     
     /**
-     * JSON response
+     * JSON response with metrics
      */
     private function respond($data){
         $this->output

@@ -92,10 +92,32 @@ class Email_marketing_model extends MY_Model {
      */
     public function update_campaign_rotation_index($campaign_id, $new_index) {
         $this->db->where('id', $campaign_id);
-        return $this->db->update($this->tb_campaigns, [
-            'smtp_rotation_index' => $new_index,
+        $result = $this->db->update($this->tb_campaigns, [
+            'smtp_rotation_index' => (int)$new_index,
             'updated_at' => NOW
         ]);
+        
+        // Debug logging
+        log_message('debug', sprintf(
+            'SMTP Rotation Update: campaign_id=%d, new_index=%d, affected_rows=%d, success=%s',
+            $campaign_id,
+            $new_index,
+            $this->db->affected_rows(),
+            $result ? 'true' : 'false'
+        ));
+        
+        // Log any database errors
+        if (!$result || $this->db->affected_rows() == 0) {
+            $error = $this->db->error();
+            log_message('error', sprintf(
+                'SMTP Rotation Update FAILED: campaign_id=%d, error_code=%s, error_message=%s',
+                $campaign_id,
+                $error['code'],
+                $error['message']
+            ));
+        }
+        
+        return $result;
     }
     
     public function delete_campaign($ids) {
@@ -404,6 +426,9 @@ class Email_marketing_model extends MY_Model {
             $this->db->limit($limit, $page);
         }
         
+        // Order by priority first (lower = higher priority), then by created_at
+        // Manual emails have priority=1, imported have priority=100
+        $this->db->order_by('priority', 'ASC');
         $this->db->order_by('created_at', 'ASC');
         $query = $this->db->get();
         
@@ -639,12 +664,31 @@ class Email_marketing_model extends MY_Model {
     // LOG METHODS
     // ========================================
     
+    /**
+     * Add log entry (basic version for backward compatibility)
+     */
     public function add_log($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null) {
+        return $this->add_log_with_timing($campaign_id, $recipient_id, $email, $subject, $status, $error_message, $smtp_config_id, 0);
+    }
+    
+    /**
+     * Add detailed log entry with timing information
+     * @param int $campaign_id Campaign ID
+     * @param int $recipient_id Recipient ID
+     * @param string $email Email address
+     * @param string $subject Email subject
+     * @param string $status Status (sent, failed, opened, etc.)
+     * @param string|null $error_message Error message if failed
+     * @param int|null $smtp_config_id SMTP config ID used
+     * @param float $time_taken_ms Time taken in milliseconds
+     * @return bool Success
+     */
+    public function add_log_with_timing($campaign_id, $recipient_id, $email, $subject, $status, $error_message = null, $smtp_config_id = null, $time_taken_ms = 0) {
+        // Build base data
         $data = [
             'ids' => ids(),
             'campaign_id' => (int)$campaign_id,
             'recipient_id' => (int)$recipient_id,
-            'smtp_config_id' => ($smtp_config_id !== null) ? (int)$smtp_config_id : null,
             'email' => $email,
             'subject' => $subject,
             'status' => $status,
@@ -655,10 +699,40 @@ class Email_marketing_model extends MY_Model {
             'created_at' => NOW
         ];
         
-        // Log the insert for debugging
-        log_message('debug', 'Email Log Insert: smtp_config_id=' . ($smtp_config_id !== null ? $smtp_config_id : 'NULL') . ', campaign_id=' . $campaign_id . ', email=' . $email);
+        // Add smtp_config_id if provided (column must exist in DB)
+        if ($smtp_config_id !== null) {
+            $data['smtp_config_id'] = (int)$smtp_config_id;
+        }
         
-        return $this->db->insert($this->tb_logs, $data);
+        // Add time_taken_ms (column must exist in DB)
+        if ($time_taken_ms > 0) {
+            $data['time_taken_ms'] = (float)$time_taken_ms;
+        }
+        
+        // Log the insert for debugging
+        log_message('debug', sprintf(
+            'Email Log Insert: smtp_config_id=%s, campaign_id=%d, email=%s, status=%s, time=%0.2fms, data_keys=%s',
+            ($smtp_config_id !== null ? $smtp_config_id : 'NULL'),
+            $campaign_id,
+            $email,
+            $status,
+            $time_taken_ms,
+            implode(',', array_keys($data))
+        ));
+        
+        $result = $this->db->insert($this->tb_logs, $data);
+        
+        // Log any database errors
+        if (!$result) {
+            $error = $this->db->error();
+            log_message('error', sprintf(
+                'Email Log Insert FAILED: error_code=%s, error_message=%s',
+                $error['code'],
+                $error['message']
+            ));
+        }
+        
+        return $result;
     }
     
     public function get_logs($campaign_id, $limit = -1, $page = -1) {
@@ -688,6 +762,48 @@ class Email_marketing_model extends MY_Model {
         }
         
         return ($limit == -1) ? 0 : [];
+    }
+    
+    /**
+     * Get queue metrics for observability dashboard
+     * @return object Queue metrics
+     */
+    public function get_queue_metrics() {
+        // Get pending emails count
+        $this->db->where('status', 'pending');
+        $pending_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get failed emails count
+        $this->db->where('status', 'failed');
+        $failed_count = $this->db->count_all_results($this->tb_recipients);
+        
+        // Get last cron info from settings
+        $last_cron_run = $this->get_setting('last_cron_run', 'Never');
+        $last_cron_duration = $this->get_setting('last_cron_duration_sec', 0);
+        $last_cron_sent = $this->get_setting('last_cron_sent', 0);
+        $last_cron_failed = $this->get_setting('last_cron_failed', 0);
+        $last_cron_rejected = $this->get_setting('last_cron_rejected_domain', 0);
+        
+        // Get domain filter settings
+        $domain_filter = $this->get_setting('email_domain_filter', 'gmail_only');
+        $allowed_domains = $this->get_setting('email_allowed_domains', 'gmail.com');
+        
+        // Get running campaigns count
+        $this->db->where('status', 'running');
+        $running_campaigns = $this->db->count_all_results($this->tb_campaigns);
+        
+        return (object) [
+            'queue_size' => $pending_count,
+            'failed_count' => $failed_count,
+            'running_campaigns' => $running_campaigns,
+            'last_cron_run' => $last_cron_run,
+            'last_cron_duration_sec' => $last_cron_duration,
+            'last_cron_sent' => $last_cron_sent,
+            'last_cron_failed' => $last_cron_failed,
+            'last_cron_rejected_domain' => $last_cron_rejected,
+            'domain_filter' => $domain_filter,
+            'allowed_domains' => $allowed_domains
+        ];
     }
     
     // ========================================
