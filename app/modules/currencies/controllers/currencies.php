@@ -9,6 +9,52 @@ class currencies extends MX_Controller {
 	}
 
 	/**
+	 * Currency Manager Index Page
+	 * Standalone module for managing currencies
+	 */
+	public function index(){
+		// Get all currencies (not just active) for management
+		$currencies = $this->model->get_all_currencies();
+		
+		$data = [
+			'module'     => get_class($this),
+			'currencies' => $currencies,
+		];
+		
+		$this->template->build('index', $data);
+	}
+
+	/**
+	 * Get currencies list via AJAX (for lazy loading/pagination)
+	 */
+	public function get_currencies_ajax(){
+		$page = (int)$this->input->get('page', true);
+		$limit = (int)$this->input->get('limit', true);
+		$search = $this->input->get('search', true);
+		$status = $this->input->get('status', true);
+		
+		$page = max(1, $page);
+		$limit = $limit > 0 ? min($limit, 100) : 20;
+		$offset = ($page - 1) * $limit;
+		
+		$currencies = $this->model->get_currencies_filtered($search, $status, $limit, $offset);
+		$total = $this->model->count_currencies_filtered($search, $status);
+		
+		// Ensure limit is at least 1 to prevent division by zero
+		$pages = $limit > 0 ? ceil($total / $limit) : 1;
+		
+		ms([
+			'status' => 'success',
+			'data' => [
+				'currencies' => $currencies,
+				'total' => $total,
+				'page' => $page,
+				'pages' => $pages
+			]
+		]);
+	}
+
+	/**
 	 * Set user's selected currency
 	 */
 	public function set_currency(){
@@ -452,6 +498,111 @@ class currencies extends MX_Controller {
 		ms([
 			'status'  => 'success',
 			'message' => 'Currency updated successfully'
+		]);
+	}
+
+	/**
+	 * Delete a currency
+	 */
+	public function delete_currency(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$id = $this->input->post('id', true);
+
+		if (!$id) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Missing currency ID'
+			]);
+		}
+
+		// Get the currency to ensure it exists and is not default
+		$currency = $this->db->get_where('currencies', ['id' => $id])->row();
+		if (!$currency) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Currency not found'
+			]);
+		}
+
+		// Cannot delete default currency
+		if ($currency->is_default) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Cannot delete default currency. Set another currency as default first.'
+			]);
+		}
+
+		// Delete the currency
+		$this->db->where('id', $id);
+		$this->db->delete('currencies');
+
+		ms([
+			'status'  => 'success',
+			'message' => 'Currency deleted successfully'
+		]);
+	}
+
+	/**
+	 * Batch update currencies (for bulk operations)
+	 */
+	public function batch_update(){
+		if ($this->input->method() !== 'post') {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid method'
+			]);
+		}
+
+		$action = $this->input->post('action', true);
+		$ids = $this->input->post('ids', true);
+
+		if (!$action || !is_array($ids) || empty($ids)) {
+			ms([
+				'status'  => 'error',
+				'message' => 'Invalid parameters'
+			]);
+		}
+
+		$updated = 0;
+		foreach ($ids as $id) {
+			$id = (int)$id;
+			if ($id <= 0) continue;
+
+			// Check if currency exists and is not default (for certain actions)
+			$currency = $this->db->get_where('currencies', ['id' => $id])->row();
+			if (!$currency) continue;
+
+			switch ($action) {
+				case 'activate':
+					$this->db->where('id', $id)->update('currencies', ['status' => 1]);
+					$updated++;
+					break;
+				case 'deactivate':
+					// Cannot deactivate default currency
+					if (!$currency->is_default) {
+						$this->db->where('id', $id)->update('currencies', ['status' => 0]);
+						$updated++;
+					}
+					break;
+				case 'delete':
+					// Cannot delete default currency
+					if (!$currency->is_default) {
+						$this->db->where('id', $id)->delete('currencies');
+						$updated++;
+					}
+					break;
+			}
+		}
+
+		ms([
+			'status'  => 'success',
+			'message' => "Successfully processed {$updated} currencies"
 		]);
 	}
 }
