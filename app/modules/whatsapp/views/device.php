@@ -155,8 +155,8 @@
                 <form id="configForm">
                     <div class="form-group">
                         <label class="form-label"><?=lang("API Base URL")?> <span class="text-danger">*</span></label>
-                        <input type="text" name="url" class="form-control" 
-                               value="<?=isset($config->url) ? html_escape($config->url) : ''?>"
+                        <input type="text" name="base_url" class="form-control" 
+                               value="<?=isset($config->base_url) ? html_escape($config->base_url) : ''?>"
                                placeholder="https://new.apiflair.com" required>
                         <small class="form-text text-muted"><?=lang("Base URL of your WhatsApp server. Endpoints like /qr, /status, /send-message will be appended.")?></small>
                     </div>
@@ -182,7 +182,7 @@
         </div>
         
         <!-- Configured Endpoints Card -->
-        <?php if ($is_configured && isset($config->url)): ?>
+        <?php if ($is_configured && isset($config->base_url)): ?>
         <div class="card p-0 content mt-4">
             <div class="card-header">
                 <h3 class="card-title"><i class="fe fe-link text-info"></i> <?=lang("Configured Endpoints")?></h3>
@@ -190,12 +190,12 @@
             <div class="card-body">
                 <small class="text-muted"><?=lang("These endpoints will be used:")?></small>
                 <div class="mt-2">
-                    <code class="d-block mb-1"><?=html_escape($config->url)?>/qr</code>
-                    <code class="d-block mb-1"><?=html_escape($config->url)?>/status</code>
-                    <code class="d-block mb-1"><?=html_escape($config->url)?>/health</code>
-                    <code class="d-block mb-1"><?=html_escape($config->url)?>/ping</code>
-                    <code class="d-block mb-1"><?=html_escape($config->url)?>/send-message</code>
-                    <code class="d-block"><?=html_escape($config->url)?>/logout</code>
+                    <code class="d-block mb-1"><?=html_escape($config->base_url)?>/qr</code>
+                    <code class="d-block mb-1"><?=html_escape($config->base_url)?>/status</code>
+                    <code class="d-block mb-1"><?=html_escape($config->base_url)?>/health</code>
+                    <code class="d-block mb-1"><?=html_escape($config->base_url)?>/ping</code>
+                    <code class="d-block mb-1"><?=html_escape($config->base_url)?>/send-message</code>
+                    <code class="d-block"><?=html_escape($config->base_url)?>/logout</code>
                 </div>
             </div>
         </div>

@@ -34,8 +34,9 @@ class Whatsapp_model extends MY_Model {
             
             $config = $this->db->get('whatsapp_config')->row();
             
-            if ($config && !empty($config->url) && !empty($config->api_key)) {
-                $this->api_url = rtrim($config->url, '/');
+            // Use base_url column for WhatsApp module (separate from existing url column)
+            if ($config && !empty($config->base_url) && !empty($config->api_key)) {
+                $this->api_url = rtrim($config->base_url, '/');
                 $this->api_key = $config->api_key;
                 $this->admin_phone = isset($config->admin_phone) ? $config->admin_phone : '';
                 $this->is_configured = true;
