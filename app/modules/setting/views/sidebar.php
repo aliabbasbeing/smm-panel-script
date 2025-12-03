@@ -41,9 +41,14 @@
         <span><?=lang("currency_setting")?></span>
       </a>
 
-      <a href="<?php echo cn($module. "/currencies")?>" class="sidebar-link <?php echo (segment(2) == 'all_currencies') ? 'active' : ''?>">
+      <a href="<?php echo cn($module. "/currencies")?>" class="sidebar-link <?php echo (segment(2) == 'currencies') ? 'active' : ''?>">
         <i class="fe fe-dollar-sign"></i>
-        <span><?=lang("all_currencies")?></span>
+        <span><?=lang("Multi-Currency")?></span>
+      </a>
+
+      <a href="<?php echo cn("currencies")?>" class="sidebar-link">
+        <i class="fe fe-globe"></i>
+        <span><?=lang("Currency Manager")?></span>
       </a>
 
       <a href="<?php echo cn($module."/child-panel")?>" class="sidebar-link <?php echo (segment(2) == 'child-panel') ? 'active' : ''?>">
