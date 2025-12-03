@@ -9,7 +9,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @package    SMM Panel
  * @subpackage Modules/WhatsApp
  */
-class Whatsapp_model extends CI_Model {
+class Whatsapp_model extends MY_Model {
 
     protected $api_url;
     protected $api_key;
@@ -18,7 +18,6 @@ class Whatsapp_model extends CI_Model {
 
     public function __construct() {
         parent::__construct();
-        $this->load->database();
         $this->_load_config();
     }
 
@@ -27,6 +26,12 @@ class Whatsapp_model extends CI_Model {
      */
     private function _load_config() {
         try {
+            // Check if table exists first
+            if (!$this->db->table_exists('whatsapp_config')) {
+                $this->is_configured = false;
+                return;
+            }
+            
             $config = $this->db->get('whatsapp_config')->row();
             
             if ($config && !empty($config->url) && !empty($config->api_key)) {
@@ -52,6 +57,9 @@ class Whatsapp_model extends CI_Model {
      * Get API configuration
      */
     public function get_config() {
+        if (!$this->db->table_exists('whatsapp_config')) {
+            return null;
+        }
         return $this->db->get('whatsapp_config')->row();
     }
 
@@ -59,14 +67,25 @@ class Whatsapp_model extends CI_Model {
      * Save API configuration
      */
     public function save_config($data) {
+        if (!$this->db->table_exists('whatsapp_config')) {
+            return false;
+        }
+        
         $existing = $this->db->get('whatsapp_config')->row();
         
         if ($existing) {
             $this->db->where('id', $existing->id);
-            return $this->db->update('whatsapp_config', $data);
+            $result = $this->db->update('whatsapp_config', $data);
         } else {
-            return $this->db->insert('whatsapp_config', $data);
+            $result = $this->db->insert('whatsapp_config', $data);
         }
+        
+        // Reload config after saving
+        if ($result) {
+            $this->_load_config();
+        }
+        
+        return $result;
     }
 
     // ==================== NODE.JS API ENDPOINTS ====================
@@ -264,6 +283,9 @@ class Whatsapp_model extends CI_Model {
      * Get all notification templates
      */
     public function get_all_notifications() {
+        if (!$this->db->table_exists('whatsapp_notifications')) {
+            return [];
+        }
         return $this->db->order_by('id', 'ASC')->get('whatsapp_notifications')->result();
     }
 
@@ -271,6 +293,9 @@ class Whatsapp_model extends CI_Model {
      * Get notification by event type
      */
     public function get_notification($event_type) {
+        if (!$this->db->table_exists('whatsapp_notifications')) {
+            return null;
+        }
         return $this->db->get_where('whatsapp_notifications', ['event_type' => $event_type])->row();
     }
 
@@ -278,6 +303,9 @@ class Whatsapp_model extends CI_Model {
      * Update notification settings
      */
     public function update_notification($event_type, $data) {
+        if (!$this->db->table_exists('whatsapp_notifications')) {
+            return false;
+        }
         $this->db->where('event_type', $event_type);
         return $this->db->update('whatsapp_notifications', $data);
     }
@@ -286,6 +314,10 @@ class Whatsapp_model extends CI_Model {
      * Batch update notifications
      */
     public function batch_update_notifications($statuses, $templates) {
+        if (!$this->db->table_exists('whatsapp_notifications')) {
+            return 0;
+        }
+        
         $all_notifications = $this->get_all_notifications();
         $updated = 0;
 
@@ -313,6 +345,10 @@ class Whatsapp_model extends CI_Model {
      * Works with existing whatsapp_logs table structure
      */
     public function log_message($phone, $message, $event, $status, $response = null) {
+        if (!$this->db->table_exists('whatsapp_logs')) {
+            return false;
+        }
+        
         $data = [
             'ids' => $this->_generate_ids(),
             'campaign_id' => 0,  // 0 for notification messages
@@ -333,6 +369,10 @@ class Whatsapp_model extends CI_Model {
      * Get message logs with filters and pagination
      */
     public function get_logs($filters = [], $limit = 20, $offset = 0) {
+        if (!$this->db->table_exists('whatsapp_logs')) {
+            return [];
+        }
+        
         if (!empty($filters['status'])) {
             $this->db->where('status', $filters['status']);
         }
@@ -379,6 +419,10 @@ class Whatsapp_model extends CI_Model {
      * Count logs with filters
      */
     public function count_logs($filters = []) {
+        if (!$this->db->table_exists('whatsapp_logs')) {
+            return 0;
+        }
+        
         if (!empty($filters['status'])) {
             $this->db->where('status', $filters['status']);
         }
@@ -414,11 +458,17 @@ class Whatsapp_model extends CI_Model {
      */
     public function get_log_stats() {
         $stats = [
-            'total' => $this->db->count_all('whatsapp_logs'),
+            'total' => 0,
             'sent' => 0,
             'failed' => 0,
             'queued' => 0
         ];
+        
+        if (!$this->db->table_exists('whatsapp_logs')) {
+            return $stats;
+        }
+        
+        $stats['total'] = $this->db->count_all('whatsapp_logs');
 
         // Count by status
         $this->db->where('status', 'sent');
@@ -437,6 +487,9 @@ class Whatsapp_model extends CI_Model {
      * Delete old logs
      */
     public function delete_old_logs($days = 30) {
+        if (!$this->db->table_exists('whatsapp_logs')) {
+            return false;
+        }
         $cutoff = date('Y-m-d H:i:s', strtotime("-{$days} days"));
         $this->db->where('created_at <', $cutoff);
         return $this->db->delete('whatsapp_logs');

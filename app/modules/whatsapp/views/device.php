@@ -197,22 +197,25 @@
             <div class="card-body">
                 <form id="configForm">
                     <div class="form-group">
-                        <label><?=lang("API URL")?> <span class="text-danger">*</span></label>
+                        <label><?=lang("API Base URL")?> <span class="text-danger">*</span></label>
                         <input type="text" name="url" class="form-control" 
                                value="<?=isset($config->url) ? html_escape($config->url) : ''?>"
-                               placeholder="http://localhost:3000" required>
+                               placeholder="https://new.apiflair.com" required>
+                        <small class="text-muted"><?=lang("Base URL of your WhatsApp server (without trailing slash). Endpoints like /qr, /status will be appended automatically.")?></small>
                     </div>
                     <div class="form-group">
                         <label><?=lang("API Key")?> <span class="text-danger">*</span></label>
                         <input type="text" name="api_key" class="form-control"
                                value="<?=isset($config->api_key) ? html_escape($config->api_key) : ''?>"
-                               placeholder="Your API key" required>
+                               placeholder="<?=lang("Your API key")?>" required>
+                        <small class="text-muted"><?=lang("The API key configured in your WhatsApp server.")?></small>
                     </div>
                     <div class="form-group">
                         <label><?=lang("Admin Phone")?> <span class="text-danger">*</span></label>
                         <input type="text" name="admin_phone" class="form-control"
                                value="<?=isset($config->admin_phone) ? html_escape($config->admin_phone) : ''?>"
                                placeholder="+923001234567" required>
+                        <small class="text-muted"><?=lang("Phone number with country code to receive test messages.")?></small>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">
                         <i class="fe fe-save"></i> <?=lang("Save Configuration")?>
@@ -220,6 +223,26 @@
                 </form>
             </div>
         </div>
+        
+        <!-- Configured Endpoints Card -->
+        <?php if ($is_configured && isset($config->url)): ?>
+        <div class="card mt-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0"><i class="fe fe-link text-info"></i> <?=lang("Configured Endpoints")?></h5>
+            </div>
+            <div class="card-body">
+                <small class="text-muted"><?=lang("These endpoints will be used:")?></small>
+                <div class="mt-2">
+                    <code class="d-block mb-1"><?=html_escape($config->url)?>/qr</code>
+                    <code class="d-block mb-1"><?=html_escape($config->url)?>/status</code>
+                    <code class="d-block mb-1"><?=html_escape($config->url)?>/health</code>
+                    <code class="d-block mb-1"><?=html_escape($config->url)?>/ping</code>
+                    <code class="d-block mb-1"><?=html_escape($config->url)?>/send-message</code>
+                    <code class="d-block"><?=html_escape($config->url)?>/logout</code>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 </div>
 
