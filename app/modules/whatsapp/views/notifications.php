@@ -328,19 +328,39 @@ $(document).ready(function() {
     // Copy variable to clipboard when clicked
     $('.variable-tag').on('click', function() {
         var text = $(this).data('var');
+        var self = this;
+        var original = $(this).text();
+        
+        // Use modern Clipboard API with fallback
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+                $(self).text('<?=lang("Copied!")?>');
+                setTimeout(function() {
+                    $(self).text(original);
+                }, 1000);
+            }).catch(function() {
+                copyFallback(text, self, original);
+            });
+        } else {
+            copyFallback(text, self, original);
+        }
+    });
+    
+    function copyFallback(text, elem, original) {
         var temp = $('<input>');
         $('body').append(temp);
         temp.val(text).select();
-        document.execCommand('copy');
+        try {
+            document.execCommand('copy');
+            $(elem).text('<?=lang("Copied!")?>');
+        } catch (e) {
+            $(elem).text('<?=lang("Failed")?>');
+        }
         temp.remove();
-        
-        var original = $(this).text();
-        $(this).text('<?=lang("Copied!")?>');
-        var self = this;
         setTimeout(function() {
-            $(self).text(original);
+            $(elem).text(original);
         }, 1000);
-    });
+    }
 
     // Save notifications form
     $('#notificationsForm').on('submit', function(e) {

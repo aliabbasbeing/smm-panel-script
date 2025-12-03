@@ -294,10 +294,35 @@
                 <option value="60">60 <?=lang("days")?></option>
                 <option value="90">90 <?=lang("days")?></option>
             </select>
-            <button type="submit" class="btn btn-danger">
+            <button type="button" class="btn btn-danger" id="cleanupBtn">
                 <i class="fe fe-trash-2"></i> <?=lang("Delete Old Logs")?>
             </button>
         </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title"><i class="fe fe-alert-triangle"></i> <?=lang("Confirm Delete")?></h5>
+                <button type="button" class="close text-white" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p><?=lang("Are you sure you want to delete old logs?")?></p>
+                <p class="text-danger small"><?=lang("This action cannot be undone.")?></p>
+                <p class="font-weight-bold" id="deleteConfirmDays"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                    <i class="fe fe-trash-2"></i> <?=lang("Delete")?>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -397,13 +422,17 @@ $(document).ready(function() {
         $('#viewLogModal').modal('show');
     });
 
-    // Cleanup form
-    $('#cleanupForm').on('submit', function(e) {
-        e.preventDefault();
-        
-        if (!confirm('<?=lang("Are you sure you want to delete old logs? This action cannot be undone.")?>')) {
-            return;
-        }
+    // Cleanup - show modal
+    $('#cleanupBtn').on('click', function() {
+        var days = $('select[name="days"]').val();
+        $('#deleteConfirmDays').text('<?=lang("Logs older than")?> ' + days + ' <?=lang("days")?>');
+        $('#deleteConfirmModal').modal('show');
+    });
+
+    // Confirm delete
+    $('#confirmDeleteBtn').on('click', function() {
+        var $btn = $(this);
+        $btn.prop('disabled', true).html('<i class="fe fe-loader spin"></i> <?=lang("Deleting...")?>');
         
         var days = $('select[name="days"]').val();
         var data = { days: days };
@@ -415,6 +444,8 @@ $(document).ready(function() {
             data: data,
             dataType: 'json',
             success: function(response) {
+                $btn.prop('disabled', false).html('<i class="fe fe-trash-2"></i> <?=lang("Delete")?>');
+                $('#deleteConfirmModal').modal('hide');
                 if (response.status === 'success') {
                     showMessage(response.message, 'success');
                     setTimeout(function() {
@@ -425,9 +456,14 @@ $(document).ready(function() {
                 }
             },
             error: function() {
+                $btn.prop('disabled', false).html('<i class="fe fe-trash-2"></i> <?=lang("Delete")?>');
+                $('#deleteConfirmModal').modal('hide');
                 showMessage('<?=lang("Failed to delete logs")?>', 'error');
             }
         });
     });
+    
+    // Spin animation
+    $('<style>.spin { animation: spin 1s linear infinite; } @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>').appendTo('head');
 });
 </script>

@@ -395,7 +395,7 @@ $(document).ready(function() {
     // Ping
     $('#pingBtn').on('click', function() {
         var $btn = $(this);
-        $btn.prop('disabled', true).html('<i class="fe fe-loader spin"></i> Pinging...');
+        $btn.prop('disabled', true).html('<i class="fe fe-loader spin"></i> <?=lang("Pinging...")?>');
         
         $.ajax({
             url: '<?=cn("whatsapp/ping")?>',
