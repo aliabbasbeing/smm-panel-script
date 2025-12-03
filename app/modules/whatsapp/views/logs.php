@@ -1,26 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <style>
-.whatsapp-header {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color: white;
-    padding: 20px;
-    border-radius: 8px 8px 0 0;
-}
-.nav-tabs-whatsapp .nav-link {
-    color: #128C7E;
-    border: none;
-    border-bottom: 3px solid transparent;
-    padding: 12px 20px;
-}
-.nav-tabs-whatsapp .nav-link.active {
-    color: #25D366;
-    background: transparent;
-    border-bottom-color: #25D366;
-}
-.nav-tabs-whatsapp .nav-link:hover {
-    border-bottom-color: #25D366;
-}
 .stats-card {
     border-radius: 8px;
     padding: 15px;
@@ -86,14 +66,8 @@
 }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
-    </h1>
-</div>
-
 <!-- Navigation Tabs -->
-<ul class="nav nav-tabs nav-tabs-whatsapp mb-4">
+<ul class="nav nav-tabs mb-4">
     <li class="nav-item">
         <a class="nav-link" href="<?=cn('whatsapp/device')?>">
             <i class="fe fe-smartphone"></i> <?=lang("Device")?>
@@ -194,12 +168,12 @@
 </div>
 
 <!-- Logs Table -->
-<div class="card">
-    <div class="whatsapp-header d-flex justify-content-between align-items-center">
-        <h4 class="mb-0">
-            <i class="fe fe-list"></i> <?=lang("Message Logs")?>
-        </h4>
-        <span class="badge badge-light"><?=$total?> <?=lang("records")?></span>
+<div class="card p-0 content">
+    <div class="card-header" style="border: 0.1px solid #25D366; border-radius: 3.5px 3.5px 0px 0px; background: #25D366 !important;">
+        <h3 class="card-title text-white d-flex justify-content-between align-items-center w-100">
+            <span><i class="fe fe-list"></i> <?=lang("Message Logs")?></span>
+            <span class="badge badge-light"><?=$total?> <?=lang("records")?></span>
+        </h3>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -280,9 +254,9 @@
 </div>
 
 <!-- Cleanup Logs -->
-<div class="card mt-4">
-    <div class="card-header bg-light">
-        <h5 class="mb-0"><i class="fe fe-trash-2 text-danger"></i> <?=lang("Cleanup Old Logs")?></h5>
+<div class="card p-0 content mt-4">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fe fe-trash-2 text-danger"></i> <?=lang("Cleanup Old Logs")?></h3>
     </div>
     <div class="card-body">
         <form id="cleanupForm" class="form-inline">

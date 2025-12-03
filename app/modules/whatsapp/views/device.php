@@ -1,23 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <style>
-.whatsapp-header {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color: white;
-    padding: 20px;
-    border-radius: 8px 8px 0 0;
-}
-.device-status-card {
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-}
-.device-status-card.connected {
-    border-color: #25D366;
-}
-.device-status-card.disconnected {
-    border-color: #dc3545;
-}
 .status-indicator {
     width: 12px;
     height: 12px;
@@ -57,18 +40,6 @@
     text-align: center;
     color: #6c757d;
 }
-.stats-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 8px;
-    padding: 20px;
-}
-.stats-card.green {
-    background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-}
-.stats-card.orange {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
 .health-item {
     display: flex;
     justify-content: space-between;
@@ -78,30 +49,16 @@
 .health-item:last-child {
     border-bottom: none;
 }
-.nav-tabs-whatsapp .nav-link {
-    color: #128C7E;
-    border: none;
-    border-bottom: 3px solid transparent;
-    padding: 12px 20px;
+.device-status-card.connected {
+    border-color: #25D366;
 }
-.nav-tabs-whatsapp .nav-link.active {
-    color: #25D366;
-    background: transparent;
-    border-bottom-color: #25D366;
-}
-.nav-tabs-whatsapp .nav-link:hover {
-    border-bottom-color: #25D366;
+.device-status-card.disconnected {
+    border-color: #dc3545;
 }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
-    </h1>
-</div>
-
 <!-- Navigation Tabs -->
-<ul class="nav nav-tabs nav-tabs-whatsapp mb-4">
+<ul class="nav nav-tabs mb-4">
     <li class="nav-item">
         <a class="nav-link active" href="<?=cn('whatsapp/device')?>">
             <i class="fe fe-smartphone"></i> <?=lang("Device")?>
@@ -122,11 +79,11 @@
 <div class="row">
     <!-- Connection Status Card -->
     <div class="col-md-8">
-        <div class="card device-status-card" id="statusCard">
-            <div class="whatsapp-header">
-                <h4 class="mb-0">
+        <div class="card p-0 content device-status-card" id="statusCard">
+            <div class="card-header" style="border: 0.1px solid #25D366; border-radius: 3.5px 3.5px 0px 0px; background: #25D366 !important;">
+                <h3 class="card-title text-white">
                     <i class="fa fa-whatsapp"></i> <?=lang("Device Connection")?>
-                </h4>
+                </h3>
             </div>
             <div class="card-body">
                 <!-- Connection Status -->
@@ -178,9 +135,9 @@
     <!-- Right Sidebar -->
     <div class="col-md-4">
         <!-- Health Status Card -->
-        <div class="card mb-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="fe fe-activity text-success"></i> <?=lang("Server Health")?></h5>
+        <div class="card p-0 content mb-4">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fe fe-activity text-success"></i> <?=lang("Server Health")?></h3>
             </div>
             <div class="card-body" id="healthData">
                 <div class="text-center text-muted py-3">
@@ -190,32 +147,32 @@
         </div>
 
         <!-- API Configuration Card -->
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="fe fe-settings text-primary"></i> <?=lang("API Configuration")?></h5>
+        <div class="card p-0 content">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fe fe-settings text-primary"></i> <?=lang("API Configuration")?></h3>
             </div>
             <div class="card-body">
                 <form id="configForm">
                     <div class="form-group">
-                        <label><?=lang("API Base URL")?> <span class="text-danger">*</span></label>
+                        <label class="form-label"><?=lang("API Base URL")?> <span class="text-danger">*</span></label>
                         <input type="text" name="url" class="form-control" 
                                value="<?=isset($config->url) ? html_escape($config->url) : ''?>"
                                placeholder="https://new.apiflair.com" required>
-                        <small class="text-muted"><?=lang("Base URL of your WhatsApp server (without trailing slash). Endpoints like /qr, /status will be appended automatically.")?></small>
+                        <small class="form-text text-muted"><?=lang("Base URL of your WhatsApp server. Endpoints like /qr, /status, /send-message will be appended.")?></small>
                     </div>
                     <div class="form-group">
-                        <label><?=lang("API Key")?> <span class="text-danger">*</span></label>
+                        <label class="form-label"><?=lang("API Key")?> <span class="text-danger">*</span></label>
                         <input type="text" name="api_key" class="form-control"
                                value="<?=isset($config->api_key) ? html_escape($config->api_key) : ''?>"
                                placeholder="<?=lang("Your API key")?>" required>
-                        <small class="text-muted"><?=lang("The API key configured in your WhatsApp server.")?></small>
+                        <small class="form-text text-muted"><?=lang("The API key configured in your WhatsApp server.")?></small>
                     </div>
                     <div class="form-group">
-                        <label><?=lang("Admin Phone")?> <span class="text-danger">*</span></label>
+                        <label class="form-label"><?=lang("Admin Phone")?> <span class="text-danger">*</span></label>
                         <input type="text" name="admin_phone" class="form-control"
                                value="<?=isset($config->admin_phone) ? html_escape($config->admin_phone) : ''?>"
                                placeholder="+923001234567" required>
-                        <small class="text-muted"><?=lang("Phone number with country code to receive test messages.")?></small>
+                        <small class="form-text text-muted"><?=lang("Phone number with country code for test messages.")?></small>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">
                         <i class="fe fe-save"></i> <?=lang("Save Configuration")?>
@@ -226,9 +183,9 @@
         
         <!-- Configured Endpoints Card -->
         <?php if ($is_configured && isset($config->url)): ?>
-        <div class="card mt-4">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="fe fe-link text-info"></i> <?=lang("Configured Endpoints")?></h5>
+        <div class="card p-0 content mt-4">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fe fe-link text-info"></i> <?=lang("Configured Endpoints")?></h3>
             </div>
             <div class="card-body">
                 <small class="text-muted"><?=lang("These endpoints will be used:")?></small>

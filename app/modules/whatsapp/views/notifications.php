@@ -1,26 +1,6 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 <style>
-.whatsapp-header {
-    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
-    color: white;
-    padding: 20px;
-    border-radius: 8px 8px 0 0;
-}
-.nav-tabs-whatsapp .nav-link {
-    color: #128C7E;
-    border: none;
-    border-bottom: 3px solid transparent;
-    padding: 12px 20px;
-}
-.nav-tabs-whatsapp .nav-link.active {
-    color: #25D366;
-    background: transparent;
-    border-bottom-color: #25D366;
-}
-.nav-tabs-whatsapp .nav-link:hover {
-    border-bottom-color: #25D366;
-}
 .notification-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -35,7 +15,7 @@
 }
 .notification-header {
     padding: 1.25rem;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    background: #f8f9fa;
     border-bottom: 1px solid #dee2e6;
 }
 .notification-body {
@@ -66,24 +46,9 @@
     border-radius: 20px;
     font-weight: 600;
 }
-.badge-success {
-    background-color: #25D366;
-    color: white;
-}
-.badge-secondary {
-    background-color: #6c757d;
-    color: white;
-}
 .template-textarea {
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
-    transition: border-color 0.3s ease;
-}
-.template-textarea:focus {
-    border-color: #25D366;
-    box-shadow: 0 0 0 0.2rem rgba(37, 211, 102, 0.25);
 }
 .variables-info {
     background: #f8f9fa;
@@ -106,23 +71,11 @@
 }
 .variable-tag:hover {
     background: #1ea952;
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
-}
-.test-message-card {
-    border: 2px solid #25D366;
-    border-radius: 8px;
 }
 </style>
 
-<div class="page-header">
-    <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
-    </h1>
-</div>
-
 <!-- Navigation Tabs -->
-<ul class="nav nav-tabs nav-tabs-whatsapp mb-4">
+<ul class="nav nav-tabs mb-4">
     <li class="nav-item">
         <a class="nav-link" href="<?=cn('whatsapp/device')?>">
             <i class="fe fe-smartphone"></i> <?=lang("Device")?>
@@ -152,11 +105,11 @@
 <div class="row">
     <div class="col-md-8">
         <!-- Notification Templates -->
-        <div class="card">
-            <div class="whatsapp-header">
-                <h4 class="mb-0">
+        <div class="card p-0 content">
+            <div class="card-header" style="border: 0.1px solid #25D366; border-radius: 3.5px 3.5px 0px 0px; background: #25D366 !important;">
+                <h3 class="card-title text-white">
                     <i class="fe fe-bell"></i> <?=lang("Notification Templates")?>
-                </h4>
+                </h3>
             </div>
             <div class="card-body">
                 <?php if (empty($notifications)): ?>
@@ -246,21 +199,21 @@
 
     <div class="col-md-4">
         <!-- Test Message Card -->
-        <div class="card test-message-card mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="fe fe-send"></i> <?=lang("Send Test Message")?></h5>
+        <div class="card p-0 content mb-4">
+            <div class="card-header" style="border: 0.1px solid #25D366; border-radius: 3.5px 3.5px 0px 0px; background: #25D366 !important;">
+                <h3 class="card-title text-white"><i class="fe fe-send"></i> <?=lang("Send Test Message")?></h3>
             </div>
             <div class="card-body">
                 <form id="testMessageForm">
                     <div class="form-group">
-                        <label><?=lang("Phone Number")?></label>
+                        <label class="form-label"><?=lang("Phone Number")?></label>
                         <input type="text" name="phone" class="form-control" 
                                placeholder="<?=lang("Leave empty for admin phone")?>"
                                value="<?=isset($config->admin_phone) ? html_escape($config->admin_phone) : ''?>">
-                        <small class="text-muted"><?=lang("With country code, e.g. +923001234567")?></small>
+                        <small class="form-text text-muted"><?=lang("With country code, e.g. +923001234567")?></small>
                     </div>
                     <div class="form-group">
-                        <label><?=lang("Message")?></label>
+                        <label class="form-label"><?=lang("Message")?></label>
                         <textarea name="message" class="form-control" rows="4" 
                                   placeholder="<?=lang("Test message...")?>"><?=lang("This is a test message from your SMM Panel WhatsApp integration.")?></textarea>
                     </div>
@@ -272,9 +225,9 @@
         </div>
 
         <!-- Quick Stats -->
-        <div class="card">
-            <div class="card-header bg-light">
-                <h5 class="mb-0"><i class="fe fe-bar-chart-2"></i> <?=lang("Quick Stats")?></h5>
+        <div class="card p-0 content">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fe fe-bar-chart-2"></i> <?=lang("Quick Stats")?></h3>
             </div>
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-3">
