@@ -5,6 +5,12 @@ class currencies extends MX_Controller {
 
 	public function __construct(){
 		parent::__construct();
+		
+		// Check if user is admin, redirect non-admin users to order/add
+		if (!get_role("admin")) {
+			redirect(cn('order/add'));
+		}
+		
 		$this->load->model('currencies_model', 'model');
 	}
 
