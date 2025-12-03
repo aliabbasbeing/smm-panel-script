@@ -40,13 +40,16 @@ class currencies extends MX_Controller {
 		$currencies = $this->model->get_currencies_filtered($search, $status, $limit, $offset);
 		$total = $this->model->count_currencies_filtered($search, $status);
 		
+		// Ensure limit is at least 1 to prevent division by zero
+		$pages = $limit > 0 ? ceil($total / $limit) : 1;
+		
 		ms([
 			'status' => 'success',
 			'data' => [
 				'currencies' => $currencies,
 				'total' => $total,
 				'page' => $page,
-				'pages' => ceil($total / $limit)
+				'pages' => $pages
 			]
 		]);
 	}

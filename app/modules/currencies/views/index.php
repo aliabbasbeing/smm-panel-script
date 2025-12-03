@@ -62,6 +62,14 @@
   border-radius: 8px;
   margin-bottom: 20px;
 }
+/* Spin animation for loading icons */
+.spin {
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 </style>
 
 <div class="page-header">
@@ -774,8 +782,5 @@ $(document).ready(function() {
     link.click();
     showMessage('<?=lang("Export completed")?>', 'success');
   });
-  
-  // Add spin animation for loader
-  $('<style>.spin { animation: spin 1s linear infinite; } @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }</style>').appendTo('head');
 });
 </script>
