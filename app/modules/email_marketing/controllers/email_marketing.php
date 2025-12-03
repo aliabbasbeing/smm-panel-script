@@ -998,4 +998,80 @@ class Email_marketing extends MX_Controller {
         fclose($output);
         exit;
     }
+    
+    // ========================================
+    // SETTINGS
+    // ========================================
+    
+    /**
+     * Email marketing settings page
+     */
+    public function settings(){
+        // Get current settings
+        $settings = [
+            'email_domain_filter' => $this->model->get_setting('email_domain_filter', 'gmail_only'),
+            'email_allowed_domains' => $this->model->get_setting('email_allowed_domains', 'gmail.com'),
+            'enable_open_tracking' => $this->model->get_setting('enable_open_tracking', 1)
+        ];
+        
+        // Get queue metrics for observability
+        $queue_metrics = $this->model->get_queue_metrics();
+        
+        $data = array(
+            "module" => $this->module,
+            "settings" => $settings,
+            "queue_metrics" => $queue_metrics
+        );
+        $this->template->build("settings/index", $data);
+    }
+    
+    /**
+     * Save email marketing settings
+     */
+    public function ajax_save_settings(){
+        _is_ajax($this->module);
+        
+        $domain_filter = post("domain_filter");
+        $allowed_domains = post("allowed_domains");
+        $enable_open_tracking = post("enable_open_tracking");
+        
+        // Validate domain filter option
+        $valid_filters = ['gmail_only', 'custom', 'disabled'];
+        if(!in_array($domain_filter, $valid_filters)){
+            ms(array(
+                "status" => "error",
+                "message" => "Invalid domain filter option"
+            ));
+        }
+        
+        // Validate allowed domains if custom filter
+        if($domain_filter === 'custom' && empty($allowed_domains)){
+            ms(array(
+                "status" => "error",
+                "message" => "Please enter at least one allowed domain"
+            ));
+        }
+        
+        // Set allowed domains based on filter type
+        if($domain_filter === 'gmail_only'){
+            $allowed_domains = 'gmail.com';
+        } elseif($domain_filter === 'disabled'){
+            $allowed_domains = '*';
+        } else {
+            // Sanitize custom domains (remove spaces, lowercase)
+            $domains = array_map('trim', explode(',', strtolower($allowed_domains)));
+            $domains = array_filter($domains); // Remove empty values
+            $allowed_domains = implode(',', $domains);
+        }
+        
+        // Save settings
+        $this->model->update_setting('email_domain_filter', $domain_filter);
+        $this->model->update_setting('email_allowed_domains', $allowed_domains);
+        $this->model->update_setting('enable_open_tracking', $enable_open_tracking ? 1 : 0);
+        
+        ms(array(
+            "status" => "success",
+            "message" => "Settings saved successfully"
+        ));
+    }
 }

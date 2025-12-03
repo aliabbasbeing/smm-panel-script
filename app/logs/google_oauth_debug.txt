@@ -1,26 +1,103 @@
-2025-11-17 01:55:39 - Callback started
-Google login disabled
-2025-11-17 01:56:41 - Callback started
+2025-12-01 20:02:20 - Callback started
 Client ID: 234570890438-nc6s421...
 OAuth code present: yes
 Token received: yes
 User info received: yes
-User email: aliabbaszounr213@gmail.com
-User ID: 116188080760525018782
-User exists: no
-New user created with ID: 6240
+User email: alihassansidhu413@gmail.com
+User ID: 103000860123696856056
+User exists: yes
+Session set for user ID: 5726
+About to redirect to statistics
+Before WhatsApp alert
 Redirecting to statistics
-2025-11-17 15:03:48 - Callback started
+2025-12-01 22:08:59 - Callback started
 Client ID: 234570890438-nc6s421...
 OAuth code present: yes
 Token received: yes
 User info received: yes
-User email: arnbhai555@gmail.com
-User ID: 110319501887050226315
+User email: tahirabbas0553@gmail.com
+User ID: 107654742534926179849
 User exists: no
-New user created with ID: 6241
+New user created with ID: 6260
 Redirecting to statistics
-2025-11-18 16:46:05 - Callback started
+2025-12-02 03:23:28 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: abdullahking33366@gmail.com
+User ID: 106548391487176204904
+User exists: yes
+Updated existing user with google_id
+Session set for user ID: 6065
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-02 07:36:25 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: muhammadrizwanmastoi943@gmail.com
+User ID: 100959498393064061214
+User exists: yes
+Session set for user ID: 6249
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-02 08:02:45 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: s12027@commecscollege.edu.pk
+User ID: 106443194220843851673
+User exists: no
+New user created with ID: 6261
+Redirecting to statistics
+2025-12-02 08:45:01 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: hbllimited051@gmail.com
+User ID: 100173396573508899668
+User exists: yes
+Session set for user ID: 6256
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-02 11:47:09 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: frankgraphixs@gmail.com
+User ID: 111872295859889082142
+User exists: no
+New user created with ID: 6262
+Redirecting to statistics
+2025-12-02 17:42:44 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: h4xpanel793@gmail.com
+User ID: 105647409706362581771
+User exists: no
+New user created with ID: 6263
+Redirecting to statistics
+2025-12-02 21:39:36 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: hg834101@gmail.com
+User ID: 112052095739661170211
+User exists: no
+New user created with ID: 6264
+Redirecting to statistics
+2025-12-03 01:09:42 - Callback started
 Client ID: 234570890438-nc6s421...
 OAuth code present: yes
 Token received: yes
@@ -28,8 +105,53 @@ User info received: yes
 User email: beastsmm98@gmail.com
 User ID: 102334298418122417627
 User exists: yes
-Updated existing user with google_id
 Session set for user ID: 2
 About to redirect to statistics
 Before WhatsApp alert
+Redirecting to statistics
+2025-12-03 02:29:43 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: abdullahking33366@gmail.com
+User ID: 106548391487176204904
+User exists: yes
+Session set for user ID: 6065
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-03 08:34:35 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: tahirabbas0553@gmail.com
+User ID: 107654742534926179849
+User exists: yes
+Session set for user ID: 6260
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-03 08:52:39 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: s12027@commecscollege.edu.pk
+User ID: 106443194220843851673
+User exists: yes
+Session set for user ID: 6261
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics
+2025-12-03 11:39:24 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: mrimran19931@gmail.com
+User ID: 114650323541547370749
+User exists: no
+New user created with ID: 6265
 Redirecting to statistics

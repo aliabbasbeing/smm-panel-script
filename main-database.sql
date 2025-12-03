@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 28, 2025 at 11:43 PM
--- Server version: 11.4.8-MariaDB
--- PHP Version: 8.3.22
+-- Host: 127.0.0.1
+-- Generation Time: Nov 26, 2025 at 06:25 PM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `beastsmm_ali`
+-- Database: `beastsmm`
 --
 
 -- --------------------------------------------------------
@@ -81,23 +81,7 @@ CREATE TABLE `childpanels` (
   `renewal_date` date NOT NULL,
   `changed` datetime NOT NULL,
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `code_parts`
---
-
-CREATE TABLE `code_parts` (
-  `id` int(11) NOT NULL,
-  `page_key` varchar(100) NOT NULL COMMENT 'Unique identifier for the page',
-  `page_name` varchar(255) NOT NULL COMMENT 'Human-readable page name',
-  `content` longtext DEFAULT NULL COMMENT 'HTML content for the page',
-  `status` tinyint(1) NOT NULL DEFAULT 1 COMMENT '1=enabled, 0=disabled',
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -146,8 +130,6 @@ CREATE TABLE `email_campaigns` (
   `name` varchar(255) NOT NULL,
   `template_id` int(11) NOT NULL,
   `smtp_config_id` int(11) NOT NULL,
-  `smtp_config_ids` text DEFAULT NULL COMMENT 'JSON array of SMTP config IDs for rotation',
-  `smtp_rotation_index` int(11) NOT NULL DEFAULT 0 COMMENT 'Current index for round-robin rotation',
   `status` enum('pending','running','paused','completed','cancelled') NOT NULL DEFAULT 'pending',
   `total_emails` int(11) NOT NULL DEFAULT 0,
   `sent_emails` int(11) NOT NULL DEFAULT 0,
@@ -174,7 +156,6 @@ CREATE TABLE `email_logs` (
   `ids` varchar(32) NOT NULL,
   `campaign_id` int(11) NOT NULL,
   `recipient_id` int(11) NOT NULL,
-  `smtp_config_id` int(11) DEFAULT NULL COMMENT 'SMTP config used for sending this email',
   `email` varchar(255) NOT NULL,
   `subject` varchar(500) NOT NULL,
   `status` enum('queued','sent','failed','opened','bounced') NOT NULL DEFAULT 'queued',
@@ -206,8 +187,7 @@ CREATE TABLE `email_recipients` (
   `tracking_token` varchar(64) DEFAULT NULL,
   `error_message` text DEFAULT NULL,
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `priority` int(11) NOT NULL DEFAULT 100 COMMENT 'Lower value = higher priority. Manual=1, Imported=100'
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -306,6 +286,23 @@ CREATE TABLE `general_balance_logs` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `general_currencies`
+--
+
+CREATE TABLE `general_currencies` (
+  `id` int(11) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `symbol` varchar(10) NOT NULL,
+  `exchange_rate` decimal(10,4) NOT NULL DEFAULT 1.0000,
+  `is_default` tinyint(1) NOT NULL DEFAULT 0,
+  `status` tinyint(1) NOT NULL DEFAULT 1,
+  `created` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `general_custom_page`
 --
 
@@ -356,7 +353,7 @@ CREATE TABLE `general_lang` (
   `lang_code` varchar(10) DEFAULT NULL,
   `slug` text DEFAULT NULL,
   `value` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -372,7 +369,7 @@ CREATE TABLE `general_lang_list` (
   `is_default` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT NULL,
   `created` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -467,8 +464,6 @@ CREATE TABLE `general_transaction_logs` (
   `data` text DEFAULT NULL,
   `amount` float DEFAULT NULL,
   `status` int(11) DEFAULT 1,
-  `verified_at` datetime DEFAULT NULL,
-  `verify_source` varchar(32) DEFAULT NULL,
   `created` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -483,6 +478,7 @@ CREATE TABLE `general_users` (
   `ids` text DEFAULT NULL,
   `role` enum('admin','user') DEFAULT 'user',
   `login_type` text DEFAULT NULL,
+  `google_id` varchar(255) DEFAULT NULL,
   `first_name` text DEFAULT NULL,
   `last_name` text DEFAULT NULL,
   `email` text DEFAULT NULL,
@@ -506,8 +502,7 @@ CREATE TABLE `general_users` (
   `status` int(11) DEFAULT 1,
   `changed` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
-  `whatsapp_number_updated` tinyint(1) DEFAULT 0,
-  `google_id` varchar(50) DEFAULT NULL
+  `whatsapp_number_updated` tinyint(1) DEFAULT 0
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -521,7 +516,7 @@ CREATE TABLE `general_users_price` (
   `uid` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
   `service_price` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -536,7 +531,7 @@ CREATE TABLE `general_user_block_ip` (
   `ip` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   `created` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -552,7 +547,7 @@ CREATE TABLE `general_user_logs` (
   `country` text DEFAULT NULL,
   `type` int(11) DEFAULT 1 COMMENT '1 - login, 0 - logout',
   `created` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -579,7 +574,7 @@ CREATE TABLE `general_user_mail_logs` (
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
-  `ids` text CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci DEFAULT NULL,
+  `ids` text CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `type` enum('direct','api') NOT NULL DEFAULT 'direct',
   `cate_id` varchar(191) DEFAULT NULL,
   `service_id` varchar(191) DEFAULT NULL,
@@ -621,10 +616,7 @@ CREATE TABLE `orders` (
   `created` datetime DEFAULT NULL,
   `completed_at` datetime DEFAULT NULL,
   `last_10_avg_time` int(11) DEFAULT NULL,
-  `refill_status` varchar(10) DEFAULT 'no',
-  `refund_processed` tinyint(1) NOT NULL DEFAULT 0,
-  `refund_processed_at` datetime DEFAULT NULL,
-  `charge_original` decimal(15,4) DEFAULT NULL
+  `refill_status` varchar(10) DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- --------------------------------------------------------
@@ -654,7 +646,7 @@ CREATE TABLE `payments` (
   `new_users` int(11) NOT NULL DEFAULT 0 COMMENT '1:Allowed, 0: Not Allowed',
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '1 -> ON, 0 -> OFF',
   `params` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -669,7 +661,7 @@ CREATE TABLE `payments_bonus` (
   `bonus_from` double NOT NULL,
   `percentage` double NOT NULL,
   `status` int(11) NOT NULL DEFAULT 1
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
 
@@ -834,24 +826,6 @@ CREATE TABLE `whatsapp_notifications` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `whatsapp_notification_queue`
---
-
-CREATE TABLE `whatsapp_notification_queue` (
-  `id` int(11) NOT NULL,
-  `event_type` varchar(100) NOT NULL,
-  `phone` varchar(50) NOT NULL,
-  `variables` text NOT NULL COMMENT 'JSON encoded variables for template',
-  `status` enum('pending','sent','failed','skipped') NOT NULL DEFAULT 'pending',
-  `attempts` tinyint(3) NOT NULL DEFAULT 0,
-  `error_message` varchar(500) DEFAULT NULL,
-  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
-  `processed_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `whatsapp_recipients`
 --
 
@@ -922,13 +896,6 @@ ALTER TABLE `categories`
 --
 ALTER TABLE `childpanels`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `code_parts`
---
-ALTER TABLE `code_parts`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `page_key` (`page_key`);
 
 --
 -- Indexes for table `cron_logs`
@@ -1018,6 +985,13 @@ ALTER TABLE `general_balance_logs`
   ADD KEY `created` (`created`);
 
 --
+-- Indexes for table `general_currencies`
+--
+ALTER TABLE `general_currencies`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `code` (`code`);
+
+--
 -- Indexes for table `general_custom_page`
 --
 ALTER TABLE `general_custom_page`
@@ -1082,7 +1056,8 @@ ALTER TABLE `general_transaction_logs`
 -- Indexes for table `general_users`
 --
 ALTER TABLE `general_users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_google_id` (`google_id`(250));
 
 --
 -- Indexes for table `general_users_price`
@@ -1178,14 +1153,6 @@ ALTER TABLE `whatsapp_notifications`
   ADD UNIQUE KEY `event_type` (`event_type`);
 
 --
--- Indexes for table `whatsapp_notification_queue`
---
-ALTER TABLE `whatsapp_notification_queue`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_status` (`status`),
-  ADD KEY `idx_created` (`created_at`);
-
---
 -- Indexes for table `whatsapp_recipients`
 --
 ALTER TABLE `whatsapp_recipients`
@@ -1229,12 +1196,6 @@ ALTER TABLE `categories`
 -- AUTO_INCREMENT for table `childpanels`
 --
 ALTER TABLE `childpanels`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `code_parts`
---
-ALTER TABLE `code_parts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1295,6 +1256,12 @@ ALTER TABLE `faqs`
 -- AUTO_INCREMENT for table `general_balance_logs`
 --
 ALTER TABLE `general_balance_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `general_currencies`
+--
+ALTER TABLE `general_currencies`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -1427,12 +1394,6 @@ ALTER TABLE `whatsapp_logs`
 -- AUTO_INCREMENT for table `whatsapp_notifications`
 --
 ALTER TABLE `whatsapp_notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `whatsapp_notification_queue`
---
-ALTER TABLE `whatsapp_notification_queue`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
