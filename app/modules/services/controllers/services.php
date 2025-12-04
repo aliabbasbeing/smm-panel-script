@@ -93,16 +93,8 @@ class services extends MX_Controller {
 	}
 
 	public function add(){
-		if (!get_role('admin')) _validation('error', "Permission Denied!");
-
-		$categories  = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
-		$api_providers  = $this->model->fetch("*", $this->tb_api_providers, "status = 1", 'id','ASC');
-		$data = array(
-			"module"   			=> get_class($this),
-			"categories" 		=> $categories,
-			"api_providers" 	=> $api_providers,
-		);
-		$this->template->build('add', $data);
+		// Redirect to services index page where the add form is now embedded
+		redirect(cn($this->module));
 	}
 
 	public function ajax_add(){
