@@ -49,6 +49,9 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
+    <!-- Summernote Editor CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.css" rel="stylesheet">
+    
     <!-- emoji -->
     <?php
       if (in_array(segment('1'), ['services', 'api_provider', 'provider'])) {
@@ -147,25 +150,42 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Tiny Editor -->
-
-    <script type="text/javascript" id="tinymce-js" src="<?= BASE ?>assets/plugins/tinymce/tinymce.min.js"></script>
+    
+    <!-- Summernote Editor CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-bs4.min.js"></script>
     <script type="text/javascript">
-  tinymce.init({
-    selector: '.plugin_editor', // Target the textarea by its ID
-    height: 300,
-    menubar: true,
-    plugins: [
-      'advlist autolink lists link image charmap print preview anchor',
-      'searchreplace visualblocks code fullscreen',
-      'insertdatetime media table paste code help wordcount'
-    ],
-    toolbar: 'undo redo | formatselect | bold italic backcolor | \
-              alignleft aligncenter alignright alignjustify | \
-              bullist numlist outdent indent | removeformat | help',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-  });
-</script>
+    $(document).ready(function() {
+      // Initialize Summernote on all .plugin_editor elements
+      if ($('.plugin_editor').length > 0) {
+        $('.plugin_editor').summernote({
+          height: 300,
+          minHeight: 200,
+          maxHeight: 500,
+          focus: false,
+          toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+            ['fontname', ['fontname']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['height', ['height']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture', 'video', 'hr']],
+            ['view', ['fullscreen', 'codeview', 'help']]
+          ],
+          fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Helvetica', 'Impact', 'Tahoma', 'Times New Roman', 'Verdana'],
+          fontSizes: ['8', '9', '10', '11', '12', '14', '16', '18', '20', '22', '24', '28', '32', '36', '48', '64', '72'],
+          styleTags: ['p', 'blockquote', 'pre', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'],
+          callbacks: {
+            onInit: function() {
+              // Editor initialized
+            }
+          }
+        });
+      }
+    });
+    </script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>

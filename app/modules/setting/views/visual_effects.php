@@ -28,12 +28,18 @@
                 <select name="visual_effects_type" class="form-control square">
                   <?php
                     $effect_types = array(
-                      'snow'      => 'Snow ❄️',
-                      'bubbles'   => 'Bubbles 🫧',
-                      'confetti'  => 'Confetti 🎉',
-                      'stars'     => 'Stars ⭐',
-                      'hearts'    => 'Hearts ❤️',
-                      'leaves'    => 'Leaves 🍂',
+                      'snow'      => 'Snow ❄️ - Classic snowfall',
+                      'bubbles'   => 'Bubbles 🫧 - Floating bubbles',
+                      'confetti'  => 'Confetti 🎉 - Party celebration',
+                      'stars'     => 'Stars ⭐ - Twinkling stars',
+                      'hearts'    => 'Hearts ❤️ - Floating hearts',
+                      'leaves'    => 'Leaves 🍂 - Autumn leaves',
+                      'rain'      => 'Rain 🌧️ - Rainfall effect',
+                      'fireflies' => 'Fireflies ✨ - Glowing fireflies',
+                      'sakura'    => 'Sakura 🌸 - Cherry blossoms',
+                      'diamonds'  => 'Diamonds 💎 - Sparkling gems',
+                      'ribbons'   => 'Ribbons 🎀 - Flowing ribbons',
+                      'sparkles'  => 'Sparkles ✦ - Twinkling sparkles',
                     );
                     foreach ($effect_types as $key => $row) {
                   ?>
@@ -48,7 +54,7 @@
               <h5 class="text-info"><i class="fe fe-droplet"></i> <?=lang("Effect Color")?></h5>
               <div class="form-group">
                 <input type="color" name="visual_effects_color" class="form-control" style="width: 100px; height: 40px; padding: 5px;" value="<?=get_option('visual_effects_color', '#ffffff')?>">
-                <small class="text-muted"><?=lang("Primary color of the effect particles")?></small>
+                <small class="text-muted"><?=lang("Primary color of the effect particles (some effects use preset color palettes)")?></small>
               </div>
 
               <hr>
@@ -60,10 +66,12 @@
                     <select name="visual_effects_size" class="form-control square">
                       <?php
                         $sizes = array(
-                          'small'   => 'Small',
-                          'medium'  => 'Medium',
-                          'large'   => 'Large',
-                          'mixed'   => 'Mixed',
+                          'tiny'    => 'Tiny (1-3px)',
+                          'small'   => 'Small (2-6px)',
+                          'medium'  => 'Medium (5-12px)',
+                          'large'   => 'Large (10-20px)',
+                          'xlarge'  => 'X-Large (15-30px)',
+                          'mixed'   => 'Mixed (2-25px)',
                         );
                         foreach ($sizes as $key => $row) {
                       ?>
@@ -80,10 +88,12 @@
                     <select name="visual_effects_density" class="form-control square">
                       <?php
                         $densities = array(
-                          'light'   => 'Light (25 particles)',
-                          'medium'  => 'Medium (50 particles)',
+                          'minimal' => 'Minimal (15 particles)',
+                          'light'   => 'Light (30 particles)',
+                          'medium'  => 'Medium (60 particles)',
                           'heavy'   => 'Heavy (100 particles)',
                           'extreme' => 'Extreme (150 particles) ⚠️',
+                          'insane'  => 'Insane (200 particles) ⚠️⚠️',
                         );
                         foreach ($densities as $key => $row) {
                       ?>
@@ -91,7 +101,7 @@
                       <?php }?>
                     </select>
                     <small class="text-muted"><?=lang("Number of particles on screen")?></small>
-                    <br><small class="text-warning"><?=lang("Note: Extreme density may impact performance on lower-end devices")?></small>
+                    <br><small class="text-warning"><?=lang("Note: Extreme/Insane density may impact performance on lower-end devices")?></small>
                   </div>
                 </div>
 
@@ -101,9 +111,11 @@
                     <select name="visual_effects_speed" class="form-control square">
                       <?php
                         $speeds = array(
-                          'slow'    => 'Slow',
-                          'normal'  => 'Normal',
-                          'fast'    => 'Fast',
+                          'very_slow' => 'Very Slow',
+                          'slow'      => 'Slow',
+                          'normal'    => 'Normal',
+                          'fast'      => 'Fast',
+                          'very_fast' => 'Very Fast',
                         );
                         foreach ($speeds as $key => $row) {
                       ?>
@@ -121,6 +133,19 @@
                 <i class="fe fe-info"></i> 
                 <strong><?=lang("Note")?>:</strong> 
                 <?=lang("Visual effects are designed to be lightweight and will not affect page interactions or click events. Effects are rendered on a separate layer above the content.")?> 
+              </div>
+
+              <div class="alert alert-success">
+                <i class="fe fe-check-circle"></i> 
+                <strong><?=lang("Effect Tips")?>:</strong>
+                <ul class="mb-0 mt-2">
+                  <li><strong>Snow/Rain</strong> - Great for seasonal themes</li>
+                  <li><strong>Confetti/Ribbons</strong> - Perfect for celebrations</li>
+                  <li><strong>Fireflies/Sparkles</strong> - Elegant ambient effects</li>
+                  <li><strong>Sakura/Leaves</strong> - Beautiful nature themes</li>
+                  <li><strong>Hearts</strong> - Ideal for Valentine's or romantic themes</li>
+                  <li><strong>Diamonds/Stars</strong> - Luxurious appearance</li>
+                </ul>
               </div>
 
             </div> 

@@ -58,19 +58,21 @@
     </div>
 </div>
 <script type="text/javascript">
-  tinymce.init({
-    selector: '.plugin_editor', // Target the textarea by its ID
+$(document).ready(function() {
+  $('.plugin_editor').summernote({
     height: 300,
-    menubar: true,
-    plugins: [
-      'advlist autolink lists link image charmap print preview anchor',
-      'searchreplace visualblocks code fullscreen',
-      'insertdatetime media table paste code help wordcount'
-    ],
-    toolbar: 'undo redo | formatselect | bold italic backcolor | \
-              alignleft aligncenter alignright alignjustify | \
-              bullist numlist outdent indent | removeformat | help',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+    minHeight: 150,
+    maxHeight: 400,
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'clear']],
+      ['fontsize', ['fontsize']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['link', 'picture']],
+      ['view', ['fullscreen', 'codeview']]
+    ]
   });
+});
 </script>
 

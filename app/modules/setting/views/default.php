@@ -324,6 +324,19 @@
 
     <script>
       $(document).ready(function() {
-        plugin_editor('.plugin_editor', {height: 200});
+        $('.plugin_editor').summernote({
+          height: 200,
+          minHeight: 150,
+          maxHeight: 400,
+          toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'italic', 'underline', 'clear']],
+            ['fontsize', ['fontsize']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link', 'picture']],
+            ['view', ['fullscreen', 'codeview']]
+          ]
+        });
       });
     </script>
