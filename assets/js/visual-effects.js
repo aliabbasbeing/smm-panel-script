@@ -91,6 +91,10 @@
     function createParticle(sizeRange) {
         var size = Math.random() * (sizeRange.max - sizeRange.min) + sizeRange.min;
         
+        // Assign stable random color for confetti effect
+        var confettiColors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f', '#bb8fce', '#82e0aa'];
+        var confettiColor = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+        
         return {
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height - canvas.height,
@@ -100,7 +104,8 @@
             opacity: Math.random() * 0.5 + 0.5,
             rotation: Math.random() * 360,
             rotationSpeed: (Math.random() - 0.5) * 2,
-            color: config.color || '#ffffff'
+            color: config.color || '#ffffff',
+            confettiColor: confettiColor
         };
     }
 
@@ -209,11 +214,8 @@
      * Draw confetti
      */
     function drawConfetti(p) {
-        // Generate random colors for confetti
-        var colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7dc6f', '#bb8fce', '#82e0aa', p.color];
-        var color = colors[Math.floor(p.x + p.y) % colors.length];
-        
-        ctx.fillStyle = color;
+        // Use the stable confetti color assigned during particle creation
+        ctx.fillStyle = p.confettiColor;
         ctx.fillRect(-p.size/2, -p.size/4, p.size, p.size/2);
     }
 

@@ -83,7 +83,7 @@
                           'light'   => 'Light (25 particles)',
                           'medium'  => 'Medium (50 particles)',
                           'heavy'   => 'Heavy (100 particles)',
-                          'extreme' => 'Extreme (150 particles)',
+                          'extreme' => 'Extreme (150 particles) ⚠️',
                         );
                         foreach ($densities as $key => $row) {
                       ?>
@@ -91,6 +91,7 @@
                       <?php }?>
                     </select>
                     <small class="text-muted"><?=lang("Number of particles on screen")?></small>
+                    <br><small class="text-warning"><?=lang("Note: Extreme density may impact performance on lower-end devices")?></small>
                   </div>
                 </div>
 

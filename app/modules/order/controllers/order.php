@@ -780,8 +780,10 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 
         if (get_role('admin')) {
         	$number_error_orders = $this->model->get_count_orders('error');
-        	// Get total provider price for the current status filter
-        	$total_provider_price = $this->model->get_total_provider_price($order_status);
+        	// Only calculate total provider price for error orders (optimization)
+        	if ($order_status == 'error') {
+        		$total_provider_price = $this->model->get_total_provider_price($order_status);
+        	}
         }
 
 		$page        = (int)get("p");
