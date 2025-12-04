@@ -49,6 +49,9 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
+    <!-- Summernote Editor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.css" rel="stylesheet">
+    
     <!-- emoji -->
     <?php
       if (in_array(segment('1'), ['services', 'api_provider', 'provider'])) {
@@ -147,25 +150,8 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Tiny Editor -->
-
-    <script type="text/javascript" id="tinymce-js" src="<?= BASE ?>assets/plugins/tinymce/tinymce.min.js"></script>
-    <script type="text/javascript">
-  tinymce.init({
-    selector: '.plugin_editor', // Target the textarea by its ID
-    height: 300,
-    menubar: true,
-    plugins: [
-      'advlist autolink lists link image charmap print preview anchor',
-      'searchreplace visualblocks code fullscreen',
-      'insertdatetime media table paste code help wordcount'
-    ],
-    toolbar: 'undo redo | formatselect | bold italic backcolor | \
-              alignleft aligncenter alignright alignjustify | \
-              bullist numlist outdent indent | removeformat | help',
-    content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-  });
-</script>
+    <!-- Summernote Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.js"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
@@ -188,6 +174,18 @@
     
     <!-- general JS -->
     <script src="<?php echo BASE; ?>assets/js/process.js"></script>
+    
+    <!-- Global Summernote initialization for plugin_editor elements -->
+    <script type="text/javascript">
+      $(document).ready(function() {
+        // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
+        $('.plugin_editor').each(function() {
+          if (!$(this).hasClass('note-editor') && !$(this).next().hasClass('note-editor')) {
+            plugin_editor(this, {height: 300});
+          }
+        });
+      });
+    </script>
     
     <!-- Visual Effects System -->
     <?php if (get_option('visual_effects_enabled', 0) == 1): ?>
