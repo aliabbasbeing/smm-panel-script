@@ -234,6 +234,18 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
               <i class="fa fa-cog"></i> <?=lang("System_Settings")?>
             </a>
           </li>
+          
+          <li class="menu-item <?=(segment(1) == 'currencies') ? 'active' : ''?>">
+            <a href="<?=cn('currencies')?>" class="menu-link">
+              <i class="fa fa-usd"></i> <?=lang("Currencies")?>
+            </a>
+          </li>
+          
+          <li class="menu-item <?=(segment(1) == 'whatsapp') ? 'active' : ''?>">
+            <a href="<?=cn('whatsapp')?>" class="menu-link">
+              <i class="fa fa-whatsapp"></i> <?=lang("Whatsapp_Management")?>
+            </a>
+          </li>
 
           <li class="menu-item <?=(segment(1) == 'api_provider') ? 'active' : ''?>">
             <a href="<?=cn('api_provider')?>" class="menu-link">

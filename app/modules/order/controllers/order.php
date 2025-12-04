@@ -773,12 +773,17 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 		}
 
 		$number_error_orders = 0;
+		$total_provider_price = 0;
 		if (get_role('user') && in_array($order_status, ['fail', 'error'])) {
           redirect(cn('order/log/all'));
         }
 
         if (get_role('admin')) {
         	$number_error_orders = $this->model->get_count_orders('error');
+        	// Only calculate total provider price for error orders (optimization)
+        	if ($order_status == 'error') {
+        		$total_provider_price = $this->model->get_total_provider_price($order_status);
+        	}
         }
 
 		$page        = (int)get("p");
@@ -811,6 +816,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 			"order_status"                  => $order_status,
 			"links"                         => $links,
 			"number_error_orders"           => $number_error_orders,
+			"total_provider_price"          => $total_provider_price,
 		);
 		$this->template->build('logs/logs', $data);
 	}

@@ -80,6 +80,11 @@
         <i class="fe fe-command"></i>
         <span><?=lang("Other")?></span>
       </a>
+
+      <a href="<?php echo cn($module. "/visual_effects")?>" class="sidebar-link <?php echo (segment(2) == 'visual_effects') ? 'active' : ''?>">
+        <i class="fe fe-star"></i>
+        <span><?=lang("Visual Effects")?></span>
+      </a>
     </nav>
   </div>
 
