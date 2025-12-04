@@ -180,8 +180,9 @@
       $(document).ready(function() {
         // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
         $('.plugin_editor').each(function() {
-          if (!$(this).hasClass('note-editor') && !$(this).next().hasClass('note-editor')) {
-            plugin_editor(this, {height: 300});
+          var $this = $(this);
+          if (!$this.hasClass('note-editor') && !$this.next().hasClass('note-editor')) {
+            plugin_editor($this, {height: 300});
           }
         });
       });

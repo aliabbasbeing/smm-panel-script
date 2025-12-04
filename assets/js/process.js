@@ -122,14 +122,25 @@
 
 /*----------  Configure Summernote editor  ----------*/
 function plugin_editor(selector, settings){
-  selector = typeof(selector) == 'undefined' ? '.summernote' : selector;
+  // Handle both string selectors and jQuery objects
+  if (typeof(selector) == 'undefined') {
+    selector = '.plugin_editor';
+  }
+  
+  var $elements = (selector instanceof jQuery) ? selector : $(selector);
+  
+  // Return early if no elements found
+  if ($elements.length === 0) {
+    return $elements;
+  }
+  
   var _height = 300;
   
   if (typeof(settings) != 'undefined' && settings.height) {
     _height = settings.height;
   }
   
-  $(selector).summernote({
+  $elements.summernote({
     height: _height,
     minHeight: 100,
     maxHeight: 600,
@@ -155,11 +166,13 @@ function plugin_editor(selector, settings){
         // Handle image upload - convert to base64
         var editor = $(this);
         for (var i = 0; i < files.length; i++) {
-          var reader = new FileReader();
-          reader.onload = function(e) {
-            editor.summernote('insertImage', e.target.result);
-          };
-          reader.readAsDataURL(files[i]);
+          (function(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              editor.summernote('insertImage', e.target.result);
+            };
+            reader.readAsDataURL(file);
+          })(files[i]);
         }
       }
     },
@@ -168,7 +181,7 @@ function plugin_editor(selector, settings){
     codeviewIframeFilter: false
   });
   
-  return $(selector);
+  return $elements;
 }
 
 function elFinderBrowser (field_name, url, type, win) {
