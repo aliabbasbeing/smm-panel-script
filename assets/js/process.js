@@ -120,59 +120,74 @@
   });
 }
 
-/*----------  Configure tinymce editor  ----------*/
+/*----------  Configure Summernote editor  ----------*/
 function plugin_editor(selector, settings){
-  selector = typeof(selector) == 'undefined' ? '.tinymce' : selector;
-  var _settings = {
-    selector: selector,
-    menubar: false,
-    theme: "modern",
-    branding: false,
-    paste_data_images: true,
-    relative_urls: false,
-    convert_urls: false,
-    inline_styles: true,
-    verify_html: false,
-    cleanup: false,
-    autoresize_bottom_margin: 25,
-    plugins: [
-      "advlist autolink lists link charmap print preview hr anchor pagebreak",
-      "searchreplace wordcount visualblocks visualchars code fullscreen",
-      "insertdatetime nonbreaking save table contextmenu directionality",
-      "emoticons template paste textcolor colorpicker textpattern"
+  // Handle both string selectors and jQuery objects
+  if (typeof(selector) == 'undefined') {
+    selector = '.plugin_editor';
+  }
+  
+  var $elements = (selector instanceof jQuery) ? selector : $(selector);
+  
+  // Return early if no elements found
+  if ($elements.length === 0) {
+    return $elements;
+  }
+  
+  var _height = 300;
+  
+  if (typeof(settings) != 'undefined' && settings.height) {
+    _height = settings.height;
+  }
+  
+  $elements.summernote({
+    height: _height,
+    minHeight: 100,
+    maxHeight: 600,
+    focus: false,
+    toolbar: [
+      ['view', ['codeview', 'fullscreen', 'help']],
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
+      ['color', ['forecolor', 'backcolor']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      ['table', ['table']],
+      ['insert', ['link', 'picture', 'video', 'hr']]
     ],
-    toolbar1: "forecolor backcolor | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist | link image media | print preview emoticons",
-    // file_browser_callback: elFinderBrowser,
-  }
-
-  if (typeof(settings) != 'undefined') {
-    for (var key in settings) {
-      if (key == 'append_plugins') {
-        _settings['plugins'].push(settings[key]);
-      } else if(key == 'toolbar') {
-        _settings['toolbar1'] = _settings['toolbar1'] + " " + settings[key];
-      }else{
-        _settings[key] = settings[key];
+    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
+    fontNamesIgnoreCheck: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
+    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'],
+    lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
+    callbacks: {
+      onImageUpload: function(files) {
+        // Handle image upload - convert to base64
+        var editor = $(this);
+        for (var i = 0; i < files.length; i++) {
+          (function(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              editor.summernote('insertImage', e.target.result);
+            };
+            reader.readAsDataURL(file);
+          })(files[i]);
+        }
       }
-    }
-  }
-  var editor = tinymce.init(_settings);
-  return editor;
+    },
+    // Don't clean or strip HTML - preserve full content
+    codeviewFilter: false,
+    codeviewIframeFilter: false
+  });
+  
+  return $elements;
 }
 
 function elFinderBrowser (field_name, url, type, win) {
-  tinymce.activeEditor.windowManager.open({
-    file: PATH + 'file_manager/elfinder_init',// use an absolute path!
-    title: 'File manager',
-    width: 900,  
-    height: 450,
-    resizable: 'yes',
-    inline:true
-  }, {
-    setUrl: function (url) {
-      win.document.getElementById(field_name).value = url;
-    }
-  });
+  // Legacy function - no longer using TinyMCE file browser
+  // Summernote handles image upload via callbacks
+  console.log('elFinderBrowser is deprecated - using Summernote image upload instead');
   return false;
 }
 
@@ -195,19 +210,8 @@ function sendXMLPostRequest($url, $params){
 
 /*----------  Upload media and return path to input selector  ----------*/
 function getPathMediaByelFinderBrowser(_this, default_selector){
-  var _that = _this;
-  var _passToElement = typeof(default_selector) == 'undefined' ? _that.siblings('input')  : default_selector;
-  tinymce.activeEditor.windowManager.open({
-    file: PATH + 'file_manager/elfinder_init',
-    title: 'File manager',
-    width: 900,  
-    height: 450,
-    resizable: 'yes',
-    inline:true
-  }, {
-    setUrl: function (url) {
-      _passToElement.val(url);
-    }
-  });
+  // Legacy function - no longer using TinyMCE file browser
+  // Summernote handles image upload via callbacks
+  console.log('getPathMediaByelFinderBrowser is deprecated - using Summernote image upload instead');
   return false;
 }
