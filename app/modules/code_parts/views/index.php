@@ -11,15 +11,27 @@
     border-radius: 3px;
     margin-right: 5px;
   }
+  .code-parts-container {
+    padding: 15px;
+  }
 </style>
 
 <div class="row m-t-5">
-  <div class="col-sm-12 col-sm-12">
-    <div class="row">
-      <div class="col-sm-12 col-lg-12 item">
-        <div class="card">
-          <div class="card-header d-flex align-items-center" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
-            <div class="tabs-list">
+  <div class="col-sm-12 col-lg-12">
+    <div class="card">
+      <div class="card-header d-flex align-items-center justify-content-between" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
+        <h4 class="card-title text-white m-0">
+          <i class="fe fe-code"></i> <?=lang("Code Parts")?>
+        </h4>
+        <a href="<?=cn('setting/website_setting')?>" class="btn btn-outline-light btn-sm">
+          <i class="fe fe-arrow-left"></i> <?=lang("Back to Settings")?>
+        </a>
+      </div>
+      <div class="card-body code-parts-container">
+        <div class="row">
+          <div class="col-md-12 col-lg-12">
+            <!-- Navigation Tabs -->
+            <div class="tabs-list mb-4">
               <ul class="nav nav-tabs">
                 <li class="code-parts-tab">
                   <a class="active show" data-toggle="tab" href="#code_dashboard"><i class="fa fa-home"></i> Dashboard</a>
@@ -56,8 +68,8 @@
                 </li>
               </ul>
             </div>
-          </div>
-          <div class="card-body">
+
+            <!-- Info Alerts -->
             <div class="alert alert-info">
               <i class="fe fe-info"></i> 
               <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
@@ -91,11 +103,12 @@
               </div>
             </div>
             
+            <!-- Tab Content -->
             <div class="tab-content mt-3">
               
               <!-- Dashboard Page Code Part -->
               <div id="code_dashboard" class="tab-pane fade in active show">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="dashboard">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -120,7 +133,7 @@
               
               <!-- New Order Page Code Part -->
               <div id="code_new_order" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="new_order">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -145,7 +158,7 @@
               
               <!-- Order Logs Page Code Part -->
               <div id="code_orders" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="orders">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -170,7 +183,7 @@
               
               <!-- Services Page Code Part -->
               <div id="code_services" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="services">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -195,7 +208,7 @@
               
               <!-- Add Funds Page Code Part -->
               <div id="code_add_funds" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="add_funds">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -220,7 +233,7 @@
               
               <!-- API Page Code Part -->
               <div id="code_api" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="api">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -245,7 +258,7 @@
               
               <!-- Tickets Page Code Part -->
               <div id="code_tickets" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="tickets">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -270,7 +283,7 @@
               
               <!-- Child Panel Page Code Part -->
               <div id="code_child_panel" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="child_panel">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -295,11 +308,11 @@
               
               <!-- Transactions Page Code Part -->
               <div id="code_transactions" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="transactions">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transsactions")?></h5>
+                      <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transactions")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -320,7 +333,7 @@
               
               <!-- Sign In Page Code Part -->
               <div id="code_signin" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signin">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
@@ -345,7 +358,7 @@
               
               <!-- Sign Up Page Code Part -->
               <div id="code_signup" class="tab-pane fade">
-                <form class="actionForm" action="<?=cn("$module/ajax_code_parts")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
+                <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signup">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
