@@ -3,9 +3,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Code Parts Model
- * Handles database operations for code parts/HTML blocks
+ * Handles database operations for code parts/HTML blocks.
+ * Uses the existing 'code_parts' database table.
  */
-class Code_parts_model extends MY_Model {
+class code_parts_model extends MY_Model {
     
     protected $table = 'code_parts';
     

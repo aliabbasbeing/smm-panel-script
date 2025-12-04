@@ -66,7 +66,7 @@
         <span>Pages & Text</span>
       </a>
 
-      <a href="<?php echo cn($module. "/code_parts")?>" class="sidebar-link <?php echo (segment(2) == 'code_parts') ? 'active' : ''?>">
+      <a href="<?php echo cn("code_parts")?>" class="sidebar-link <?php echo (segment(1) == 'code_parts') ? 'active' : ''?>">
         <i class="fe fe-code"></i>
         <span>Code Parts</span>
       </a>
