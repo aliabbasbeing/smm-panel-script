@@ -367,6 +367,20 @@ function General(){
             return false;
         });
 
+        // load ajax-Modal for Add Service (separate from update modal)
+        $(document).on("click", ".ajaxModalAddService", function(){
+            _that = $(this);
+            _url = _that.attr("href");
+            $('#modal-add-service-ajax').load(_url, function(){
+                $('#modal-add-service-ajax').modal({
+                    backdrop: 'static',
+                    keyboard: false 
+                });
+                $('#modal-add-service-ajax').modal('show');
+            });
+            return false;
+        });
+
         /*----------  ajaxChangeTicketSubject  ----------*/
         $(document).on("change", ".ajaxChangeTicketSubject", function(){
             event.preventDefault();

@@ -112,6 +112,7 @@
           </div>
         </div>
         <div id="modal-ajax" class="modal fade" tabindex="-1"></div>
+        <div id="modal-add-service-ajax" class="modal fade" tabindex="-1"></div>
       </div>
     </div>
 

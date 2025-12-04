@@ -38,7 +38,7 @@
           <?php 
             if(get_role("admin") || get_role("supporter")) {
           ?>
-          <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a>
+          <a href="<?=cn("$module/add")?>" class="ajaxModalAddService"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a>
           <?php }else{?>
             <i class="fe fe-list" aria-hidden="true"> </i> 
           <?php }?>

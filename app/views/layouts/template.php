@@ -122,6 +122,7 @@
       </div>
       <!-- modal -->
       <div id="modal-ajax" class="modal fade" tabindex="-1"></div>
+      <div id="modal-add-service-ajax" class="modal fade" tabindex="-1"></div>
       <div id="modal-ajax-notification" class="modal fade" tabindex="-1"></div>
     </div>
 
