@@ -96,7 +96,7 @@ class services extends MX_Controller {
 			"categories" 		=> $categories,
 			"api_providers" 	=> $api_providers,
 		);
-		$this->load->view('add', $data);
+		$this->template->build('add', $data);
 	}
 
 	public function ajax_add(){
