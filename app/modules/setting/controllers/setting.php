@@ -10,6 +10,11 @@ class setting extends MX_Controller {
     }
 
     public function index($tab = ""){
+        // Redirect code_parts to the new dedicated module
+        if ($tab == "code_parts") {
+            redirect(cn('code_parts'));
+        }
+        
         $path              = APPPATH.'./modules/setting/views/';
         $path_integrations = APPPATH.'./modules/setting/views/integrations/';
         $tabs = array_merge(
