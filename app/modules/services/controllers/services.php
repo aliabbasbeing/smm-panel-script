@@ -86,6 +86,146 @@ class services extends MX_Controller {
 		$this->load->view('descriptions', $data);
 	}
 
+	public function add(){
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+
+		$categories  = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
+		$api_providers  = $this->model->fetch("*", $this->tb_api_providers, "status = 1", 'id','ASC');
+		$data = array(
+			"module"   			=> get_class($this),
+			"categories" 		=> $categories,
+			"api_providers" 	=> $api_providers,
+		);
+		$this->load->view('add', $data);
+	}
+
+	public function ajax_add(){
+		_is_ajax($this->module);
+
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+
+		$name 		        = post("name");
+		$category	        = post("category");
+		$min	            = post("min");
+		$max	            = post("max");
+		$add_type			= post("add_type");
+		$price	            = (double)post("price");
+		$status 	        = (int)post("status");
+		$desc 	            = $_POST['desc'];
+
+		if($name == ""){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("name_is_required")
+			));
+		}
+
+		if($category == ""){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("category_is_required")
+			));
+		}
+
+		if($min == ""){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("min_order_is_required")
+			));
+		}
+
+		if($max == ""){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("max_order_is_required")
+			));
+		}
+
+		if($min > $max){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("max_order_must_to_be_greater_than_min_order")
+			));
+		}
+
+		if($price == ""){
+			ms(array(
+				"status"  => "error",
+				"message" => lang("price_invalid")
+			));
+		}
+
+		$data = array(
+			"uid"             => session('uid'),
+			"cate_id"         => $category,
+			"name"            => $name,
+			"desc"            => $desc,
+			"min"             => $min,
+			"max"             => $max,
+			"price"           => $price,
+			"status"          => $status,
+		);
+
+		/*----------  Fields for Service API type  ----------*/
+		switch ($add_type) {
+			case 'api':
+				$api_provider_id	         = post("api_provider_id");
+				$original_price	             = post("original_price");
+				$api_service_id	             = post("api_service_id");
+				$api_service_type	         = post("api_service_type");
+				$api_service_dripfeed	     = (int)post("api_service_dripfeed");
+				
+				$api = $this->model->get("ids", $this->tb_api_providers, ['id' => $api_provider_id, 'status' => 1]);
+				if (empty($api)) {
+					ms(array(
+						"status"  => "error",
+						"message" => lang("api_provider_does_not_exists")
+					));
+				}
+
+				if ($api_service_id == "") {
+					ms(array(
+						"status"  => "error",
+						"message" => 'API Service ID invalid format'
+					));
+				}
+				$data['api_provider_id'] = $api_provider_id;
+				$data['api_service_id']  = $api_service_id;
+				$data['original_price']  = $original_price;
+				$data['type']            = $api_service_type;
+				$data['dripfeed']        = $api_service_dripfeed;
+				break;
+			
+			default:
+
+				$service_type_array = array('default', 'subscriptions', 'custom_comments', 'custom_comments_package', 'mentions_with_hashtags', 'mentions_custom_list', 'mentions_hashtag', 'mentions_user_followers', 'mentions_media_likers', 'package', 'comment_likes');
+
+				if (!in_array(post("service_type"), $service_type_array)) {
+					ms(array(
+						"status"  => "error",
+						"message" => 'Service Type invalid format'
+					));
+				}
+				$data['api_provider_id'] = "";
+				$data['api_service_id']  = "";
+				$data['type']            = post("service_type");
+				$data['dripfeed']        = (int)post("dripfeed");
+				break;
+		}
+		
+		$data['add_type'] = $add_type;
+		$data["ids"]     = ids();
+		$data["changed"] = NOW;
+		$data["created"] = NOW;
+
+		$this->db->insert($this->tb_services, $data);
+
+		ms(array(
+			"status"  => "success",
+			"message" => lang("Created_successfully")
+		));
+	}
+
 	public function ajax_update($ids = ""){
 		_is_ajax($this->module);
 
