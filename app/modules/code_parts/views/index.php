@@ -312,7 +312,7 @@
                   <input type="hidden" name="page_key" value="transactions">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transsactions")?></h5>
+                      <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transactions")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
