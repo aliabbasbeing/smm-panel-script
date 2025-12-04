@@ -10,6 +10,11 @@ class setting extends MX_Controller {
     }
 
     public function index($tab = ""){
+        // Redirect code_parts to the new dedicated module
+        if ($tab == "code_parts") {
+            redirect(cn('code_parts'));
+        }
+        
         $path              = APPPATH.'./modules/setting/views/';
         $path_integrations = APPPATH.'./modules/setting/views/integrations/';
         $tabs = array_merge(
@@ -314,7 +319,7 @@ class setting extends MX_Controller {
         }
 
         // Basic sanitization - remove dangerous scripts but keep styling
-        $sanitized_content = $this->sanitize_html_code_part($content);
+        $sanitized_content = sanitize_code_part_html($content);
 
         // Check if page_key exists in database
         $existing = $this->db->where('page_key', $page_key)->get('code_parts')->row();
@@ -341,35 +346,5 @@ class setting extends MX_Controller {
             "status"  => "success",
             "message" => lang('Update_successfully')
         ]);
-    }
-
-    /**
-     * Sanitize HTML code parts - remove dangerous elements while allowing styling.
-     * @param string $html The HTML content to sanitize
-     * @return string Sanitized HTML
-     */
-    private function sanitize_html_code_part($html) {
-        if (empty($html)) {
-            return '';
-        }
-
-        // Remove script tags and their content
-        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
-        
-        // Remove noscript tags
-        $html = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $html);
-        
-        // Remove javascript: protocol from attributes
-        $html = preg_replace('/\b(href|src|action)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '$1="#"', $html);
-        
-        // Remove event handlers (onclick, onload, etc.)
-        $html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
-        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
-        
-        // Remove iframe, object, embed tags
-        $html = preg_replace('/<(iframe|object|embed)\b[^>]*>(.*?)<\/\1>/is', '', $html);
-        $html = preg_replace('/<(iframe|object|embed)\b[^>]*\/?>/i', '', $html);
-        
-        return trim($html);
     }
 }

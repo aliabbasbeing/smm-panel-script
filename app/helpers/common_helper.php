@@ -1838,3 +1838,36 @@ if (!function_exists('_is_ajax')) {
 		}
 	}
 }
+
+/**
+ * Sanitize HTML code parts - remove dangerous elements while allowing styling.
+ * Used for sanitizing user-submitted HTML content for code parts/blocks.
+ * @param string $html The HTML content to sanitize
+ * @return string Sanitized HTML
+ */
+if(!function_exists("sanitize_code_part_html")){
+	function sanitize_code_part_html($html) {
+		if (empty($html)) {
+			return '';
+		}
+
+		// Remove script tags and their content
+		$html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
+		
+		// Remove noscript tags
+		$html = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $html);
+		
+		// Remove javascript: protocol from attributes
+		$html = preg_replace('/\b(href|src|action)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '$1="#"', $html);
+		
+		// Remove event handlers (onclick, onload, etc.)
+		$html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
+		$html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
+		
+		// Remove iframe, object, embed tags
+		$html = preg_replace('/<(iframe|object|embed)\b[^>]*>(.*?)<\/\1>/is', '', $html);
+		$html = preg_replace('/<(iframe|object|embed)\b[^>]*\/?>/i', '', $html);
+		
+		return trim($html);
+	}
+}
