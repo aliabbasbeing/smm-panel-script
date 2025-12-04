@@ -146,6 +146,7 @@ function plugin_editor(selector, settings){
     maxHeight: 600,
     focus: false,
     toolbar: [
+      ['view', ['codeview', 'fullscreen', 'help']],
       ['style', ['style']],
       ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
       ['fontname', ['fontname']],
@@ -154,8 +155,7 @@ function plugin_editor(selector, settings){
       ['para', ['ul', 'ol', 'paragraph']],
       ['height', ['height']],
       ['table', ['table']],
-      ['insert', ['link', 'picture', 'video', 'hr']],
-      ['view', ['fullscreen', 'codeview', 'help']]
+      ['insert', ['link', 'picture', 'video', 'hr']]
     ],
     fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
     fontNamesIgnoreCheck: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
