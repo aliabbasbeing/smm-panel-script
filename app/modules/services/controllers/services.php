@@ -55,6 +55,12 @@ class services extends MX_Controller {
 			"custom_rates" => $this->model->get_custom_rates(),
 		);
 		
+		// Add categories_list and api_providers for the add service form (admin only)
+		if (get_role("admin") || get_role("supporter")) {
+			$data["categories_list"] = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
+			$data["api_providers"]   = $this->model->fetch("*", $this->tb_api_providers, "status = 1", 'id','ASC');
+		}
+		
 		if (!session('uid')) {
 			$this->template->set_layout('general_page');
 			$this->template->build("index", $data);
