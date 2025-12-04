@@ -17,6 +17,22 @@
     <!-- Script js -->
     <script src="<?=BASE?>assets/js/process.js"></script>
     <script src="<?=BASE?>assets/js/general.js"></script>
+    
+    <!-- Visual Effects System -->
+    <?php if (get_option('visual_effects_enabled', 0) == 1): ?>
+    <script>
+      var VISUAL_EFFECTS_CONFIG = {
+        enabled: true,
+        type: '<?= get_option('visual_effects_type', 'snow') ?>',
+        color: '<?= get_option('visual_effects_color', '#ffffff') ?>',
+        size: '<?= get_option('visual_effects_size', 'medium') ?>',
+        density: '<?= get_option('visual_effects_density', 'medium') ?>',
+        speed: '<?= get_option('visual_effects_speed', 'normal') ?>'
+      };
+    </script>
+    <script src="<?=BASE?>assets/js/visual-effects.js"></script>
+    <?php endif; ?>
+    
     <?=htmlspecialchars_decode(get_option('embed_javascript', ''), ENT_QUOTES)?>
     <script>
       $(document).ready(function(){

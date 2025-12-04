@@ -320,6 +320,27 @@ class order_model extends MY_Model {
 		return $query->num_rows();
 	}
 
+	/**
+	 * Get total provider price (formal_charge) for orders by status
+	 * @param string $status Order status to filter by
+	 * @return float Total provider price
+	 */
+	function get_total_provider_price($status = ""){
+		if (get_role("user")) {
+			$this->db->where("uid", session("uid"));
+		}
+		$this->db->select("SUM(formal_charge) as total_provider_price");
+		$this->db->from($this->tb_order);
+		if($status != "all" && !empty($status)){
+			$this->db->where("status", $status);
+		}
+		$this->db->where("service_type !=", "subscriptions");
+		$this->db->where("is_drip_feed !=", 1);
+		$query = $this->db->get();
+		$result = $query->row();
+		return ($result && $result->total_provider_price) ? (float)$result->total_provider_price : 0;
+	}
+
 	function get_orders_logs_by_search($k){
 		$k = trim(htmlspecialchars($k));
 		if (get_role("user")) {
