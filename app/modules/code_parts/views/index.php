@@ -342,8 +342,8 @@
               <div id="editorForm" style="<?=!$active_tab ? 'display:none;' : ''?>">
                 <div class="code-parts-editor-header">
                   <div class="code-parts-editor-title">
-                    <h4 id="editorTitle"><?=lang("Dashboard")?></h4>
-                    <p id="editorSubtitle"><?=lang("Edit HTML content for the dashboard page")?></p>
+                    <h4 id="editorTitle"><?=lang("Select a Code Part")?></h4>
+                    <p id="editorSubtitle"><?=lang("Choose a code part from the list to start editing")?></p>
                   </div>
                   <div class="status-toggle">
                     <label class="text-muted mr-2"><?=lang("Status")?>:</label>
@@ -632,14 +632,31 @@
   function copyVariable(element) {
     var text = $(element).text();
     
-    // Create temporary textarea
+    // Use modern Clipboard API with fallback
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function() {
+        toastr.info('Copied: ' + text);
+      }).catch(function() {
+        // Fallback for clipboard API failure
+        fallbackCopy(text);
+      });
+    } else {
+      // Fallback for older browsers
+      fallbackCopy(text);
+    }
+  }
+  
+  function fallbackCopy(text) {
     var $temp = $('<textarea>');
+    $temp.css({position: 'absolute', left: '-9999px'});
     $('body').append($temp);
     $temp.val(text).select();
-    document.execCommand('copy');
+    try {
+      document.execCommand('copy');
+      toastr.info('Copied: ' + text);
+    } catch (err) {
+      toastr.error('Failed to copy');
+    }
     $temp.remove();
-    
-    // Show feedback
-    toastr.info('Copied: ' + text);
   }
 </script>

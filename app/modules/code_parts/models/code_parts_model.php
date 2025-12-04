@@ -43,10 +43,17 @@ class Code_parts_model extends MY_Model {
     
     /**
      * Get raw content by page key (without variable processing)
+     * Uses cached data when available
      * @param string $page_key The page identifier
      * @return string
      */
     public function get_content($page_key){
+        // Try to use cached result first
+        $cache_key = $page_key . '_0';
+        if (isset(self::$cache[$cache_key]) && self::$cache[$cache_key]) {
+            return !empty(self::$cache[$cache_key]->content) ? self::$cache[$cache_key]->content : '';
+        }
+        
         $result = $this->db->select('content')
                            ->where('page_key', $page_key)
                            ->get($this->table)

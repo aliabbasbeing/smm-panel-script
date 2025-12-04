@@ -107,8 +107,8 @@ class code_parts extends MX_Controller {
             return;
         }
 
-        // Sanitize HTML content
-        $sanitized_content = $this->sanitize_html($content);
+        // Sanitize HTML content using shared helper function
+        $sanitized_content = sanitize_code_part_html($content);
 
         // Save using model
         $result = $this->model->save($page_key, $sanitized_content);
@@ -281,35 +281,5 @@ class code_parts extends MX_Controller {
             'status' => 'success',
             'data'   => $code_parts
         ]);
-    }
-
-    /**
-     * Sanitize HTML code parts - remove dangerous elements while allowing styling
-     * @param string $html The HTML content to sanitize
-     * @return string Sanitized HTML
-     */
-    private function sanitize_html($html) {
-        if (empty($html)) {
-            return '';
-        }
-
-        // Remove script tags and their content
-        $html = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', '', $html);
-        
-        // Remove noscript tags
-        $html = preg_replace('/<noscript\b[^>]*>(.*?)<\/noscript>/is', '', $html);
-        
-        // Remove javascript: protocol from attributes
-        $html = preg_replace('/\b(href|src|action)\s*=\s*["\']?\s*javascript:[^"\'>\s]*/i', '$1="#"', $html);
-        
-        // Remove event handlers (onclick, onload, etc.)
-        $html = preg_replace('/\s+on\w+\s*=\s*["\'][^"\']*["\']/i', '', $html);
-        $html = preg_replace('/\s+on\w+\s*=\s*[^\s>]*/i', '', $html);
-        
-        // Remove iframe, object, embed tags
-        $html = preg_replace('/<(iframe|object|embed)\b[^>]*>(.*?)<\/\1>/is', '', $html);
-        $html = preg_replace('/<(iframe|object|embed)\b[^>]*\/?>/i', '', $html);
-        
-        return trim($html);
     }
 }
