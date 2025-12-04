@@ -76,6 +76,16 @@
   </div>
 <?php endif; ?>
 
+<?php if ($order_status == 'error' && get_role("admin") && isset($total_provider_price)): ?>
+  <!-- Total Provider Price Card for Error Orders -->
+  <div id="total-provider-price-card" class="card summary-card">
+    <h4><?=lang("Total Provider Price")?> <small style="font-size:1rem; color: #000;">(Error Orders)</small></h4>
+    <p id="total-provider-price-value" class="summary-value" style="color: #e74c3c; font-size:2rem; font-weight:bold; margin:0;">
+      $<?= number_format($total_provider_price, 4) ?>
+    </p>
+  </div>
+<?php endif; ?>
+
   <br><br>
   <?php if ($order_status == 'error') { ?>
     <div class="dropdown d-inline-block">
