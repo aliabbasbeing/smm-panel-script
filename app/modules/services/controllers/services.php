@@ -46,13 +46,38 @@ class services extends MX_Controller {
 			redirect(cn());
 		}
 
-		$all_services = $this->model->get_services_list();
+		// Get filter parameters from URL
+		$filters = array(
+			'search'    => $this->input->get('search'),
+			'category'  => $this->input->get('category'),
+			'status'    => $this->input->get('status'),
+			'provider'  => $this->input->get('provider'),
+			'price_min' => $this->input->get('price_min'),
+			'price_max' => $this->input->get('price_max'),
+			'dripfeed'  => $this->input->get('dripfeed'),
+		);
+		
+		$page = max(1, (int)$this->input->get('page'));
+		$per_page = max(10, min(100, (int)$this->input->get('per_page') ?: 50));
+		
+		// Get paginated services
+		$result = $this->model->get_paginated_services($filters, $page, $per_page);
+		
+		// Get categories and providers for filters
+		$categories_list = $this->model->get_all_categories_for_filter();
+		$providers_list = get_role("admin") ? $this->model->get_all_providers_for_filter() : array();
+		$stats = get_role("admin") ? $this->model->get_services_stats() : null;
+		
 		$data = array(
-			"module"       => get_class($this),
-			"columns"      => $this->columns,
-			"all_services" => $all_services,
-			"categories"   => $all_services,
-			"custom_rates" => $this->model->get_custom_rates(),
+			"module"          => get_class($this),
+			"columns"         => $this->columns,
+			"services"        => $result['services'],
+			"pagination"      => $result,
+			"filters"         => $filters,
+			"categories_list" => $categories_list,
+			"providers_list"  => $providers_list,
+			"stats"           => $stats,
+			"custom_rates"    => $this->model->get_custom_rates(),
 		);
 		
 		if (!session('uid')) {
@@ -384,5 +409,243 @@ class services extends MX_Controller {
 			"api_service_id" 		=> $api_service_id,
 		);
 		$this->load->view('ajax/get_services_from_api', $data);
+	}
+
+	/**
+	 * AJAX endpoint for paginated services with filtering
+	 * Returns HTML for the services table
+	 */
+	public function ajax_get_paginated_services(){
+		_is_ajax($this->module);
+		
+		// Get filter parameters
+		$filters = array(
+			'search'    => post('search'),
+			'category'  => post('category'),
+			'status'    => post('status'),
+			'provider'  => post('provider'),
+			'price_min' => post('price_min'),
+			'price_max' => post('price_max'),
+			'dripfeed'  => post('dripfeed'),
+		);
+		
+		$page = max(1, (int)post('page'));
+		$per_page = max(10, min(100, (int)post('per_page') ?: 50));
+		
+		// Get paginated services
+		$result = $this->model->get_paginated_services($filters, $page, $per_page);
+		
+		$data = array(
+			"module"       => get_class($this),
+			"columns"      => $this->columns,
+			"services"     => $result['services'],
+			"pagination"   => $result,
+			"custom_rates" => $this->model->get_custom_rates(),
+		);
+		
+		$this->load->view("ajax/paginated_services", $data);
+	}
+
+	/**
+	 * AJAX endpoint for JSON response with paginated services
+	 * Used for advanced client-side processing
+	 */
+	public function ajax_get_services_json(){
+		_is_ajax($this->module);
+		
+		// Get filter parameters
+		$filters = array(
+			'search'    => post('search'),
+			'category'  => post('category'),
+			'status'    => post('status'),
+			'provider'  => post('provider'),
+			'price_min' => post('price_min'),
+			'price_max' => post('price_max'),
+			'dripfeed'  => post('dripfeed'),
+		);
+		
+		$page = max(1, (int)post('page'));
+		$per_page = max(10, min(100, (int)post('per_page') ?: 50));
+		
+		// Get paginated services
+		$result = $this->model->get_paginated_services($filters, $page, $per_page);
+		
+		// Get custom rates for price adjustments
+		$custom_rates = $this->model->get_custom_rates();
+		
+		// Adjust prices for non-admin users
+		if (!get_role('admin') && !empty($custom_rates)) {
+			foreach ($result['services'] as &$service) {
+				if (isset($custom_rates[$service->id])) {
+					$service->price = $custom_rates[$service->id]['service_price'];
+				}
+			}
+		}
+		
+		ms(array(
+			"status"     => "success",
+			"data"       => $result['services'],
+			"pagination" => array(
+				"total"        => $result['total'],
+				"pages"        => $result['pages'],
+				"current_page" => $result['current_page'],
+				"per_page"     => $result['per_page'],
+				"from"         => $result['from'],
+				"to"           => $result['to']
+			)
+		));
+	}
+
+	/**
+	 * Bulk update prices for services
+	 * Admin only
+	 */
+	public function ajax_bulk_update_prices(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$idss = post("ids");
+		$price_change = post("price_change");
+		$change_type = post("change_type"); // 'fixed', 'percentage', 'set'
+		
+		if (empty($idss)) {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("please_choose_at_least_one_item")
+			));
+		}
+		
+		if (!is_numeric($price_change)) {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("price_invalid")
+			));
+		}
+		
+		$updated_count = 0;
+		foreach ($idss as $ids) {
+			$service = $this->model->get("id, price", $this->tb_services, ['ids' => $ids]);
+			if ($service) {
+				$new_price = $service->price;
+				switch ($change_type) {
+					case 'fixed':
+						$new_price = $service->price + (float)$price_change;
+						break;
+					case 'percentage':
+						$new_price = $service->price * (1 + ((float)$price_change / 100));
+						break;
+					case 'set':
+						$new_price = (float)$price_change;
+						break;
+				}
+				$new_price = max(0, $new_price); // Ensure price is not negative
+				$this->db->update($this->tb_services, ['price' => $new_price, 'changed' => NOW], ['ids' => $ids]);
+				$updated_count++;
+			}
+		}
+		
+		ms(array(
+			"status"  => "success",
+			"message" => sprintf(lang("updated_x_services"), $updated_count)
+		));
+	}
+
+	/**
+	 * Bulk update category for services
+	 * Admin only
+	 */
+	public function ajax_bulk_update_category(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$idss = post("ids");
+		$new_category = post("new_category");
+		
+		if (empty($idss)) {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("please_choose_at_least_one_item")
+			));
+		}
+		
+		if (empty($new_category)) {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("category_is_required")
+			));
+		}
+		
+		// Verify category exists
+		$category = $this->model->get("id", $this->tb_categories, ['id' => (int)$new_category]);
+		if (!$category) {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("category_not_found")
+			));
+		}
+		
+		$updated_count = 0;
+		foreach ($idss as $ids) {
+			$this->db->update($this->tb_services, ['cate_id' => (int)$new_category, 'changed' => NOW], ['ids' => $ids]);
+			$updated_count++;
+		}
+		
+		ms(array(
+			"status"  => "success",
+			"message" => sprintf(lang("updated_x_services"), $updated_count)
+		));
+	}
+
+	/**
+	 * Export services to CSV
+	 * Admin only
+	 */
+	public function export_csv(){
+		if (!get_role('admin')) {
+			redirect(cn());
+		}
+		
+		// Get filter parameters
+		$filters = array(
+			'search'    => $this->input->get('search'),
+			'category'  => $this->input->get('category'),
+			'status'    => $this->input->get('status'),
+			'provider'  => $this->input->get('provider'),
+		);
+		
+		// Get all filtered services (no pagination for export)
+		$result = $this->model->get_paginated_services($filters, 1, 10000);
+		$services = $result['services'];
+		
+		// Set headers for CSV download
+		header('Content-Type: text/csv; charset=utf-8');
+		header('Content-Disposition: attachment; filename="services_export_' . date('Y-m-d_H-i-s') . '.csv"');
+		
+		$output = fopen('php://output', 'w');
+		
+		// Add BOM for UTF-8
+		fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+		
+		// CSV headers
+		fputcsv($output, array('ID', 'Name', 'Category', 'Price', 'Min', 'Max', 'Provider', 'API Service ID', 'Status', 'Dripfeed', 'Type'));
+		
+		foreach ($services as $service) {
+			fputcsv($output, array(
+				$service->id,
+				$service->name,
+				$service->category_name,
+				$service->price,
+				$service->min,
+				$service->max,
+				isset($service->api_name) ? $service->api_name : 'Manual',
+				isset($service->api_service_id) ? $service->api_service_id : '',
+				$service->status == 1 ? 'Active' : 'Inactive',
+				isset($service->dripfeed) && $service->dripfeed == 1 ? 'Yes' : 'No',
+				isset($service->type) ? $service->type : 'default'
+			));
+		}
+		
+		fclose($output);
+		exit;
 	}
 }
