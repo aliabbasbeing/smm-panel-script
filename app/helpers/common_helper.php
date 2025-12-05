@@ -22,6 +22,16 @@ if(!function_exists('get_fake_order_id')){
 				$multiplier = 1;
 			}
 			
+			// Ensure real_order_id is a valid integer
+			$real_order_id = (int)$real_order_id;
+			
+			// Check for potential overflow (PHP_INT_MAX check)
+			$max_safe_id = (PHP_INT_MAX - $offset) / $multiplier;
+			if($real_order_id > $max_safe_id){
+				// Return original ID if calculation would overflow
+				return $real_order_id;
+			}
+			
 			// Calculate fake order ID: (real_id * multiplier) + offset
 			return ($real_order_id * $multiplier) + $offset;
 		}
@@ -52,12 +62,23 @@ if(!function_exists('get_real_order_id')){
 				$multiplier = 1;
 			}
 			
-			// Reverse the fake order ID calculation: (fake_id - offset) / multiplier
-			$real_id = ($order_id - $offset) / $multiplier;
+			// Ensure order_id is a valid integer
+			$order_id = (int)$order_id;
 			
-			// Return real ID only if it's a positive integer
-			if($real_id > 0 && floor($real_id) == $real_id){
-				return (int)$real_id;
+			// Check if order_id is greater than offset (could be a fake ID)
+			if($order_id > $offset){
+				// Reverse the fake order ID calculation using integer arithmetic
+				$subtracted = $order_id - $offset;
+				
+				// Check if the subtracted value is evenly divisible by multiplier
+				if($subtracted % $multiplier === 0){
+					$real_id = intdiv($subtracted, $multiplier);
+					
+					// Return real ID only if it's a positive integer
+					if($real_id > 0){
+						return $real_id;
+					}
+				}
 			}
 		}
 		

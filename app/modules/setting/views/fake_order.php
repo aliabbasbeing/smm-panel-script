@@ -27,7 +27,7 @@
               <h5 class="text-info"><i class="fe fe-plus-circle"></i> <?=lang("Fake Order ID Offset")?></h5>
               <div class="form-group">
                 <label class="form-label"><?=lang("Offset Value")?></label>
-                <input type="number" class="form-control" name="fake_order_offset" value="<?=get_option('fake_order_offset', 1000)?>" min="0" max="999999999">
+                <input type="number" class="form-control" name="fake_order_offset" value="<?=get_option('fake_order_offset', 1000)?>" min="0" max="10000000">
                 <small class="text-muted" data-toggle="tooltip" data-placement="top" title="<?=lang("This value will be added to actual order IDs when displaying to users. For example, if offset is 1000 and real order ID is 5, displayed ID will be 1005.")?>"><?=lang("The base offset to add to actual order IDs when displaying to customers")?> <i class="fe fe-help-circle text-info" style="cursor:help;"></i></small>
               </div>
 
@@ -54,7 +54,7 @@
                 <ul class="mb-0 mt-2">
                   <li><?=lang("The fake order ID is only for display purposes to customers")?></li>
                   <li><?=lang("Internal order tracking still uses real order IDs")?></li>
-                  <li><?=lang("API integrations and admin panel will continue to show actual order IDs")?></li>
+                  <li><?=lang("Admin panel will continue to show actual order IDs")?></li>
                   <li><?=lang("Changing these settings will affect new orders only")?></li>
                 </ul>
               </div>
