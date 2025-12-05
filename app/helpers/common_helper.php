@@ -1293,6 +1293,59 @@ if(!function_exists("update_option")){
 }
 
 /**
+ * Get fake order ID when the feature is enabled
+ * Converts real order ID to a fake one using multiplier and offset
+ * @param int $real_order_id The actual order ID from database
+ * @return int The fake order ID if feature is enabled, or the real ID if disabled
+ */
+if(!function_exists("get_display_order_id")){
+	function get_display_order_id($real_order_id){
+		// Check if fake order ID feature is enabled
+		$is_enabled = get_option('enable_fake_order_id', 0);
+		
+		if ($is_enabled == 1) {
+			$multiplier = (int)get_option('fake_order_id_multiplier', 7);
+			$offset = (int)get_option('fake_order_id_offset', 1000);
+			
+			// Ensure valid values
+			$multiplier = ($multiplier >= 2) ? $multiplier : 7;
+			$offset = ($offset >= 100) ? $offset : 1000;
+			
+			// Generate fake order ID: (real_id * multiplier) + offset
+			return ($real_order_id * $multiplier) + $offset;
+		}
+		
+		return $real_order_id;
+	}
+}
+
+/**
+ * Convert fake order ID back to real order ID (for admin use)
+ * @param int $fake_order_id The displayed fake order ID
+ * @return int The real order ID
+ */
+if(!function_exists("get_real_order_id")){
+	function get_real_order_id($fake_order_id){
+		$is_enabled = get_option('enable_fake_order_id', 0);
+		
+		if ($is_enabled == 1) {
+			$multiplier = (int)get_option('fake_order_id_multiplier', 7);
+			$offset = (int)get_option('fake_order_id_offset', 1000);
+			
+			// Ensure valid values
+			$multiplier = ($multiplier >= 2) ? $multiplier : 7;
+			$offset = ($offset >= 100) ? $offset : 1000;
+			
+			// Reverse the formula: (fake_id - offset) / multiplier
+			$real_id = ($fake_order_id - $offset) / $multiplier;
+			return (int)$real_id;
+		}
+		
+		return $fake_order_id;
+	}
+}
+
+/**
  * Get code part content from the code_parts table
  * @param string $page_key The unique page identifier
  * @param string $default Default value if not found

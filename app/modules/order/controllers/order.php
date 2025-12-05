@@ -554,6 +554,9 @@ class order extends MX_Controller {
 private function save_order($table, $data_orders, $user_balance = "", $total_charge = "") {
     $this->db->insert($table, $data_orders);
     $order_id = $this->db->insert_id();
+    // Get display order ID (fake if enabled, real otherwise)
+    $display_order_id = get_display_order_id($order_id);
+    
     if ($this->db->affected_rows() > 0) {
 
         if ($data_orders["service_type"] != "subscriptions") {
@@ -561,7 +564,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             $new_balance = ($new_balance > 0) ? $new_balance : 0;
             $this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => session("uid")]);
             
-            // Log balance deduction for order
+            // Log balance deduction for order (use real order ID for internal logging)
             $this->load->helper('balance_logs');
             log_order_deduction(session("uid"), $order_id, $total_charge, $user_balance, $new_balance);
         }
@@ -584,9 +587,9 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                                 truncate_string($data_orders['link'], 60);
             }
 
-            // Prepare variables for order placed notification
+            // Prepare variables for order placed notification (use display order ID)
             $variables = array(
-                'order_id' => $order_id,
+                'order_id' => $display_order_id,
                 'total_charge' => $total_charge,
                 'quantity' => $data_orders['quantity'],
                 'link' => $formatted_link,
@@ -596,7 +599,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             // Send order placed notification to admin
             $result = $this->whatsapp_notification->send('order_placed', $variables);
 
-            // Log the response
+            // Log the response (use real order ID for logs)
             if ($result === true) {
                 error_log("Admin WhatsApp notification sent successfully for order #" . $order_id);
             } else {
@@ -613,7 +616,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
             $subject = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $subject);
             $email_content = getEmailTemplate("order_success")->content;
             $email_content = str_replace("{{user_email}}", $user_email, $email_content);
-            $email_content = str_replace("{{order_id}}", $order_id, $email_content);
+            $email_content = str_replace("{{order_id}}", $display_order_id, $email_content);
             $email_content = str_replace("{{currency_symbol}}", get_option("currency_symbol",""), $email_content);
             $email_content = str_replace("{{total_charge}}", $total_charge, $email_content);
             $email_content = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $email_content);
@@ -960,11 +963,13 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                     // Get service name
                     $service = $this->model->get("name", SERVICES, ["id" => $check_item->service_id]);
                     $service_name = isset($service->name) ? $service->name : 'Unknown Service';
+                    // Get display order ID (fake if enabled)
+                    $display_order_id = get_display_order_id($check_item->id);
 
                     if ($status == "canceled" || $status == "refunded") {
                         // Send order cancelled notification
                         $variables = array(
-                            'order_id' => $check_item->id,
+                            'order_id' => $display_order_id,
                             'refund_amount' => number_format($refund_amount, 2),
                             'service_name' => $service_name,
                             'new_balance' => number_format($new_balance, 2)
@@ -974,7 +979,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
                         // Send order partial notification
                         $delivered_quantity = $check_item->quantity - $remains;
                         $variables = array(
-                            'order_id' => $check_item->id,
+                            'order_id' => $display_order_id,
                             'service_name' => $service_name,
                             'delivered_quantity' => $delivered_quantity,
                             'ordered_quantity' => $check_item->quantity,
@@ -1041,9 +1046,12 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 				preg_replace('#^https?://#', '', $order->link) : 
 				truncate_string($order->link, 60);
 	
-			// Prepare message with additional details
+			// Get display order ID (fake if enabled)
+			$display_order_id = get_display_order_id($order_id);
+	
+			// Prepare message with additional details (use display order ID)
 			$message = "*✅ Order Completed Successfully!*\n\n"
-				. "🔢 *Order ID*: {$order_id}\n"
+				. "🔢 *Order ID*: {$display_order_id}\n"
 				. "🛍️ *Service*: {$service_name}\n"
 				. "💰 *Total Charge*: ${formatted_charge}\n"
 				. "🔗 *Order Link*: {$formatted_link}\n\n"
@@ -1133,6 +1141,8 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 			$check_item_user = $this->model->get("id, first_name, last_name, email", $this->tb_users, "id = '{$check_item_refill->uid}'");
 			if(!empty($check_item_refill)){
 
+						// Get display order ID (fake if enabled)
+						$display_order_id = get_display_order_id($check_item_refill->id);
 
 						$subject = get_option('email_new_refill_subject', '');
 						$subject = str_replace("{{website_name}}", get_option("website_name", "SmartPanel"), $subject);
@@ -1141,7 +1151,7 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 						$email_content = str_replace("{{user_firstname}}", $check_item_user->first_name, $email_content);
 						$email_content = str_replace("{{user_lastname}}", $check_item_user->last_name, $email_content);
 						$email_content = str_replace("{{user_email}}", $check_item_user->email, $email_content);
-						$email_content = str_replace("{{order_id}}", $check_item_refill->id, $email_content);
+						$email_content = str_replace("{{order_id}}", $display_order_id, $email_content);
 						$email_content = str_replace("{{api_order_id}}", $check_item_refill->api_order_id, $email_content);
 
 						$admin_id = $this->model->get("id", $this->tb_users, "role = 'admin'","id","ASC")->id;
