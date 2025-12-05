@@ -1838,3 +1838,78 @@ if (!function_exists('_is_ajax')) {
 		}
 	}
 }
+
+/**
+ * Get dynamic header menu items based on user role
+ * @return array Array of menu items visible to current user
+ */
+if (!function_exists('get_header_menu_items')) {
+	function get_header_menu_items() {
+		$menu_data = get_option('header_menu_items', '[]');
+		$items = json_decode($menu_data, true);
+		
+		if (!is_array($items) || empty($items)) {
+			return [];
+		}
+
+		// Sort by sort_order
+		usort($items, function($a, $b) {
+			return ($a['sort_order'] ?? 0) - ($b['sort_order'] ?? 0);
+		});
+
+		// Get current user role
+		$current_role = 'guest';
+		if (session('uid')) {
+			if (get_role('admin')) {
+				$current_role = 'admin';
+			} elseif (get_role('supporter')) {
+				$current_role = 'supporter';
+			} elseif (get_role('user')) {
+				$current_role = 'user';
+			}
+		}
+
+		$visible_items = [];
+		foreach ($items as $item) {
+			// Skip disabled items
+			if (empty($item['status']) || $item['status'] != 1) {
+				continue;
+			}
+
+			// Check role visibility
+			$roles = isset($item['roles']) ? $item['roles'] : ['everyone'];
+			
+			if (in_array('everyone', $roles) || in_array($current_role, $roles)) {
+				$visible_items[] = $item;
+			}
+		}
+
+		return $visible_items;
+	}
+}
+
+/**
+ * Render a menu item URL - handles relative and absolute URLs
+ * @param string $url The URL from menu item
+ * @return string The full URL
+ */
+if (!function_exists('render_menu_url')) {
+	function render_menu_url($url) {
+		if (empty($url)) {
+			return '#';
+		}
+		
+		// Check if it's already an absolute URL
+		if (preg_match('/^(https?:\/\/|\/\/)/i', $url)) {
+			return $url;
+		}
+		
+		// Check if it starts with # (anchor link)
+		if (strpos($url, '#') === 0) {
+			return $url;
+		}
+		
+		// It's a relative URL, prepend base URL
+		return cn($url);
+	}
+}

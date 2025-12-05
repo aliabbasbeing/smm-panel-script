@@ -21,6 +21,11 @@
         <span><?=lang("Logo")?></span>
       </a>
 
+      <a href="<?php echo cn("menus")?>" class="sidebar-link <?php echo (segment(1) == 'menus') ? 'active' : ''?>">
+        <i class="fe fe-menu"></i>
+        <span><?=lang("Header Menus")?></span>
+      </a>
+
       <a href="<?php echo cn($module."/cookie_policy")?>" class="sidebar-link <?php echo (segment(2) == 'cookie_policy') ? 'active' : ''?>">
         <i class="fe fe-bookmark"></i>
         <span><?php echo lang("cookie_policy");?></span>
