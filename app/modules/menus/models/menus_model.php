@@ -57,27 +57,11 @@ class menus_model extends MY_Model {
     }
 
     /**
-     * Get current user role
+     * Get current user role using shared helper function
      * @return string
      */
     private function get_current_user_role(){
-        if (!session('uid')) {
-            return 'guest';
-        }
-
-        if (get_role('admin')) {
-            return 'admin';
-        }
-
-        if (get_role('supporter')) {
-            return 'supporter';
-        }
-
-        if (get_role('user')) {
-            return 'user';
-        }
-
-        return 'user';
+        return get_current_role_type();
     }
 
     /**

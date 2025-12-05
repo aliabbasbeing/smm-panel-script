@@ -1858,16 +1858,7 @@ if (!function_exists('get_header_menu_items')) {
 		});
 
 		// Get current user role
-		$current_role = 'guest';
-		if (session('uid')) {
-			if (get_role('admin')) {
-				$current_role = 'admin';
-			} elseif (get_role('supporter')) {
-				$current_role = 'supporter';
-			} elseif (get_role('user')) {
-				$current_role = 'user';
-			}
-		}
+		$current_role = get_current_role_type();
 
 		$visible_items = [];
 		foreach ($items as $item) {
@@ -1885,6 +1876,60 @@ if (!function_exists('get_header_menu_items')) {
 		}
 
 		return $visible_items;
+	}
+}
+
+/**
+ * Get current user role type for menu visibility checks
+ * @return string Role type (guest, user, supporter, admin)
+ */
+if (!function_exists('get_current_role_type')) {
+	function get_current_role_type() {
+		if (!session('uid')) {
+			return 'guest';
+		}
+		
+		if (get_role('admin')) {
+			return 'admin';
+		}
+		
+		if (get_role('supporter')) {
+			return 'supporter';
+		}
+		
+		return 'user';
+	}
+}
+
+/**
+ * Check if a menu URL is active (matches current page)
+ * @param string $url The menu URL to check
+ * @return bool True if active
+ */
+if (!function_exists('is_menu_url_active')) {
+	function is_menu_url_active($url) {
+		if (empty($url) || strpos($url, '#') === 0) {
+			return false;
+		}
+		
+		// Parse URL path
+		$url_parts = explode('/', trim($url, '/'));
+		
+		if (empty($url_parts[0])) {
+			return false;
+		}
+		
+		// Check first segment match
+		if (segment(1) != $url_parts[0]) {
+			return false;
+		}
+		
+		// Check second segment if exists
+		if (isset($url_parts[1]) && !empty($url_parts[1])) {
+			return (segment(2) == $url_parts[1]);
+		}
+		
+		return true;
 	}
 }
 

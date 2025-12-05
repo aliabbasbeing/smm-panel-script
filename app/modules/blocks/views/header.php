@@ -109,20 +109,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           foreach ($dynamic_menu_items as $menu_item):
             // Determine if current menu item is active
             $menu_url = isset($menu_item['url']) ? $menu_item['url'] : '';
-            $is_active = false;
-            
-            // Check if URL matches current segment
-            if (!empty($menu_url)) {
-              $url_parts = explode('/', trim($menu_url, '/'));
-              if (!empty($url_parts[0]) && segment(1) == $url_parts[0]) {
-                if (isset($url_parts[1]) && !empty($url_parts[1])) {
-                  $is_active = (segment(2) == $url_parts[1]);
-                } else {
-                  $is_active = true;
-                }
-              }
-            }
-            
+            $is_active = is_menu_url_active($menu_url);
             $target = (!empty($menu_item['new_tab']) && $menu_item['new_tab'] == 1) ? ' target="_blank"' : '';
         ?>
           <li class="menu-item <?=$is_active ? 'active' : ''?>">
