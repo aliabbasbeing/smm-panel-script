@@ -57,7 +57,11 @@
               $i++;
             ?>
             <tr class="tr_<?=$row->ids?>">
-              <td class="text-center"><?=$row->id?></td>
+              <td class="text-center"><?php 
+                // Show fake order ID to regular users if feature is enabled
+                $display_order_id = (get_role('admin') || get_role('supporter')) ? $row->id : get_fake_order_id($row->id);
+                echo $display_order_id;
+              ?></td>
 
               <?php
                 if (get_role("admin") || get_role("supporter")) {

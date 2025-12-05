@@ -165,7 +165,11 @@
                 <tr style="color: #fff;" class="tr_<?=$row->ids?>">
                   <!-- Order ID with copy button -->
                   <td style="color: #fff;">
-                    <span id="orderId_<?=$row->id?>"><?=$row->id?></span>
+                    <?php 
+                    // Show fake order ID to regular users if feature is enabled
+                    $display_order_id = (get_role('admin') || get_role('supporter')) ? $row->id : get_fake_order_id($row->id);
+                    ?>
+                    <span id="orderId_<?=$row->id?>"><?=$display_order_id?></span>
                     <button onclick="copyToClipboard('orderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
                       <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
                     </button>
