@@ -18,7 +18,7 @@
 
                 <div class="col-md-6 col-sm-6 col-xs-6">
                   <div class="form-group">
-                    <label ><?=lang("order_id")?></label>
+                    <label ><?=lang("order_id")?> <?php if(get_option('enable_fake_order_id', 0) == 1): ?><small class="text-muted">(<?=lang("fake_order_id_increment")?>: <?=get_display_order_id($order->id)?>)</small><?php endif; ?></label>
                     <input type="text" class="form-control square"  disabled value="<?=(!empty($order->id))? $order->id: ''?>">
                   </div>
                 </div>

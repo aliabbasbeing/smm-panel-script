@@ -916,3 +916,12 @@ $lang["View_Cron_Logs"] = "View Cron Logs";
 $lang["Filter_Cron_Logs"] = "Filter Cron Logs";
 $lang["Back_to_Balance_Logs"] = "Back to Balance Logs";
 
+/*----------  Fake Order ID  ----------*/
+$lang["fake_order_id_increment"] = "Fake Order ID Increment";
+$lang["fake_order_id_tooltip"] = "When enabled, order IDs displayed to users will be transformed using a formula to mask real order counts. This helps protect business information while keeping order tracking functional.";
+$lang["fake_order_id_description"] = "Enable this feature to display fake order IDs to users. Real order data and processing remain unaffected.";
+$lang["fake_order_id_multiplier"] = "Multiplier";
+$lang["fake_order_id_multiplier_hint"] = "The factor to multiply real order IDs (default: 7)";
+$lang["fake_order_id_offset"] = "Offset";
+$lang["fake_order_id_offset_hint"] = "Starting offset for fake IDs (default: 1000)";
+

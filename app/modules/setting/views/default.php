@@ -259,6 +259,36 @@
                 </div>
 
               </div>
+
+              <h5 class="m-t-10"><i class="fe fe-hash"></i> <?=lang("fake_order_id_increment")?> 
+                <i class="fe fe-info text-info" data-toggle="tooltip" data-placement="top" title="<?=lang("fake_order_id_tooltip")?>"></i>
+              </h5>
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="custom-controls-stacked">
+                    <label class="custom-control custom-checkbox">
+                      <input type="hidden" name="enable_fake_order_id" value="0">
+                      <input type="checkbox" class="custom-control-input" name="enable_fake_order_id" value="1" <?=(get_option('enable_fake_order_id',"") == 1)? "checked" : ''?>>
+                      <span class="custom-control-label"><?=lang("Active")?></span>
+                    </label>
+                  </div>
+                  <small class="text-info"><?=lang("fake_order_id_description")?></small>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label><?=lang("fake_order_id_multiplier")?></label>
+                    <input class="form-control" name="fake_order_id_multiplier" type="number" min="2" max="100" value="<?=get_option('fake_order_id_multiplier', 7)?>">
+                    <small class="text-muted"><?=lang("fake_order_id_multiplier_hint")?></small>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label><?=lang("fake_order_id_offset")?></label>
+                    <input class="form-control" name="fake_order_id_offset" type="number" min="100" max="100000" value="<?=get_option('fake_order_id_offset', 1000)?>">
+                    <small class="text-muted"><?=lang("fake_order_id_offset_hint")?></small>
+                  </div>
+                </div>
+              </div>
               
               <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_google_recapcha")?></h5>
               <div class="row">
@@ -325,5 +355,7 @@
     <script>
       $(document).ready(function() {
         plugin_editor('.plugin_editor', {height: 200});
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
       });
     </script>
