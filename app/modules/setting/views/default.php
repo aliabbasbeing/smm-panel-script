@@ -248,6 +248,29 @@
                 </div>
 
                 <div class="col-md-6">
+                  <h5 class="m-t-10">
+                    <i class="fe fe-hash"></i> <?=lang("Fake Order ID Increment")?>
+                    <i class="fe fe-help-circle text-muted" data-toggle="tooltip" data-placement="top" title="<?=lang("When enabled, the system will display fake order IDs to mask real order counts. This helps hide actual order volume from users while keeping real order data intact.")?>"></i>
+                  </h5>
+                  <div class="custom-controls-stacked">
+                    <label class="custom-control custom-checkbox">
+                      <input type="hidden" name="enable_fake_order_id" value="0">
+                      <input type="checkbox" class="custom-control-input" name="enable_fake_order_id" value="1" <?=(get_option('enable_fake_order_id',"") == 1)? "checked" : ''?>>
+                      <span class="custom-control-label"><?=lang("Active")?></span>
+                    </label>
+                  </div>
+                  <small class="text-muted"><?=lang("Masks real order counts by adding a fake increment offset to displayed order IDs.")?></small>
+                </div>
+
+                <div class="col-md-6" id="fake_order_offset_container" style="<?=(get_option('enable_fake_order_id',"") != 1)? 'display:none;' : ''?>">
+                  <h5 class="m-t-10"><i class="fe fe-plus-circle"></i> <?=lang("Fake Order ID Offset")?></h5>
+                  <div class="form-group">
+                    <input type="number" class="form-control" name="fake_order_id_offset" value="<?=get_option('fake_order_id_offset', 10000)?>" min="0" placeholder="10000">
+                    <small class="text-muted"><?=lang("The number added to real order IDs when displayed. E.g., if offset is 10000, order #5 shows as #10005.")?></small>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
                   <h5 class="m-t-10"><i class="fe fe-link"></i> <?=lang("displays_required_skypeid_field_in_signup_page")?></h5>
                   <div class="custom-controls-stacked">
                     <label class="custom-control custom-checkbox">
@@ -325,5 +348,17 @@
     <script>
       $(document).ready(function() {
         plugin_editor('.plugin_editor', {height: 200});
+        
+        // Initialize tooltips
+        $('[data-toggle="tooltip"]').tooltip();
+        
+        // Show/hide fake order offset field based on toggle
+        $('input[name="enable_fake_order_id"]').change(function() {
+          if ($(this).is(':checked')) {
+            $('#fake_order_offset_container').slideDown();
+          } else {
+            $('#fake_order_offset_container').slideUp();
+          }
+        });
       });
     </script>
