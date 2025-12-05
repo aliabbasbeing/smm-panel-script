@@ -1537,6 +1537,9 @@
     }
   };
   
+  // Expose ServicesManager to global scope for onclick handlers
+  window.ServicesManager = ServicesManager;
+  
   // Initialize when document is ready
   $(document).ready(function() {
     ServicesManager.init();
