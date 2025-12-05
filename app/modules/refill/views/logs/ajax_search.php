@@ -27,7 +27,7 @@
               $i++;
             ?>
             <tr class="tr_<?=$row->ids?>">
-              <td class="text-center"><?=$row->id?></td>
+              <td class="text-center"><?=get_display_order_id($row->id)?></td>
 
               <?php
                 if (get_role("admin") || get_role("supporter")) {
