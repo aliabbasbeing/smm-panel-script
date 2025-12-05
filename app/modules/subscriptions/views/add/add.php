@@ -6,10 +6,10 @@
         <div class="tabs-list">
           <ul class="nav nav-tabs">
             <li class="">
-              <a class="active show" data-toggle="tab" href="#new_order"><i class="fa fa-clone"></i> <?=lang("single_order")?></a>
+              <a class="active show" data-toggle="tab" href="#new_order"><i class="fas fa-clone"></i> <?=lang("single_order")?></a>
             </li>
             <li>
-              <a data-toggle="tab" href="#mass_order"><i class="fa fa-sitemap"></i> <?=lang("mass_order")?></a>
+              <a data-toggle="tab" href="#mass_order"><i class="fas fa-sitemap"></i> <?=lang("mass_order")?></a>
             </li>
           </ul>
         </div>
@@ -21,7 +21,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="content-header-title">
-                    <h6><i class="fa fa-shopping-cart"></i> <?=lang('add_new')?></h6>
+                    <h6><i class="fas fa-shopping-cart"></i> <?=lang('add_new')?></h6>
                   </div>
                   <div class="form-group">
                     <label><?=lang("Category")?></label>
@@ -163,7 +163,7 @@
                         <div class="form-label"><?=lang("dripfeed")?> 
                         <label class="custom-switch">
 
-                          <span class="custom-switch-description m-r-20"><i class="fa fa-question-circle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>"></i></span>
+                          <span class="custom-switch-description m-r-20"><i class="fas fa-question-circle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>"></i></span>
 
                           <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-toggle="collapse" data-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
                           <span class="custom-switch-indicator"></span>
@@ -227,7 +227,7 @@
 
                 <div class="col-md-6" id="order_resume">
                   <div class="content-header-title">
-                    <h6><i class="fa fa-shopping-cart"></i> <?=lang("order_resume")?></h6>
+                    <h6><i class="fas fa-shopping-cart"></i> <?=lang("order_resume")?></h6>
                   </div>
                   <div class="row" id="result_onChangeService">
                     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -293,7 +293,7 @@
                 <div class="col-md-6 col-sm-12 col-xs-12">
                   <div class="mass_order_error" id="result_notification">
                     <div class="content-header-title">
-                      <h6><i class="fa fa-info-circle"></i> <?=lang("note")?></h6>
+                      <h6><i class="fas fa-info-circle"></i> <?=lang("note")?></h6>
                     </div>
                     <div class="form-group">
                       <?=lang("here_you_can_place_your_orders_easy_please_make_sure_you_check_all_the_prices_and_delivery_times_before_you_place_a_order_after_a_order_submited_it_cannot_be_canceled")?>

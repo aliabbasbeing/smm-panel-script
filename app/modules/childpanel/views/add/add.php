@@ -30,7 +30,7 @@
           <ul class="nav nav-tabs child-panel-tabs">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#new_order">
-                <i class="fa fa-shopping-cart"></i> <?=lang('add_new')?>
+                <i class="fas fa-shopping-cart"></i> <?=lang('add_new')?>
               </a>
             </li>
             <li class="nav-item">
@@ -49,7 +49,7 @@
           <!-- Description Section -->
           <div class="description-section mb-4">
             <h4 class="description-title">
-              <i class="fa fa-info-circle"></i> <?=lang('Description')?>
+              <i class="fas fa-info-circle"></i> <?=lang('Description')?>
             </h4>
             <p class="description-text">
               <?=get_option('childpanel_desc')?>
@@ -68,7 +68,7 @@
             <!-- Nameservers Alert -->
             <div class="alert alert-info nameserver-alert" role="alert">
               <div class="alert-title">
-                <i class="fa fa-link"></i> Point your domain to these name servers
+                <i class="fas fa-link"></i> Point your domain to these name servers
               </div>
               <div class="nameserver-list">
                 <code><?=get_option('ns1')?></code>
@@ -109,7 +109,7 @@
 
           <!-- Error Alert -->
           <div class="alert alert-danger fund-alert d-none" role="alert">
-            <i class="fa fa-exclamation-triangle"></i>
+            <i class="fas fa-exclamation-triangle"></i>
             <?=lang("order_amount_exceeds_available_funds")?>
           </div>
 
@@ -126,7 +126,7 @@
           <!-- Submit Button -->
           <div class="form-actions">
             <button type="submit" class="btn btn-primary btn-lg btn-block">
-              <i class="fa fa-paper-plane"></i> <?=lang("place_order")?>
+              <i class="fas fa-paper-plane"></i> <?=lang("place_order")?>
             </button>
           </div>
 

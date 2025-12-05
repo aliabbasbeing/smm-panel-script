@@ -112,7 +112,7 @@
               <strong>FAYSAL BANK ACCOUNT TITLE:</strong>
               <h2>
                 <span id="holderName"><?php echo $holder_name; ?></span>
-                <i class="fa fa-copy copy-icon" onclick="copyToClipboard('holderName', this)" title="Copy Title"></i>
+                <i class="fas fa-copy copy-icon" onclick="copyToClipboard('holderName', this)" title="Copy Title"></i>
                 <span class="copy-msg">Copied!</span>
               </h2>
             </div>
@@ -121,7 +121,7 @@
               <strong>FAYSAL BANK ACCOUNT NUMBER:</strong>
               <h2>
                 <span id="accountNumber"><?php echo $account_number; ?></span>
-                <i class="fa fa-copy copy-icon" onclick="copyToClipboard('accountNumber', this)" title="Copy Number"></i>
+                <i class="fas fa-copy copy-icon" onclick="copyToClipboard('accountNumber', this)" title="Copy Number"></i>
                 <span class="copy-msg">Copied!</span>
               </h2>
             </div>

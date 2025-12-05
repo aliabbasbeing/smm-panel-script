@@ -117,7 +117,7 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
+        <i class="fab fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
     </h1>
 </div>
 
@@ -161,7 +161,7 @@
             <div class="card-body">
                 <?php if (empty($notifications)): ?>
                 <div class="alert alert-warning">
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <strong><?=lang("Notice")?>:</strong> <?=lang("WhatsApp notification templates are not set up yet. Please run the database migration file.")?>
                     <code>/database/whatsapp-notifications.sql</code>
                 </div>
@@ -178,7 +178,7 @@
                         <div class="notification-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 notification-title">
-                                    <i class="fa fa-bell text-primary"></i> 
+                                    <i class="fas fa-bell text-primary"></i> 
                                     <?=htmlspecialchars($notification->event_name)?>
                                 </h5>
                                 <div class="custom-control custom-switch custom-switch-lg">
@@ -198,7 +198,7 @@
                             
                             <?php if (!empty($notification->description)): ?>
                             <p class="notification-description text-muted mb-0 mt-2">
-                                <i class="fa fa-info-circle"></i> <?=htmlspecialchars($notification->description)?>
+                                <i class="fas fa-info-circle"></i> <?=htmlspecialchars($notification->description)?>
                             </p>
                             <?php endif; ?>
                         </div>
@@ -206,7 +206,7 @@
                         <div class="notification-body">
                             <div class="form-group mb-3">
                                 <label class="form-label font-weight-bold">
-                                    <i class="fa fa-file-text-o"></i> <?=lang("Message Template")?>
+                                    <i class="far fa-file-lines"></i> <?=lang("Message Template")?>
                                 </label>
                                 <textarea 
                                     class="form-control template-textarea" 
@@ -217,14 +217,14 @@
                             
                             <?php if (!empty($variables)): ?>
                             <div class="variables-info">
-                                <strong><i class="fa fa-code"></i> <?=lang("Available Variables")?>:</strong>
+                                <strong><i class="fas fa-code"></i> <?=lang("Available Variables")?>:</strong>
                                 <div class="mt-2">
                                     <?php foreach ($variables as $var): ?>
                                     <span class="variable-tag" data-var="{<?=$var?>}">{<?=htmlspecialchars($var)?>}</span>
                                     <?php endforeach; ?>
                                 </div>
                                 <small class="d-block mt-2 text-muted">
-                                    <i class="fa fa-lightbulb-o"></i> <?=lang("Click to copy. Variables will be replaced with actual values.")?>
+                                    <i class="far fa-lightbulb"></i> <?=lang("Click to copy. Variables will be replaced with actual values.")?>
                                 </small>
                             </div>
                             <?php endif; ?>
@@ -234,7 +234,7 @@
                     
                     <div class="mt-4 pt-3 border-top">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fa fa-save"></i> <?=lang("Save All Templates")?>
+                            <i class="fas fa-save"></i> <?=lang("Save All Templates")?>
                         </button>
                     </div>
                 </form>
@@ -378,7 +378,7 @@ $(document).ready(function() {
             data: formData,
             dataType: 'json',
             success: function(response) {
-                $btn.prop('disabled', false).html('<i class="fa fa-save"></i> <?=lang("Save All Templates")?>');
+                $btn.prop('disabled', false).html('<i class="fas fa-save"></i> <?=lang("Save All Templates")?>');
                 if (response.status === 'success') {
                     showMessage(response.message, 'success');
                 } else {
@@ -386,7 +386,7 @@ $(document).ready(function() {
                 }
             },
             error: function() {
-                $btn.prop('disabled', false).html('<i class="fa fa-save"></i> <?=lang("Save All Templates")?>');
+                $btn.prop('disabled', false).html('<i class="fas fa-save"></i> <?=lang("Save All Templates")?>');
                 showMessage('<?=lang("Failed to save settings")?>', 'error');
             }
         });

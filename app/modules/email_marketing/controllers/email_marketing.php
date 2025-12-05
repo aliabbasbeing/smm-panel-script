@@ -14,7 +14,7 @@ class Email_marketing extends MX_Controller {
         // Config Module
         $this->module_name = 'Email Marketing';
         $this->module = strtolower(get_class($this));
-        $this->module_icon = "fa fa-envelope";
+        $this->module_icon = "fas fa-envelope";
         
         // Check if user is admin
         if (!get_role("admin")) {

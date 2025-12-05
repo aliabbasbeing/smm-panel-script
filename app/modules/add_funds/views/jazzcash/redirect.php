@@ -15,7 +15,7 @@ $uid       = isset($uid) ? $uid : session('uid');
 <?php if ($status == 'success'): ?>
 <div class="card jazzcash-fadein" style="margin:40px auto;max-width:520px;">
   <div class="card-body text-center">
-    <i class="fa fa-check-circle" style="color:green;font-size:60px"></i>
+    <i class="fas fa-check-circle" style="color:green;font-size:60px"></i>
     <h3 style="margin-top:15px;">Deposit Successful!</h3>
     <p style="margin-top:8px;">
       Amount: <strong><?=htmlspecialchars($amount)?></strong> PKR<br>
@@ -32,7 +32,7 @@ $uid       = isset($uid) ? $uid : session('uid');
 <?php if ($status == 'pending'): ?>
 <div class="card jazzcash-fadein" style="margin:40px auto;max-width:520px;">
   <div class="card-body text-center">
-    <i class="fa fa-clock-o" style="color:#f39c12;font-size:60px"></i>
+    <i class="far fa-clock" style="color:#f39c12;font-size:60px"></i>
     <h3 style="margin-top:15px;">Deposit Under Review</h3>
     <p style="margin-top:8px;">
       Your payment has been received and is currently being reviewed.<br>
@@ -52,7 +52,7 @@ $uid       = isset($uid) ? $uid : session('uid');
 <?php if ($status == 'failed'): ?>
 <div class="card jazzcash-fadein" style="margin:40px auto;max-width:520px;">
   <div class="card-body text-center">
-    <i class="fa fa-times-circle" style="color:red;font-size:60px"></i>
+    <i class="fas fa-times-circle" style="color:red;font-size:60px"></i>
     <h3 style="margin-top:15px;">Deposit Failed</h3>
     <p style="margin-top:8px;"><?=htmlspecialchars($error_msg)?></p>
     <div style="margin-top:20px;">

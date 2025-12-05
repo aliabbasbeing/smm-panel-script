@@ -25,8 +25,8 @@
   <div class="row justify-content-between">
     <div class="col-md-6">
       <h1 class="page-title d-flex">
-        <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a> 
-        <span class="d-none d-sm-block"><i class="fa fa-comments-o text-primary" aria-hidden="true"></i></span> 
+        <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fas fa-plus"> <?=lang("add_new")?></i></span></a> 
+        <span class="d-none d-sm-block"><i class="far fa-comments text-primary" aria-hidden="true"></i></span> 
       </h1>
     </div>
     <div class="col-md-2">
@@ -205,7 +205,7 @@
                   <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="new" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-mail"></i> <?=lang("mark_as_new")?></a>
 
-                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fa fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
+                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon far fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
 
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="closed" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-unlock"></i> <?=lang("mark_as_closed")?></a>
                     <?php 

@@ -109,11 +109,11 @@
                   <?php if (get_role("admin")) { ?>
                   <div class="dropdown">
                       <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
-                          <i class="fa fa-clone mr-2"></i> Copy Options
+                          <i class="fas fa-clone mr-2"></i> Copy Options
                       </button>
                       <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #04a9f4;">
                           <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
-                              <i class="fa fa-copy mr-2"></i> Copy All API Order IDs
+                              <i class="fas fa-copy mr-2"></i> Copy All API Order IDs
                           </a>
                       </div>
                   </div>
@@ -167,7 +167,7 @@
                   <td style="color: #fff;">
                     <span id="orderId_<?=$row->id?>"><?=$row->id?></span>
                     <button onclick="copyToClipboard('orderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-                      <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
+                      <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
                     </button>
                   </td>
                   <?php if (get_role("admin") || get_role("supporter")) { ?>
@@ -177,7 +177,7 @@
                     </span>
                     <?php if ($row->api_order_id != 0 && $row->api_order_id != -1): ?>
                       <button onclick="copyToClipboard('apiOrderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-                        <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
+                        <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
                       </button>
                     <?php endif; ?>
                   </td>

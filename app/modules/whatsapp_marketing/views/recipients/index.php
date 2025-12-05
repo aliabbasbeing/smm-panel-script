@@ -140,7 +140,7 @@ $(document).ready(function(){
       data: formData,
       timeout: 60000,
       beforeSend: function(){
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
@@ -193,7 +193,7 @@ $(document).ready(function(){
       contentType: false,
       timeout: 60000,
       beforeSend: function(){
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
       },
       success: function(response){
         if(response.status == 'success'){

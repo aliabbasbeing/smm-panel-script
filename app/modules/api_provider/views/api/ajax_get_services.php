@@ -76,7 +76,7 @@
           
           <form class="form actionForm" action="<?=cn($module."/ajax_add_api_provider_service")?>" method="POST">
             <div class="modal-header bg-pantone">
-              <h4 class="modal-title"><i class="fa fa-edit"></i><?=lang("add_update_service")?></h4>
+              <h4 class="modal-title"><i class="fas fa-edit"></i><?=lang("add_update_service")?></h4>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               </button>
             </div>

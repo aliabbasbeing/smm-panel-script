@@ -17,7 +17,7 @@ class Whatsapp_marketing extends MX_Controller {
             // Config Module
             $this->module_name = 'WhatsApp Marketing';
             $this->module = strtolower(get_class($this));
-            $this->module_icon = "fa fa-whatsapp";
+            $this->module_icon = "fab fa-whatsapp";
             
             // Check if user is admin
             if (!get_role("admin")) {

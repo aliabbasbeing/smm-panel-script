@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1 class="page-title">
-    <i class="fa fa-handshake-o" aria-hidden="true"></i></span>
+    <i class="far fa-handshake" aria-hidden="true"></i></span>
     Affiliate
   </h1>
 </div>

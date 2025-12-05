@@ -15,7 +15,7 @@
     <div class="card card-collapsed">
       <div class="card-header">
         <h3 class="card-title" data-toggle="card-collapse">
-          <span class="bg-question"><i class="fa fa-question-circle" aria-hidden="true"></i></span>
+          <span class="bg-question"><i class="fas fa-question-circle" aria-hidden="true"></i></span>
           <?=$row->question?>
         </h3>
         <div class="card-options">

@@ -53,21 +53,21 @@ hr {
               ?>
                 <div class="input-icon mb-3">
                   <span class="input-icon-addon">
-                    <i class="fa fa-skype"></i>
+                    <i class="fab fa-skype"></i>
                   </span>
                   <input type="text" class="form-control" name="skype_id" placeholder="<?= lang("Skype_id") ?>" required>
                 </div>
               <?php } ?>
               <div class="input-icon mb-3">
                 <span class="input-icon-addon">
-                  <i class="fa fa-key"></i>
+                  <i class="fas fa-key"></i>
                 </span>
                 <input type="password" class="form-control" name="password" placeholder="<?= lang("Password") ?>" required>
               </div>
 
               <div class="input-icon mb-3">
                 <span class="input-icon-addon">
-                  <i class="fa fa-key"></i>
+                  <i class="fas fa-key"></i>
                 </span>
                 <input type="password" class="form-control" name="re_password" placeholder="<?= lang("Confirm_password") ?>" required>
               </div>
@@ -99,7 +99,7 @@ hr {
               <label>Referral Id (Optional)</label>
               <div class="input-icon mb-5">
                 <span class="input-icon-addon">
-                  <i class="fa fa-handshake-o"></i>
+                  <i class="far fa-handshake"></i>
                 </span>
                 <input type="text" class="form-control" name="referral" placeholder="<?= lang("Referral_id_(optional)") ?>" value="<?= session("referral") ?>">
               </div>

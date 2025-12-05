@@ -11,7 +11,7 @@
     <?php 
       if(get_role("admin")) {
     ?>
-    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
     <?php }?>
     <?=lang("banned_ip_address_list")?>
   </h1>

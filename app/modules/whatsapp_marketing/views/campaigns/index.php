@@ -5,7 +5,7 @@
       <h1 class="page-title">
         <a href="<?php echo cn($module . '/campaign_create'); ?>" class="ajaxModal">
           <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="Add New Campaign">
-            <i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
+            <i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
           </span>
         </a>
         WhatsApp Campaigns

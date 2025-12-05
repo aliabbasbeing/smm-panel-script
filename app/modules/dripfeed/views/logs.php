@@ -11,7 +11,7 @@
 <div class="page-header">
   <h1 class="page-title">
     <a href="<?=cn("$module/add")?>">
-      <span class="add-new" data-toggle="tooltip" data-placement="bottom" data-original-title="<?=lang("add_new")?>"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span>
+      <span class="add-new" data-toggle="tooltip" data-placement="bottom" data-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span>
     </a>
     <?=lang("dripfeed")?>
   </h1>

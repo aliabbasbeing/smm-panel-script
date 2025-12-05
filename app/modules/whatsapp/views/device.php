@@ -96,7 +96,7 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
+        <i class="fab fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
     </h1>
 </div>
 
@@ -125,7 +125,7 @@
         <div class="card device-status-card" id="statusCard">
             <div class="whatsapp-header">
                 <h4 class="mb-0">
-                    <i class="fa fa-whatsapp"></i> <?=lang("Device Connection")?>
+                    <i class="fab fa-whatsapp"></i> <?=lang("Device Connection")?>
                 </h4>
             </div>
             <div class="card-body">

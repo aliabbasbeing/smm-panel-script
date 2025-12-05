@@ -85,35 +85,35 @@
                   <?php 
                     if (get_option('social_facebook_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_facebook_link','')?>" target="_blank" class="btn btn-icon btn-facebook"><i class="fa fa-facebook"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_facebook_link','')?>" target="_blank" class="btn btn-icon btn-facebook"><i class="fab fa-facebook"></i></a></li>
                   <?php }?>
                   <?php 
                     if (get_option('social_twitter_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_twitter_link','')?>" target="_blank" class="btn btn-icon btn-twitter"><i class="fa fa-twitter"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_twitter_link','')?>" target="_blank" class="btn btn-icon btn-twitter"><i class="fab fa-twitter"></i></a></li>
                   <?php }?>
                   <?php 
                     if (get_option('social_instagram_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_instagram_link','')?>" target="_blank" class="btn btn-icon btn-instagram"><i class="fa fa-instagram"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_instagram_link','')?>" target="_blank" class="btn btn-icon btn-instagram"><i class="fab fa-instagram"></i></a></li>
                   <?php }?>
 
                   <?php 
                     if (get_option('social_pinterest_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_pinterest_link','')?>" target="_blank" class="btn btn-icon btn-pinterest"><i class="fa fa-pinterest"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_pinterest_link','')?>" target="_blank" class="btn btn-icon btn-pinterest"><i class="fab fa-pinterest"></i></a></li>
                   <?php }?>
 
                   <?php 
                     if (get_option('social_tumblr_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_tumblr_link','')?>" target="_blank" class="btn btn-icon btn-vk"><i class="fa fa-tumblr"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_tumblr_link','')?>" target="_blank" class="btn btn-icon btn-vk"><i class="fab fa-tumblr"></i></a></li>
                   <?php }?>
 
                   <?php 
                     if (get_option('social_youtube_link','') != '') {
                   ?>
-                  <li class="list-inline-item"><a href="<?=get_option('social_youtube_link','')?>" target="_blank" class="btn btn-icon btn-youtube"><i class="fa fa-youtube"></i></a></li>
+                  <li class="list-inline-item"><a href="<?=get_option('social_youtube_link','')?>" target="_blank" class="btn btn-icon btn-youtube"><i class="fab fa-youtube"></i></a></li>
                   <?php }?>
 
                 </ul>

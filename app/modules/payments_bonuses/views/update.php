@@ -13,7 +13,7 @@
         ?>
         <form class="form actionForm" action="<?=$url?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?php echo lang("add_bonus"); ?></h4>
+            <h4 class="modal-title"><i class="fas fa-edit"></i> <?php echo lang("add_bonus"); ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>

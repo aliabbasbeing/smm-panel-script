@@ -3,7 +3,7 @@
 <div class="card2">
     <div class="card-header" style="border: 0.1px solid #25D366; border-radius: 3.5px 3.5px 0px 0px; background: #25D366 !important;">
         <h3 class="card-title text-white">
-            <i class="fa fa-whatsapp"></i> WhatsApp Notification Settings
+            <i class="fab fa-whatsapp"></i> WhatsApp Notification Settings
         </h3>
     </div>
     <div class="card-body">
@@ -11,10 +11,10 @@
         <!-- API Configuration Section -->
         <div class="mb-5">
             <h4 class="text-success mb-3">
-                <i class="fa fa-cog"></i> WhatsApp API Configuration
+                <i class="fas fa-cog"></i> WhatsApp API Configuration
             </h4>
             <div class="alert alert-info mb-4">
-                <i class="fa fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i> 
                 <strong>Important:</strong> Configure your WhatsApp API credentials. These settings are required for sending WhatsApp notifications.
             </div>
 
@@ -23,7 +23,7 @@
                     <div class="col-md-12">
                         <div class="form-group">
                             <label class="form-label font-weight-bold">
-                                <i class="fa fa-link"></i> API URL <span class="text-danger">*</span>
+                                <i class="fas fa-link"></i> API URL <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control" 
@@ -40,7 +40,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label font-weight-bold">
-                                <i class="fa fa-key"></i> API Key <span class="text-danger">*</span>
+                                <i class="fas fa-key"></i> API Key <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control" 
@@ -57,7 +57,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label class="form-label font-weight-bold">
-                                <i class="fa fa-phone"></i> Admin Phone Number <span class="text-danger">*</span>
+                                <i class="fas fa-phone"></i> Admin Phone Number <span class="text-danger">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control" 
@@ -73,7 +73,7 @@
 
                     <div class="col-md-12">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fa fa-save"></i> Save API Configuration
+                            <i class="fas fa-save"></i> Save API Configuration
                         </button>
                     </div>
                 </div>
@@ -85,10 +85,10 @@
         <!-- Notification Templates Section -->
         <div>
             <h4 class="text-success mb-3">
-                <i class="fa fa-bell"></i> Notification Templates
+                <i class="fas fa-bell"></i> Notification Templates
             </h4>
             <div class="alert alert-info mb-4">
-                <i class="fa fa-info-circle"></i> 
+                <i class="fas fa-info-circle"></i> 
                 <strong>Manage Notifications:</strong> Enable or disable notifications and customize message templates for different events.
             </div>
 
@@ -99,7 +99,7 @@
             
             if (empty($notifications)): ?>
                 <div class="alert alert-warning">
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <strong>Notice:</strong> WhatsApp notification templates are not set up yet. Please run the database migration file: 
                     <code>/database/whatsapp-notifications.sql</code>
                 </div>
@@ -118,7 +118,7 @@
                             <div class="notification-header">
                                 <div class="d-flex justify-content-between align-items-center">
                                     <h5 class="mb-0 notification-title">
-                                        <i class="fa fa-bell text-primary"></i> 
+                                        <i class="fas fa-bell text-primary"></i> 
                                         <?php echo htmlspecialchars($notification->event_name); ?>
                                     </h5>
                                     <div class="custom-control custom-switch custom-switch-lg">
@@ -138,7 +138,7 @@
                                 
                                 <?php if (!empty($notification->description)): ?>
                                     <p class="notification-description text-muted mb-0 mt-2">
-                                        <i class="fa fa-info-circle"></i> <?php echo htmlspecialchars($notification->description); ?>
+                                        <i class="fas fa-info-circle"></i> <?php echo htmlspecialchars($notification->description); ?>
                                     </p>
                                 <?php endif; ?>
                             </div>
@@ -146,7 +146,7 @@
                             <div class="notification-body">
                                 <div class="form-group mb-3">
                                     <label class="form-label font-weight-bold">
-                                        <i class="fa fa-file-text-o"></i> Message Template
+                                        <i class="far fa-file-lines"></i> Message Template
                                     </label>
                                     <textarea 
                                         class="form-control template-textarea" 
@@ -157,14 +157,14 @@
                                 
                                 <?php if (!empty($variables)): ?>
                                     <div class="variables-info">
-                                        <strong><i class="fa fa-code"></i> Available Variables:</strong>
+                                        <strong><i class="fas fa-code"></i> Available Variables:</strong>
                                         <div class="variable-tags mt-2">
                                             <?php foreach ($variables as $var): ?>
                                                 <span class="variable-tag">{<?php echo htmlspecialchars($var); ?>}</span>
                                             <?php endforeach; ?>
                                         </div>
                                         <small class="d-block mt-2 text-muted">
-                                            <i class="fa fa-lightbulb-o"></i> Use these variables in your template. They will be replaced with actual values when the notification is sent.
+                                            <i class="far fa-lightbulb"></i> Use these variables in your template. They will be replaced with actual values when the notification is sent.
                                         </small>
                                     </div>
                                 <?php endif; ?>
@@ -175,7 +175,7 @@
                     
                     <div class="form-footer mt-4 pt-3">
                         <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fa fa-save"></i> Save All Notification Templates
+                            <i class="fas fa-save"></i> Save All Notification Templates
                         </button>
                     </div>
                 </form>

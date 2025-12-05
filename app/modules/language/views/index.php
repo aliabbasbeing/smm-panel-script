@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1 class="page-title">
-    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Add new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
     <?=lang("Language")?>
   </h1>
 </div>

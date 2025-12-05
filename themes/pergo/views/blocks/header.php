@@ -107,7 +107,7 @@
                 ?>
                 <li class="nav-item active">
                   <a class="nav-link js-scroll-trigger" href="#home">
-                    <i class="fa fa-home"></i> <?=lang("Home")?>
+                    <i class="fas fa-home"></i> <?=lang("Home")?>
                   </a>
                 </li>
 
@@ -115,7 +115,7 @@
                 <?php if (get_option("enable_service_list_no_login") == 1) { ?>
                   <li class="nav-item">
                     <a class="nav-link" href="<?=cn("services")?>">
-                      <i class="fa fa-briefcase"></i> <?=lang("Services")?>
+                      <i class="fas fa-briefcase"></i> <?=lang("Services")?>
                     </a>
                   </li>
                 <?php } ?>
@@ -125,20 +125,20 @@
                   <!-- Login / Sign Up as nav items for better mobile behaviour -->
                   <li class="nav-item btn-nav-item">
                     <a class="btn btn-login" href="<?=cn('auth/login')?>">
-                      <i class="fa fa-sign-in"></i> <?=lang("Login")?>
+                      <i class="fas fa-right-to-bracket"></i> <?=lang("Login")?>
                     </a>
                   </li>
                   <?php if(!get_option('disable_signup_page')) { ?>
                     <li class="nav-item btn-nav-item">
                       <a href="<?=cn('auth/signup')?>" class="btn btn-pill btn-outline-primary sign-up">
-                        <i class="fa fa-user-plus"></i> <?=lang("Sign_Up")?>
+                        <i class="fas fa-user-plus"></i> <?=lang("Sign_Up")?>
                       </a>
                     </li>
                   <?php } ?>
                 <?php } else { ?>
                   <li class="nav-item btn-nav-item">
                     <a href="<?=cn('statistics')?>" class="btn btn-pill btn-outline-primary btn-statistics text-uppercase">
-                      <i class="fa fa-chart-bar"></i> <?=lang("Statistics")?>
+                      <i class="fas fa-chart-bar"></i> <?=lang("Statistics")?>
                     </a>
                   </li>
                 <?php } ?>

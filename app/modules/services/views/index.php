@@ -582,7 +582,7 @@
         <div class="d-flex align-items-center">
           <?php if(get_role("admin") || get_role("supporter")): ?>
           <a href="<?=cn("$module/update")?>" class="ajaxModal btn btn-info mr-2">
-            <i class="fa fa-plus"></i> <?=lang("add_new")?>
+            <i class="fas fa-plus"></i> <?=lang("add_new")?>
           </a>
           <button type="button" class="btn-quick-action mr-2" id="openServiceActionModal">
             <i class="fe fe-zap"></i> <?=lang("quick_actions")?>

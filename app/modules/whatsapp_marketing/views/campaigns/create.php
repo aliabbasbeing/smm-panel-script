@@ -5,7 +5,7 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_create'); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-whatsapp"></i> Create New WhatsApp Campaign</h4>
+            <h4 class="modal-title"><i class="fab fa-whatsapp"></i> Create New WhatsApp Campaign</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -67,7 +67,7 @@
                   </div>
                   
                   <div class="alert alert-info">
-                    <i class="fa fa-info-circle"></i> After creating the campaign, you'll be able to add recipients and start sending.
+                    <i class="fas fa-info-circle"></i> After creating the campaign, you'll be able to add recipients and start sending.
                   </div>
                   
                 </div>

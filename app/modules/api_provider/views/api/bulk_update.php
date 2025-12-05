@@ -8,7 +8,7 @@
         ?>
         <form class="form actionForm" action="<?=cn($module."/ajax_bulk_services/$ids")?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("bulk_add_all_services")?></h4>
+            <h4 class="modal-title"><i class="fas fa-edit"></i> <?=lang("bulk_add_all_services")?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>

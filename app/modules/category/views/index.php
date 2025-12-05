@@ -11,7 +11,7 @@
     <?php 
       if(get_role("admin")  || get_role("supporter")) {
     ?>
-    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a> 
+    <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip"><i class="btn btn-info fas fa-plus"> <?=lang("add_new")?></i></span></a> 
     <?php }?>
   </h1>
   <div class="page-options d-flex">

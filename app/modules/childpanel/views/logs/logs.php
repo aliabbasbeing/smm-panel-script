@@ -22,7 +22,7 @@
           <ul class="nav nav-tabs">
             
             <li>
-              <a data-toggle="" href="<?=cn('childpanel/add')?>"><i class="fa fa-shopping-cart"></i> <?=lang("add_new")?></a>
+              <a data-toggle="" href="<?=cn('childpanel/add')?>"><i class="fas fa-shopping-cart"></i> <?=lang("add_new")?></a>
             </li>
             <li class="">
               <a class="active show" data-toggle="tab" href="#new_order"><i class="fe fe-inbox"></i>&nbsp;<?=lang('History')?></a>

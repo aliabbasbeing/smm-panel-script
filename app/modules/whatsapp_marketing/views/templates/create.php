@@ -5,7 +5,7 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_template_create'); ?>" data-redirect="<?php echo cn($module . '/templates'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-file-text"></i> Create New WhatsApp Template</h4>
+            <h4 class="modal-title"><i class="fas fa-file-text"></i> Create New WhatsApp Template</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>

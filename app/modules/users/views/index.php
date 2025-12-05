@@ -1,7 +1,7 @@
 
 <div class="page-header">
   <h1 class="page-title">
-    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<?=lang("add_new")?>"><i class="fa fa-plus-square"></i></span></a>
+    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square"></i></span></a>
     <?=lang("users")?>
   </h1>
 </div>
@@ -116,7 +116,7 @@
     <div class="title"><h6><?php _echo($row->first_name) . " " . _echo($row->last_name); ?></h6></div>
     <div class="sub" style="margin-right: 15px; margin-bottom: 10px;">
         <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #fdfdfdff; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
-            <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+            <i class="fas fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
             <small style="color:#000;"><?php _echo($row->email); ?></small>
         </a>
     </div>
@@ -124,7 +124,7 @@
     <div class="sub" style="margin-bottom: 10px;">
         <small>
             <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #000 !important; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
-                <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+                <i class="fab fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
                 <?php echo $row->whatsapp_number; ?>
             </a>
         </small>

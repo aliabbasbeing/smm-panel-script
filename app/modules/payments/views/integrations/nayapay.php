@@ -12,7 +12,7 @@
         ?>
         <form class="form actionForm" action="<?php echo $url?>" data-redirect="<?php echo cn($module); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?php echo $payment->name; ?></h4>
+            <h4 class="modal-title"><i class="fas fa-edit"></i> <?php echo $payment->name; ?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -20,7 +20,7 @@
             <div class="form-body">
               
               <center class="form-control" style="background:blue; margin-bottom: 10px;">
-                <a style="color :#fff;" href="https://youtu.be/s-FrFoeec2w" target="_blank"><strong>Help</strong> <i class="fa fa-question-circle-o" aria-hidden="true"></i></a>
+                <a style="color :#fff;" href="https://youtu.be/s-FrFoeec2w" target="_blank"><strong>Help</strong> <i class="far fa-circle-question" aria-hidden="true"></i></a>
               </center>
               <div class="row justify-content-md-center">
 

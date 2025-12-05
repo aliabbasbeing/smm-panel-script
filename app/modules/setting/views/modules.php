@@ -1,6 +1,6 @@
 <div class="card p-0 content">
       <div class="card-header">
-        <h3 class="card-title" style="color:#fff !important;"><i class="fa fa-question-circle"></i> <?= lang("Modules") ?></h3>
+        <h3 class="card-title" style="color:#fff !important;"><i class="fas fa-question-circle"></i> <?= lang("Modules") ?></h3>
   </div>
 
   <div class="card-body">

@@ -2,9 +2,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h3><i class="fa fa-cog"></i> WhatsApp API Configurations</h3>
+            <h3><i class="fas fa-cog"></i> WhatsApp API Configurations</h3>
             <a href="<?php echo cn($module . '/api_create'); ?>" class="btn btn-primary float-right ajaxModal">
-                <i class="fa fa-plus"></i> Add API Config
+                <i class="fas fa-plus"></i> Add API Config
             </a>
         </div>
         <div class="card-body">

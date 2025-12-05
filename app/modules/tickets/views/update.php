@@ -8,7 +8,7 @@
     <div class="col-md-4">
       <div class="card">
         <div class="card-header d-flex align-items-center">
-          <h3 class="h4"><i class="fa fa-ticket"></i> <?=lang("Ticket_no")?><?=$ticket->id?></h3>
+          <h3 class="h4"><i class="fas fa-ticket"></i> <?=lang("Ticket_no")?><?=$ticket->id?></h3>
         </div>
         <div class="card-body">
           <div class="ticket-details">

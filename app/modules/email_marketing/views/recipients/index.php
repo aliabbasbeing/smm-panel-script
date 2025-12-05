@@ -187,7 +187,7 @@ $(document).ready(function(){
       data: $.param(formData),
       timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
@@ -243,7 +243,7 @@ $(document).ready(function(){
       data: $.param(formData),
       timeout: 120000, // 120 seconds timeout for larger imports
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
@@ -292,7 +292,7 @@ $(document).ready(function(){
       contentType: false,
       timeout: 60000, // 60 seconds timeout
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
+        $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
       },
       success: function(response){
         if(response.status == 'success'){
@@ -339,7 +339,7 @@ $(document).ready(function(){
       data: $.param(formData),
       timeout: 30000, // 30 seconds timeout
       beforeSend: function(){
-        $form.find('button').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Adding...');
+        $form.find('button').prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Adding...');
       },
       success: function(response){
         if(response.status == 'success'){

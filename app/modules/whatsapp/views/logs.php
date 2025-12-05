@@ -88,7 +88,7 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
+        <i class="fab fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
     </h1>
 </div>
 

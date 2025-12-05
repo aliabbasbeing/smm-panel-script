@@ -3,11 +3,11 @@
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">
-                    <i class="fa fa-refresh"></i> Bulk Status Update Results
+                    <i class="fas fa-arrows-rotate"></i> Bulk Status Update Results
                 </h3>
                 <div class="card-options">
                     <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-default btn-sm">
-                        <i class="fa fa-arrow-left"></i> Back to Form
+                        <i class="fas fa-arrow-left"></i> Back to Form
                     </a>
                 </div>
             </div>
@@ -51,10 +51,10 @@
                 
                 <div class="mt-4">
                     <a href="<?=cn('api_provider')?>" class="btn btn-primary">
-                        <i class="fa fa-arrow-left"></i> Back to API Providers
+                        <i class="fas fa-arrow-left"></i> Back to API Providers
                     </a>
                     <a href="<?=cn('api_provider/update_order_status')?>" class="btn btn-outline-primary">
-                        <i class="fa fa-refresh"></i> Update Another Order
+                        <i class="fas fa-arrows-rotate"></i> Update Another Order
                     </a>
                 </div>
             </div>

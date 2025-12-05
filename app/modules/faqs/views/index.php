@@ -5,7 +5,7 @@
   ?>
   <h1 class="page-title">
     <a href="<?php echo cn("$module/update"); ?>" class="btn-add-new">
-      <span class="add-new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span>
+      <span class="add-new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span>
       <?php echo lang("FAQs"); ?>
     </a>
   </h1>

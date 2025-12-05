@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <h1 class="page-title">
         <span data-toggle="modal" data-target="#install-module">
-          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
+          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
           </span>
         </span> 
         <?=lang("Modules")?>

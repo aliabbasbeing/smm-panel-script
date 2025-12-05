@@ -12,7 +12,7 @@
         ?>
         <form class="form actionForm" action="<?=$url?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?=lang("edit_service")?></h4>
+            <h4 class="modal-title"><i class="fas fa-edit"></i> <?=lang("edit_service")?></h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>
@@ -281,7 +281,7 @@
     window.emojiPicker = new EmojiPicker({
       emojiable_selector: '[data-emojiable=true]',
       assetsPath: "<?=BASE?>assets/plugins/emoji-picker/lib/img/",
-      popupButtonClasses: 'fa fa-smile-o'
+      popupButtonClasses: 'far fa-face-smile'
     });
     window.emojiPicker.discover();
   });
@@ -292,7 +292,7 @@
     window.emojiPicker = new EmojiPicker({
       emojiable_selector: '[data-emojiable=true]',
       assetsPath: "<?=BASE?>assets/plugins/emoji-picker/lib/img/",
-      popupButtonClasses: 'fa fa-smile-o'
+      popupButtonClasses: 'far fa-face-smile'
     });
     window.emojiPicker.discover();
   });

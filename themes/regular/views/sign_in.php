@@ -36,7 +36,7 @@
                     
               <div class="input-icon mb-5">
                 <span class="input-icon-addon">
-                  <i class="fa fa-key"></i>
+                  <i class="fas fa-key"></i>
                 </span>
                 <input type="password" class="form-control" name="password" placeholder="<?=lang("Password")?>" value="<?=(isset($cookie_pass) && $cookie_pass != "") ? $cookie_pass : ""?>" required>
               </div>  

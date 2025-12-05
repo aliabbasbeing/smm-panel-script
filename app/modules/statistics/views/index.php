@@ -141,7 +141,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-danger-gradient text-white mr-3">
-              <i class="fa fa-ticket"></i>
+              <i class="fas fa-ticket"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -162,7 +162,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-success-gradient text-white mr-3">
-              <i class="icon-fa fa fa-money"></i>
+              <i class="icon-fa fas fa-money-bill"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -178,7 +178,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-info-gradient text-white mr-3">
-              <i class="icon-fa fa fa-balance-scale"></i>
+              <i class="icon-fa fas fa-balance-scale"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -194,7 +194,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-warning-gradient text-white mr-3">
-              <i class="icon-fa fa fa-calculator"></i>
+              <i class="icon-fa fas fa-calculator"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -210,7 +210,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md bg-danger-gradient text-white mr-3">
-              <i class="icon-fa fa fa-calculator"></i>
+              <i class="icon-fa fas fa-calculator"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -310,7 +310,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md mr-3 text-info">
-              <i class="fa fa-hourglass-half"></i>
+              <i class="fas fa-hourglass-half"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">
@@ -363,7 +363,7 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
             <span class="stamp stamp-md mr-3 text-info">
-              <i class="fa fa-ticket"></i>
+              <i class="fas fa-ticket"></i>
             </span>
             <div class="d-flex order-lg-2 ml-auto">
               <div class="ml-2 d-lg-block text-right">

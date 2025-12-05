@@ -133,7 +133,7 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label class="form-label"><?=lang("Icon Class")?></label>
-                <input type="text" class="form-control" name="icon" id="menuIcon" placeholder="<?=lang("e.g., fe fe-home or fa fa-dashboard")?>">
+                <input type="text" class="form-control" name="icon" id="menuIcon" placeholder="<?=lang("e.g., fe fe-home or fas fa-gauge")?>">
                 <small class="text-muted"><?=lang("Use Font Awesome or Feather icons")?></small>
               </div>
             </div>

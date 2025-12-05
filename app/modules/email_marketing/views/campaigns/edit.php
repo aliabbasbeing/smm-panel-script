@@ -4,7 +4,7 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_edit/' . $campaign->ids); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Campaign</h4>
+            <h4 class="modal-title"><i class="fas fa-edit"></i> Edit Campaign</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>

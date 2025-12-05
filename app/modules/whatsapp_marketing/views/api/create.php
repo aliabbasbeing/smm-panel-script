@@ -5,7 +5,7 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_api_create'); ?>" data-redirect="<?php echo cn($module . '/api'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-cog"></i> Add WhatsApp API Configuration</h4>
+            <h4 class="modal-title"><i class="fas fa-cog"></i> Add WhatsApp API Configuration</h4>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             </button>
           </div>

@@ -52,17 +52,17 @@
       </a>
 
       <a href="<?php echo cn($module."/child-panel")?>" class="sidebar-link <?php echo (segment(2) == 'child-panel') ? 'active' : ''?>">
-        <i class="fa fa-child"></i>
+        <i class="fas fa-child"></i>
         <span><?=lang("child_panel")?></span>
       </a>
 
       <a href="<?php echo cn($module."/affiliate")?>" class="sidebar-link <?php echo (segment(2) == 'affiliate') ? 'active' : ''?>">
-        <i class="fa fa-users"></i>
+        <i class="fas fa-users"></i>
         <span><?=lang("Affiliate")?></span>
       </a>
 
       <a href="<?php echo cn($module. "/modules")?>" class="sidebar-link <?php echo (segment(2) == 'modules') ? 'active' : ''?>">
-        <i class="fa fa-question-circle"></i>
+        <i class="fas fa-question-circle"></i>
         <span><?=lang("Modules")?></span>
       </a>
 
@@ -77,7 +77,7 @@
       </a>
 
       <a href="<?php echo cn($module."/rules_updates")?>" class="sidebar-link <?php echo (segment(2) == 'rules_updates') ?  'active' : ''?>">
-        <i class="fa fa-info-circle"></i>
+        <i class="fas fa-info-circle"></i>
         <span>Rules & Updates</span>
       </a>
 
@@ -136,7 +136,7 @@
       </a>
       
       <a href="<?php echo cn($module."/whatsapp_notifications")?>" class="sidebar-link <?php echo (segment(2) == 'whatsapp_notifications') ? 'active' : ''?>">
-        <i class="fa fa-whatsapp"></i>
+        <i class="fab fa-whatsapp"></i>
         <span>WhatsApp Notifications</span>
       </a>
     </nav>
