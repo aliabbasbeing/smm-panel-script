@@ -1317,13 +1317,14 @@ if(!function_exists("get_display_order_id")){
 			$multiplier = ($multiplier >= 2 && $multiplier <= 100) ? $multiplier : 7;
 			$offset = ($offset >= 100 && $offset <= 100000) ? $offset : 1000;
 			
-			// Generate fake order ID: (real_id * multiplier) + offset
-			// Check for potential overflow (PHP_INT_MAX)
-			$result = ($real_order_id * $multiplier) + $offset;
-			if ($result > PHP_INT_MAX || $result < 0) {
+			// Check for potential overflow before performing calculation
+			$max_safe_order = (PHP_INT_MAX - $offset) / $multiplier;
+			if ($real_order_id > $max_safe_order) {
 				return $real_order_id; // Return original if overflow would occur
 			}
-			return $result;
+			
+			// Generate fake order ID: (real_id * multiplier) + offset
+			return ($real_order_id * $multiplier) + $offset;
 		}
 		
 		return $real_order_id;
@@ -1358,15 +1359,19 @@ if(!function_exists("get_real_order_id")){
 				return $fake_order_id; // Cannot be a valid fake ID
 			}
 			
-			// Reverse the formula: (fake_id - offset) / multiplier
-			$potential_real_id = ($fake_order_id - $offset) / $multiplier;
-			
-			// Verify it results in a valid integer
-			if ($potential_real_id != floor($potential_real_id) || $potential_real_id <= 0) {
+			// Check divisibility using modulo before division
+			$adjusted = $fake_order_id - $offset;
+			if ($adjusted % $multiplier !== 0) {
 				return $fake_order_id; // Not a valid fake ID, return as-is
 			}
 			
-			return (int)$potential_real_id;
+			// Calculate real ID
+			$real_id = $adjusted / $multiplier;
+			if ($real_id <= 0) {
+				return $fake_order_id; // Not a valid result
+			}
+			
+			return (int)$real_id;
 		}
 		
 		return $fake_order_id;
