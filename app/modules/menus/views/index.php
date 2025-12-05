@@ -1,8 +1,8 @@
 <div class="row justify-content-center">
   <div class="col-md-12 col-lg-12">
-    <div class="card">
+    <div class="card p-0">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <h3 class="card-title">
+        <h3 class="card-title" style="color:#fff !important;">
           <i class="fe fe-menu"></i> <?=lang("Header Menu Management")?>
         </h3>
         <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menuModal" onclick="openAddModal()">

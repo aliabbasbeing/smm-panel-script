@@ -155,3 +155,15 @@ User ID: 114650323541547370749
 User exists: no
 New user created with ID: 6265
 Redirecting to statistics
+2025-12-05 18:20:49 - Callback started
+Client ID: 234570890438-nc6s421...
+OAuth code present: yes
+Token received: yes
+User info received: yes
+User email: hbllimited051@gmail.com
+User ID: 100173396573508899668
+User exists: yes
+Session set for user ID: 6256
+About to redirect to statistics
+Before WhatsApp alert
+Redirecting to statistics

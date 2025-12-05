@@ -242,3 +242,6 @@
 [03-Dec-2025 11:25:48 Asia/Karachi] Admin WhatsApp notification sent successfully for order #27583
 [03-Dec-2025 12:29:50 Asia/Karachi] Admin WhatsApp notification sent successfully for order #27584
 [03-Dec-2025 13:22:41 Asia/Karachi] Admin WhatsApp notification sent successfully for order #27585
+[05-Dec-2025 17:22:38 Asia/Karachi] Failed to send admin WhatsApp notification: Failed to send: Operation timed out after 5002 milliseconds with 0 bytes received
+[05-Dec-2025 17:23:38 Asia/Karachi] Failed to send admin WhatsApp notification: Failed to send: Operation timed out after 5002 milliseconds with 0 bytes received
+[05-Dec-2025 18:31:50 Asia/Karachi] Failed to send admin WhatsApp notification: Failed to send: Operation timed out after 5008 milliseconds with 0 bytes received
