@@ -1338,9 +1338,9 @@ if(!function_exists("get_display_order_id")){
  */
 if(!function_exists("get_real_order_id")){
 	function get_real_order_id($fake_order_id){
-		// Validate input - ensure it's a positive integer
+		// Validate input - ensure it's a positive numeric value
 		if (!is_numeric($fake_order_id) || $fake_order_id <= 0) {
-			return (int)$fake_order_id;
+			return $fake_order_id; // Return original for invalid input
 		}
 		$fake_order_id = (int)$fake_order_id;
 		
