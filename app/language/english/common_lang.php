@@ -943,3 +943,7 @@ $lang["Displayed Order ID"] = "Displayed Order ID";
 $lang["When enabled, order IDs will be incremented with a fake sequence to mask the real order count. This helps protect business information by hiding actual order volume from customers."] = "When enabled, order IDs will be incremented with a fake sequence to mask the real order count. This helps protect business information by hiding actual order volume from customers.";
 $lang["This value will be added to actual order IDs when displaying to users. For example, if offset is 1000 and real order ID is 5, displayed ID will be 1005."] = "This value will be added to actual order IDs when displaying to users. For example, if offset is 1000 and real order ID is 5, displayed ID will be 1005.";
 $lang["This multiplies the actual order ID before adding the offset. For example, with multiplier 2 and offset 1000, real order ID 5 becomes (5*2)+1000=1010."] = "This multiplies the actual order ID before adding the offset. For example, with multiplier 2 and offset 1000, real order ID 5 becomes (5*2)+1000=1010.";
+$lang["Fake"] = "Fake";
+
+$lang["with fake ID preview"] = "with fake ID preview";
+$lang["Changing these settings will affect all existing and new orders"] = "Changing these settings will affect all existing and new orders";

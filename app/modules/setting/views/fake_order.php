@@ -54,8 +54,8 @@
                 <ul class="mb-0 mt-2">
                   <li><?=lang("The fake order ID is only for display purposes to customers")?></li>
                   <li><?=lang("Internal order tracking still uses real order IDs")?></li>
-                  <li><?=lang("Admin panel will continue to show actual order IDs")?></li>
-                  <li><?=lang("Changing these settings will affect new orders only")?></li>
+                  <li><strong><?=lang("Admin panel will continue to show actual order IDs")?></strong> (<?=lang("with fake ID preview")?>)</li>
+                  <li><?=lang("Changing these settings will affect all existing and new orders")?></li>
                 </ul>
               </div>
 

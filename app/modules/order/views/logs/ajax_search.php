@@ -60,7 +60,11 @@
               <td class="text-center"><?php 
                 // Show fake order ID to regular users if feature is enabled
                 $display_order_id = (get_role('admin') || get_role('supporter')) ? $row->id : get_fake_order_id($row->id);
+                $fake_id_preview = get_fake_order_id($row->id);
                 echo $display_order_id;
+                if ((get_role('admin') || get_role('supporter')) && is_fake_order_enabled() && $fake_id_preview != $row->id) {
+                  echo '<br><small class="text-muted" style="font-size: 10px;">'.lang("Fake").': '.$fake_id_preview.'</small>';
+                }
               ?></td>
 
               <?php
