@@ -101,199 +101,214 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
     <div class="menu-wrapper">
       <ul class="menu" id="menu">
         <?php
-        if (!function_exists('get_role')) {
-            function get_role($role) {
-                if (!isset($_SESSION['roles'])) return false;
-                $user_roles = $_SESSION['roles'];
-                return in_array($role, $user_roles);
-            }
-        }
+        // Get dynamic menu items
+        $dynamic_menu_items = get_header_menu_items();
+        
+        // Check if dynamic menu items exist
+        if (!empty($dynamic_menu_items)): 
+          foreach ($dynamic_menu_items as $menu_item):
+            // Determine if current menu item is active
+            $menu_url = isset($menu_item['url']) ? $menu_item['url'] : '';
+            $is_active = is_menu_url_active($menu_url);
+            $target = (!empty($menu_item['new_tab']) && $menu_item['new_tab'] == 1) ? ' target="_blank"' : '';
         ?>
-
-        <!-- Dashboard (Admin only) -->
-       
+          <li class="menu-item <?=$is_active ? 'active' : ''?>">
+            <a href="<?=render_menu_url($menu_url)?>" class="menu-link"<?=$target?>>
+              <?php if (!empty($menu_item['icon'])): ?>
+                <i class="<?=htmlspecialchars($menu_item['icon'])?>"></i>
+              <?php endif; ?>
+              <?=htmlspecialchars($menu_item['title'])?>
+            </a>
+          </li>
+        <?php 
+          endforeach;
+        else:
+          // Fallback to default hardcoded menu if no dynamic items exist
+        ?>
+          <!-- Dashboard -->
           <li class="menu-item <?=(segment(1) == 'statistics') ? 'active' : ''?>">
             <a href="<?=cn('statistics')?>" class="menu-link">
               <i class="fe fe-bar-chart-2"></i> <?=lang("Dashboard")?>
             </a>
           </li>
 
-        <!-- New Order -->
-        <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'add') ? 'active' : ''?>">
-          <a href="<?=cn('order/add')?>" class="menu-link">
-            <i class="fe fe-shopping-cart"></i> <?=lang("New_order")?>
-          </a>
-        </li>
-
-        <!-- Orders -->
-        <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'log') ? 'active' : ''?>">
-          <a href="<?=cn('order/log')?>" class="menu-link">
-            <i class="fa fa-shopping-cart"></i> <?=lang("Orders")?>
-          </a>
-        </li>
-
-        <!-- Refill -->
-        <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'refill') ? 'active' : ''?>">
-          <a href="<?=cn('refill/log')?>" class="menu-link">
-            <i class="fa fa-recycle"></i> <?=lang("Refill")?>
-          </a>
-        </li>
-
-        <!-- Category (Admin/Supporter) -->
-        <?php if (get_role("admin") || get_role("supporter")) { ?>
-          <li class="menu-item <?=(segment(1) == 'category') ? 'active' : ''?>">
-            <a href="<?=cn('category')?>" class="menu-link">
-              <i class="fa fa-table"></i> <?=lang("Category")?>
-            </a>
-          </li>
-        <?php } ?>
-
-        <!-- Services -->
-        <li class="menu-item <?=(segment(1) == 'services') ? 'active' : ''?>">
-          <a href="<?=cn('services')?>" class="menu-link">
-            <i class="fe fe-list"></i> <?=lang('Services')?>
-          </a>
-        </li>
-
-        <!-- Add Funds -->
-        <?php if (get_role("user") || get_role("admin")) { ?>
-          <li class="menu-item <?=(segment(1) == 'add_funds') ? 'active' : ''?>">
-            <a href="<?=cn('add_funds')?>" class="menu-link">
-              <i class="fa fa-money"></i> <?=lang("Add_funds")?>
-            </a>
-          </li>
-        <?php } ?>
-
-        <!-- API (if enabled and not admin) -->
-        <?php if (get_option('enable_api_tab') && !get_role("admin")) { ?>      
-          <li class="menu-item <?=(segment(2) == 'docs') ? 'active' : ''?>">
-            <a href="<?=cn('api/docs')?>" class="menu-link">
-              <i class="fe fe-share-2"></i> <?=lang("API")?>
-            </a>
-          </li>
-        <?php } ?>
-
-        <!-- Tickets -->
-        <li class="menu-item <?=(segment(1) == 'tickets') ? 'active' : ''?>">
-          <a href="<?=cn('tickets')?>" class="menu-link">
-            <i class="fa fa-comments-o"></i> <?=lang("Tickets")?>
-            <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
-              <span class="badge badge-info"><?=$total_unread_tickets?></span>
-            <?php endif; ?>
-          </a>
-        </li>
-
-        <!-- Affiliate (if enabled) -->
-        <?php if(get_option("enable_affiliate") == "1"){ ?>
-          <li class="menu-item <?=(segment(1) == 'affiliate') ? 'active' : ''?>">
-            <a href="<?=cn('affiliate')?>" class="menu-link">
-              <i class="fa fa-money"></i> <?=lang("Affiliate")?>
-            </a>
-          </li>
-        <?php } ?>
-
-        <!-- Child Panel (if enabled) -->
-        <?php if(get_option("is_childpanel_status") == "1"){ ?>
-          <li class="menu-item <?=(segment(1) == 'childpanel') ? 'active' : ''?>">
-            <a href="<?=cn('childpanel/add')?>" class="menu-link">
-              <i class="fa fa-child"></i> <?=lang("Child_Panel")?>
-            </a>
-          </li>
-        <?php } ?>
-
-        <!-- Transactions -->
-        <li class="menu-item <?=(segment(1) == 'transactions') ? 'active' : ''?>">
-          <a href="<?=cn('transactions')?>" class="menu-link">
-            <i class="fe fe-calendar"></i> <?=lang("Transaction_logs")?>
-          </a>
-        </li>
-
-        <!-- Balance Logs -->
-        <li class="menu-item <?=(segment(1) == 'balance_logs') ? 'active' : ''?>">
-          <a href="<?=cn('balance_logs')?>" class="menu-link">
-            <i class="fe fe-activity"></i> <?=lang("Balance_Logs")?>
-          </a>
-        </li>
-
-        <!-- Admin Section -->
-        <?php if(get_role("admin") || get_role("supporter")){ ?>
-          <li class="menu-item <?=(segment(1) == 'users') ? 'active' : ''?>">
-            <a href="<?=cn('users')?>" class="menu-link">
-              <i class="fe fe-users"></i> <?=lang("Users")?>
+          <!-- New Order -->
+          <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'add') ? 'active' : ''?>">
+            <a href="<?=cn('order/add')?>" class="menu-link">
+              <i class="fe fe-shopping-cart"></i> <?=lang("New_order")?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'subscribers') ? 'active' : ''?>">
-            <a href="<?=cn('subscribers')?>" class="menu-link">
-              <i class="fa fa-user-circle-o"></i> <?=lang("subscribers")?>
+          <!-- Orders -->
+          <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'log') ? 'active' : ''?>">
+            <a href="<?=cn('order/log')?>" class="menu-link">
+              <i class="fa fa-shopping-cart"></i> <?=lang("Orders")?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'setting') ? 'active' : ''?>">
-            <a href="<?=cn('setting')?>" class="menu-link">
-              <i class="fa fa-cog"></i> <?=lang("System_Settings")?>
-            </a>
-          </li>
-          
-          <li class="menu-item <?=(segment(1) == 'currencies') ? 'active' : ''?>">
-            <a href="<?=cn('currencies')?>" class="menu-link">
-              <i class="fa fa-usd"></i> <?=lang("Currencies")?>
-            </a>
-          </li>
-          
-          <li class="menu-item <?=(segment(1) == 'whatsapp') ? 'active' : ''?>">
-            <a href="<?=cn('whatsapp')?>" class="menu-link">
-              <i class="fa fa-whatsapp"></i> <?=lang("Whatsapp_Management")?>
+          <!-- Refill -->
+          <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'refill') ? 'active' : ''?>">
+            <a href="<?=cn('refill/log')?>" class="menu-link">
+              <i class="fa fa-recycle"></i> <?=lang("Refill")?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'api_provider') ? 'active' : ''?>">
-            <a href="<?=cn('api_provider')?>" class="menu-link">
-              <i class="fa fa-share-alt"></i> <?=lang("Services_Providers")?>
+          <!-- Category (Admin/Supporter) -->
+          <?php if (get_role("admin") || get_role("supporter")) { ?>
+            <li class="menu-item <?=(segment(1) == 'category') ? 'active' : ''?>">
+              <a href="<?=cn('category')?>" class="menu-link">
+                <i class="fa fa-table"></i> <?=lang("Category")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Services -->
+          <li class="menu-item <?=(segment(1) == 'services') ? 'active' : ''?>">
+            <a href="<?=cn('services')?>" class="menu-link">
+              <i class="fe fe-list"></i> <?=lang('Services')?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'payments') ? 'active' : ''?>">
-            <a href="<?=cn('payments')?>" class="menu-link">
-              <i class="fa fa-credit-card"></i> <?=lang("Payments")?>
+          <!-- Add Funds -->
+          <?php if (get_role("user") || get_role("admin")) { ?>
+            <li class="menu-item <?=(segment(1) == 'add_funds') ? 'active' : ''?>">
+              <a href="<?=cn('add_funds')?>" class="menu-link">
+                <i class="fa fa-money"></i> <?=lang("Add_funds")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- API (if enabled and not admin) -->
+          <?php if (get_option('enable_api_tab') && !get_role("admin")) { ?>      
+            <li class="menu-item <?=(segment(2) == 'docs') ? 'active' : ''?>">
+              <a href="<?=cn('api/docs')?>" class="menu-link">
+                <i class="fe fe-share-2"></i> <?=lang("API")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Tickets -->
+          <li class="menu-item <?=(segment(1) == 'tickets') ? 'active' : ''?>">
+            <a href="<?=cn('tickets')?>" class="menu-link">
+              <i class="fa fa-comments-o"></i> <?=lang("Tickets")?>
+              <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
+                <span class="badge badge-info"><?=$total_unread_tickets?></span>
+              <?php endif; ?>
             </a>
           </li>
-        <?php } ?>
 
-        <!-- Admin Only -->
-        <?php if(get_role("admin")){ ?>
-          <li class="menu-item <?=(segment(1) == 'news') ? 'active' : ''?>">
-            <a href="<?=cn('news')?>" class="menu-link">
-              <i class="fa fa-bell"></i> <?=lang("Announcement")?>
+          <!-- Affiliate (if enabled) -->
+          <?php if(get_option("enable_affiliate") == "1"){ ?>
+            <li class="menu-item <?=(segment(1) == 'affiliate') ? 'active' : ''?>">
+              <a href="<?=cn('affiliate')?>" class="menu-link">
+                <i class="fa fa-money"></i> <?=lang("Affiliate")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Child Panel (if enabled) -->
+          <?php if(get_option("is_childpanel_status") == "1"){ ?>
+            <li class="menu-item <?=(segment(1) == 'childpanel') ? 'active' : ''?>">
+              <a href="<?=cn('childpanel/add')?>" class="menu-link">
+                <i class="fa fa-child"></i> <?=lang("Child_Panel")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Transactions -->
+          <li class="menu-item <?=(segment(1) == 'transactions') ? 'active' : ''?>">
+            <a href="<?=cn('transactions')?>" class="menu-link">
+              <i class="fe fe-calendar"></i> <?=lang("Transaction_logs")?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'faqs') ? 'active' : ''?>">
-            <a href="<?=cn('faqs')?>" class="menu-link">
-              <i class="fa fa-book"></i> FAQs
+          <!-- Balance Logs -->
+          <li class="menu-item <?=(segment(1) == 'balance_logs') ? 'active' : ''?>">
+            <a href="<?=cn('balance_logs')?>" class="menu-link">
+              <i class="fe fe-activity"></i> <?=lang("Balance_Logs")?>
             </a>
           </li>
 
-          <li class="menu-item <?=(segment(1) == 'language') ? 'active' : ''?>">
-            <a href="<?=cn('language')?>" class="menu-link">
-              <i class="fa fa-language"></i> <?=lang("Language")?>
+          <!-- Admin Section -->
+          <?php if(get_role("admin") || get_role("supporter")){ ?>
+            <li class="menu-item <?=(segment(1) == 'users') ? 'active' : ''?>">
+              <a href="<?=cn('users')?>" class="menu-link">
+                <i class="fe fe-users"></i> <?=lang("Users")?>
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'subscribers') ? 'active' : ''?>">
+              <a href="<?=cn('subscribers')?>" class="menu-link">
+                <i class="fa fa-user-circle-o"></i> <?=lang("subscribers")?>
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'setting') ? 'active' : ''?>">
+              <a href="<?=cn('setting')?>" class="menu-link">
+                <i class="fa fa-cog"></i> <?=lang("System_Settings")?>
+              </a>
+            </li>
+            
+            <li class="menu-item <?=(segment(1) == 'currencies') ? 'active' : ''?>">
+              <a href="<?=cn('currencies')?>" class="menu-link">
+                <i class="fa fa-usd"></i> <?=lang("Currencies")?>
+              </a>
+            </li>
+            
+            <li class="menu-item <?=(segment(1) == 'whatsapp') ? 'active' : ''?>">
+              <a href="<?=cn('whatsapp')?>" class="menu-link">
+                <i class="fa fa-whatsapp"></i> <?=lang("Whatsapp_Management")?>
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'api_provider') ? 'active' : ''?>">
+              <a href="<?=cn('api_provider')?>" class="menu-link">
+                <i class="fa fa-share-alt"></i> <?=lang("Services_Providers")?>
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'payments') ? 'active' : ''?>">
+              <a href="<?=cn('payments')?>" class="menu-link">
+                <i class="fa fa-credit-card"></i> <?=lang("Payments")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Admin Only -->
+          <?php if(get_role("admin")){ ?>
+            <li class="menu-item <?=(segment(1) == 'news') ? 'active' : ''?>">
+              <a href="<?=cn('news')?>" class="menu-link">
+                <i class="fa fa-bell"></i> <?=lang("Announcement")?>
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'faqs') ? 'active' : ''?>">
+              <a href="<?=cn('faqs')?>" class="menu-link">
+                <i class="fa fa-book"></i> FAQs
+              </a>
+            </li>
+
+            <li class="menu-item <?=(segment(1) == 'language') ? 'active' : ''?>">
+              <a href="<?=cn('language')?>" class="menu-link">
+                <i class="fa fa-language"></i> <?=lang("Language")?>
+              </a>
+            </li>
+          <?php } ?>
+
+          <!-- Account -->
+          <li class="menu-item <?=(segment(1) == 'profile') ? 'active' : ''?>">
+            <a href="<?=cn('profile')?>" class="menu-link">
+              <i class="fa fa-user"></i> <?=lang("Account")?>
             </a>
           </li>
-        <?php } ?>
 
-        <!-- Account -->
-        <li class="menu-item <?=(segment(1) == 'profile') ? 'active' : ''?>">
-          <a href="<?=cn('profile')?>" class="menu-link">
-            <i class="fa fa-user"></i> <?=lang("Account")?>
-          </a>
-        </li>
-
-        <!-- Sign Out -->
-        <li class="menu-item">
-          <a href="<?=cn("auth/logout")?>" class="menu-link">
-            <i class="fa fa-power-off"></i> <?=lang("Sign_Out")?>
-          </a>
-        </li>
+          <!-- Sign Out -->
+          <li class="menu-item">
+            <a href="<?=cn("auth/logout")?>" class="menu-link">
+              <i class="fa fa-power-off"></i> <?=lang("Sign_Out")?>
+            </a>
+          </li>
+        <?php endif; ?>
       </ul>
     </div>
   </nav>

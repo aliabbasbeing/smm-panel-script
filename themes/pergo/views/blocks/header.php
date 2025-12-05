@@ -80,6 +80,30 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
               <ul class="navbar-nav ml-auto">
+                <?php
+                // Get dynamic menu items for landing page
+                $landing_menu_items = get_header_menu_items();
+                
+                if (!empty($landing_menu_items)):
+                  foreach ($landing_menu_items as $menu_item):
+                    // Only show items visible to guests if not logged in
+                    $menu_url = isset($menu_item['url']) ? $menu_item['url'] : '';
+                    $target = (!empty($menu_item['new_tab']) && $menu_item['new_tab'] == 1) ? ' target="_blank"' : '';
+                    $is_anchor = (strpos($menu_url, '#') === 0);
+                ?>
+                  <li class="nav-item<?=$is_anchor ? ' active' : ''?>">
+                    <a class="nav-link<?=$is_anchor ? ' js-scroll-trigger' : ''?>" href="<?=render_menu_url($menu_url)?>"<?=$target?>>
+                      <?php if (!empty($menu_item['icon'])): ?>
+                        <i class="<?=htmlspecialchars($menu_item['icon'])?>"></i>
+                      <?php endif; ?>
+                      <?=htmlspecialchars($menu_item['title'])?>
+                    </a>
+                  </li>
+                <?php 
+                  endforeach;
+                else:
+                  // Fallback to default menu
+                ?>
                 <li class="nav-item active">
                   <a class="nav-link js-scroll-trigger" href="#home">
                     <i class="fa fa-home"></i> <?=lang("Home")?>
@@ -94,6 +118,7 @@
                     </a>
                   </li>
                 <?php } ?>
+                <?php endif; ?>
 
                 <?php if (!session('uid')) { ?>
                   <!-- Login / Sign Up as nav items for better mobile behaviour -->
