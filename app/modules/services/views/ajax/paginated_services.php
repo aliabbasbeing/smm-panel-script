@@ -34,8 +34,10 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
             </tr>
         </thead>
         <tbody>
-            <?php foreach ($services as $row): ?>
-            <tr class="tr_<?php echo (get_role('admin')) ? $row->ids : $row->id; ?>" data-service-id="<?=$row->id?>" data-service-ids="<?=$row->ids?>">
+            <?php foreach ($services as $row): 
+                $row_identifier = (get_role('admin')) ? $row->ids : $row->id;
+            ?>
+            <tr class="tr_<?php echo $row_identifier; ?>" data-service-id="<?=$row->id?>" data-service-ids="<?=$row->ids?>">
                 <?php if (get_role("admin")): ?>
                 <td class="text-center w-1">
                     <div class="custom-controls-stacked">

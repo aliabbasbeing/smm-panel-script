@@ -238,6 +238,7 @@
           <label class="filter-label"><?=lang("provider")?></label>
           <select name="provider" id="filter-provider" class="form-control">
             <option value="all"><?=lang("all_providers")?></option>
+            <option value="api" <?=(isset($filters['provider']) && $filters['provider'] === 'api') ? 'selected' : ''?>><?=lang("API")?> (<?=lang("all")?>)</option>
             <option value="manual" <?=(isset($filters['provider']) && $filters['provider'] === 'manual') ? 'selected' : ''?>><?=lang("Manual")?></option>
             <?php if (!empty($providers_list)): 
               foreach ($providers_list as $provider): ?>
@@ -648,8 +649,7 @@
           $('#filter-status').val('0');
           break;
         case 'api':
-          $('#filter-provider').val('all');
-          // We need a specific filter for API, so we'll handle it differently
+          $('#filter-provider').val('api');
           break;
         case 'manual':
           $('#filter-provider').val('manual');

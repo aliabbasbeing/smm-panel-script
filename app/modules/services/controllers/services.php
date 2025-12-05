@@ -598,7 +598,7 @@ class services extends MX_Controller {
 
 	/**
 	 * Export services to CSV
-	 * Admin only
+	 * Admin only - Uses chunked export for better memory usage
 	 */
 	public function export_csv(){
 		if (!get_role('admin')) {
@@ -613,13 +613,16 @@ class services extends MX_Controller {
 			'provider'  => $this->input->get('provider'),
 		);
 		
-		// Get all filtered services (no pagination for export)
-		$result = $this->model->get_paginated_services($filters, 1, 10000);
-		$services = $result['services'];
-		
-		// Set headers for CSV download
+		// Set headers for CSV download with streaming
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename="services_export_' . date('Y-m-d_H-i-s') . '.csv"');
+		header('Pragma: no-cache');
+		header('Expires: 0');
+		
+		// Disable output buffering for streaming
+		if (ob_get_level()) {
+			ob_end_clean();
+		}
 		
 		$output = fopen('php://output', 'w');
 		
@@ -629,20 +632,42 @@ class services extends MX_Controller {
 		// CSV headers
 		fputcsv($output, array('ID', 'Name', 'Category', 'Price', 'Min', 'Max', 'Provider', 'API Service ID', 'Status', 'Dripfeed', 'Type'));
 		
-		foreach ($services as $service) {
-			fputcsv($output, array(
-				$service->id,
-				$service->name,
-				$service->category_name,
-				$service->price,
-				$service->min,
-				$service->max,
-				isset($service->api_name) ? $service->api_name : 'Manual',
-				isset($service->api_service_id) ? $service->api_service_id : '',
-				$service->status == 1 ? 'Active' : 'Inactive',
-				isset($service->dripfeed) && $service->dripfeed == 1 ? 'Yes' : 'No',
-				isset($service->type) ? $service->type : 'default'
-			));
+		// Export in chunks of 500 records for better memory usage
+		$chunk_size = 500;
+		$page = 1;
+		$has_more = true;
+		
+		while ($has_more) {
+			$result = $this->model->get_paginated_services($filters, $page, $chunk_size);
+			$services = $result['services'];
+			
+			if (empty($services)) {
+				$has_more = false;
+				break;
+			}
+			
+			foreach ($services as $service) {
+				fputcsv($output, array(
+					$service->id,
+					$service->name,
+					isset($service->category_name) ? $service->category_name : '',
+					$service->price,
+					$service->min,
+					$service->max,
+					isset($service->api_name) ? $service->api_name : 'Manual',
+					isset($service->api_service_id) ? $service->api_service_id : '',
+					$service->status == 1 ? 'Active' : 'Inactive',
+					isset($service->dripfeed) && $service->dripfeed == 1 ? 'Yes' : 'No',
+					isset($service->type) ? $service->type : 'default'
+				));
+			}
+			
+			// Flush output to browser
+			fflush($output);
+			
+			// Check if there are more pages
+			$has_more = ($page * $chunk_size) < $result['total'];
+			$page++;
 		}
 		
 		fclose($output);

@@ -213,39 +213,16 @@ class services_model extends MY_Model {
 		$per_page = max(10, min(100, (int)$per_page));
 		$offset = ($page - 1) * $per_page;
 		
-		// Build base query
-		if (get_role("admin")) {
-			$this->db->select('s.*, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
-		} else {
-			$this->db->where("s.status", "1");
-			$this->db->select('s.id, s.desc, s.ids, s.name, s.min, s.max, s.price, s.dripfeed, s.status, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
-		}
-		
-		$this->db->from($this->tb_services." s");
-		$this->db->join($this->tb_categories." c", "c.id = s.cate_id", 'left');
-		$this->db->join($this->tb_api_providers." api", "s.api_provider_id = api.id", 'left');
-		
-		// Apply filters
+		// Build base query for counting
+		$this->_build_services_base_query();
 		$this->_apply_filters($filters);
 		
 		// Get total count first (before limit)
-		$count_query = clone $this->db;
 		$total = $this->db->count_all_results('', false);
 		
-		// Reset the query and apply filters again
+		// Reset the query and rebuild for fetching data
 		$this->db->reset_query();
-		
-		if (get_role("admin")) {
-			$this->db->select('s.*, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
-		} else {
-			$this->db->where("s.status", "1");
-			$this->db->select('s.id, s.desc, s.ids, s.name, s.min, s.max, s.price, s.dripfeed, s.status, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
-		}
-		
-		$this->db->from($this->tb_services." s");
-		$this->db->join($this->tb_categories." c", "c.id = s.cate_id", 'left');
-		$this->db->join($this->tb_api_providers." api", "s.api_provider_id = api.id", 'left');
-		
+		$this->_build_services_base_query();
 		$this->_apply_filters($filters);
 		
 		// Apply ordering and pagination
@@ -268,6 +245,23 @@ class services_model extends MY_Model {
 			'from' => $offset + 1,
 			'to' => min($offset + $per_page, $total)
 		);
+	}
+	
+	/**
+	 * Build base query for services with joins
+	 * Extracted to reduce code duplication
+	 */
+	private function _build_services_base_query(){
+		if (get_role("admin")) {
+			$this->db->select('s.*, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
+		} else {
+			$this->db->where("s.status", "1");
+			$this->db->select('s.id, s.desc, s.ids, s.name, s.min, s.max, s.price, s.dripfeed, s.status, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
+		}
+		
+		$this->db->from($this->tb_services." s");
+		$this->db->join($this->tb_categories." c", "c.id = s.cate_id", 'left');
+		$this->db->join($this->tb_api_providers." api", "s.api_provider_id = api.id", 'left');
 	}
 	
 	/**
@@ -300,6 +294,8 @@ class services_model extends MY_Model {
 		if (get_role("admin") && !empty($filters['provider']) && $filters['provider'] != 'all') {
 			if ($filters['provider'] == 'manual') {
 				$this->db->where("(s.api_provider_id IS NULL OR s.api_provider_id = '' OR s.add_type = 'manual')");
+			} elseif ($filters['provider'] == 'api') {
+				$this->db->where("(s.api_provider_id IS NOT NULL AND s.api_provider_id != '' AND s.add_type = 'api')");
 			} else {
 				$this->db->where("s.api_provider_id", (int)$filters['provider']);
 			}
