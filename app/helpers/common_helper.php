@@ -1301,7 +1301,8 @@ if(!function_exists("get_fake_order_config")){
 		static $config = null;
 		
 		if ($config === null) {
-			$is_enabled = get_option('enable_fake_order_id', 0);
+			// get_option returns string from database, cast to int for reliable comparison
+			$is_enabled = (int)get_option('enable_fake_order_id', 0);
 			$multiplier = (int)get_option('fake_order_id_multiplier', 7);
 			$offset = (int)get_option('fake_order_id_offset', 1000);
 			
@@ -1313,7 +1314,7 @@ if(!function_exists("get_fake_order_config")){
 			$max_safe_order = (PHP_INT_MAX - $offset) / $multiplier;
 			
 			$config = array(
-				'is_enabled' => ($is_enabled == 1),
+				'is_enabled' => ($is_enabled === 1),
 				'multiplier' => $multiplier,
 				'offset' => $offset,
 				'max_safe_order' => $max_safe_order
