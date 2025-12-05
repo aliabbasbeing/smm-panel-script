@@ -106,6 +106,292 @@
   .bulk-actions-panel.show {
     display: block;
   }
+  
+  /* Custom Service Action Modal Styles */
+  .service-action-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1060;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+  }
+  .service-action-modal.show {
+    display: block;
+  }
+  .service-action-modal .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .service-action-modal.show .modal-backdrop {
+    opacity: 1;
+  }
+  .service-action-modal .modal-container {
+    position: relative;
+    width: 100%;
+    max-width: 700px;
+    margin: 2rem auto;
+    padding: 0 15px;
+    transform: translateY(-50px) scale(0.95);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  .service-action-modal.show .modal-container {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  .service-action-modal .modal-content {
+    position: relative;
+    background: #ffffff;
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35), 0 10px 30px rgba(102, 126, 234, 0.3);
+    overflow: hidden;
+  }
+  .service-action-modal .modal-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    border: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-action-modal .modal-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  @keyframes shimmer {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(5deg); }
+  }
+  .service-action-modal .modal-title {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+    margin: 0;
+  }
+  .service-action-modal .modal-title i {
+    background: rgba(255,255,255,0.2);
+    padding: 10px;
+    border-radius: 12px;
+    font-size: 1.2rem;
+  }
+  .service-action-modal .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #ffffff;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+  .service-action-modal .modal-close:hover {
+    background: rgba(255,255,255,0.35);
+    transform: rotate(90deg) scale(1.1);
+  }
+  .service-action-modal .modal-body {
+    padding: 30px;
+    max-height: 60vh;
+    overflow-y: auto;
+  }
+  .service-action-modal .modal-body::-webkit-scrollbar {
+    width: 6px;
+  }
+  .service-action-modal .modal-body::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  .service-action-modal .modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 3px;
+  }
+  .service-action-modal .modal-footer {
+    background: #f8f9fa;
+    padding: 20px 30px;
+    border-top: 1px solid #e9ecef;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+  .service-action-modal .btn-modal-cancel {
+    background: #6c757d;
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+  }
+  .service-action-modal .btn-modal-cancel:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+  }
+  .service-action-modal .btn-modal-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  }
+  .service-action-modal .btn-modal-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+  }
+  .service-action-modal .modal-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+  }
+  .service-action-modal .modal-loader .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+  }
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  .service-action-modal .modal-loader p {
+    color: #6c757d;
+    font-size: 0.95rem;
+  }
+  
+  /* Service Action Card Styles */
+  .service-action-card {
+    background: #ffffff;
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  .service-action-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+    transform: translateY(-3px);
+  }
+  .service-action-card.active {
+    border-color: #667eea;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08) 0%, rgba(118, 75, 162, 0.08) 100%);
+  }
+  .service-action-card .action-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .service-action-card .action-icon.icon-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+  }
+  .service-action-card .action-icon.icon-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: #ffffff;
+  }
+  .service-action-card .action-icon.icon-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    color: #ffffff;
+  }
+  .service-action-card .action-icon.icon-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    color: #ffffff;
+  }
+  .service-action-card .action-icon.icon-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6610f2 100%);
+    color: #ffffff;
+  }
+  .service-action-card .action-content {
+    flex: 1;
+  }
+  .service-action-card .action-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: #2d3436;
+    margin-bottom: 4px;
+  }
+  .service-action-card .action-desc {
+    color: #6c757d;
+    font-size: 0.875rem;
+    margin: 0;
+  }
+  .service-action-card .action-arrow {
+    color: #dee2e6;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+  }
+  .service-action-card:hover .action-arrow {
+    color: #667eea;
+    transform: translateX(5px);
+  }
+  
+  /* Quick Action Button */
+  .btn-quick-action {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  }
+  .btn-quick-action:hover {
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  }
+  .btn-quick-action i {
+    margin-right: 8px;
+  }
 </style>
 <br>
 <?php if (get_option('services_text','') != '') { ?>
@@ -299,6 +585,9 @@
           <a href="<?=cn("$module/update")?>" class="ajaxModal btn btn-info mr-2">
             <i class="fa fa-plus"></i> <?=lang("add_new")?>
           </a>
+          <button type="button" class="btn-quick-action mr-2" id="openServiceActionModal">
+            <i class="fe fe-zap"></i> <?=lang("quick_actions")?>
+          </button>
           <?php else: ?>
           <h4 class="mb-0"><i class="fe fe-list mr-2"></i><?=lang("Services")?></h4>
           <?php endif; ?>
@@ -470,6 +759,99 @@
 </div>
 <?php endif; ?>
 
+<!-- Custom Service Action Modal -->
+<div class="service-action-modal" id="serviceActionModal">
+  <div class="modal-backdrop"></div>
+  <div class="modal-container">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="serviceActionModalTitle">
+          <i class="fe fe-zap"></i>
+          <span><?=lang("quick_actions")?></span>
+        </h4>
+        <button type="button" class="modal-close" id="closeServiceActionModal">
+          <i class="fe fe-x"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="serviceActionModalBody">
+        <!-- Default content - Quick Actions Menu -->
+        <div class="service-actions-menu">
+          <?php if (get_role("admin")): ?>
+          <div class="service-action-card" data-action="quick-add">
+            <div class="action-icon icon-primary">
+              <i class="fe fe-plus"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("add_new_service")?></div>
+              <p class="action-desc"><?=lang("create_new_service_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          
+          <div class="service-action-card" data-action="sync-prices">
+            <div class="action-icon icon-success">
+              <i class="fe fe-refresh-cw"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("sync_api_prices")?></div>
+              <p class="action-desc"><?=lang("sync_api_prices_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          
+          <div class="service-action-card" data-action="bulk-status">
+            <div class="action-icon icon-warning">
+              <i class="fe fe-toggle-left"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("manage_service_status")?></div>
+              <p class="action-desc"><?=lang("manage_service_status_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          
+          <div class="service-action-card" data-action="duplicate-service">
+            <div class="action-icon icon-info">
+              <i class="fe fe-copy"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("duplicate_services")?></div>
+              <p class="action-desc"><?=lang("duplicate_services_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          
+          <div class="service-action-card" data-action="cleanup">
+            <div class="action-icon icon-danger">
+              <i class="fe fe-trash-2"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("cleanup_services")?></div>
+              <p class="action-desc"><?=lang("cleanup_services_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <?php endif; ?>
+          
+          <div class="service-action-card" data-action="service-info">
+            <div class="action-icon icon-primary">
+              <i class="fe fe-info"></i>
+            </div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("service_information")?></div>
+              <p class="action-desc"><?=lang("service_information_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" id="serviceActionModalFooter">
+        <button type="button" class="btn-modal-cancel" id="cancelServiceAction"><?=lang("close")?></button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 (function($) {
   'use strict';
@@ -483,6 +865,389 @@
     init: function() {
       this.bindEvents();
       this.updateSelectedCount();
+      this.initServiceActionModal();
+    },
+    
+    // Initialize the custom Service Action Modal
+    initServiceActionModal: function() {
+      var self = this;
+      
+      // Open modal
+      $(document).on('click', '#openServiceActionModal, .btn-quick-action', function(e) {
+        e.preventDefault();
+        self.openServiceActionModal();
+      });
+      
+      // Close modal
+      $(document).on('click', '#closeServiceActionModal, #cancelServiceAction, .service-action-modal .modal-backdrop', function(e) {
+        e.preventDefault();
+        self.closeServiceActionModal();
+      });
+      
+      // ESC key to close
+      $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $('#serviceActionModal').hasClass('show')) {
+          self.closeServiceActionModal();
+        }
+      });
+      
+      // Action card clicks
+      $(document).on('click', '.service-action-card', function() {
+        var action = $(this).data('action');
+        self.handleServiceAction(action);
+      });
+    },
+    
+    openServiceActionModal: function() {
+      $('body').css('overflow', 'hidden');
+      $('#serviceActionModal').addClass('show');
+      // Reset to default content
+      this.resetModalToDefault();
+    },
+    
+    closeServiceActionModal: function() {
+      $('#serviceActionModal').removeClass('show');
+      setTimeout(function() {
+        $('body').css('overflow', '');
+      }, 400);
+    },
+    
+    resetModalToDefault: function() {
+      $('#serviceActionModalTitle span').text('<?=lang("quick_actions")?>');
+      $('#serviceActionModalTitle i').attr('class', 'fe fe-zap');
+      $('#serviceActionModalFooter').html('<button type="button" class="btn-modal-cancel" id="cancelServiceAction"><?=lang("close")?></button>');
+      // Restore default content
+      var defaultContent = `
+        <div class="service-actions-menu">
+          <?php if (get_role("admin")): ?>
+          <div class="service-action-card" data-action="quick-add">
+            <div class="action-icon icon-primary"><i class="fe fe-plus"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("add_new_service")?></div>
+              <p class="action-desc"><?=lang("create_new_service_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <div class="service-action-card" data-action="sync-prices">
+            <div class="action-icon icon-success"><i class="fe fe-refresh-cw"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("sync_api_prices")?></div>
+              <p class="action-desc"><?=lang("sync_api_prices_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <div class="service-action-card" data-action="bulk-status">
+            <div class="action-icon icon-warning"><i class="fe fe-toggle-left"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("manage_service_status")?></div>
+              <p class="action-desc"><?=lang("manage_service_status_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <div class="service-action-card" data-action="duplicate-service">
+            <div class="action-icon icon-info"><i class="fe fe-copy"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("duplicate_services")?></div>
+              <p class="action-desc"><?=lang("duplicate_services_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <div class="service-action-card" data-action="cleanup">
+            <div class="action-icon icon-danger"><i class="fe fe-trash-2"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("cleanup_services")?></div>
+              <p class="action-desc"><?=lang("cleanup_services_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+          <?php endif; ?>
+          <div class="service-action-card" data-action="service-info">
+            <div class="action-icon icon-primary"><i class="fe fe-info"></i></div>
+            <div class="action-content">
+              <div class="action-title"><?=lang("service_information")?></div>
+              <p class="action-desc"><?=lang("service_information_description")?></p>
+            </div>
+            <i class="fe fe-chevron-right action-arrow"></i>
+          </div>
+        </div>
+      `;
+      $('#serviceActionModalBody').html(defaultContent);
+    },
+    
+    showModalLoader: function(message) {
+      var loaderHtml = `
+        <div class="modal-loader">
+          <div class="spinner"></div>
+          <p>${message || '<?=lang("loading")?>'}</p>
+        </div>
+      `;
+      $('#serviceActionModalBody').html(loaderHtml);
+    },
+    
+    handleServiceAction: function(action) {
+      var self = this;
+      
+      switch(action) {
+        case 'quick-add':
+          // Load add service form via AJAX
+          this.showModalLoader('<?=lang("loading_form")?>');
+          $('#serviceActionModalTitle span').text('<?=lang("add_new_service")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-plus');
+          
+          $.ajax({
+            url: PATH + 'services/ajax_get_quick_add_form',
+            type: 'POST',
+            data: { token: token },
+            success: function(response) {
+              $('#serviceActionModalBody').html(response);
+              $('#serviceActionModalFooter').html(`
+                <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+                <button type="button" class="btn-modal-primary" onclick="ServicesManager.submitQuickAddForm()"><?=lang("add_service")?></button>
+              `);
+            },
+            error: function() {
+              notify('<?=lang("error_loading_form")?>', 'error');
+              self.resetModalToDefault();
+            }
+          });
+          break;
+          
+        case 'sync-prices':
+          this.showModalLoader('<?=lang("syncing_prices")?>');
+          $('#serviceActionModalTitle span').text('<?=lang("sync_api_prices")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-refresh-cw');
+          
+          $.ajax({
+            url: PATH + 'services/ajax_get_sync_prices_content',
+            type: 'POST',
+            data: { token: token },
+            success: function(response) {
+              $('#serviceActionModalBody').html(response);
+              $('#serviceActionModalFooter').html(`
+                <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+              `);
+            },
+            error: function() {
+              notify('<?=lang("error_loading_content")?>', 'error');
+              self.resetModalToDefault();
+            }
+          });
+          break;
+          
+        case 'bulk-status':
+          $('#serviceActionModalTitle span').text('<?=lang("manage_service_status")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-toggle-left');
+          
+          var statusContent = `
+            <div class="text-center mb-4">
+              <p class="text-muted"><?=lang("select_status_action")?></p>
+            </div>
+            <div class="row">
+              <div class="col-6 mb-3">
+                <div class="service-action-card" onclick="ServicesManager.bulkStatusAction('activate')">
+                  <div class="action-icon icon-success"><i class="fe fe-check-circle"></i></div>
+                  <div class="action-content">
+                    <div class="action-title"><?=lang("activate_all")?></div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-6 mb-3">
+                <div class="service-action-card" onclick="ServicesManager.bulkStatusAction('deactivate')">
+                  <div class="action-icon icon-warning"><i class="fe fe-x-circle"></i></div>
+                  <div class="action-content">
+                    <div class="action-title"><?=lang("deactivate_all")?></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="alert alert-info mt-3">
+              <i class="fe fe-info mr-2"></i><?=lang("bulk_status_info")?>
+            </div>
+          `;
+          $('#serviceActionModalBody').html(statusContent);
+          $('#serviceActionModalFooter').html(`
+            <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+          `);
+          break;
+          
+        case 'duplicate-service':
+          this.showModalLoader('<?=lang("loading")?>');
+          $('#serviceActionModalTitle span').text('<?=lang("duplicate_services")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-copy');
+          
+          $.ajax({
+            url: PATH + 'services/ajax_get_duplicate_content',
+            type: 'POST',
+            data: { token: token },
+            success: function(response) {
+              $('#serviceActionModalBody').html(response);
+              $('#serviceActionModalFooter').html(`
+                <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+              `);
+            },
+            error: function() {
+              notify('<?=lang("error_loading_content")?>', 'error');
+              self.resetModalToDefault();
+            }
+          });
+          break;
+          
+        case 'cleanup':
+          $('#serviceActionModalTitle span').text('<?=lang("cleanup_services")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-trash-2');
+          
+          var cleanupContent = `
+            <div class="alert alert-warning mb-4">
+              <i class="fe fe-alert-triangle mr-2"></i>
+              <strong><?=lang("warning")?></strong> <?=lang("cleanup_warning")?>
+            </div>
+            <div class="service-action-card" onclick="ServicesManager.cleanupAction('inactive')">
+              <div class="action-icon icon-warning"><i class="fe fe-trash"></i></div>
+              <div class="action-content">
+                <div class="action-title"><?=lang("delete_inactive_services")?></div>
+                <p class="action-desc"><?=lang("delete_inactive_services_desc")?></p>
+              </div>
+            </div>
+            <div class="service-action-card" onclick="ServicesManager.cleanupAction('duplicates')">
+              <div class="action-icon icon-info"><i class="fe fe-layers"></i></div>
+              <div class="action-content">
+                <div class="action-title"><?=lang("find_duplicate_services")?></div>
+                <p class="action-desc"><?=lang("find_duplicate_services_desc")?></p>
+              </div>
+            </div>
+          `;
+          $('#serviceActionModalBody').html(cleanupContent);
+          $('#serviceActionModalFooter').html(`
+            <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+          `);
+          break;
+          
+        case 'service-info':
+          this.showModalLoader('<?=lang("loading_statistics")?>');
+          $('#serviceActionModalTitle span').text('<?=lang("service_information")?>');
+          $('#serviceActionModalTitle i').attr('class', 'fe fe-info');
+          
+          $.ajax({
+            url: PATH + 'services/ajax_get_service_stats',
+            type: 'POST',
+            data: { token: token },
+            success: function(response) {
+              $('#serviceActionModalBody').html(response);
+              $('#serviceActionModalFooter').html(`
+                <button type="button" class="btn-modal-cancel" onclick="ServicesManager.resetModalToDefault()"><?=lang("back")?></button>
+              `);
+            },
+            error: function() {
+              notify('<?=lang("error_loading_content")?>', 'error');
+              self.resetModalToDefault();
+            }
+          });
+          break;
+      }
+    },
+    
+    bulkStatusAction: function(action) {
+      var self = this;
+      if (!confirm(action === 'activate' ? '<?=lang("confirm_activate_all")?>' : '<?=lang("confirm_deactivate_all")?>')) {
+        return;
+      }
+      
+      self.showModalLoader(action === 'activate' ? '<?=lang("activating_services")?>' : '<?=lang("deactivating_services")?>');
+      
+      $.ajax({
+        url: PATH + 'services/ajax_bulk_status_all',
+        type: 'POST',
+        data: { action: action, token: token },
+        dataType: 'json',
+        success: function(response) {
+          notify(response.message, response.status);
+          if (response.status === 'success') {
+            self.loadServices();
+            self.closeServiceActionModal();
+          } else {
+            self.resetModalToDefault();
+          }
+        },
+        error: function() {
+          notify('<?=lang("error_processing_request")?>', 'error');
+          self.resetModalToDefault();
+        }
+      });
+    },
+    
+    cleanupAction: function(type) {
+      var self = this;
+      
+      if (type === 'inactive') {
+        if (!confirm('<?=lang("confirm_delete_inactive")?>')) return;
+        
+        self.showModalLoader('<?=lang("deleting_services")?>');
+        
+        $.ajax({
+          url: PATH + 'services/ajax_actions_option',
+          type: 'POST',
+          data: { type: 'all_deactive', token: token },
+          dataType: 'json',
+          success: function(response) {
+            notify(response.message, response.status);
+            if (response.status === 'success') {
+              self.loadServices();
+            }
+            self.closeServiceActionModal();
+          },
+          error: function() {
+            notify('<?=lang("error_processing_request")?>', 'error');
+            self.resetModalToDefault();
+          }
+        });
+      } else if (type === 'duplicates') {
+        self.showModalLoader('<?=lang("scanning_duplicates")?>');
+        
+        $.ajax({
+          url: PATH + 'services/ajax_find_duplicates',
+          type: 'POST',
+          data: { token: token },
+          success: function(response) {
+            $('#serviceActionModalBody').html(response);
+          },
+          error: function() {
+            notify('<?=lang("error_processing_request")?>', 'error');
+            self.resetModalToDefault();
+          }
+        });
+      }
+    },
+    
+    submitQuickAddForm: function() {
+      var self = this;
+      var $form = $('#quickAddServiceForm');
+      
+      if ($form.length === 0) {
+        notify('<?=lang("form_not_found")?>', 'error');
+        return;
+      }
+      
+      self.showModalLoader('<?=lang("saving")?>');
+      
+      $.ajax({
+        url: PATH + 'services/ajax_update',
+        type: 'POST',
+        data: $form.serialize() + '&token=' + token,
+        dataType: 'json',
+        success: function(response) {
+          notify(response.message, response.status);
+          if (response.status === 'success') {
+            self.loadServices();
+            self.closeServiceActionModal();
+          } else {
+            self.resetModalToDefault();
+          }
+        },
+        error: function() {
+          notify('<?=lang("error_processing_request")?>', 'error');
+          self.resetModalToDefault();
+        }
+      });
     },
     
     bindEvents: function() {

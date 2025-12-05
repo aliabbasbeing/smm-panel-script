@@ -673,4 +673,152 @@ class services extends MX_Controller {
 		fclose($output);
 		exit;
 	}
+
+	/**
+	 * Get quick add form for the custom modal
+	 * Admin only
+	 */
+	public function ajax_get_quick_add_form(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$categories  = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
+		$api_providers  = $this->model->fetch("*", $this->tb_api_providers, "status = 1", 'id','ASC');
+		
+		$data = array(
+			"module"   			=> get_class($this),
+			"categories" 		=> $categories,
+			"api_providers" 	=> $api_providers,
+		);
+		$this->load->view('ajax/quick_add_form', $data);
+	}
+
+	/**
+	 * Get sync prices content for the custom modal
+	 * Admin only
+	 */
+	public function ajax_get_sync_prices_content(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$api_providers = $this->model->fetch("*", $this->tb_api_providers, "status = 1", 'id','ASC');
+		
+		$data = array(
+			"module"   		  => get_class($this),
+			"api_providers"   => $api_providers,
+		);
+		$this->load->view('ajax/sync_prices_content', $data);
+	}
+
+	/**
+	 * Get duplicate service content for the custom modal
+	 * Admin only
+	 */
+	public function ajax_get_duplicate_content(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$categories  = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
+		
+		$data = array(
+			"module"   		=> get_class($this),
+			"categories" 	=> $categories,
+		);
+		$this->load->view('ajax/duplicate_content', $data);
+	}
+
+	/**
+	 * Get service stats for the custom modal
+	 */
+	public function ajax_get_service_stats(){
+		_is_ajax($this->module);
+		
+		$stats = $this->model->get_services_stats();
+		$categories  = $this->model->fetch("*", $this->tb_categories, "status = 1", 'sort','ASC');
+		
+		// Get category breakdown using a single GROUP BY query to avoid N+1 queries
+		$this->db->select('cate_id, COUNT(*) as count');
+		$this->db->from($this->tb_services);
+		$this->db->group_by('cate_id');
+		$query = $this->db->get();
+		$count_results = $query->result();
+		
+		// Create a lookup array for counts
+		$count_lookup = array();
+		foreach ($count_results as $result) {
+			$count_lookup[$result->cate_id] = $result->count;
+		}
+		
+		// Build category stats array
+		$category_stats = array();
+		foreach ($categories as $cat) {
+			$category_stats[] = array(
+				'name' => $cat->name,
+				'count' => isset($count_lookup[$cat->id]) ? $count_lookup[$cat->id] : 0
+			);
+		}
+		
+		$data = array(
+			"module"   		  => get_class($this),
+			"stats"           => $stats,
+			"category_stats"  => $category_stats,
+		);
+		$this->load->view('ajax/service_stats', $data);
+	}
+
+	/**
+	 * Bulk activate/deactivate all services
+	 * Admin only - Intentionally affects ALL services without WHERE clause
+	 */
+	public function ajax_bulk_status_all(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		$action = post('action');
+		
+		// These updates intentionally affect ALL services as per function name
+		if ($action === 'activate') {
+			$this->db->update($this->tb_services, ['status' => 1, 'changed' => NOW]);
+			$count = $this->db->affected_rows();
+			ms(array(
+				"status"  => "success",
+				"message" => sprintf(lang("activated_x_services"), $count)
+			));
+		} elseif ($action === 'deactivate') {
+			$this->db->update($this->tb_services, ['status' => 0, 'changed' => NOW]);
+			$count = $this->db->affected_rows();
+			ms(array(
+				"status"  => "success",
+				"message" => sprintf(lang("deactivated_x_services"), $count)
+			));
+		} else {
+			ms(array(
+				"status"  => "error",
+				"message" => lang("invalid_action")
+			));
+		}
+	}
+
+	/**
+	 * Find duplicate services
+	 * Admin only
+	 */
+	public function ajax_find_duplicates(){
+		_is_ajax($this->module);
+		if (!get_role('admin')) _validation('error', "Permission Denied!");
+		
+		// Find services with same name
+		$this->db->select('name, COUNT(*) as count');
+		$this->db->from($this->tb_services);
+		$this->db->group_by('name');
+		$this->db->having('COUNT(*) > 1');
+		$query = $this->db->get();
+		$duplicates = $query->result();
+		
+		$data = array(
+			"module"   	 => get_class($this),
+			"duplicates" => $duplicates,
+		);
+		$this->load->view('ajax/duplicates_content', $data);
+	}
 }
