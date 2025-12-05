@@ -916,3 +916,34 @@ $lang["View_Cron_Logs"] = "View Cron Logs";
 $lang["Filter_Cron_Logs"] = "Filter Cron Logs";
 $lang["Back_to_Balance_Logs"] = "Back to Balance Logs";
 
+
+
+/*----------  Fake Order Settings  ----------*/
+$lang["Fake Order Settings"] = "Fake Order Settings";
+$lang["Fake Order"] = "Fake Order";
+$lang["Enable Fake Order ID Increment"] = "Enable Fake Order ID Increment";
+$lang["Enable or disable automatic Fake Order ID Increment"] = "Enable or disable automatic Fake Order ID Increment";
+$lang["Fake Order ID Offset"] = "Fake Order ID Offset";
+$lang["Offset Value"] = "Offset Value";
+$lang["The base offset to add to actual order IDs when displaying to customers"] = "The base offset to add to actual order IDs when displaying to customers";
+$lang["Fake Order ID Multiplier"] = "Fake Order ID Multiplier";
+$lang["Multiplier Value"] = "Multiplier Value";
+$lang["Multiplier applied to actual order IDs before adding offset"] = "Multiplier applied to actual order IDs before adding offset";
+$lang["How it works"] = "How it works";
+$lang["When enabled, the displayed Order ID will be calculated as: (Actual Order ID × Multiplier) + Offset. This helps mask your real order volume while maintaining consistent, unique order IDs for tracking purposes."] = "When enabled, the displayed Order ID will be calculated as: (Actual Order ID × Multiplier) + Offset. This helps mask your real order volume while maintaining consistent, unique order IDs for tracking purposes.";
+$lang["The fake order ID is only for display purposes to customers"] = "The fake order ID is only for display purposes to customers";
+$lang["Internal order tracking still uses real order IDs"] = "Internal order tracking still uses real order IDs";
+$lang["Admin panel will continue to show actual order IDs"] = "Admin panel will continue to show actual order IDs";
+$lang["Changing these settings will affect new orders only"] = "Changing these settings will affect new orders only";
+$lang["Example Calculation"] = "Example Calculation";
+$lang["Real Order ID"] = "Real Order ID";
+$lang["Multiplier"] = "Multiplier";
+$lang["Offset"] = "Offset";
+$lang["Displayed Order ID"] = "Displayed Order ID";
+$lang["When enabled, order IDs will be incremented with a fake sequence to mask the real order count. This helps protect business information by hiding actual order volume from customers."] = "When enabled, order IDs will be incremented with a fake sequence to mask the real order count. This helps protect business information by hiding actual order volume from customers.";
+$lang["This value will be added to actual order IDs when displaying to users. For example, if offset is 1000 and real order ID is 5, displayed ID will be 1005."] = "This value will be added to actual order IDs when displaying to users. For example, if offset is 1000 and real order ID is 5, displayed ID will be 1005.";
+$lang["This multiplies the actual order ID before adding the offset. For example, with multiplier 2 and offset 1000, real order ID 5 becomes (5*2)+1000=1010."] = "This multiplies the actual order ID before adding the offset. For example, with multiplier 2 and offset 1000, real order ID 5 becomes (5*2)+1000=1010.";
+$lang["Fake"] = "Fake";
+
+$lang["with fake ID preview"] = "with fake ID preview";
+$lang["Changing these settings will affect all existing and new orders"] = "Changing these settings will affect all existing and new orders";

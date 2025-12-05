@@ -299,9 +299,11 @@ class api extends MX_Controller {
 			$new_balance = $user->balance - $total_charge;
 			$this->db->update($this->tb_users, ["balance" => $new_balance], ["id" => $this->uid]);
 			if ($this->db->affected_rows() > 0) {
+				// Return fake order ID if feature is enabled
+				$display_order_id = get_fake_order_id($insert_order_id);
 				echo_json_string(array(
 					'status' => "success",
-					"order"  => $insert_order_id,
+					"order"  => $display_order_id,
 				));
 			}
 		}else{
@@ -339,7 +341,10 @@ class api extends MX_Controller {
 			));
 		}
 
-		$exists_order = $this->model->get('id, service_type ,status, charge, start_counter, remains, runs, is_drip_feed, sub_response_orders, sub_expiry, sub_posts', $this->tb_orders, ['id' => $order_id, 'uid' => $this->uid]);
+		// Convert fake order ID to real order ID if feature is enabled
+		$real_order_id = get_real_order_id($order_id);
+
+		$exists_order = $this->model->get('id, service_type ,status, charge, start_counter, remains, runs, is_drip_feed, sub_response_orders, sub_expiry, sub_posts', $this->tb_orders, ['id' => $real_order_id, 'uid' => $this->uid]);
 
 		if (empty($exists_order)) {
 			echo_json_string(array(
@@ -353,7 +358,8 @@ class api extends MX_Controller {
 					$related_orders = $this->model->fetch("id, status", $this->tb_orders, ['main_order_id' => $exists_order->id]);
 					if (!empty($related_orders)) {
 						foreach ($related_orders as $key => $order) {
-							$orders[]= $order->id;
+							// Return fake order IDs for related orders
+							$orders[]= get_fake_order_id($order->id);
 						}
 					}
 					$result = array(
@@ -371,7 +377,8 @@ class api extends MX_Controller {
 						$related_orders = $this->model->fetch("id, status", $this->tb_orders, ['main_order_id' => $exists_order->id]);
 						if (!empty($related_orders)) {
 							foreach ($related_orders as $key => $order) {
-								$orders[]= $order->id;
+								// Return fake order IDs for related orders
+								$orders[]= get_fake_order_id($order->id);
 							}
 						}
 						$result = array(
@@ -381,8 +388,9 @@ class api extends MX_Controller {
 						);
 						
 					}else{
+						// Return fake order ID in response
 						$result = array(
-							'order'       => $exists_order->id,
+							'order'       => get_fake_order_id($exists_order->id),
 							'status'      => $this->order_title_status($exists_order->status),
 							'charge'      => $exists_order->charge,
 							'start_count' => $exists_order->start_counter,
@@ -411,7 +419,9 @@ class api extends MX_Controller {
 		if (is_array($order_ids)) {
 			$data = [];
 			foreach ($order_ids as $order_id) {
-				$exists_order = $this->model->get('id, service_type ,status, charge, start_counter, remains, runs, is_drip_feed, sub_response_orders, sub_expiry, sub_posts', $this->tb_orders, ['id' => $order_id, 'uid' => $this->uid]);
+				// Convert fake order ID to real order ID if feature is enabled
+				$real_order_id = get_real_order_id($order_id);
+				$exists_order = $this->model->get('id, service_type ,status, charge, start_counter, remains, runs, is_drip_feed, sub_response_orders, sub_expiry, sub_posts', $this->tb_orders, ['id' => $real_order_id, 'uid' => $this->uid]);
 				if (empty($exists_order)) {
 					$data[$order_id] = "Incorrect order ID";
 				}else{
@@ -421,7 +431,8 @@ class api extends MX_Controller {
 							$related_orders = $this->model->fetch("id, status", $this->tb_orders, ['main_order_id' => $exists_order->id]);
 							if (!empty($related_orders)) {
 								foreach ($related_orders as $key => $order) {
-									$orders[]= $order->id;
+									// Return fake order IDs for related orders
+									$orders[]= get_fake_order_id($order->id);
 								}
 							}
 							$result = array(
@@ -438,7 +449,8 @@ class api extends MX_Controller {
 								$related_orders = $this->model->fetch("id, status", $this->tb_orders, ['main_order_id' => $exists_order->id]);
 								if (!empty($related_orders)) {
 									foreach ($related_orders as $key => $order) {
-										$orders[]= $order->id;
+										// Return fake order IDs for related orders
+										$orders[]= get_fake_order_id($order->id);
 									}
 								}
 								$result = array(
@@ -448,8 +460,9 @@ class api extends MX_Controller {
 								);
 								
 							}else{
+								// Return fake order ID in response
 								$result = array(
-									'order'       => $exists_order->id,
+									'order'       => get_fake_order_id($exists_order->id),
 									'status'      => $this->order_title_status($exists_order->status),
 									'charge'      => $exists_order->charge,
 									'start_count' => $exists_order->start_counter,

@@ -90,6 +90,11 @@
         <i class="fe fe-star"></i>
         <span><?=lang("Visual Effects")?></span>
       </a>
+
+      <a href="<?php echo cn($module. "/fake_order")?>" class="sidebar-link <?php echo (segment(2) == 'fake_order') ? 'active' : ''?>">
+        <i class="fe fe-hash"></i>
+        <span><?=lang("Fake Order")?></span>
+      </a>
     </nav>
   </div>
 

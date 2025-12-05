@@ -1,4 +1,103 @@
 <?php
+
+/**
+ * Get Fake Order ID for display purposes
+ * When fake order feature is enabled, this calculates a fake order ID
+ * based on the configured offset and multiplier
+ * 
+ * @param int $real_order_id The actual order ID from database
+ * @return int The fake order ID if enabled, or the real order ID if disabled
+ */
+if(!function_exists('get_fake_order_id')){
+	function get_fake_order_id($real_order_id){
+		// Check if fake order feature is enabled
+		$fake_enabled = get_option('fake_order_enabled', 0);
+		
+		if($fake_enabled == 1){
+			$offset = (int)get_option('fake_order_offset', 1000);
+			$multiplier = (int)get_option('fake_order_multiplier', 1);
+			
+			// Ensure multiplier is at least 1
+			if($multiplier < 1){
+				$multiplier = 1;
+			}
+			
+			// Ensure real_order_id is a valid integer
+			$real_order_id = (int)$real_order_id;
+			
+			// Check for potential overflow (PHP_INT_MAX check)
+			$max_safe_id = (PHP_INT_MAX - $offset) / $multiplier;
+			if($real_order_id > $max_safe_id){
+				// Return original ID if calculation would overflow
+				return $real_order_id;
+			}
+			
+			// Calculate fake order ID: (real_id * multiplier) + offset
+			return ($real_order_id * $multiplier) + $offset;
+		}
+		
+		// Return real order ID if feature is disabled
+		return $real_order_id;
+	}
+}
+
+/**
+ * Get Real Order ID from a potentially fake order ID
+ * When fake order feature is enabled, this converts a fake order ID back to real
+ * 
+ * @param int $order_id The order ID that may be fake or real
+ * @return int The real order ID for database lookup
+ */
+if(!function_exists('get_real_order_id')){
+	function get_real_order_id($order_id){
+		// Check if fake order feature is enabled
+		$fake_enabled = get_option('fake_order_enabled', 0);
+		
+		if($fake_enabled == 1){
+			$offset = (int)get_option('fake_order_offset', 1000);
+			$multiplier = (int)get_option('fake_order_multiplier', 1);
+			
+			// Ensure multiplier is at least 1
+			if($multiplier < 1){
+				$multiplier = 1;
+			}
+			
+			// Ensure order_id is a valid integer
+			$order_id = (int)$order_id;
+			
+			// Check if order_id is greater than offset (could be a fake ID)
+			if($order_id > $offset){
+				// Reverse the fake order ID calculation using integer arithmetic
+				$subtracted = $order_id - $offset;
+				
+				// Check if the subtracted value is evenly divisible by multiplier
+				if($subtracted % $multiplier === 0){
+					$real_id = intdiv($subtracted, $multiplier);
+					
+					// Return real ID only if it's a positive integer
+					if($real_id > 0){
+						return $real_id;
+					}
+				}
+			}
+		}
+		
+		// Return the order ID as-is if feature is disabled or calculation fails
+		return $order_id;
+	}
+}
+
+/**
+ * Check if fake order ID feature is enabled
+ * 
+ * @return bool True if enabled, false otherwise
+ */
+if(!function_exists('is_fake_order_enabled')){
+	function is_fake_order_enabled(){
+		return get_option('fake_order_enabled', 0) == 1;
+	}
+}
+
 if(!function_exists('post_get')){
 	function post_get($name = ""){
 		$CI = &get_instance();
