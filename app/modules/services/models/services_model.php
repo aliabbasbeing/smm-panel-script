@@ -200,4 +200,180 @@ class services_model extends MY_Model {
 		return $exist_db_custom_rates;
 	}
 
+	/**
+	 * Get paginated services with advanced filtering
+	 * 
+	 * @param array $filters Filter options (search, category, status, provider, price_min, price_max)
+	 * @param int $page Current page number
+	 * @param int $per_page Items per page
+	 * @return array Contains 'services', 'total', 'pages', 'current_page'
+	 */
+	public function get_paginated_services($filters = array(), $page = 1, $per_page = 50){
+		$page = max(1, (int)$page);
+		$per_page = max(10, min(100, (int)$per_page));
+		$offset = ($page - 1) * $per_page;
+		
+		// Build base query for counting
+		$this->_build_services_base_query();
+		$this->_apply_filters($filters);
+		
+		// Get total count first (before limit)
+		$total = $this->db->count_all_results('', false);
+		
+		// Reset the query and rebuild for fetching data
+		$this->db->reset_query();
+		$this->_build_services_base_query();
+		$this->_apply_filters($filters);
+		
+		// Apply ordering and pagination
+		$this->db->order_by("c.sort", 'ASC');
+		$this->db->order_by("s.price", 'ASC');
+		$this->db->order_by("s.name", 'ASC');
+		$this->db->limit($per_page, $offset);
+		
+		$query = $this->db->get();
+		$services = $query->result();
+		
+		$total_pages = ceil($total / $per_page);
+		
+		return array(
+			'services' => $services,
+			'total' => $total,
+			'pages' => $total_pages,
+			'current_page' => $page,
+			'per_page' => $per_page,
+			'from' => $offset + 1,
+			'to' => min($offset + $per_page, $total)
+		);
+	}
+	
+	/**
+	 * Build base query for services with joins
+	 * Extracted to reduce code duplication
+	 */
+	private function _build_services_base_query(){
+		if (get_role("admin")) {
+			$this->db->select('s.*, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
+		} else {
+			$this->db->where("s.status", "1");
+			$this->db->select('s.id, s.desc, s.ids, s.name, s.min, s.max, s.price, s.dripfeed, s.status, api.name as api_name, c.name as category_name, c.id as main_cate_id, c.sort as cate_sort');
+		}
+		
+		$this->db->from($this->tb_services." s");
+		$this->db->join($this->tb_categories." c", "c.id = s.cate_id", 'left');
+		$this->db->join($this->tb_api_providers." api", "s.api_provider_id = api.id", 'left');
+	}
+	
+	/**
+	 * Apply filters to the current query
+	 * 
+	 * @param array $filters Filter options
+	 */
+	private function _apply_filters($filters){
+		// Search filter
+		if (!empty($filters['search'])) {
+			$search = $this->db->escape_like_str($filters['search']);
+			if (get_role("supporter") || get_role("admin")) {
+				$this->db->where("(`s`.`id` LIKE '%".$search."%' ESCAPE '!' OR `s`.`api_service_id` LIKE '%".$search."%' ESCAPE '!' OR `s`.`name` LIKE '%".$search."%' ESCAPE '!' OR `api`.`name` LIKE '%".$search."%' ESCAPE '!')");
+			} else {
+				$this->db->where("(`s`.`id` LIKE '%".$search."%' ESCAPE '!' OR `s`.`name` LIKE '%".$search."%' ESCAPE '!')");
+			}
+		}
+		
+		// Category filter
+		if (!empty($filters['category']) && $filters['category'] != 'all') {
+			$this->db->where("s.cate_id", (int)$filters['category']);
+		}
+		
+		// Status filter (admin only)
+		if (get_role("admin") && isset($filters['status']) && $filters['status'] !== '' && $filters['status'] !== 'all') {
+			$this->db->where("s.status", (int)$filters['status']);
+		}
+		
+		// Provider filter (admin only)
+		if (get_role("admin") && !empty($filters['provider']) && $filters['provider'] != 'all') {
+			if ($filters['provider'] == 'manual') {
+				$this->db->where("(s.api_provider_id IS NULL OR s.api_provider_id = '' OR s.add_type = 'manual')");
+			} elseif ($filters['provider'] == 'api') {
+				$this->db->where("(s.api_provider_id IS NOT NULL AND s.api_provider_id != '' AND s.add_type = 'api')");
+			} else {
+				$this->db->where("s.api_provider_id", (int)$filters['provider']);
+			}
+		}
+		
+		// Price range filter
+		if (!empty($filters['price_min']) && is_numeric($filters['price_min'])) {
+			$this->db->where("s.price >=", (float)$filters['price_min']);
+		}
+		if (!empty($filters['price_max']) && is_numeric($filters['price_max'])) {
+			$this->db->where("s.price <=", (float)$filters['price_max']);
+		}
+		
+		// Dripfeed filter
+		if (isset($filters['dripfeed']) && $filters['dripfeed'] !== '' && $filters['dripfeed'] !== 'all') {
+			$this->db->where("s.dripfeed", (int)$filters['dripfeed']);
+		}
+	}
+	
+	/**
+	 * Get all categories for filter dropdown
+	 * 
+	 * @return array
+	 */
+	public function get_all_categories_for_filter(){
+		if (get_role("user")) {
+			$this->db->where("status", "1");
+		}
+		$this->db->select("id, ids, name");
+		$this->db->from($this->tb_categories);
+		$this->db->order_by("sort", 'ASC');
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	/**
+	 * Get all API providers for filter dropdown
+	 * 
+	 * @return array
+	 */
+	public function get_all_providers_for_filter(){
+		$this->db->select("id, name");
+		$this->db->from($this->tb_api_providers);
+		$this->db->where("status", 1);
+		$this->db->order_by("name", 'ASC');
+		$query = $this->db->get();
+		return $query->result();
+	}
+	
+	/**
+	 * Get service statistics for dashboard
+	 * 
+	 * @return object
+	 */
+	public function get_services_stats(){
+		$stats = new stdClass();
+		
+		// Total services
+		$this->db->from($this->tb_services);
+		$stats->total = $this->db->count_all_results();
+		
+		// Active services
+		$this->db->from($this->tb_services);
+		$this->db->where("status", 1);
+		$stats->active = $this->db->count_all_results();
+		
+		// Inactive services
+		$stats->inactive = $stats->total - $stats->active;
+		
+		// API services
+		$this->db->from($this->tb_services);
+		$this->db->where("add_type", 'api');
+		$stats->api = $this->db->count_all_results();
+		
+		// Manual services
+		$stats->manual = $stats->total - $stats->api;
+		
+		return $stats;
+	}
+
 }
