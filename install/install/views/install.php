@@ -83,7 +83,8 @@ if (!empty($_SERVER['HTTPS'])) {
         <link rel="icon" href="/install/install/views/no1scripts.png" />
         <title><?=$project_name?> Installation</title>
         <link rel='stylesheet' type='text/css' href='assets/bootstrap/css/bootstrap.min.css' />
-        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/font-awesome.min.css' />
+        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/all.min.css' />
+        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/v4-shims.min.css' />
 
         <link rel='stylesheet' type='text/css' href='assets/css/install.css' />
 

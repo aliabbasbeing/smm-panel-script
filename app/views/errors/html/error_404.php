@@ -16,7 +16,8 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">

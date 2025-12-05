@@ -17,7 +17,8 @@
     <meta name="MobileOptimized" content="320">
 
     
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
     <script src="https://eduactionsmm.site/data_files/general.js"></script>

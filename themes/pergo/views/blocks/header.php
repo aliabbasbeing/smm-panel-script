@@ -16,7 +16,8 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     
-    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Arvo&display=swap" rel="stylesheet">
     
