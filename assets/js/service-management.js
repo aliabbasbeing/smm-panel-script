@@ -1,8 +1,17 @@
-// Service Management - Select2 and Category/Service handling
+/**
+ * Service Management - Select2 and Category/Service handling
+ * Enhanced to load icons dynamically from database
+ */
 
 (function($){
-    /* ========= Icon helper ========= */
-    function pickPlatformIcon(text){
+    /* ========= Icon helper - Now supports database icons ========= */
+    function pickPlatformIcon(text, dbIcon){
+        // Prioritize database icon if available
+        if (dbIcon && dbIcon !== '') {
+            return dbIcon;
+        }
+        
+        // Fallback to text-based detection
         if (!text) return '';
         var t = text.toLowerCase();
         
@@ -75,7 +84,21 @@
         return '';
     }
 
-    /* ========= Service templates (with icons) ========= */
+    /* ========= Render icon HTML (supports both Font Awesome and image URLs) ========= */
+    function renderIconHtml(iconToken){
+        if (!iconToken) return '';
+        
+        // Check if it's an image URL
+        if (iconToken.indexOf && (iconToken.indexOf('http') === 0 || iconToken.indexOf('img:') === 0)) {
+            var url = iconToken.replace('img:', '');
+            return '<img src="' + url + '" alt="icon" class="cat-icon-img" style="width:18px;height:18px;vertical-align:middle;margin-right:8px;border-radius:3px;">';
+        }
+        
+        // It's a Font Awesome class
+        return '<i class="' + iconToken + ' cat-icon" aria-hidden="true"></i> ';
+    }
+
+    /* ========= Service templates (with icons from database) ========= */
     function formatService(option) {
         if (!option.id) return option.text;
         var $opt = $(option.element);
@@ -84,16 +107,20 @@
         var min  = $opt.data('min');
         var max  = $opt.data('max');
         var drip = ($opt.data('dripfeed') == 1);
+        var dbIcon = $opt.data('icon'); // Get icon from data attribute
+        
         var meta = [];
         if (rate) meta.push('PKR: ' + rate);
         if (min)  meta.push('Min: ' + min);
         if (max)  meta.push('Max: ' + max);
         if (drip) meta.push('Drip');
 
-        var icon = pickPlatformIcon(name);
+        var icon = pickPlatformIcon(name, dbIcon);
+        var iconHtml = renderIconHtml(icon);
+        
         return $(
             '<div class="svc-item">'+
-            (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+            iconHtml +
             '<strong>'+ $('<span>').text(name).html() +'</strong><br>'+
             '<span class="svc-meta">'+ meta.join(' | ') +'</span>'+
             '</div>'
@@ -105,11 +132,15 @@
         var $opt = $(option.element);
         var name = $opt.data('name') || option.text;
         var rate = $opt.data('rate');
-        var icon = pickPlatformIcon(name);
+        var dbIcon = $opt.data('icon'); // Get icon from data attribute
+        
+        var icon = pickPlatformIcon(name, dbIcon);
+        var iconHtml = renderIconHtml(icon);
         var label = rate ? name + ' (' + rate + ')' : name;
+        
         return $(
             '<span class="svc-sel">'+
-            (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+            iconHtml +
             $('<span>').text(label).html()+
             '</span>'
         );
@@ -120,9 +151,11 @@
         if (!option.id) return option.text;
         var txt = option.text || '';
         var icon = pickPlatformIcon(txt);
+        var iconHtml = renderIconHtml(icon);
+        
         return $(
             '<span class="cat-opt">'+
-            (icon ? '<i class="'+icon+' cat-icon" aria-hidden="true"></i> ' : '')+
+            iconHtml +
             $('<span>').text(txt).html()+
             '</span>'
         );
@@ -175,7 +208,7 @@
         });
     }
 
-    /* ========= Load Services by Category ========= */
+    /* ========= Load Services by Category (Optimized for large datasets) ========= */
     function loadServicesForCategory(categoryId){
         if (!categoryId) {
             $('#result_onChange').html(
@@ -191,10 +224,15 @@
         }
         
         var url = $('#dropdowncategories').data('url');
+        
+        // Show loading state
+        $('#result_onChange').html('<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div></div>');
+        
         $.ajax({
             type: 'POST',
             url: url + categoryId,
             data: { token: (typeof window.csrfToken !== 'undefined') ? window.csrfToken : '' },
+            cache: true, // Enable caching for better performance
             success: function(html){
                 $('#result_onChange').html(html);
                 initServiceSelect('#result_onChange');
@@ -206,8 +244,6 @@
                     if ($serviceDropdown.length) {
                         var firstServiceOption = $serviceDropdown.find('option[value!=""]').first();
                         if (firstServiceOption.length && firstServiceOption.val()) {
-                            console.log('Auto-selecting first service:', firstServiceOption.val());
-                            
                             $serviceDropdown.val(firstServiceOption.val()).trigger('change');
                             
                             var serviceId = firstServiceOption.val();
@@ -221,7 +257,7 @@
             },
             error: function(xhr){
                 console.error('Failed to load services', xhr.status, xhr.responseText);
-                alert('Could not load services for this category.');
+                $('#result_onChange').html('<div class="alert alert-danger">Could not load services for this category.</div>');
             }
         });
     }
@@ -230,12 +266,11 @@
     function fetchServiceDetails(serviceId, baseUrl, $select){
         if (!serviceId) { resetServiceResume(); return; }
         
-        console.log('Fetching service details for ID:', serviceId);
-        
         $.ajax({
             type: 'POST',
             url: baseUrl + serviceId,
             data: { token: (typeof window.csrfToken !== 'undefined') ? window.csrfToken : '' },
+            cache: true, // Enable caching
             success: function(fragment){
                 $('#result_onChangeService').html(fragment);
                 var price = $('#order_resume input[name=service_price]').val();
@@ -247,8 +282,6 @@
                 $('#service_id').val(serviceId);
                 var $opt = $select.find('option:selected');
                 applyServiceTypeUI($opt.data('type'), $opt.data('dripfeed'));
-                
-                console.log('Service details loaded successfully for ID:', serviceId);
             },
             error: function(xhr){
                 console.error('Failed to fetch service details', xhr.status, xhr.responseText);
@@ -295,7 +328,9 @@
         initServiceSelect: initServiceSelect,
         loadServicesForCategory: loadServicesForCategory,
         fetchServiceDetails: fetchServiceDetails,
-        resetServiceResume: resetServiceResume
+        resetServiceResume: resetServiceResume,
+        pickPlatformIcon: pickPlatformIcon,
+        renderIconHtml: renderIconHtml
     };
 
 })(jQuery);
