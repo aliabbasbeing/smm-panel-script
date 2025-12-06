@@ -120,7 +120,10 @@
   });
 }
 
-/*----------  Configure Summernote editor  ----------*/
+/*----------  Configure Quill Editor  ----------*/
+// Store Quill instances globally for access
+window.quillEditors = window.quillEditors || {};
+
 function plugin_editor(selector, settings){
   // Handle both string selectors and jQuery objects
   if (typeof(selector) == 'undefined') {
@@ -134,9 +137,9 @@ function plugin_editor(selector, settings){
     return $elements;
   }
   
-  // Check if Summernote is available
-  if (typeof $.fn.summernote === 'undefined') {
-    console.warn('Summernote is not loaded. Waiting for it to load...');
+  // Check if Quill is available
+  if (typeof Quill === 'undefined') {
+    console.warn('Quill is not loaded. Waiting for it to load...');
     // Retry after a short delay
     setTimeout(function() {
       plugin_editor(selector, settings);
@@ -150,45 +153,73 @@ function plugin_editor(selector, settings){
     _height = settings.height;
   }
   
-  $elements.summernote({
-    height: _height,
-    minHeight: 100,
-    maxHeight: 600,
-    focus: false,
-    toolbar: [
-      ['view', ['codeview', 'fullscreen', 'help']],
-      ['style', ['style']],
-      ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-      ['fontname', ['fontname']],
-      ['fontsize', ['fontsize']],
-      ['color', ['forecolor', 'backcolor']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      ['table', ['table']],
-      ['insert', ['link', 'picture', 'video', 'hr']]
-    ],
-    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
-    fontNamesIgnoreCheck: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
-    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'],
-    lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
-    callbacks: {
-      onImageUpload: function(files) {
-        // Handle image upload - convert to base64
-        var editor = $(this);
-        for (var i = 0; i < files.length; i++) {
-          (function(file) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-              editor.summernote('insertImage', e.target.result);
-            };
-            reader.readAsDataURL(file);
-          })(files[i]);
-        }
+  $elements.each(function(index) {
+    var $textarea = $(this);
+    
+    // Skip if already initialized
+    if ($textarea.data('quill-initialized')) {
+      return;
+    }
+    
+    // Create unique ID for the editor
+    var editorId = 'quill-editor-' + Date.now() + '-' + index;
+    
+    // Create wrapper and editor container
+    var $wrapper = $('<div class="quill-wrapper mb-3"></div>');
+    var $editorDiv = $('<div id="' + editorId + '"></div>');
+    
+    // Hide the original textarea and insert the editor
+    $textarea.hide().after($wrapper);
+    $wrapper.append($editorDiv);
+    
+    // Set the initial content from textarea
+    var initialContent = $textarea.val();
+    
+    // Initialize Quill
+    var quill = new Quill('#' + editorId, {
+      theme: 'snow',
+      placeholder: $textarea.attr('placeholder') || 'Write something...',
+      modules: {
+        toolbar: [
+          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          [{ 'font': [] }],
+          [{ 'size': ['small', false, 'large', 'huge'] }],
+          ['bold', 'italic', 'underline', 'strike'],
+          [{ 'color': [] }, { 'background': [] }],
+          [{ 'script': 'sub'}, { 'script': 'super' }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          [{ 'indent': '-1'}, { 'indent': '+1' }],
+          [{ 'direction': 'rtl' }],
+          [{ 'align': [] }],
+          ['blockquote', 'code-block'],
+          ['link', 'image', 'video'],
+          ['clean']
+        ]
       }
-    },
-    // Don't clean or strip HTML - preserve full content
-    codeviewFilter: false,
-    codeviewIframeFilter: false
+    });
+    
+    // Set editor height
+    $editorDiv.find('.ql-editor').css('min-height', _height + 'px');
+    
+    // Set initial content
+    if (initialContent) {
+      quill.root.innerHTML = initialContent;
+    }
+    
+    // Sync content back to textarea on text change
+    quill.on('text-change', function() {
+      $textarea.val(quill.root.innerHTML);
+    });
+    
+    // Store the quill instance
+    window.quillEditors[editorId] = quill;
+    $textarea.data('quill-instance', quill);
+    $textarea.data('quill-initialized', true);
+    
+    // Handle form submission - ensure textarea is synced
+    $textarea.closest('form').on('submit', function() {
+      $textarea.val(quill.root.innerHTML);
+    });
   });
   
   return $elements;
@@ -196,8 +227,8 @@ function plugin_editor(selector, settings){
 
 function elFinderBrowser (field_name, url, type, win) {
   // Legacy function - no longer using TinyMCE file browser
-  // Summernote handles image upload via callbacks
-  console.log('elFinderBrowser is deprecated - using Summernote image upload instead');
+  // Quill handles image upload via toolbar
+  console.log('elFinderBrowser is deprecated - using Quill image upload instead');
   return false;
 }
 

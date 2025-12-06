@@ -51,8 +51,15 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
-    <!-- Summernote Editor CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.css" rel="stylesheet">
+    <!-- Quill Editor CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+    <style>
+      .ql-editor { min-height: 200px; }
+      .ql-container { font-size: 14px; }
+      .quill-wrapper { background: #fff; border-radius: 4px; }
+      .quill-wrapper .ql-toolbar { border-radius: 4px 4px 0 0; }
+      .quill-wrapper .ql-container { border-radius: 0 0 4px 4px; }
+    </style>
     
     <!-- emoji -->
     <?php
@@ -153,8 +160,8 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Summernote Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.js"></script>
+    <!-- Quill Editor -->
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
@@ -178,24 +185,24 @@
     <!-- general JS -->
     <script src="<?php echo BASE; ?>assets/js/process.js"></script>
     
-    <!-- Global Summernote initialization for plugin_editor elements -->
+    <!-- Global Quill Editor initialization for plugin_editor elements -->
     <script type="text/javascript">
       $(document).ready(function() {
-        // Wait for Summernote to be available
-        function initSummernote() {
-          if (typeof $.fn.summernote === 'undefined') {
-            setTimeout(initSummernote, 100);
+        // Wait for Quill to be available
+        function initQuillEditors() {
+          if (typeof Quill === 'undefined') {
+            setTimeout(initQuillEditors, 100);
             return;
           }
-          // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
+          // Initialize any plugin_editor elements that haven't been initialized
           $('.plugin_editor').each(function() {
             var $this = $(this);
-            if (!$this.hasClass('note-editor') && !$this.next().hasClass('note-editor')) {
+            if (!$this.data('quill-initialized')) {
               plugin_editor($this, {height: 300});
             }
           });
         }
-        initSummernote();
+        initQuillEditors();
       });
     </script>
     
