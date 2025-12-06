@@ -52,7 +52,7 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
     <!-- Summernote Editor CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/plugins/summernote/summernote-bs5.min.css" rel="stylesheet">
     
     <!-- emoji -->
     <?php
@@ -154,7 +154,7 @@
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
     <!-- Summernote Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.js"></script>
+    <script src="<?php echo BASE; ?>assets/plugins/summernote/summernote-bs5.min.js"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
