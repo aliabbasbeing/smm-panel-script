@@ -12,58 +12,58 @@
                 <div class="form-label"><?=lang("email_notifications")?></div>
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_verification_new_account" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_verification_new_account" value="1" <?=(get_option('is_verification_new_account', 0) == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"> <?=lang("email_verification_for_new_customer_accounts_preventing_spam_account")?></span>
+                    <input type="checkbox" class="form-check-input" name="is_verification_new_account" value="1" <?=(get_option('is_verification_new_account', 0) == 1)? "checked" : ''?>>
+                    <span class="form-check-label"> <?=lang("email_verification_for_new_customer_accounts_preventing_spam_account")?></span>
                   </label>
                 </div>   
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_welcome_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_welcome_email" value="1" <?=(get_option('is_welcome_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("new_user_welcome_email")?></span>
+                    <input type="checkbox" class="form-check-input" name="is_welcome_email" value="1" <?=(get_option('is_welcome_email',"") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("new_user_welcome_email")?></span>
                   </label>
                 </div>     
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_new_user_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_new_user_email" value="1" <?=(get_option('is_new_user_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("new_user_notification_email")?> <small><?=lang("receive_notification_when_a_new_user_registers_to_the_site")?></small></span>
+                    <input type="checkbox" class="form-check-input" name="is_new_user_email" value="1" <?=(get_option('is_new_user_email',"") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("new_user_notification_email")?> <small><?=lang("receive_notification_when_a_new_user_registers_to_the_site")?></small></span>
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_payment_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_payment_notice_email" value="1" <?=(get_option('is_payment_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("payment_notification_email")?> <small><?=lang("send_notification_when_a_new_user_add_funds_successfully_to_user_balance")?></small></span>
+                    <input type="checkbox" class="form-check-input" name="is_payment_notice_email" value="1" <?=(get_option('is_payment_notice_email',"") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("payment_notification_email")?> <small><?=lang("send_notification_when_a_new_user_add_funds_successfully_to_user_balance")?></small></span>
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_ticket_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_ticket_notice_email" value="1" <?=(get_option('is_ticket_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("ticket_notification_email")?> <small><?=lang("send_notification_to_user_when_admin_reply_to_a_ticket")?></small></span>
+                    <input type="checkbox" class="form-check-input" name="is_ticket_notice_email" value="1" <?=(get_option('is_ticket_notice_email',"") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("ticket_notification_email")?> <small><?=lang("send_notification_to_user_when_admin_reply_to_a_ticket")?></small></span>
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_ticket_notice_email_admin" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_ticket_notice_email_admin" value="1" <?=(get_option('is_ticket_notice_email_admin', "") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("ticket_notification_email")?> <small><?php echo lang("send_notification_to_admin_when_user_open_a_ticket"); ?></small></span>
+                    <input type="checkbox" class="form-check-input" name="is_ticket_notice_email_admin" value="1" <?=(get_option('is_ticket_notice_email_admin', "") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("ticket_notification_email")?> <small><?php echo lang("send_notification_to_admin_when_user_open_a_ticket"); ?></small></span>
                   </label>
                 </div>
 
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_order_notice_email" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_order_notice_email" value="1" <?=(get_option('is_order_notice_email',"") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("order_notification_email")?> <small><?=lang("receive_notification_when_a_user_place_order_successfully")?></small></span>
+                    <input type="checkbox" class="form-check-input" name="is_order_notice_email" value="1" <?=(get_option('is_order_notice_email',"") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("order_notification_email")?> <small><?=lang("receive_notification_when_a_user_place_order_successfully")?></small></span>
                   </label>
                 </div>
 

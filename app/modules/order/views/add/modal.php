@@ -23,7 +23,7 @@ $order_details = $_SESSION['order_details'] ?? null;
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="orderSummaryModalLabel">Order Summary</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -38,7 +38,7 @@ $order_details = $_SESSION['order_details'] ?? null;
         <?php endif; ?>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -46,16 +46,17 @@ $order_details = $_SESSION['order_details'] ?? null;
 
 <!-- Include jQuery and Bootstrap (or whatever framework you are using) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
 
 <script>
   $(document).ready(function () {
     // Check if order details exist in session and show the modal
     <?php if ($order_details): ?>
-      $('#orderSummaryModal').modal('show');
+      var myModal = new bootstrap.Modal(document.getElementById('orderSummaryModal'));
+      myModal.show();
 
       // Clear session after modal is shown
-      $('#orderSummaryModal').on('hidden.bs.modal', function () {
+      document.getElementById('orderSummaryModal').addEventListener('hidden.bs.modal', function () {
         $.ajax({
           url: 'clear_session.php', // This file will clear the session (see below)
           method: 'POST',

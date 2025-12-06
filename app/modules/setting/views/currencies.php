@@ -21,7 +21,7 @@
         <div class="alert alert-warning d-none" id="cronUrlBox">
           <strong>Cron URL:</strong><br>
           <code id="cronUrlText"></code>
-          <button type="button" class="btn btn-sm btn-primary ml-2" id="copyCronUrl">
+          <button type="button" class="btn btn-sm btn-primary ms-2" id="copyCronUrl">
             <i class="fe fe-copy"></i> Copy
           </button>
           <br><small class="text-muted mt-2 d-block">Use this URL in your cron job to automatically update exchange rates daily.</small>
@@ -65,7 +65,7 @@
                 </td>
                 <td>
                   <?php if ($currency->is_default) { ?>
-                    <span class="badge badge-success"><?=lang("Default")?></span>
+                    <span class="badge bg-success"><?=lang("Default")?></span>
                   <?php } else { ?>
                     <button class="btn btn-sm btn-primary set-default" data-id="<?=$currency->id?>">
                       <?=lang("Set as Default")?>

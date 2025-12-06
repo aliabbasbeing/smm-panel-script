@@ -47,17 +47,17 @@
 .notification-description {
     color: #6c757d;
 }
-.custom-switch-lg .custom-control-label::before {
+.custom-switch-lg .form-check-label::before {
     width: 3rem;
     height: 1.5rem;
     border-radius: 3rem;
 }
-.custom-switch-lg .custom-control-label::after {
+.custom-switch-lg .form-check-label::after {
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 50%;
 }
-.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+.custom-switch-lg .form-check-input:checked ~ .form-check-label::after {
     transform: translateX(1.5rem);
 }
 .status-badge {
@@ -66,11 +66,11 @@
     border-radius: 20px;
     font-weight: 600;
 }
-.badge-success {
+.bg-success {
     background-color: #25D366;
     color: white;
 }
-.badge-secondary {
+.bg-secondary {
     background-color: #6c757d;
     color: white;
 }
@@ -117,7 +117,7 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
+        <i class="fab fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
     </h1>
 </div>
 
@@ -145,7 +145,7 @@
     <i class="fe fe-alert-circle"></i> 
     <strong><?=lang("Not Configured")?></strong> - 
     <?=lang("Please configure the WhatsApp API in the Device tab first.")?>
-    <a href="<?=cn('whatsapp/device')?>" class="btn btn-sm btn-warning ml-3"><?=lang("Configure Now")?></a>
+    <a href="<?=cn('whatsapp/device')?>" class="btn btn-sm btn-warning ms-3"><?=lang("Configure Now")?></a>
 </div>
 <?php endif; ?>
 
@@ -161,7 +161,7 @@
             <div class="card-body">
                 <?php if (empty($notifications)): ?>
                 <div class="alert alert-warning">
-                    <i class="fa fa-exclamation-triangle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <strong><?=lang("Notice")?>:</strong> <?=lang("WhatsApp notification templates are not set up yet. Please run the database migration file.")?>
                     <code>/database/whatsapp-notifications.sql</code>
                 </div>
@@ -178,18 +178,18 @@
                         <div class="notification-header">
                             <div class="d-flex justify-content-between align-items-center">
                                 <h5 class="mb-0 notification-title">
-                                    <i class="fa fa-bell text-primary"></i> 
+                                    <i class="fas fa-bell text-primary"></i> 
                                     <?=htmlspecialchars($notification->event_name)?>
                                 </h5>
-                                <div class="custom-control custom-switch custom-switch-lg">
+                                <div class="form-check form-switch custom-switch-lg">
                                     <input type="checkbox" 
-                                           class="custom-control-input notification-toggle" 
+                                           class="form-check-input notification-toggle" 
                                            name="notification_status[<?=$notification->event_type?>]" 
                                            id="status_<?=$notification->event_type?>"
                                            value="1"
                                            <?=($notification->status == 1) ? 'checked' : ''?>>
-                                    <label class="custom-control-label" for="status_<?=$notification->event_type?>">
-                                        <span class="status-badge <?=($notification->status == 1) ? 'badge-success' : 'badge-secondary'?>">
+                                    <label class="form-check-label" for="status_<?=$notification->event_type?>">
+                                        <span class="status-badge <?=($notification->status == 1) ? 'bg-success' : 'bg-secondary'?>">
                                             <?=($notification->status == 1) ? lang('Enabled') : lang('Disabled')?>
                                         </span>
                                     </label>
@@ -198,7 +198,7 @@
                             
                             <?php if (!empty($notification->description)): ?>
                             <p class="notification-description text-muted mb-0 mt-2">
-                                <i class="fa fa-info-circle"></i> <?=htmlspecialchars($notification->description)?>
+                                <i class="fas fa-info-circle"></i> <?=htmlspecialchars($notification->description)?>
                             </p>
                             <?php endif; ?>
                         </div>
@@ -206,7 +206,7 @@
                         <div class="notification-body">
                             <div class="form-group mb-3">
                                 <label class="form-label font-weight-bold">
-                                    <i class="fa fa-file-text-o"></i> <?=lang("Message Template")?>
+                                    <i class="far fa-file-lines"></i> <?=lang("Message Template")?>
                                 </label>
                                 <textarea 
                                     class="form-control template-textarea" 
@@ -217,14 +217,14 @@
                             
                             <?php if (!empty($variables)): ?>
                             <div class="variables-info">
-                                <strong><i class="fa fa-code"></i> <?=lang("Available Variables")?>:</strong>
+                                <strong><i class="fas fa-code"></i> <?=lang("Available Variables")?>:</strong>
                                 <div class="mt-2">
                                     <?php foreach ($variables as $var): ?>
                                     <span class="variable-tag" data-var="{<?=$var?>}">{<?=htmlspecialchars($var)?>}</span>
                                     <?php endforeach; ?>
                                 </div>
                                 <small class="d-block mt-2 text-muted">
-                                    <i class="fa fa-lightbulb-o"></i> <?=lang("Click to copy. Variables will be replaced with actual values.")?>
+                                    <i class="far fa-lightbulb"></i> <?=lang("Click to copy. Variables will be replaced with actual values.")?>
                                 </small>
                             </div>
                             <?php endif; ?>
@@ -234,7 +234,7 @@
                     
                     <div class="mt-4 pt-3 border-top">
                         <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fa fa-save"></i> <?=lang("Save All Templates")?>
+                            <i class="fas fa-save"></i> <?=lang("Save All Templates")?>
                         </button>
                     </div>
                 </form>
@@ -317,11 +317,11 @@ $(document).ready(function() {
 
     // Update badge text when switch changes
     $('.notification-toggle').on('change', function() {
-        var badge = $(this).siblings('.custom-control-label').find('.status-badge');
+        var badge = $(this).siblings('.form-check-label').find('.status-badge');
         if ($(this).is(':checked')) {
-            badge.removeClass('badge-secondary').addClass('badge-success').text('<?=lang("Enabled")?>');
+            badge.removeClass('bg-secondary').addClass('bg-success').text('<?=lang("Enabled")?>');
         } else {
-            badge.removeClass('badge-success').addClass('badge-secondary').text('<?=lang("Disabled")?>');
+            badge.removeClass('bg-success').addClass('bg-secondary').text('<?=lang("Disabled")?>');
         }
     });
 
@@ -378,7 +378,7 @@ $(document).ready(function() {
             data: formData,
             dataType: 'json',
             success: function(response) {
-                $btn.prop('disabled', false).html('<i class="fa fa-save"></i> <?=lang("Save All Templates")?>');
+                $btn.prop('disabled', false).html('<i class="fas fa-save"></i> <?=lang("Save All Templates")?>');
                 if (response.status === 'success') {
                     showMessage(response.message, 'success');
                 } else {
@@ -386,7 +386,7 @@ $(document).ready(function() {
                 }
             },
             error: function() {
-                $btn.prop('disabled', false).html('<i class="fa fa-save"></i> <?=lang("Save All Templates")?>');
+                $btn.prop('disabled', false).html('<i class="fas fa-save"></i> <?=lang("Save All Templates")?>');
                 showMessage('<?=lang("Failed to save settings")?>', 'error');
             }
         });

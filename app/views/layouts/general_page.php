@@ -16,9 +16,10 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
 
-
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
@@ -67,12 +68,12 @@
           <a class="navbar-brand" href="<?=cn()?>">
             <img class="site-logo" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
           </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span><i class="fe fe-menu"></i></span>
           </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
 
               <li class="nav-item ">
                 <a class="nav-link js-scroll-trigger" href="<?=cn()?>#home"><?=lang("Home")?></a>
@@ -117,6 +118,7 @@
 
     <?=Modules::run("blocks/footer");?>
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <!-- general JS -->

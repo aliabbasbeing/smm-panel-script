@@ -5,7 +5,7 @@
         <div class="modal-header bg-pantone">
           <h4 class="modal-title"><i class="fe fe-award"></i> <?=lang("whats_new_on_Panel
 ")?></h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           </button>
         </div>
         <div class="modal-body o-auto" >

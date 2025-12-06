@@ -68,7 +68,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
 </span>
 
             </div>
-            <i class="fa fa-angle-down"></i>
+            <i class="fas fa-angle-down"></i>
           </div>
           <ul class="currency-dropdown-menu" id="currencyDropdownMenu">
             <?php
@@ -92,7 +92,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
 
         <!-- Mobile Menu Toggle -->
         <button class="menu-toggle" id="menuToggle">
-          <i class="fa fa-bars"></i>
+          <i class="fas fa-bars"></i>
         </button>
       </div>
     </div>
@@ -142,14 +142,14 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <!-- Orders -->
           <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'log') ? 'active' : ''?>">
             <a href="<?=cn('order/log')?>" class="menu-link">
-              <i class="fa fa-shopping-cart"></i> <?=lang("Orders")?>
+              <i class="fas fa-shopping-cart"></i> <?=lang("Orders")?>
             </a>
           </li>
 
           <!-- Refill -->
           <li class="menu-item <?=(segment(1) == 'order' && segment(2) == 'refill') ? 'active' : ''?>">
             <a href="<?=cn('refill/log')?>" class="menu-link">
-              <i class="fa fa-recycle"></i> <?=lang("Refill")?>
+              <i class="fas fa-recycle"></i> <?=lang("Refill")?>
             </a>
           </li>
 
@@ -157,7 +157,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <?php if (get_role("admin") || get_role("supporter")) { ?>
             <li class="menu-item <?=(segment(1) == 'category') ? 'active' : ''?>">
               <a href="<?=cn('category')?>" class="menu-link">
-                <i class="fa fa-table"></i> <?=lang("Category")?>
+                <i class="fas fa-table"></i> <?=lang("Category")?>
               </a>
             </li>
           <?php } ?>
@@ -173,7 +173,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <?php if (get_role("user") || get_role("admin")) { ?>
             <li class="menu-item <?=(segment(1) == 'add_funds') ? 'active' : ''?>">
               <a href="<?=cn('add_funds')?>" class="menu-link">
-                <i class="fa fa-money"></i> <?=lang("Add_funds")?>
+                <i class="fas fa-money-bill"></i> <?=lang("Add_funds")?>
               </a>
             </li>
           <?php } ?>
@@ -190,9 +190,9 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <!-- Tickets -->
           <li class="menu-item <?=(segment(1) == 'tickets') ? 'active' : ''?>">
             <a href="<?=cn('tickets')?>" class="menu-link">
-              <i class="fa fa-comments-o"></i> <?=lang("Tickets")?>
+              <i class="far fa-comments"></i> <?=lang("Tickets")?>
               <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
-                <span class="badge badge-info"><?=$total_unread_tickets?></span>
+                <span class="badge bg-info"><?=$total_unread_tickets?></span>
               <?php endif; ?>
             </a>
           </li>
@@ -201,7 +201,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <?php if(get_option("enable_affiliate") == "1"){ ?>
             <li class="menu-item <?=(segment(1) == 'affiliate') ? 'active' : ''?>">
               <a href="<?=cn('affiliate')?>" class="menu-link">
-                <i class="fa fa-money"></i> <?=lang("Affiliate")?>
+                <i class="fas fa-money-bill"></i> <?=lang("Affiliate")?>
               </a>
             </li>
           <?php } ?>
@@ -210,7 +210,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <?php if(get_option("is_childpanel_status") == "1"){ ?>
             <li class="menu-item <?=(segment(1) == 'childpanel') ? 'active' : ''?>">
               <a href="<?=cn('childpanel/add')?>" class="menu-link">
-                <i class="fa fa-child"></i> <?=lang("Child_Panel")?>
+                <i class="fas fa-child"></i> <?=lang("Child_Panel")?>
               </a>
             </li>
           <?php } ?>
@@ -239,37 +239,37 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
 
             <li class="menu-item <?=(segment(1) == 'subscribers') ? 'active' : ''?>">
               <a href="<?=cn('subscribers')?>" class="menu-link">
-                <i class="fa fa-user-circle-o"></i> <?=lang("subscribers")?>
+                <i class="far fa-circle-user"></i> <?=lang("subscribers")?>
               </a>
             </li>
 
             <li class="menu-item <?=(segment(1) == 'setting') ? 'active' : ''?>">
               <a href="<?=cn('setting')?>" class="menu-link">
-                <i class="fa fa-cog"></i> <?=lang("System_Settings")?>
+                <i class="fas fa-cog"></i> <?=lang("System_Settings")?>
               </a>
             </li>
             
             <li class="menu-item <?=(segment(1) == 'currencies') ? 'active' : ''?>">
               <a href="<?=cn('currencies')?>" class="menu-link">
-                <i class="fa fa-usd"></i> <?=lang("Currencies")?>
+                <i class="fas fa-usd"></i> <?=lang("Currencies")?>
               </a>
             </li>
             
             <li class="menu-item <?=(segment(1) == 'whatsapp') ? 'active' : ''?>">
               <a href="<?=cn('whatsapp')?>" class="menu-link">
-                <i class="fa fa-whatsapp"></i> <?=lang("Whatsapp_Management")?>
+                <i class="fab fa-whatsapp"></i> <?=lang("Whatsapp_Management")?>
               </a>
             </li>
 
             <li class="menu-item <?=(segment(1) == 'api_provider') ? 'active' : ''?>">
               <a href="<?=cn('api_provider')?>" class="menu-link">
-                <i class="fa fa-share-alt"></i> <?=lang("Services_Providers")?>
+                <i class="fas fa-share-alt"></i> <?=lang("Services_Providers")?>
               </a>
             </li>
 
             <li class="menu-item <?=(segment(1) == 'payments') ? 'active' : ''?>">
               <a href="<?=cn('payments')?>" class="menu-link">
-                <i class="fa fa-credit-card"></i> <?=lang("Payments")?>
+                <i class="fas fa-credit-card"></i> <?=lang("Payments")?>
               </a>
             </li>
           <?php } ?>
@@ -278,19 +278,19 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <?php if(get_role("admin")){ ?>
             <li class="menu-item <?=(segment(1) == 'news') ? 'active' : ''?>">
               <a href="<?=cn('news')?>" class="menu-link">
-                <i class="fa fa-bell"></i> <?=lang("Announcement")?>
+                <i class="fas fa-bell"></i> <?=lang("Announcement")?>
               </a>
             </li>
 
             <li class="menu-item <?=(segment(1) == 'faqs') ? 'active' : ''?>">
               <a href="<?=cn('faqs')?>" class="menu-link">
-                <i class="fa fa-book"></i> FAQs
+                <i class="fas fa-book"></i> FAQs
               </a>
             </li>
 
             <li class="menu-item <?=(segment(1) == 'language') ? 'active' : ''?>">
               <a href="<?=cn('language')?>" class="menu-link">
-                <i class="fa fa-language"></i> <?=lang("Language")?>
+                <i class="fas fa-language"></i> <?=lang("Language")?>
               </a>
             </li>
           <?php } ?>
@@ -298,14 +298,14 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
           <!-- Account -->
           <li class="menu-item <?=(segment(1) == 'profile') ? 'active' : ''?>">
             <a href="<?=cn('profile')?>" class="menu-link">
-              <i class="fa fa-user"></i> <?=lang("Account")?>
+              <i class="fas fa-user"></i> <?=lang("Account")?>
             </a>
           </li>
 
           <!-- Sign Out -->
           <li class="menu-item">
             <a href="<?=cn("auth/logout")?>" class="menu-link">
-              <i class="fa fa-power-off"></i> <?=lang("Sign_Out")?>
+              <i class="fas fa-power-off"></i> <?=lang("Sign_Out")?>
             </a>
           </li>
         <?php endif; ?>
@@ -392,9 +392,9 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php if (get_option("enable_news_announcement") == 1) { ?>
-  <a href="<?=cn("news/ajax_notification")?>" style="position: fixed; bottom: 8px; right: 8px; font-size: 20px; padding-top: 3px; text-align: center; z-index: 10000000;" data-toggle="tooltip" data-placement="bottom" title="News & Announcement" class="ajaxModal text-white">
+  <a href="<?=cn("news/ajax_notification")?>" style="position: fixed; bottom: 8px; right: 8px; font-size: 20px; padding-top: 3px; text-align: center; z-index: 10000000;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="News & Announcement" class="ajaxModal text-white">
     <div class="bell-fix">
-      <i class="fa fa-bell"></i>
+      <i class="fas fa-bell"></i>
       <div class="test">
         <span class="nav-unread <?=(isset($_COOKIE["news_annoucement"]) && $_COOKIE["news_annoucement"] == "clicked") ? "" : "change_color"?>"></span>
       </div>

@@ -64,7 +64,7 @@
       <div class="card-header">
         <h3 class="card-title">Recipients List (Showing last 100)</h3>
         <div class="card-options">
-          <span class="badge badge-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
+          <span class="badge bg-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
         </div>
       </div>
       <div class="table-responsive">
@@ -140,7 +140,7 @@ $(document).ready(function(){
       data: formData,
       timeout: 60000,
       beforeSend: function(){
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Importing...');
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Importing...');
       },
       success: function(response){
         if(response.status == 'success'){
@@ -193,7 +193,7 @@ $(document).ready(function(){
       contentType: false,
       timeout: 60000,
       beforeSend: function(){
-        $button.prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Uploading...');
+        $button.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Uploading...');
       },
       success: function(response){
         if(response.status == 'success'){

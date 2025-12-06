@@ -5,7 +5,7 @@
     <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
       <h3 class="card-title"><?=(isset($cate_name)) ? $cate_name : lang("Lists")?></h3>
       <div class="card-options">
-        <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+        <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
       </div>
     </div>
     <?php if (!empty($services)) {
@@ -20,9 +20,9 @@
             ?>
             <th class="text-center w-1">
               <div class="custom-controls-stacked">
-                <label class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input check-all" data-name="chk_<?=$j?>">
-                  <span class="custom-control-label"></span>
+                <label class="form-check">
+                  <input type="checkbox" class="form-check-input check-all" data-name="chk_<?=$j?>">
+                  <span class="form-check-label"></span>
                 </label>
               </div>
             </th>
@@ -55,9 +55,9 @@
             ?>
             <th class="text-center w-1">
               <div class="custom-controls-stacked">
-                <label class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input chk_<?=$j?>"  name="ids[]" value="<?=$row->ids?>">
-                  <span class="custom-control-label"></span>
+                <label class="form-check">
+                  <input type="checkbox" class="form-check-input chk_<?=$j?>"  name="ids[]" value="<?=$row->ids?>">
+                  <span class="form-check-label"></span>
                 </label>
               </div>
             </th>
@@ -110,7 +110,7 @@
             <td class="text-center" style="width: 8%;"><?=$row->min?> / <?=$row->max?></td>
 
             <td style="width: 6%;">
-              <button class="btn btn-info btn-sm" type="button" class="dash-btn" data-toggle="modal" data-target="#<?php echo $row->ids; ?>"><?=lang("Details")?></button>
+              <button class="btn btn-info btn-sm" type="button" class="dash-btn" data-bs-toggle="modal" data-bs-target="#<?php echo $row->ids; ?>"><?=lang("Details")?></button>
               <div id="<?php echo $row->ids; ?>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                 <?php
                   $this->load->view('descriptions', ['service' => $row]);
@@ -123,9 +123,9 @@
             ?>
             <td class="w-1 text-center">
               <?php if(!empty($row->dripfeed) && $row->dripfeed == 1){?>
-                <span class="badge badge-info"><?=lang("Active")?></span>
+                <span class="badge bg-info"><?=lang("Active")?></span>
                 <?php }else{?>
-                <span class="badge badge-warning"><?=lang("Deactive")?></span>
+                <span class="badge bg-warning text-dark"><?=lang("Deactive")?></span>
               <?php }?>
             </td>
 

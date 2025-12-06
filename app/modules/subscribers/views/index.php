@@ -15,8 +15,8 @@
         <h3 class="card-title" style="color:#fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
           <div class="dropdown">
-            <button type="button" class="btn btn-outline-info  dropdown-toggle" data-toggle="dropdown">
-               <i class="fe fe-upload mr-2"></i>Export
+            <button type="button" class="btn btn-outline-info  dropdown-toggle" data-bs-toggle="dropdown">
+               <i class="fe fe-upload me-2"></i>Export
             </button>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="<?=cn($module.'/export/excel')?>">Excel</a>
@@ -61,7 +61,7 @@
               ?>
               <td class="text-center w-1">
                 <div class="item-action dropdown">
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu">
                     <?php
                       if (get_role("admin")) {
@@ -85,7 +85,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="float-right">
+    <div class="float-end">
       <?=$links?>
     </div>
   </div>

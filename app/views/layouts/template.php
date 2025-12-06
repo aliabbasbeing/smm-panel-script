@@ -16,7 +16,9 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
 
-    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -48,9 +50,6 @@
     <link rel="stylesheet" type="text/css" href="<?php echo BASE; ?>assets/plugins/jquery-toast/css/jquery.toast.css">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
-    
-    <!-- Summernote Editor CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.css" rel="stylesheet">
     
     <!-- emoji -->
     <?php
@@ -137,6 +136,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/standalone/selectize.min.js"></script>
 
     <script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo BASE; ?>assets/js/bootstrap-toast.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/selectize.min.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/jquery.tablesorter.min.js"></script>
@@ -150,8 +150,8 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Summernote Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.js"></script>
+    <!-- TinyMCE Editor from Tiny Cloud CDN -->
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
@@ -175,16 +175,24 @@
     <!-- general JS -->
     <script src="<?php echo BASE; ?>assets/js/process.js"></script>
     
-    <!-- Global Summernote initialization for plugin_editor elements -->
+    <!-- Global TinyMCE Editor initialization for plugin_editor elements -->
     <script type="text/javascript">
       $(document).ready(function() {
-        // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
-        $('.plugin_editor').each(function() {
-          var $this = $(this);
-          if (!$this.hasClass('note-editor') && !$this.next().hasClass('note-editor')) {
-            plugin_editor($this, {height: 300});
+        // Wait for TinyMCE to be available
+        function initTinyMCEEditors() {
+          if (typeof tinymce === 'undefined') {
+            setTimeout(initTinyMCEEditors, 100);
+            return;
           }
-        });
+          // Initialize any plugin_editor elements that haven't been initialized
+          $('.plugin_editor').each(function() {
+            var $this = $(this);
+            if (!$this.data('tinymce-initialized')) {
+              plugin_editor($this, {height: 300});
+            }
+          });
+        }
+        initTinyMCEEditors();
       });
     </script>
     

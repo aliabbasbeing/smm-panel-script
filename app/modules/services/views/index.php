@@ -421,7 +421,7 @@
   <div class="col-sm-6 col-lg-3">
     <div class="card stats-card">
       <div class="card-body d-flex align-items-center">
-        <div class="stats-icon bg-primary text-white mr-3">
+        <div class="stats-icon bg-primary text-white me-3">
           <i class="fe fe-package"></i>
         </div>
         <div>
@@ -434,7 +434,7 @@
   <div class="col-sm-6 col-lg-3">
     <div class="card stats-card">
       <div class="card-body d-flex align-items-center">
-        <div class="stats-icon bg-success text-white mr-3">
+        <div class="stats-icon bg-success text-white me-3">
           <i class="fe fe-check-circle"></i>
         </div>
         <div>
@@ -447,7 +447,7 @@
   <div class="col-sm-6 col-lg-3">
     <div class="card stats-card">
       <div class="card-body d-flex align-items-center">
-        <div class="stats-icon bg-warning text-white mr-3">
+        <div class="stats-icon bg-warning text-white me-3">
           <i class="fe fe-x-circle"></i>
         </div>
         <div>
@@ -460,7 +460,7 @@
   <div class="col-sm-6 col-lg-3">
     <div class="card stats-card">
       <div class="card-body d-flex align-items-center">
-        <div class="stats-icon bg-info text-white mr-3">
+        <div class="stats-icon bg-info text-white me-3">
           <i class="fe fe-cloud"></i>
         </div>
         <div>
@@ -476,9 +476,9 @@
 <!-- Advanced Filters Card -->
 <div class="card services-filter-card">
   <div class="card-header">
-    <h3 class="card-title"><i class="fe fe-filter mr-2"></i><?=lang("filters_and_search")?></h3>
+    <h3 class="card-title"><i class="fe fe-filter me-2"></i><?=lang("filters_and_search")?></h3>
     <div class="card-options">
-      <a href="#" class="card-options-collapse text-white" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+      <a href="#" class="card-options-collapse text-white" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
     </div>
   </div>
   <div class="card-body">
@@ -489,7 +489,7 @@
           <label class="filter-label"><?=lang("search")?></label>
           <div class="input-group">
             <input type="text" class="form-control" name="search" id="filter-search" placeholder="<?=lang("search_services")?>" value="<?=isset($filters['search']) ? htmlspecialchars($filters['search']) : ''?>">
-            <div class="input-group-append">
+            <div class="">
               <span class="input-group-text bg-white"><i class="fe fe-search"></i></span>
             </div>
           </div>
@@ -565,9 +565,9 @@
           <button type="button" class="btn btn-light quick-filter-btn" data-filter="manual"><?=lang("Manual")?> <?=lang("only")?></button>
           <?php endif; ?>
           
-          <div class="float-right">
-            <button type="button" class="btn btn-light" id="reset-filters"><i class="fe fe-x mr-1"></i><?=lang("reset")?></button>
-            <button type="submit" class="btn btn-primary" id="apply-filters"><i class="fe fe-search mr-1"></i><?=lang("apply_filters")?></button>
+          <div class="float-end">
+            <button type="button" class="btn btn-light" id="reset-filters"><i class="fe fe-x me-1"></i><?=lang("reset")?></button>
+            <button type="submit" class="btn btn-primary" id="apply-filters"><i class="fe fe-search me-1"></i><?=lang("apply_filters")?></button>
           </div>
         </div>
       </div>
@@ -581,25 +581,25 @@
       <div class="col-md-6 col-lg-4 mb-2">
         <div class="d-flex align-items-center">
           <?php if(get_role("admin") || get_role("supporter")): ?>
-          <a href="<?=cn("$module/update")?>" class="ajaxModal btn btn-info mr-2">
-            <i class="fa fa-plus"></i> <?=lang("add_new")?>
+          <a href="<?=cn("$module/update")?>" class="ajaxModal btn btn-info me-2">
+            <i class="fas fa-plus"></i> <?=lang("add_new")?>
           </a>
-          <button type="button" class="btn-quick-action mr-2" id="openServiceActionModal">
+          <button type="button" class="btn-quick-action me-2" id="openServiceActionModal">
             <i class="fe fe-zap"></i> <?=lang("quick_actions")?>
           </button>
           <?php else: ?>
-          <h4 class="mb-0"><i class="fe fe-list mr-2"></i><?=lang("Services")?></h4>
+          <h4 class="mb-0"><i class="fe fe-list me-2"></i><?=lang("Services")?></h4>
           <?php endif; ?>
           
-          <span class="badge badge-primary selected-count-badge ml-2" id="selected-count">
+          <span class="badge bg-primary selected-count-badge ms-2" id="selected-count">
             <span class="count">0</span> <?=lang("selected")?>
           </span>
         </div>
       </div>
       
-      <div class="col-md-6 col-lg-8 mb-2 text-right">
+      <div class="col-md-6 col-lg-8 mb-2 text-end">
         <?php if (get_option("enable_explication_service_symbol")): ?>
-        <div class="btn-list d-inline-block mr-3">
+        <div class="btn-list d-inline-block me-3">
           <span class="btn btn-sm round btn-secondary">⭐ = <?=lang("__good_seller")?></span>
           <span class="btn btn-sm round btn-secondary">⚡️ = <?=lang("__speed_level")?></span>
           <span class="btn btn-sm round btn-secondary">🔥 = <?=lang("__hot_service")?></span>
@@ -608,39 +608,39 @@
         
         <?php if (get_role("admin")): ?>
         <div class="d-inline-block">
-          <a href="<?=cn('api_provider/services')?>" class="btn btn-secondary mr-1">
-            <i class="fe fe-download mr-1"></i><?=lang("import_services")?>
+          <a href="<?=cn('api_provider/services')?>" class="btn btn-secondary me-1">
+            <i class="fe fe-download me-1"></i><?=lang("import_services")?>
           </a>
-          <a href="<?=cn($module.'/export_csv')?>?<?=http_build_query($filters)?>" class="btn btn-secondary mr-1">
-            <i class="fe fe-file-text mr-1"></i><?=lang("export_csv")?>
+          <a href="<?=cn($module.'/export_csv')?>?<?=http_build_query($filters)?>" class="btn btn-secondary me-1">
+            <i class="fe fe-file-text me-1"></i><?=lang("export_csv")?>
           </a>
           <div class="item-action dropdown d-inline-block">
-            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
-              <i class="fe fe-menu mr-1"></i><?=lang("bulk_actions")?>
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+              <i class="fe fe-menu me-1"></i><?=lang("bulk_actions")?>
             </button>
             <div class="dropdown-menu dropdown-menu-right">
               <h6 class="dropdown-header"><?=lang("status_actions")?></h6>
               <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="active">
-                <i class="fe fe-check-square text-success mr-2"></i><?=lang("activate_selected")?>
+                <i class="fe fe-check-square text-success me-2"></i><?=lang("activate_selected")?>
               </a>
               <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="deactive">
-                <i class="fe fe-x-square text-warning mr-2"></i><?=lang("deactivate_selected")?>
+                <i class="fe fe-x-square text-warning me-2"></i><?=lang("deactivate_selected")?>
               </a>
               <div class="dropdown-divider"></div>
               <h6 class="dropdown-header"><?=lang("delete_actions")?></h6>
               <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="delete">
-                <i class="fe fe-trash-2 text-danger mr-2"></i><?=lang("delete_selected")?>
+                <i class="fe fe-trash-2 text-danger me-2"></i><?=lang("delete_selected")?>
               </a>
               <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="all_deactive">
-                <i class="fe fe-trash-2 text-danger mr-2"></i><?=lang("delete_all_inactive")?>
+                <i class="fe fe-trash-2 text-danger me-2"></i><?=lang("delete_all_inactive")?>
               </a>
               <div class="dropdown-divider"></div>
               <h6 class="dropdown-header"><?=lang("bulk_update")?></h6>
-              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulk-price-modal">
-                <i class="fe fe-dollar-sign text-info mr-2"></i><?=lang("update_prices")?>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulk-price-modal">
+                <i class="fe fe-dollar-sign text-info me-2"></i><?=lang("update_prices")?>
               </a>
-              <a class="dropdown-item" href="#" data-toggle="modal" data-target="#bulk-category-modal">
-                <i class="fe fe-folder text-info mr-2"></i><?=lang("change_category")?>
+              <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#bulk-category-modal">
+                <i class="fe fe-folder text-info me-2"></i><?=lang("change_category")?>
               </a>
             </div>
           </div>
@@ -656,16 +656,16 @@
       <div class="card p-0 content">
         <div class="card-header d-flex justify-content-between align-items-center">
           <h3 class="card-title" style="color:#fff !important;">
-            <i class="fe fe-list mr-2"></i><?=lang("Services")?> 
+            <i class="fe fe-list me-2"></i><?=lang("Services")?> 
             <?php if (isset($pagination)): ?>
-            <span class="badge badge-light ml-2"><?=number_format($pagination['total'])?></span>
+            <span class="badge bg-light text-dark ms-2"><?=number_format($pagination['total'])?></span>
             <?php endif; ?>
           </h3>
           <div class="card-options">
-            <button type="button" class="btn btn-sm btn-light mr-2" id="refresh-services">
+            <button type="button" class="btn btn-sm btn-light me-2" id="refresh-services">
               <i class="fe fe-refresh-cw"></i>
             </button>
-            <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+            <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
           </div>
         </div>
         <div class="table-responsive dimmer" id="services-table-container">
@@ -695,10 +695,8 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title"><i class="fe fe-dollar-sign mr-2"></i><?=lang("bulk_update_prices")?></h5>
-        <button type="button" class="close text-white" data-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <h5 class="modal-title"><i class="fe fe-dollar-sign me-2"></i><?=lang("bulk_update_prices")?></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="bulk-price-form">
         <div class="modal-body">
@@ -717,7 +715,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           <button type="submit" class="btn btn-primary"><?=lang("update_prices")?></button>
         </div>
       </form>
@@ -730,10 +728,8 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
-        <h5 class="modal-title"><i class="fe fe-folder mr-2"></i><?=lang("change_category")?></h5>
-        <button type="button" class="close text-white" data-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <h5 class="modal-title"><i class="fe fe-folder me-2"></i><?=lang("change_category")?></h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="bulk-category-form">
         <div class="modal-body">
@@ -749,7 +745,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           <button type="submit" class="btn btn-primary"><?=lang("change_category")?></button>
         </div>
       </form>
@@ -1060,7 +1056,7 @@
               </div>
             </div>
             <div class="alert alert-info mt-3">
-              <i class="fe fe-info mr-2"></i><?=lang("bulk_status_info")?>
+              <i class="fe fe-info me-2"></i><?=lang("bulk_status_info")?>
             </div>
           `;
           $('#serviceActionModalBody').html(statusContent);
@@ -1097,7 +1093,7 @@
           
           var cleanupContent = `
             <div class="alert alert-warning mb-4">
-              <i class="fe fe-alert-triangle mr-2"></i>
+              <i class="fe fe-alert-triangle me-2"></i>
               <strong><?=lang("warning")?></strong> <?=lang("cleanup_warning")?>
             </div>
             <div class="service-action-card" onclick="ServicesManager.cleanupAction('inactive')">

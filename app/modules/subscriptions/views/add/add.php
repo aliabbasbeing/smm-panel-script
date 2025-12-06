@@ -6,10 +6,10 @@
         <div class="tabs-list">
           <ul class="nav nav-tabs">
             <li class="">
-              <a class="active show" data-toggle="tab" href="#new_order"><i class="fa fa-clone"></i> <?=lang("single_order")?></a>
+              <a class="active show" data-bs-toggle="tab" href="#new_order"><i class="fas fa-clone"></i> <?=lang("single_order")?></a>
             </li>
             <li>
-              <a data-toggle="tab" href="#mass_order"><i class="fa fa-sitemap"></i> <?=lang("mass_order")?></a>
+              <a data-bs-toggle="tab" href="#mass_order"><i class="fas fa-sitemap"></i> <?=lang("mass_order")?></a>
             </li>
           </ul>
         </div>
@@ -21,7 +21,7 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="content-header-title">
-                    <h6><i class="fa fa-shopping-cart"></i> <?=lang('add_new')?></h6>
+                    <h6><i class="fas fa-shopping-cart"></i> <?=lang('add_new')?></h6>
                   </div>
                   <div class="form-group">
                     <label><?=lang("Category")?></label>
@@ -146,7 +146,7 @@
                         <label>Expiry</label>
                         <div class="input-group">
                           <input type="text" class="form-control datepicker" name="sub_expiry" onkeydown="return false" name="expiry" placeholder="" id="expiry">
-                          <span class="input-group-append">
+                          <span class="">
                             <button class="btn btn-info" type="button" onclick="document.getElementById('expiry').value = ''"><i class="fe fe-trash-2"></i></button>
                           </span>
                         </div>
@@ -163,9 +163,9 @@
                         <div class="form-label"><?=lang("dripfeed")?> 
                         <label class="custom-switch">
 
-                          <span class="custom-switch-description m-r-20"><i class="fa fa-question-circle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>"></i></span>
+                          <span class="custom-switch-description m-r-20"><i class="fas fa-question-circle" data-bs-toggle="popover" data-trigger="hover" data-bs-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>"></i></span>
 
-                          <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-toggle="collapse" data-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
+                          <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-bs-toggle="collapse" data-bs-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
                           <span class="custom-switch-indicator"></span>
                         </label>
                         </div>
@@ -206,19 +206,19 @@
                     <input type="hidden" name="currency_symbol" value="<?=get_option("currency_symbol", "")?>">
                     <p class="btn btn-info total_charge"><?=lang("total_charge")?> <span class="charge_number">$0</span></p>
                     <div class="alert alert-icon alert-danger d-none" role="alert">
-                      <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i><?=lang("order_amount_exceeds_available_funds")?>
+                      <i class="fe fe-alert-triangle me-2" aria-hidden="true"></i><?=lang("order_amount_exceeds_available_funds")?>
                     </div>
                   </div>
 
                   <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="agree">
-                      <span class="custom-control-label"><?=lang("yes_i_have_confirmed_the_order")?></span>
+                    <label class="form-check">
+                      <input type="checkbox" class="form-check-input" name="agree">
+                      <span class="form-check-label"><?=lang("yes_i_have_confirmed_the_order")?></span>
                     </label>
                   </div>
 
                   <div class="form-actions left">
-                    <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">
+                    <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">
                       <?=lang("place_order")?>
                     </button>
 
@@ -227,7 +227,7 @@
 
                 <div class="col-md-6" id="order_resume">
                   <div class="content-header-title">
-                    <h6><i class="fa fa-shopping-cart"></i> <?=lang("order_resume")?></h6>
+                    <h6><i class="fas fa-shopping-cart"></i> <?=lang("order_resume")?></h6>
                   </div>
                   <div class="row" id="result_onChangeService">
                     <div class="col-md-12 col-sm-12 col-xs-12">
@@ -284,16 +284,16 @@
                     <textarea id="editor" rows="14" name="mass_order" class="form-control square" placeholder="service_id|quantity|link"></textarea>
                   </div>
                   <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="agree">
-                      <span class="custom-control-label"><?=lang("yes_i_have_confirmed_the_order")?></span>
+                    <label class="form-check">
+                      <input type="checkbox" class="form-check-input" name="agree">
+                      <span class="form-check-label"><?=lang("yes_i_have_confirmed_the_order")?></span>
                     </label>
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12 col-xs-12">
                   <div class="mass_order_error" id="result_notification">
                     <div class="content-header-title">
-                      <h6><i class="fa fa-info-circle"></i> <?=lang("note")?></h6>
+                      <h6><i class="fas fa-info-circle"></i> <?=lang("note")?></h6>
                     </div>
                     <div class="form-group">
                       <?=lang("here_you_can_place_your_orders_easy_please_make_sure_you_check_all_the_prices_and_delivery_times_before_you_place_a_order_after_a_order_submited_it_cannot_be_canceled")?>
@@ -302,7 +302,7 @@
                 </div>
               </div>
               <div class="form-actions left">
-                <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">
+                <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">
                   <?=lang("place_order")?>
                 </button>
               </div>

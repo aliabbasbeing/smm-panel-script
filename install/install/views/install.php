@@ -83,7 +83,8 @@ if (!empty($_SERVER['HTTPS'])) {
         <link rel="icon" href="/install/install/views/no1scripts.png" />
         <title><?=$project_name?> Installation</title>
         <link rel='stylesheet' type='text/css' href='assets/bootstrap/css/bootstrap.min.css' />
-        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/font-awesome.min.css' />
+        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/all.min.css' />
+        <link rel='stylesheet' type='text/css' href='assets/js/font-awesome/css/v4-shims.min.css' />
 
         <link rel='stylesheet' type='text/css' href='assets/css/install.css' />
 
@@ -103,9 +104,9 @@ if (!empty($_SERVER['HTTPS'])) {
                 </div>
                 <div class="panel-body no-padding">
                     <div class="tab-container clearfix">
-                        <div id="pre-installation" class="tab-title col-sm-4 active"><i class="fa fa-circle-o"></i><strong> Pre-Installation</strong></span></div>
-                        <div id="configuration" class="tab-title col-sm-4"><i class="fa fa-circle-o"></i><strong> Configuration</strong></div>
-                        <div id="finished" class="tab-title col-sm-4"><i class="fa fa-circle-o"></i><strong> Finished</strong></div> 
+                        <div id="pre-installation" class="tab-title col-sm-4 active"><i class="far fa-circle"></i><strong> Pre-Installation</strong></span></div>
+                        <div id="configuration" class="tab-title col-sm-4"><i class="far fa-circle"></i><strong> Configuration</strong></div>
+                        <div id="finished" class="tab-title col-sm-4"><i class="far fa-circle"></i><strong> Finished</strong></div> 
                     </div>
                     <div id="alert-container">
 
@@ -134,9 +135,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td><?php echo $php_version_required; ?>+</td>
                                                 <td class="text-center">
                                                     <?php if ($php_version_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -170,9 +171,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td>On</td>
                                                 <td class="text-center">
                                                     <?php if ($mysql_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -188,9 +189,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td>On</td>
                                                 <td class="text-center">
                                                     <?php if ($gd_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -206,9 +207,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td>On</td>
                                                 <td class="text-center">
                                                     <?php if ($zip_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -224,9 +225,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td>On</td>
                                                 <td class="text-center">
                                                     <?php if ($curl_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -241,9 +242,9 @@ if (!empty($_SERVER['HTTPS'])) {
                                                 <td>On</td>
                                                 <td class="text-center">
                                                     <?php if ($allow_url_fopen_success) { ?>
-                                                        <i class="status fa fa-check-circle-o"></i>
+                                                        <i class="status fas fa-check-circle-o"></i>
                                                     <?php } else { ?>
-                                                        <i class="status fa fa-times-circle-o"></i>
+                                                        <i class="status fas fa-times-circle-o"></i>
                                                     <?php } ?>
                                                 </td>
                                             </tr>
@@ -266,12 +267,12 @@ if (!empty($_SERVER['HTTPS'])) {
                                                     <td style="width:87%;"><?php echo $value; ?></td>  
                                                     <td class="text-center">
                                                         <?php if (is_writeable(".." . $value)) { ?>
-                                                            <i class="status fa fa-check-circle-o"></i>
+                                                            <i class="status fas fa-check-circle-o"></i>
                                                             <?php
                                                         } else {
                                                             $all_requirement_success = false;
                                                             ?>
-                                                            <i class="status fa fa-times-circle-o"></i>
+                                                            <i class="status fas fa-times-circle-o"></i>
                                                         <?php } ?>
                                                     </td>
                                                 </tr>
@@ -288,7 +289,7 @@ if (!empty($_SERVER['HTTPS'])) {
                                 if (!$all_requirement_success) {
                                     echo "disabled=disabled";
                                 }
-                                ?> class="btn btn-info form-next"><i class='fa fa-chevron-right'></i> Next</button>
+                                ?> class="btn btn-info form-next"><i class='fas fa-chevron-right'></i> Next</button>
                             </div>
 
                         </div>
@@ -388,7 +389,7 @@ if (!empty($_SERVER['HTTPS'])) {
                                 <div class="panel-footer">
                                     <button type="submit" class="btn btn-info form-next">
                                         <span class="loader hide"> Processing...</span>
-                                        <span class="button-text"><i class='fa fa-chevron-right'></i> Finish</span> 
+                                        <span class="button-text"><i class='fas fa-chevron-right'></i> Finish</span> 
                                     </button>
                                 </div>
 
@@ -398,7 +399,7 @@ if (!empty($_SERVER['HTTPS'])) {
                         <div role="tabpanel" class="tab-pane" id="finished-tab">
                             <div class="section">
                                 <div class="clearfix">
-                                    <i class="status fa fa-check-circle-o pull-left" style="font-size: 50px"> </i><span class="pull-left"  style="line-height: 50px;">Congratulation! You have successfully installed <?=$project_name?></span>  
+                                    <i class="status fas fa-check-circle-o pull-left" style="font-size: 50px"> </i><span class="pull-left"  style="line-height: 50px;">Congratulation! You have successfully installed <?=$project_name?></span>  
                                 </div>
 
                                 <div style="margin: 15px 0 15px 60px; color: #d73b3b;">
@@ -406,7 +407,7 @@ if (!empty($_SERVER['HTTPS'])) {
                                 </div>
                                 <a class="go-to-login-page" href="<?php echo $dashboard_url; ?>">
                                     <div class="text-center">
-                                        <div style="font-size: 100px;"><i class="fa fa-desktop"></i></div>
+                                        <div style="font-size: 100px;"><i class="fas fa-desktop"></i></div>
                                         <div>GO TO YOUR LOGIN PAGE</div>
                                     </div>
                                 </a>

@@ -74,7 +74,7 @@
   <div class="form-group">
     <label><?=lang("Average_Completion_Time")?></label>
     <div class="alert alert-info" style="margin-bottom: 0;">
-      <i class="fa fa-clock-o"></i> 
+      <i class="far fa-clock"></i> 
       <?php
         $avg_time = $service->avg_completion_time;
         $hours = floor($avg_time / 3600);

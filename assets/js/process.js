@@ -120,7 +120,10 @@
   });
 }
 
-/*----------  Configure Summernote editor  ----------*/
+/*----------  Configure TinyMCE Editor  ----------*/
+// Store TinyMCE instances globally for access
+window.tinymceEditors = window.tinymceEditors || {};
+
 function plugin_editor(selector, settings){
   // Handle both string selectors and jQuery objects
   if (typeof(selector) == 'undefined') {
@@ -134,60 +137,107 @@ function plugin_editor(selector, settings){
     return $elements;
   }
   
+  // Check if TinyMCE is available
+  if (typeof tinymce === 'undefined') {
+    console.warn('TinyMCE is not loaded. Waiting for it to load...');
+    // Retry after a short delay
+    setTimeout(function() {
+      plugin_editor(selector, settings);
+    }, 500);
+    return $elements;
+  }
+  
   var _height = 300;
   
   if (typeof(settings) != 'undefined' && settings.height) {
     _height = settings.height;
   }
   
-  $elements.summernote({
-    height: _height,
-    minHeight: 100,
-    maxHeight: 600,
-    focus: false,
-    toolbar: [
-      ['view', ['codeview', 'fullscreen', 'help']],
-      ['style', ['style']],
-      ['font', ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear']],
-      ['fontname', ['fontname']],
-      ['fontsize', ['fontsize']],
-      ['color', ['forecolor', 'backcolor']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      ['table', ['table']],
-      ['insert', ['link', 'picture', 'video', 'hr']]
-    ],
-    fontNames: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
-    fontNamesIgnoreCheck: ['Arial', 'Arial Black', 'Comic Sans MS', 'Courier New', 'Georgia', 'Helvetica', 'Impact', 'Lucida Console', 'Lucida Sans Unicode', 'Palatino Linotype', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'],
-    styleTags: ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'blockquote', 'pre'],
-    lineHeights: ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.0', '1.2', '1.4', '1.5', '2.0', '3.0'],
-    callbacks: {
-      onImageUpload: function(files) {
-        // Handle image upload - convert to base64
-        var editor = $(this);
-        for (var i = 0; i < files.length; i++) {
-          (function(file) {
-            var reader = new FileReader();
-            reader.onload = function(e) {
-              editor.summernote('insertImage', e.target.result);
-            };
-            reader.readAsDataURL(file);
-          })(files[i]);
-        }
+  $elements.each(function(index) {
+    var $textarea = $(this);
+    
+    // Skip if already initialized
+    if ($textarea.data('tinymce-initialized')) {
+      return;
+    }
+    
+    // Make sure textarea has an ID
+    var textareaId = $textarea.attr('id');
+    if (!textareaId) {
+      textareaId = 'tinymce-editor-' + Date.now() + '-' + index;
+      $textarea.attr('id', textareaId);
+    }
+    
+    // Mark as initialized to prevent double init
+    $textarea.data('tinymce-initialized', true);
+    
+    // Initialize TinyMCE with code view first in toolbar
+    tinymce.init({
+      selector: '#' + textareaId,
+      height: _height,
+      menubar: true,
+      promotion: false,
+      branding: false,
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount', 'codesample',
+        'emoticons', 'quickbars', 'directionality'
+      ],
+      // Code view (source code) is FIRST in toolbar as requested
+      toolbar: 'code | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media table codesample | charmap emoticons | ltr rtl | fullscreen preview | help',
+      toolbar_mode: 'sliding',
+      content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; }',
+      quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+      quickbars_insert_toolbar: 'quickimage quicktable',
+      contextmenu: 'link image table',
+      image_advtab: true,
+      image_caption: true,
+      link_default_target: '_blank',
+      directionality: 'ltr',
+      codesample_languages: [
+        { text: 'HTML/XML', value: 'markup' },
+        { text: 'JavaScript', value: 'javascript' },
+        { text: 'CSS', value: 'css' },
+        { text: 'PHP', value: 'php' },
+        { text: 'Python', value: 'python' },
+        { text: 'Java', value: 'java' },
+        { text: 'C', value: 'c' },
+        { text: 'C++', value: 'cpp' },
+        { text: 'Ruby', value: 'ruby' },
+        { text: 'SQL', value: 'sql' },
+        { text: 'Bash', value: 'bash' }
+      ],
+      setup: function(editor) {
+        // Store the editor instance
+        window.tinymceEditors[textareaId] = editor;
+        $textarea.data('tinymce-instance', editor);
+        
+        // Sync content on change
+        editor.on('change', function() {
+          editor.save();
+        });
+        
+        // Sync on blur
+        editor.on('blur', function() {
+          editor.save();
+        });
+      },
+      init_instance_callback: function(editor) {
+        // Ensure content is synced on form submit
+        $textarea.closest('form').on('submit', function() {
+          editor.save();
+        });
       }
-    },
-    // Don't clean or strip HTML - preserve full content
-    codeviewFilter: false,
-    codeviewIframeFilter: false
+    });
   });
   
   return $elements;
 }
 
 function elFinderBrowser (field_name, url, type, win) {
-  // Legacy function - no longer using TinyMCE file browser
-  // Summernote handles image upload via callbacks
-  console.log('elFinderBrowser is deprecated - using Summernote image upload instead');
+  // Legacy function - TinyMCE handles file browser internally
+  console.log('elFinderBrowser is deprecated - using TinyMCE internal file browser');
   return false;
 }
 

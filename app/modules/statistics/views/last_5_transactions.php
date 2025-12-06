@@ -2,8 +2,8 @@
   <div class="card-header">
     <h3 class="card-title"><?php echo lang("top_newest_users"); ?></h3>
     <div class="card-options">
-      <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-      <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+      <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+      <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
     </div>
   </div>
   <div class="table-responsive">
@@ -76,11 +76,11 @@
                   break;
 
                 case 0:
-                    echo '<span class="badge badge-warning">'.lang("waiting_for_buyer_funds").'</span>';
+                    echo '<span class="badge bg-warning text-dark">'.lang("waiting_for_buyer_funds").'</span>';
                   break; 
 
                 case -1:
-                    echo '<span class="badge badge-danger">'.lang('cancelled_timed_out').'</span>';
+                    echo '<span class="badge bg-danger">'.lang('cancelled_timed_out').'</span>';
                   break;
               }
             ?>
@@ -91,7 +91,7 @@
           ?>
           <td class="text-center">
             <div class="item-action dropdown">
-              <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+              <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
               <div class="dropdown-menu dropdown-menu-right">
                 <a href="<?=cn("$module/ajax_delete_item/".$row->ids)?>" class="dropdown-item ajaxDeleteItem"><i class="dropdown-icon fe fe-trash"></i> <?=lang('Delete')?> </a>
               </div>

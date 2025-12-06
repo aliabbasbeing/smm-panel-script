@@ -12,7 +12,7 @@
             <label class="form-label"><?=lang("website_favicon")?></label>
             <div class="input-group">
               <input type="text" name="website_favicon" class="form-control" value="<?=get_option('website_favicon', BASE."assets/images/favicon.png")?>">
-              <span class="input-group-append">
+              <span class="">
                 <button class="btn btn-info" type="button">
                   <i class="fe fe-image">
                     <input class="settings_fileupload" type="file" name="files[]" multiple="">
@@ -26,7 +26,7 @@
             <label class="form-label"><?=lang("website_logo")?></label>
             <div class="input-group">
               <input type="text" name="website_logo" class="form-control" value="<?=get_option('website_logo', BASE."assets/images/logo.png")?>">
-              <span class="input-group-append">
+              <span class="">
                 <button class="btn btn-info" type="button">
                   <i class="fe fe-image">
                     <input class="settings_fileupload" type="file" name="files[]" multiple="">
@@ -40,7 +40,7 @@
             <label class="form-label"><?=lang("website_logo_white")?></label>
             <div class="input-group">
               <input type="text" name="website_logo_white" class="form-control" value="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>">
-              <span class="input-group-append">
+              <span class="">
                 <button class="btn btn-info" type="button">
                   <i class="fe fe-image">
                     <input class="settings_fileupload" type="file" name="files[]" multiple="">

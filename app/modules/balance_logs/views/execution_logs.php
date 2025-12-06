@@ -5,7 +5,7 @@
   </h1>
   <div class="page-options d-flex">
     <a href="<?=cn('balance_logs')?>" class="btn btn-secondary">
-      <i class="fe fe-arrow-left mr-2"></i><?=lang("Back_to_Balance_Logs")?>
+      <i class="fe fe-arrow-left me-2"></i><?=lang("Back_to_Balance_Logs")?>
     </a>
   </div>
 </div>
@@ -18,7 +18,7 @@
       <div class="card-header">
          <h3 class="card-title" style="color:#fff !important; "><?=lang('Cron_List')?></h3>
         <div class="card-options">
-          <span class="badge badge-primary"><?=count($cron_list)?> Crons</span>
+          <span class="badge bg-primary"><?=count($cron_list)?> Crons</span>
         </div>
       </div>
       <div class="table-responsive">

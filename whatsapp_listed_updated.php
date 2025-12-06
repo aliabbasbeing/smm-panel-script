@@ -45,10 +45,10 @@ try {
             <table class="min-w-full table-auto">
                 <thead class="bg-gray-700">
                     <tr>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-300">#</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-300">First Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-300">Last Name</th>
-                        <th class="px-6 py-3 text-left text-sm font-semibold text-gray-300">WhatsApp Number</th>
+                        <th class="px-6 py-3 text-start text-sm font-semibold text-gray-300">#</th>
+                        <th class="px-6 py-3 text-start text-sm font-semibold text-gray-300">First Name</th>
+                        <th class="px-6 py-3 text-start text-sm font-semibold text-gray-300">Last Name</th>
+                        <th class="px-6 py-3 text-start text-sm font-semibold text-gray-300">WhatsApp Number</th>
                     </tr>
                 </thead>
                 <tbody class="bg-gray-800">

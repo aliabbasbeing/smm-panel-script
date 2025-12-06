@@ -22,37 +22,37 @@
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="code-parts-tab">
-                  <a class="active show" data-toggle="tab" href="#code_dashboard"><i class="fa fa-home"></i> Dashboard</a>
+                  <a class="active show" data-bs-toggle="tab" href="#code_dashboard"><i class="fas fa-home"></i> Dashboard</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_new_order"><i class="fa fa-cart-plus"></i> New Order</a>
+                  <a data-bs-toggle="tab" href="#code_new_order"><i class="fas fa-cart-plus"></i> New Order</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_orders"><i class="fa fa-list"></i> Order Logs</a>
+                  <a data-bs-toggle="tab" href="#code_orders"><i class="fas fa-list"></i> Order Logs</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_services"><i class="fa fa-server"></i> Services</a>
+                  <a data-bs-toggle="tab" href="#code_services"><i class="fas fa-server"></i> Services</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_add_funds"><i class="fa fa-money"></i> Add Funds</a>
+                  <a data-bs-toggle="tab" href="#code_add_funds"><i class="fas fa-money-bill"></i> Add Funds</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_api"><i class="fa fa-plug"></i> API</a>
+                  <a data-bs-toggle="tab" href="#code_api"><i class="fas fa-plug"></i> API</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_tickets"><i class="fa fa-ticket"></i> Tickets</a>
+                  <a data-bs-toggle="tab" href="#code_tickets"><i class="fas fa-ticket"></i> Tickets</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_child_panel"><i class="fa fa-child"></i> Child Panel</a>
+                  <a data-bs-toggle="tab" href="#code_child_panel"><i class="fas fa-child"></i> Child Panel</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_transactions"><i class="fa fa-exchange"></i> Transactions</a>
+                  <a data-bs-toggle="tab" href="#code_transactions"><i class="fas fa-arrow-right-arrow-left"></i> Transactions</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_signin"><i class="fa fa-sign-in"></i> Sign In</a>
+                  <a data-bs-toggle="tab" href="#code_signin"><i class="fas fa-right-to-bracket"></i> Sign In</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_signup"><i class="fa fa-user-plus"></i> Sign Up</a>
+                  <a data-bs-toggle="tab" href="#code_signup"><i class="fas fa-user-plus"></i> Sign Up</a>
                 </li>
               </ul>
             </div>
@@ -149,7 +149,7 @@
                   <input type="hidden" name="page_key" value="orders">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-shopping-cart"></i> <?=lang("Orders")?></h5>
+                      <h5 class="text-info"><i class="fas fa-shopping-cart"></i> <?=lang("Orders")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -199,7 +199,7 @@
                   <input type="hidden" name="page_key" value="add_funds">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-money"></i> <?=lang("Add_Funds")?></h5>
+                      <h5 class="text-info"><i class="fas fa-money-bill"></i> <?=lang("Add_Funds")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -249,7 +249,7 @@
                   <input type="hidden" name="page_key" value="tickets">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-comments-o"></i> <?=lang("Tickets")?></h5>
+                      <h5 class="text-info"><i class="far fa-comments"></i> <?=lang("Tickets")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -274,7 +274,7 @@
                   <input type="hidden" name="page_key" value="child_panel">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-child"></i> <?=lang("Child_Panel")?></h5>
+                      <h5 class="text-info"><i class="fas fa-child"></i> <?=lang("Child_Panel")?></h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -324,7 +324,7 @@
                   <input type="hidden" name="page_key" value="signin">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-sign-in"></i> Sign In Page</h5>
+                      <h5 class="text-info"><i class="fas fa-right-to-bracket"></i> Sign In Page</h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -349,7 +349,7 @@
                   <input type="hidden" name="page_key" value="signup">
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
-                      <h5 class="text-info"><i class="fa fa-user-plus"></i> Sign Up Page</h5>
+                      <h5 class="text-info"><i class="fas fa-user-plus"></i> Sign Up Page</h5>
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">

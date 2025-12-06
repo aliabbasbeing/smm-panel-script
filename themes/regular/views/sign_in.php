@@ -36,17 +36,17 @@
                     
               <div class="input-icon mb-5">
                 <span class="input-icon-addon">
-                  <i class="fa fa-key"></i>
+                  <i class="fas fa-key"></i>
                 </span>
                 <input type="password" class="form-control" name="password" placeholder="<?=lang("Password")?>" value="<?=(isset($cookie_pass) && $cookie_pass != "") ? $cookie_pass : ""?>" required>
               </div>  
             </div>
 
             <div class="form-group">
-              <label class="custom-control custom-checkbox">
-                <input type="checkbox" name="remember" class="custom-control-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
-                <span class="custom-control-label"><?=lang("remember_me")?></span>
-                <a href="<?=cn("auth/forgot_password")?>" class="float-right small"><?=lang("forgot_password")?></a>
+              <label class="form-check">
+                <input type="checkbox" name="remember" class="form-check-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
+                <span class="form-check-label"><?=lang("remember_me")?></span>
+                <a href="<?=cn("auth/forgot_password")?>" class="float-end small"><?=lang("forgot_password")?></a>
               </label>
             </div>
 

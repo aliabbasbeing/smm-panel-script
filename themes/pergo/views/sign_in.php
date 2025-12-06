@@ -52,9 +52,9 @@
               <!-- Remember / Forgot row -->
               <div class="form-group remember-row d-flex justify-content-between align-items-center">
                 <div class="remember-left">
-                  <label class="custom-control custom-checkbox mb-0">
-                    <input type="checkbox" name="remember" class="custom-control-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
-                    <span class="custom-control-label"><?=lang("remember_me")?></span>
+                  <label class="form-check mb-0">
+                    <input type="checkbox" name="remember" class="form-check-input" <?=(isset($cookie_email) && $cookie_email != "") ? "checked" : ""?>>
+                    <span class="form-check-label"><?=lang("remember_me")?></span>
                   </label>
                 </div>
 

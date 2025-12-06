@@ -17,7 +17,9 @@
     <meta name="MobileOptimized" content="320">
 
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     
     <script src="<?=BASE?>assets/js/vendors/jquery-3.2.1.min.js"></script>
@@ -51,8 +53,8 @@
           <img class="site-logo d-none" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
           <img class="site-logo-white" src="<?=get_option('website_logo_white', BASE."assets/images/logo-white.png")?>" alt="Webstie logo">
         </a>
-        <div class="d-flex order-lg-2 ml-auto">
-          <ul class="navbar-nav list-inline ml-auto">
+        <div class="d-flex order-lg-2 ms-auto">
+          <ul class="navbar-nav list-inline ms-auto">
 
             <li class="nav-item list-inline-item">
               <a class="nav-link js-scroll-trigger" href="#home"><?=lang("Home")?></a>
@@ -208,7 +210,7 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
-              <button type="button" class="close" data-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -216,7 +218,7 @@
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
             </div>
           </div>
         </div>
@@ -225,6 +227,7 @@
 
     <?=Modules::run("blocks/footer");?>
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <script src="<?=BASE?>assets/plugins/particles-js/particles.js"></script>

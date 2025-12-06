@@ -2,9 +2,9 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h3><i class="fa fa-cog"></i> WhatsApp API Configurations</h3>
-            <a href="<?php echo cn($module . '/api_create'); ?>" class="btn btn-primary float-right ajaxModal">
-                <i class="fa fa-plus"></i> Add API Config
+            <h3><i class="fas fa-cog"></i> WhatsApp API Configurations</h3>
+            <a href="<?php echo cn($module . '/api_create'); ?>" class="btn btn-primary float-end ajaxModal">
+                <i class="fas fa-plus"></i> Add API Config
             </a>
         </div>
         <div class="card-body">
@@ -25,8 +25,8 @@
                     <tr>
                         <td><?php echo $api->name; ?></td>
                         <td><?php echo $api->api_url; ?></td>
-                        <td><?php echo $api->is_default ? '<span class="badge badge-primary">Yes</span>' : 'No'; ?></td>
-                        <td><?php echo $api->status ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-secondary">Inactive</span>'; ?></td>
+                        <td><?php echo $api->is_default ? '<span class="badge bg-primary">Yes</span>' : 'No'; ?></td>
+                        <td><?php echo $api->status ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>'; ?></td>
                         <td><?php echo $api->created_at; ?></td>
                         <td>
                             <a href="<?php echo cn($module . '/api_edit/' . $api->ids); ?>" class="btn btn-sm btn-warning ajaxModal">Edit</a>

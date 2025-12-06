@@ -176,8 +176,8 @@
         ?>
         <div class="mb-3">
           <div class="clearfix mb-2">
-            <div class="float-left"><strong><?php echo $progress; ?>% Complete</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $campaign->sent_messages; ?> / <?php echo $campaign->total_messages; ?></small></div>
+            <div class="float-start"><strong><?php echo $progress; ?>% Complete</strong></div>
+            <div class="float-end"><small class="text-muted"><?php echo $campaign->sent_messages; ?> / <?php echo $campaign->total_messages; ?></small></div>
           </div>
           <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $progress; ?>%"></div>

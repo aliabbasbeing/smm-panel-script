@@ -5,8 +5,8 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_api_create'); ?>" data-redirect="<?php echo cn($module . '/api'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-cog"></i> Add WhatsApp API Configuration</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h4 class="modal-title"><i class="fas fa-cog"></i> Add WhatsApp API Configuration</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -32,16 +32,16 @@
                   </div>
                   
                   <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_default" id="is_default">
-                      <label class="custom-control-label" for="is_default">Set as Default Configuration</label>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" name="is_default" id="is_default">
+                      <label class="form-check-label" for="is_default">Set as Default Configuration</label>
                     </div>
                   </div>
                   
                   <div class="form-group">
-                    <div class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="status" id="status" checked>
-                      <label class="custom-control-label" for="status">Active</label>
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input" name="status" id="status" checked>
+                      <label class="form-check-label" for="status">Active</label>
                     </div>
                   </div>
                   
@@ -50,8 +50,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
           </div>
         </form>
       </div>

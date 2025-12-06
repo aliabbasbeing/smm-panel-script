@@ -19,7 +19,8 @@
     <script src="https://eduactionsmm.site/data_files/general.js"></script>
     <link href="https://eduactionsmm.site/data_files/layout.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>themes/monoka/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="<?php echo BASE; ?>themes/monoka/assets/css/fontawesome-all.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css" rel="stylesheet">
+    <link href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>themes/monoka/assets/css/swiper.css" rel="stylesheet">
     <link href="<?php echo BASE; ?>themes/monoka/assets/css/monoka.css" rel="stylesheet">
     <!-- AOS -->
@@ -33,4 +34,4 @@
     </script>
     <?php echo htmlspecialchars_decode(get_option('embed_head_javascript', ''), ENT_QUOTES); ?>
 </head>
-<body data-spy="scroll" data-target=".fixed-top">
+<body data-spy="scroll" data-bs-target=".fixed-top">

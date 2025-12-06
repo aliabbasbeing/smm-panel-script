@@ -25,8 +25,8 @@
   <div class="row justify-content-between">
     <div class="col-md-6">
       <h1 class="page-title d-flex">
-        <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("loading...")?>" data-original-title="Add new"><i class="btn btn-info fa fa-plus"> <?=lang("add_new")?></i></span></a> 
-        <span class="d-none d-sm-block"><i class="fa fa-comments-o text-primary" aria-hidden="true"></i></span> 
+        <a href="<?=cn("$module/add")?>" class="d-inline-block d-sm-none ajaxModal "><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("loading...")?>" data-bs-original-title="Add new"><i class="btn btn-info fas fa-plus"> <?=lang("add_new")?></i></span></a> 
+        <span class="d-none d-sm-block"><i class="far fa-comments text-primary" aria-hidden="true"></i></span> 
       </h1>
     </div>
     <div class="col-md-2">
@@ -55,7 +55,7 @@
           <h4 class="modal-title"><i class="fe fe-edit"></i> <?=lang("add_new_ticket")?></h4>
         </h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
 
@@ -114,7 +114,7 @@
               </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
-                <button type="submit" class="btn round btn-info btn-min-width mr-1 mb-1"><?=lang('Submit')?></button>
+                <button type="submit" class="btn round btn-info btn-min-width me-1 mb-1"><?=lang('Submit')?></button>
               </div>
             </div>
           </div>
@@ -130,7 +130,7 @@
         <h3 class="card-title" style="color:#fff !important;"><i class="fe fe-list"></i> <?=lang("Lists")?>
             </h3>
             <div class="card-options">
-              <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+              <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
             </div>
           </div>
 
@@ -168,7 +168,7 @@
                       ?>
                       <?php if($is_unread){
                       ?>
-                      <span class="badge badge-warning"><?=lang("Unread")?></span>
+                      <span class="badge bg-warning text-dark"><?=lang("Unread")?></span>
                       <?php }?>
                     </div>
                     <div class="email"><?=$row->first_name." ".$row->last_name." - ".$row->user_email?></div>
@@ -201,11 +201,11 @@
                   </a>
                   <?php 
                   if(get_role("admin") || get_role('supporter')) {?>
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="new" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-mail"></i> <?=lang("mark_as_new")?></a>
 
-                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fa fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
+                    <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="pending" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon far fa-envelope-open"></i> <?=lang("mark_as_pending")?></a>
 
                     <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="closed" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-unlock"></i> <?=lang("mark_as_closed")?></a>
                     <?php 
@@ -228,7 +228,7 @@
       </div>
       <?php if(!empty($tickets)){?>
       <div class="col-md-12">
-        <div class="float-right">
+        <div class="float-end">
           <?=$links?>
         </div>
       </div>

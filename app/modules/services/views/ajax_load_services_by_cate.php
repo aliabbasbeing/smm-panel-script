@@ -8,9 +8,9 @@
       ?>
       <th class="text-center w-1">
         <div class="custom-controls-stacked">
-          <label class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input check-all" data-name="chk_<?=$cate_id?>">
-            <span class="custom-control-label"></span>
+          <label class="form-check">
+            <input type="checkbox" class="form-check-input check-all" data-name="chk_<?=$cate_id?>">
+            <span class="form-check-label"></span>
           </label>
         </div>
       </th>
@@ -43,9 +43,9 @@
       ?>
       <th class="text-center w-1">
         <div class="custom-controls-stacked">
-          <label class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input chk_<?=$cate_id?>"  name="ids[]" value="<?=$row->ids?>">
-            <span class="custom-control-label"></span>
+          <label class="form-check">
+            <input type="checkbox" class="form-check-input chk_<?=$cate_id?>"  name="ids[]" value="<?=$row->ids?>">
+            <span class="form-check-label"></span>
           </label>
         </div>
       </th>
@@ -98,7 +98,7 @@
       <td class="text-center" style="width: 8%;"><?=$row->min?> / <?=$row->max?></td>
 
       <td style="width: 6%;">
-        <button class="btn btn-info btn-sm" type="button" class="dash-btn" data-toggle="modal" data-target="#<?php echo $row->ids; ?>"><?=lang("Details")?></button>
+        <button class="btn btn-info btn-sm" type="button" class="dash-btn" data-bs-toggle="modal" data-bs-target="#<?php echo $row->ids; ?>"><?=lang("Details")?></button>
         <div id="<?php echo $row->ids; ?>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
           <?php
             $this->load->view('descriptions', ['service' => $row]);
@@ -111,9 +111,9 @@
       ?>
       <td class="w-1 text-center">
         <?php if(!empty($row->dripfeed) && $row->dripfeed == 1){?>
-          <span class="badge badge-info"><?=lang("Active")?></span>
+          <span class="badge bg-info"><?=lang("Active")?></span>
           <?php }else{?>
-          <span class="badge badge-warning"><?=lang("Deactive")?></span>
+          <span class="badge bg-warning text-dark"><?=lang("Deactive")?></span>
         <?php }?>
       </td>
 

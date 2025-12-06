@@ -12,10 +12,10 @@
               <div class="form-group">
                 <div class="form-label"><?=lang("Status")?></div>
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
+                  <label class="form-check">
                     <input type="hidden" name="is_active_manual" value="0">
-                    <input type="checkbox" class="custom-control-input" name="is_active_manual" value="1" <?=(get_option('is_active_manual', "") == 1)? "checked" : ''?>>
-                    <span class="custom-control-label"><?=lang("Active")?></span>
+                    <input type="checkbox" class="form-check-input" name="is_active_manual" value="1" <?=(get_option('is_active_manual', "") == 1)? "checked" : ''?>>
+                    <span class="form-check-label"><?=lang("Active")?></span>
                   </label>
                 </div>
               </div>
