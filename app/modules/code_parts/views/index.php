@@ -1,18 +1,110 @@
 <style>
-  .code-parts-tab {
-    margin: 3px;
+  /* Code Parts Navigation Styles */
+  .code-parts-nav {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
   }
+  
+  .code-parts-tab {
+    margin-right: 5px;
+    margin-bottom: -2px;
+  }
+  
+  .code-parts-tab .nav-link {
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ddd;
+    border-bottom: 2px solid transparent;
+    background: #fff;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px 4px 0 0;
+    transition: all 0.2s ease;
+    cursor: pointer;
+  }
+  
+  .code-parts-tab .nav-link:hover {
+    background: #f5f5f5;
+    color: #1B78FC;
+    border-color: #ddd;
+  }
+  
+  .code-parts-tab .nav-link.active {
+    background: #f8f8f8;
+    color: #1B78FC;
+    border-color: #1B78FC;
+    border-bottom-color: #f8f8f8;
+    font-weight: 600;
+  }
+  
+  .code-parts-tab .nav-link i {
+    margin-right: 6px;
+  }
+  
+  /* Tab Content Styles */
+  .tab-content > .tab-pane {
+    display: none;
+  }
+  
+  .tab-content > .tab-pane.active,
+  .tab-content > .tab-pane.show {
+    display: block;
+  }
+  
+  /* Editor Loading Indicator */
+  .editor-loading-indicator {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .editor-loading-indicator i {
+    color: #1B78FC;
+  }
+  
+  /* Variables List Styles */
   .variables-list {
     font-size: 12px;
   }
+  
   .variables-list code {
     background: #e9ecef;
     padding: 2px 5px;
     border-radius: 3px;
     margin-right: 5px;
   }
+  
+  /* Container Styles */
   .code-parts-container {
     padding: 15px;
+  }
+  
+  /* Performance: Loading State */
+  .tab-pane:not(.active) .plugin_editor {
+    min-height: 200px;
+    background: #f8f9fa;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .code-parts-nav {
+      flex-direction: column;
+    }
+    
+    .code-parts-tab {
+      margin-right: 0;
+      margin-bottom: 5px;
+    }
+    
+    .code-parts-tab .nav-link {
+      width: 100%;
+      border-radius: 4px;
+    }
   }
 </style>
 
@@ -30,86 +122,63 @@
       <div class="card-body code-parts-container">
         <div class="row">
           <div class="col-md-12 col-lg-12">
-            <div class="tabs-list mb-4" style="margin-bottom:20px !important;">
-  <ul class="nav nav-tabs" style="display:flex !important; flex-wrap:wrap !important; border-bottom:1px solid #ddd !important;">
-    
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a class="active show" data-bs-toggle="tab" href="#code_dashboard"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#f8f8f8 !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-home" style="margin-right:6px !important;"></i> Dashboard
+            <div class="tabs-list mb-4">
+  <ul class="nav nav-tabs code-parts-nav" role="tablist">
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_dashboard" role="tab" aria-controls="code_dashboard">
+        <i class="fas fa-home"></i> Dashboard
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_new_order"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-cart-plus" style="margin-right:6px !important;"></i> New Order
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_new_order" role="tab" aria-controls="code_new_order">
+        <i class="fas fa-cart-plus"></i> New Order
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_orders"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-list" style="margin-right:6px !important;"></i> Order Logs
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_orders" role="tab" aria-controls="code_orders">
+        <i class="fas fa-list"></i> Order Logs
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_services"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-server" style="margin-right:6px !important;"></i> Services
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_services" role="tab" aria-controls="code_services">
+        <i class="fas fa-server"></i> Services
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_add_funds"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-money-bill" style="margin-right:6px !important;"></i> Add Funds
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_add_funds" role="tab" aria-controls="code_add_funds">
+        <i class="fas fa-money-bill"></i> Add Funds
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_api"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-plug" style="margin-right:6px !important;"></i> API
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_api" role="tab" aria-controls="code_api">
+        <i class="fas fa-plug"></i> API
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_tickets"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-ticket" style="margin-right:6px !important;"></i> Tickets
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_tickets" role="tab" aria-controls="code_tickets">
+        <i class="fas fa-ticket"></i> Tickets
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_child_panel"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-child" style="margin-right:6px !important;"></i> Child Panel
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_child_panel" role="tab" aria-controls="code_child_panel">
+        <i class="fas fa-child"></i> Child Panel
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_transactions"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-arrow-right-arrow-left" style="margin-right:6px !important;"></i> Transactions
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_transactions" role="tab" aria-controls="code_transactions">
+        <i class="fas fa-arrow-right-arrow-left"></i> Transactions
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-bs-toggle="tab" href="#code_signin"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-right-to-bracket" style="margin-right:6px !important;"></i> Sign In
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_signin" role="tab" aria-controls="code_signin">
+        <i class="fas fa-right-to-bracket"></i> Sign In
       </a>
     </li>
-
-    <li class="code-parts-tab" style="margin-right:0 !important;">
-      <a data-bs-toggle="tab" href="#code_signup"
-         style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
-        <i class="fas fa-user-plus" style="margin-right:6px !important;"></i> Sign Up
+    <li class="nav-item code-parts-tab">
+      <a class="nav-link" href="#code_signup" role="tab" aria-controls="code_signup">
+        <i class="fas fa-user-plus"></i> Sign Up
       </a>
     </li>
-
   </ul>
 </div>
 
@@ -119,6 +188,11 @@
               <i class="fe fe-info"></i> 
               <strong><?=lang("Info")?>:</strong> Use the HTML editor below to create styled HTML blocks for different pages. 
               HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
+            </div>
+            
+            <div class="alert alert-success">
+              <i class="fe fe-zap"></i> 
+              <strong>Performance Optimized:</strong> Editors are loaded on-demand when you switch tabs, ensuring fast page loading even with many code parts.
             </div>
             
             <div class="alert alert-success">
@@ -152,7 +226,7 @@
             <div class="tab-content mt-3">
               
               <!-- Dashboard Page Code Part -->
-              <div id="code_dashboard" class="tab-pane fade in active show">
+              <div id="code_dashboard" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="dashboard">
                   <div class="row">
@@ -177,7 +251,7 @@
               </div>
               
               <!-- New Order Page Code Part -->
-              <div id="code_new_order" class="tab-pane fade">
+              <div id="code_new_order" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="new_order">
                   <div class="row">
@@ -202,7 +276,7 @@
               </div>
               
               <!-- Order Logs Page Code Part -->
-              <div id="code_orders" class="tab-pane fade">
+              <div id="code_orders" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="orders">
                   <div class="row">
@@ -227,7 +301,7 @@
               </div>
               
               <!-- Services Page Code Part -->
-              <div id="code_services" class="tab-pane fade">
+              <div id="code_services" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="services">
                   <div class="row">
@@ -252,7 +326,7 @@
               </div>
               
               <!-- Add Funds Page Code Part -->
-              <div id="code_add_funds" class="tab-pane fade">
+              <div id="code_add_funds" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="add_funds">
                   <div class="row">
@@ -277,7 +351,7 @@
               </div>
               
               <!-- API Page Code Part -->
-              <div id="code_api" class="tab-pane fade">
+              <div id="code_api" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="api">
                   <div class="row">
@@ -302,7 +376,7 @@
               </div>
               
               <!-- Tickets Page Code Part -->
-              <div id="code_tickets" class="tab-pane fade">
+              <div id="code_tickets" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="tickets">
                   <div class="row">
@@ -327,7 +401,7 @@
               </div>
               
               <!-- Child Panel Page Code Part -->
-              <div id="code_child_panel" class="tab-pane fade">
+              <div id="code_child_panel" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="child_panel">
                   <div class="row">
@@ -352,7 +426,7 @@
               </div>
               
               <!-- Transactions Page Code Part -->
-              <div id="code_transactions" class="tab-pane fade">
+              <div id="code_transactions" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="transactions">
                   <div class="row">
@@ -377,7 +451,7 @@
               </div>
               
               <!-- Sign In Page Code Part -->
-              <div id="code_signin" class="tab-pane fade">
+              <div id="code_signin" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signin">
                   <div class="row">
@@ -402,7 +476,7 @@
               </div>
               
               <!-- Sign Up Page Code Part -->
-              <div id="code_signup" class="tab-pane fade">
+              <div id="code_signup" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signup">
                   <div class="row">
@@ -434,8 +508,12 @@
   </div>
 </div>
 
+<!-- Code Parts Tab Navigation Script -->
+<script src="<?=BASE?>assets/js/code_parts_tabs.js"></script>
 <script>
+  // Legacy initialization - now handled by code_parts_tabs.js with lazy loading
+  // Editors will be initialized only when their tabs are activated
   $(document).ready(function() {
-    plugin_editor('.plugin_editor', {height: 200});
+    console.log('Code Parts page loaded - tab navigation and lazy editor loading enabled');
   });
 </script>
