@@ -177,6 +177,11 @@
             </div>
             
             <div class="alert alert-success">
+              <i class="fe fe-zap"></i> 
+              <strong>Performance Optimized:</strong> Editors are loaded on-demand when you switch tabs, ensuring fast page loading even with many code parts.
+            </div>
+            
+            <div class="alert alert-success">
               <i class="fe fe-code"></i> 
               <strong>Supported Variables:</strong>
               <div class="variables-list mt-2">

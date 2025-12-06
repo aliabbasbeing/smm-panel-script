@@ -168,10 +168,23 @@
             var $editor = $(tabId + ' .' + self.config.editorClass);
             
             if ($editor.length > 0 && typeof plugin_editor === 'function') {
+                // Add loading indicator
+                var $container = $editor.closest('.form-group');
+                var loadingHtml = '<div class="editor-loading-indicator" style="text-align:center; padding:20px; background:#f8f9fa; border-radius:4px; margin-bottom:10px;">' +
+                                 '<i class="fas fa-spinner fa-spin"></i> Loading editor...</div>';
+                
+                $container.prepend(loadingHtml);
+                
                 // Small delay to ensure tab is visible
                 setTimeout(function() {
                     plugin_editor($editor, {height: 200});
                     self.initializedEditors[tabId] = true;
+                    
+                    // Remove loading indicator
+                    $container.find('.editor-loading-indicator').fadeOut(300, function() {
+                        $(this).remove();
+                    });
+                    
                     console.log('Code Parts: Editor initialized for ' + tabId);
                 }, 100);
             }
