@@ -97,12 +97,25 @@
                 'border-bottom': '1px solid #ddd'
             });
             
+            // Remove any existing badges
+            $(self.config.tabSelector).find('.editor-loaded-badge').remove();
+            
             // Style active tab
             $activeTab.css({
                 'background': '#f8f8f8',
                 'color': '#1B78FC',
                 'border-bottom': 'none'
             });
+            
+            // Add loaded indicator to tabs that have initialized editors
+            for (var tabId in self.initializedEditors) {
+                if (self.initializedEditors[tabId]) {
+                    var $tab = $(self.config.tabSelector + '[href="' + tabId + '"]');
+                    if (!$tab.find('.editor-loaded-badge').length) {
+                        $tab.append(' <span class="editor-loaded-badge" style="font-size:8px; color:#28a745;">●</span>');
+                    }
+                }
+            }
         },
         
         /**
@@ -224,6 +237,25 @@
         // Check if we're on the code parts page
         if ($('.code-parts-container').length > 0) {
             CodePartsTabs.init();
+            
+            // Ensure TinyMCE content is saved before form submission
+            $('.actionForm').on('submit', function() {
+                var $form = $(this);
+                
+                // Find the active tab's editor
+                var activeTabId = $('.code-parts-tab .nav-link.active').attr('href');
+                var $editor = $(activeTabId + ' .plugin_editor');
+                
+                if ($editor.length > 0) {
+                    var editorId = $editor.attr('id');
+                    
+                    // Save TinyMCE content to textarea
+                    if (typeof tinymce !== 'undefined' && editorId && tinymce.get(editorId)) {
+                        tinymce.get(editorId).save();
+                        console.log('Code Parts: TinyMCE content saved before form submission');
+                    }
+                }
+            });
         }
     });
     
