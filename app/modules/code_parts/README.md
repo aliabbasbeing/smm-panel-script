@@ -57,15 +57,17 @@ app/modules/code_parts/
 │   └── code_parts_model.php    # Database model
 ├── views/
 │   ├── index.php               # Main view with tabs
-│   ├── code_parts_tabs.js      # Tab navigation JavaScript
 │   └── README.md               # This file
 └── database/
     └── code-parts.sql          # Database schema
+
+assets/js/
+└── code_parts_tabs.js          # Tab navigation JavaScript
 ```
 
 ### JavaScript Module: code_parts_tabs.js
 
-The `code_parts_tabs.js` module handles all tab navigation and editor initialization:
+The `code_parts_tabs.js` module (located in `assets/js/`) handles all tab navigation and editor initialization:
 
 #### Key Functions:
 
@@ -163,7 +165,7 @@ CodePartsTabs.activateTab($('.code-parts-tab a[href="#code_api"]'), '#code_api')
 
 ### Tabs Not Switching
 1. Check browser console for JavaScript errors
-2. Ensure jQuery is loaded before code_parts_tabs.js
+2. Ensure jQuery is loaded before code_parts_tabs.js (loaded from assets/js/)
 3. Verify Bootstrap CSS is loaded
 
 ### Editor Not Loading

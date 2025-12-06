@@ -12,7 +12,7 @@ The code parts module had a critical issue where tabs were stuck on the first ta
 ## Solution Implemented
 
 ### 1. Custom Tab Navigation Module
-**File**: `app/modules/code_parts/views/code_parts_tabs.js` (265 lines)
+**File**: `assets/js/code_parts_tabs.js` (265 lines)
 
 Features:
 - ✅ Custom tab switching logic (no Bootstrap dependency)
@@ -208,8 +208,10 @@ app/modules/code_parts/
 │   └── code_parts_model.php    (optimized)
 ├── views/
 │   ├── index.php               (major restructure)
-│   ├── code_parts_tabs.js      (NEW - 265 lines)
 │   └── README.md               (NEW - 212 lines)
+
+assets/js/
+└── code_parts_tabs.js          (NEW - 265 lines)
 ```
 
 Total lines added: ~500

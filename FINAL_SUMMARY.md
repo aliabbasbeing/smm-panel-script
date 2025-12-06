@@ -24,7 +24,7 @@ All objectives from the problem statement have been successfully achieved:
 ### Files Breakdown
 ```
 ✨ NEW FILES:
-  - code_parts_tabs.js        (265 lines) - Tab navigation module
+  - code_parts_tabs.js        (265 lines) - Tab navigation module (assets/js/)
   - README.md                 (212 lines) - Module documentation
   - CHANGES_SUMMARY.md        (275 lines) - Implementation guide
   - TESTING_GUIDE.md          (589 lines) - Test plan
@@ -232,7 +232,7 @@ Page Load               JavaScript                   UI Update
 ## ✨ Key Features Implemented
 
 ### 1. Custom Tab Navigation Module
-**File**: `code_parts_tabs.js`
+**File**: `assets/js/code_parts_tabs.js`
 
 ```javascript
 // Main features:

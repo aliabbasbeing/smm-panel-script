@@ -509,7 +509,7 @@
 </div>
 
 <!-- Code Parts Tab Navigation Script -->
-<script src="<?=BASE?>app/modules/code_parts/views/code_parts_tabs.js"></script>
+<script src="<?=BASE?>assets/js/code_parts_tabs.js"></script>
 <script>
   // Legacy initialization - now handled by code_parts_tabs.js with lazy loading
   // Editors will be initialized only when their tabs are activated
