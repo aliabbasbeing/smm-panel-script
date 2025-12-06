@@ -1314,7 +1314,8 @@ if(!function_exists("get_code_part")){
 				return $default;
 			}
 			
-			$result = $CI->db->select('content')
+			// Fetch content and settings
+			$result = $CI->db->select('content, show_on_mobile, show_on_desktop, device_visibility')
 				->where('page_key', $page_key)
 				->where('status', 1)
 				->get('code_parts')
@@ -1322,9 +1323,34 @@ if(!function_exists("get_code_part")){
 			
 			$content = ($result && !empty($result->content)) ? $result->content : $default;
 			
+			if (empty($content)) {
+				return $default;
+			}
+			
 			// Process template variables if enabled and user is logged in
-			if ($process_variables && !empty($content) && session('uid')) {
+			if ($process_variables && session('uid')) {
 				$content = process_code_part_variables($content);
+			}
+			
+			// Apply device visibility wrapping
+			if ($result) {
+				$show_on_mobile = isset($result->show_on_mobile) ? (int)$result->show_on_mobile : 1;
+				$show_on_desktop = isset($result->show_on_desktop) ? (int)$result->show_on_desktop : 1;
+				
+				// Build CSS classes for device visibility
+				$visibility_classes = [];
+				if (!$show_on_mobile) {
+					$visibility_classes[] = 'hide-on-mobile';
+				}
+				if (!$show_on_desktop) {
+					$visibility_classes[] = 'hide-on-desktop';
+				}
+				
+				// Wrap content with visibility div if needed
+				if (!empty($visibility_classes)) {
+					$classes = implode(' ', $visibility_classes);
+					$content = '<div class="code-part-wrapper ' . $classes . '">' . $content . '</div>';
+				}
 			}
 			
 			return $content;
@@ -1443,6 +1469,86 @@ if(!function_exists("process_code_part_variables")){
 if(!function_exists("get_code_part_raw")){
 	function get_code_part_raw($page_key, $default = ''){
 		return get_code_part($page_key, $default, false);
+	}
+}
+
+/**
+ * Get code part by position (top or bottom)
+ * @param string $page_key The unique page identifier
+ * @param string $position Position to filter by ('top' or 'bottom')
+ * @param string $default Default value if not found
+ * @return string The HTML content or empty if position doesn't match
+ */
+if(!function_exists("get_code_part_by_position")){
+	function get_code_part_by_position($page_key, $position = 'top', $default = ''){
+		try {
+			$CI = &get_instance();
+			
+			// Check if database is loaded and table exists
+			if (!isset($CI->db) || !$CI->db) {
+				return $default;
+			}
+			
+			// Check if table exists
+			if (!$CI->db->table_exists('code_parts')) {
+				return $default;
+			}
+			
+			// Fetch with position filter
+			$result = $CI->db->select('content, display_position, show_on_mobile, show_on_desktop')
+				->where('page_key', $page_key)
+				->where('status', 1)
+				->get('code_parts')
+				->row();
+			
+			if (!$result || empty($result->content)) {
+				return $default;
+			}
+			
+			// Check if position matches
+			$display_position = isset($result->display_position) ? $result->display_position : 'top';
+			if ($display_position !== $position) {
+				return ''; // Return empty if position doesn't match
+			}
+			
+			// Process and return the content
+			return get_code_part($page_key, $default);
+			
+		} catch (Exception $e) {
+			return $default;
+		}
+	}
+}
+
+/**
+ * Get code part settings
+ * @param string $page_key The unique page identifier
+ * @return object|null Settings object with device_visibility, display_position, etc.
+ */
+if(!function_exists("get_code_part_settings")){
+	function get_code_part_settings($page_key){
+		try {
+			$CI = &get_instance();
+			
+			// Check if database is loaded and table exists
+			if (!isset($CI->db) || !$CI->db) {
+				return null;
+			}
+			
+			// Check if table exists
+			if (!$CI->db->table_exists('code_parts')) {
+				return null;
+			}
+			
+			$result = $CI->db->select('device_visibility, display_position, show_on_mobile, show_on_desktop')
+				->where('page_key', $page_key)
+				->get('code_parts')
+				->row();
+			
+			return $result;
+		} catch (Exception $e) {
+			return null;
+		}
 	}
 }
 

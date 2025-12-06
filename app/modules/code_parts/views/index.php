@@ -90,6 +90,88 @@
   background: #f8f9fa !important;
 }
 
+/* Advanced Settings Panel */
+.advanced-settings-panel {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.advanced-settings-panel h6 {
+  color: #495057;
+  font-weight: 600;
+  margin-bottom: 15px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.settings-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.settings-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+.settings-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: #495057;
+  font-size: 13px;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 0;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.settings-group select {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  background: #fff;
+  color: #495057;
+  font-size: 14px;
+}
+
+.settings-group select:focus {
+  border-color: #1B78FC;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(27, 120, 252, 0.25);
+}
+
+/* Settings Icon */
+.settings-icon {
+  color: #1B78FC;
+  margin-right: 8px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .code-parts-nav {
@@ -105,9 +187,34 @@
     width: 100% !important;
     border-radius: 4px !important;
   }
+  
+  .settings-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .settings-group {
+    min-width: 100%;
+  }
 }
 
 </style>
+
+<?php
+// Helper function to get settings for a page key
+function get_page_settings($page_key, $code_parts_settings) {
+  if (isset($code_parts_settings[$page_key])) {
+    return $code_parts_settings[$page_key];
+  }
+  // Return defaults if not found
+  return [
+    'device_visibility' => 'both',
+    'display_position' => 'top',
+    'show_on_mobile' => 1,
+    'show_on_desktop' => 1,
+  ];
+}
+?>
 
 <div class="row m-t-5">
   <div class="col-sm-12 col-lg-12">
@@ -191,6 +298,12 @@
               HTML is sanitized for security - scripts, iframes, and event handlers are removed. Use inline CSS (style attribute) for styling.
             </div>
             
+            <div class="alert alert-primary">
+              <i class="fas fa-cog"></i> 
+              <strong>Advanced Settings:</strong> Each code part now supports device visibility (mobile/desktop) and display position (top/bottom). 
+              Configure these settings in the Advanced Settings panel above each editor.
+            </div>
+            
             <div class="alert alert-success">
               <i class="fe fe-zap"></i> 
               <strong>Performance Optimized:</strong> Editors are loaded on-demand when you switch tabs, ensuring fast page loading even with many code parts.
@@ -233,6 +346,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-bar-chart-2"></i> <?=lang("dashboard")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('dashboard', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -258,6 +402,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-shopping-cart"></i> <?=lang("New_Order")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('new_order', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -283,6 +458,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fas fa-shopping-cart"></i> <?=lang("Orders")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('orders', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -308,6 +514,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-list"></i> <?=lang("Services")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('services', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -333,6 +570,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fas fa-money-bill"></i> <?=lang("Add_Funds")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('add_funds', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -358,6 +626,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-share-2"></i> <?=lang("API")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('api', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -383,6 +682,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="far fa-comments"></i> <?=lang("Tickets")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('tickets', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -408,6 +738,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fas fa-child"></i> <?=lang("Child_Panel")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('child_panel', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -433,6 +794,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fe fe-calendar"></i> <?=lang("Transactions")?></h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('transactions', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -458,6 +850,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fas fa-right-to-bracket"></i> Sign In Page</h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('signin', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
@@ -483,6 +906,37 @@
                   <div class="row">
                     <div class="col-md-12 col-lg-12">
                       <h5 class="text-info"><i class="fas fa-user-plus"></i> Sign Up Page</h5>
+                      
+                      <!-- Advanced Settings Panel -->
+                      <?php $settings = get_page_settings('signup', $code_parts_settings); ?>
+                      <div class="advanced-settings-panel">
+                        <h6><i class="fas fa-cog settings-icon"></i> Advanced Settings</h6>
+                        
+                        <div class="settings-row">
+                          <div class="settings-group">
+                            <label>Display Position</label>
+                            <select name="display_position" class="form-control">
+                              <option value="top" <?= $settings['display_position'] == 'top' ? 'selected' : '' ?>>Top of Page</option>
+                              <option value="bottom" <?= $settings['display_position'] == 'bottom' ? 'selected' : '' ?>>Bottom of Page</option>
+                            </select>
+                          </div>
+                          
+                          <div class="settings-group">
+                            <label>Device Visibility</label>
+                            <div class="checkbox-group">
+                              <label>
+                                <input type="checkbox" name="show_on_mobile" value="1" <?= $settings['show_on_mobile'] ? 'checked' : '' ?>>
+                                <i class="fas fa-mobile-alt"></i> Mobile
+                              </label>
+                              <label>
+                                <input type="checkbox" name="show_on_desktop" value="1" <?= $settings['show_on_desktop'] ? 'checked' : '' ?>>
+                                <i class="fas fa-desktop"></i> Desktop
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
                       <div class="row">
                         <div class="col-md-12">
                           <div class="form-group">
