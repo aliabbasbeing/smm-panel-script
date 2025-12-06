@@ -184,6 +184,11 @@ class services extends MX_Controller {
 			"max"             => $max,
 			"price"           => $price,
 			"status"          => $status,
+			"icon"            => post("icon") ? post("icon") : null,
+			"filter_category" => post("filter_category") ? post("filter_category") : 'other',
+			"filter_name"     => post("filter_name") ? post("filter_name") : null,
+			"filter_order"    => post("filter_order") ? (int)post("filter_order") : 999,
+			"filter_enabled"  => post("filter_enabled") !== null ? (int)post("filter_enabled") : 1,
 		);
 
 		/*----------  Fields for Service API type  ----------*/

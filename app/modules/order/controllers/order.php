@@ -1338,4 +1338,46 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 
 		redirect(cn('order/add'));
 	}
+
+	/**
+	 * Get platform filters dynamically from database
+	 * Returns unique filter categories from services table
+	 */
+	public function get_platform_filters(){
+		// Get distinct filter categories from services with deterministic values
+		// Using a subquery to get the first service for each filter_category
+		$this->db->select('s1.filter_category, s1.filter_name, s1.filter_order, s1.filter_enabled, s1.icon');
+		$this->db->from($this->tb_services . ' s1');
+		$this->db->join(
+			'(SELECT filter_category, MIN(id) as min_id 
+			  FROM ' . $this->tb_services . ' 
+			  WHERE filter_enabled = 1 AND status = 1 
+			  GROUP BY filter_category) s2',
+			's1.id = s2.min_id',
+			'inner'
+		);
+		$this->db->where('s1.filter_enabled', 1);
+		$this->db->where('s1.status', 1);
+		$this->db->order_by('s1.filter_order', 'ASC');
+		$query = $this->db->get();
+		
+		$filters = array();
+		if ($query->num_rows() > 0) {
+			foreach ($query->result() as $row) {
+				$filters[] = array(
+					'filter_category' => $row->filter_category,
+					'filter_name'     => $row->filter_name ? $row->filter_name : ucfirst($row->filter_category),
+					'filter_order'    => $row->filter_order ? $row->filter_order : 999,
+					'filter_enabled'  => $row->filter_enabled,
+					'icon'            => $row->icon,
+				);
+			}
+		}
+		
+		// Return JSON response
+		ms(array(
+			'status'  => 'success',
+			'filters' => $filters,
+		));
+	}
 }

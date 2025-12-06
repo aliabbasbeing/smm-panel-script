@@ -25,6 +25,8 @@ $decimal_places  = get_option('currency_decimal', 2);
         $price_per_1k = currency_format($converted_price, $decimal_places);
         $safe_name    = htmlspecialchars($service->name, ENT_QUOTES, 'UTF-8');
         $label_full   = "ID: {$service->id} {$service->name} - {$currency_symbol}{$price_per_1k}";
+        // Get icon from database
+        $service_icon = isset($service->icon) && !empty($service->icon) ? htmlspecialchars($service->icon, ENT_QUOTES, 'UTF-8') : '';
       ?>
         <option
           value="<?= (int)$service->id ?>"
@@ -35,6 +37,7 @@ $decimal_places  = get_option('currency_decimal', 2);
           data-price-raw="<?= htmlspecialchars($converted_price, ENT_QUOTES, 'UTF-8') ?>"
           data-name="<?= $safe_name ?>"
           data-fullname="<?= $safe_name ?>"
+          data-icon="<?= $service_icon ?>"
           title="<?= htmlspecialchars($label_full, ENT_QUOTES, 'UTF-8') ?>"
         ><?= htmlspecialchars($label_full, ENT_QUOTES, 'UTF-8') ?></option>
       <?php endforeach; ?>

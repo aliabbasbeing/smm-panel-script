@@ -403,41 +403,13 @@ if (!empty($announcement_text)):
                   <div class="row">
                     <div class="">
                       <div class="form-group">
-                        <!-- Platform Filter Bar -->
+                        <!-- Platform Filter Bar - Dynamically loaded from database -->
                         <div id="category-icon-filters" class="cat-icon-filter-bar">
+                          <!-- Filters will be loaded dynamically via JavaScript -->
                           <button type="button" class="catf-btn active" data-platform="all">
                             <i class="fas fa-bars"></i><span>All</span>
                           </button>
-                          <button type="button" class="catf-btn" data-platform="tiktok">
-                            <i class="fa-brands fa-tiktok"></i><span>TikTok</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="youtube">
-                            <i class="fa-brands fa-youtube"></i><span>Youtube</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="instagram">
-                            <i class="fa-brands fa-instagram"></i><span>Instagram</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="telegram">
-                            <i class="fa-brands fa-telegram"></i><span>Telegram</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="facebook">
-                            <i class="fa-brands fa-facebook"></i><span>Facebook</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="twitter">
-                            <i class="fa-brands fa-x-twitter"></i><span>Twitter</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="whatsapp">
-                            <i class="fa-brands fa-whatsapp"></i><span>Whatsapp</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="snapchat">
-                            <i class="fa-brands fa-snapchat"></i><span>Snapchat</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="linkedin">
-                            <i class="fa-brands fa-linkedin"></i><span>Linkedin</span>
-                          </button>
-                          <button type="button" class="catf-btn" data-platform="other">
-                            <i class="fas fa-plus"></i><span>Other</span>
-                          </button>
+                          <!-- Additional platform filters loaded from services table -->
                         </div>
 
                         <!-- Category Select -->
@@ -1731,3 +1703,6 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
 
 })(jQuery);
 </script>
+
+<!-- Order Page Dynamic Loading Script -->
+<script src="<?=BASE?>assets/js/order-page.js"></script>
