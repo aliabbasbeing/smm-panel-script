@@ -1344,13 +1344,21 @@ private function save_order($table, $data_orders, $user_balance = "", $total_cha
 	 * Returns unique filter categories from services table
 	 */
 	public function get_platform_filters(){
-		// Get distinct filter categories from services
-		$this->db->select('filter_category, filter_name, filter_order, filter_enabled, icon');
-		$this->db->from($this->tb_services);
-		$this->db->where('filter_enabled', 1);
-		$this->db->where('status', 1);
-		$this->db->group_by('filter_category');
-		$this->db->order_by('filter_order', 'ASC');
+		// Get distinct filter categories from services with deterministic values
+		// Using a subquery to get the first service for each filter_category
+		$this->db->select('s1.filter_category, s1.filter_name, s1.filter_order, s1.filter_enabled, s1.icon');
+		$this->db->from($this->tb_services . ' s1');
+		$this->db->join(
+			'(SELECT filter_category, MIN(id) as min_id 
+			  FROM ' . $this->tb_services . ' 
+			  WHERE filter_enabled = 1 AND status = 1 
+			  GROUP BY filter_category) s2',
+			's1.id = s2.min_id',
+			'inner'
+		);
+		$this->db->where('s1.filter_enabled', 1);
+		$this->db->where('s1.status', 1);
+		$this->db->order_by('s1.filter_order', 'ASC');
 		$query = $this->db->get();
 		
 		$filters = array();

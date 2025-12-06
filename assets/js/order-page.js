@@ -30,6 +30,12 @@
         loadPlatformFilters: function() {
             var self = this;
             
+            // Check if PATH and token are defined globally
+            if (typeof PATH === 'undefined' || typeof token === 'undefined') {
+                console.warn('PATH or token not defined, cannot load platform filters');
+                return;
+            }
+            
             // Get unique platforms from services
             $.ajax({
                 url: PATH + 'order/get_platform_filters',
@@ -52,6 +58,7 @@
          * Render platform filter buttons dynamically
          */
         renderPlatformFilters: function(filters) {
+            var self = this; // Define self in the correct scope
             var $container = $('#category-icon-filters');
             if (!$container.length) return;
 
