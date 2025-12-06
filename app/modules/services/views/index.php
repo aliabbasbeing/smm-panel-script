@@ -696,9 +696,7 @@
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title"><i class="fe fe-dollar-sign me-2"></i><?=lang("bulk_update_prices")?></h5>
-        <button type="button" class="close text-white" data-bs-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="bulk-price-form">
         <div class="modal-body">
@@ -731,9 +729,7 @@
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title"><i class="fe fe-folder me-2"></i><?=lang("change_category")?></h5>
-        <button type="button" class="close text-white" data-bs-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="bulk-category-form">
         <div class="modal-body">

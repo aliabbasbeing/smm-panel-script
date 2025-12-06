@@ -129,7 +129,7 @@
 
 <!-- Cron URL Alert (hidden by default) -->
 <div class="alert alert-warning d-none" id="cronUrlBox">
-  <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   <strong><i class="fe fe-terminal"></i> <?=lang("Cron URL")?>:</strong><br>
   <code id="cronUrlText" class="d-block mt-2 p-2 bg-light"></code>
   <button type="button" class="btn btn-sm btn-primary mt-2" id="copyCronUrl">
@@ -296,9 +296,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><i class="fe fe-plus-circle"></i> <?=lang("Add New Currency")?></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="addCurrencyForm">
         <div class="modal-body">
@@ -346,9 +344,7 @@
     <div class="modal-content">
       <div class="modal-header bg-danger text-white">
         <h5 class="modal-title"><i class="fe fe-alert-triangle"></i> <?=lang("Confirm Delete")?></h5>
-        <button type="button" class="close text-white" data-bs-dismiss="modal">
-          <span>&times;</span>
-        </button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
         <p><?=lang("Are you sure you want to delete")?> <strong id="deleteCurrencyCode"></strong>?</p>
