@@ -166,6 +166,68 @@
                     <textarea rows="10"  class="form-control square text-emoji" id="1text-emoji" name="desc"><?=(!empty($service->desc))? html_entity_decode($service->desc, ENT_QUOTES): ''?></textarea>
                   </div>
                 </div>
+
+                <!-- Icon & Filter Management Section -->
+                <div class="col-md-12">
+                  <hr>
+                  <h5 class="text-primary"><i class="fe fe-filter"></i> <?=lang("filter_and_icon_settings")?></h5>
+                  <p class="text-muted small"><?=lang("configure_how_this_service_appears_in_order_filters")?></p>
+                </div>
+
+                <div class="col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label><?=lang("service_icon")?> <span class="text-muted">(Font Awesome or Image URL)</span></label>
+                    <input type="text" class="form-control square" name="icon" value="<?=(!empty($service->icon))? $service->icon: 'fas fa-star'?>" placeholder="fa-brands fa-tiktok or https://...">
+                    <small class="text-muted"><?=lang("examples")?>: fa-brands fa-instagram, fa-brands fa-youtube, or image URL</small>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <label><?=lang("filter_category")?></label>
+                    <select name="filter_category" class="form-control square">
+                      <option value="tiktok" <?=(!empty($service->filter_category) && $service->filter_category == 'tiktok')? 'selected': ''?>>TikTok</option>
+                      <option value="youtube" <?=(!empty($service->filter_category) && $service->filter_category == 'youtube')? 'selected': ''?>>YouTube</option>
+                      <option value="instagram" <?=(!empty($service->filter_category) && $service->filter_category == 'instagram')? 'selected': ''?>>Instagram</option>
+                      <option value="telegram" <?=(!empty($service->filter_category) && $service->filter_category == 'telegram')? 'selected': ''?>>Telegram</option>
+                      <option value="facebook" <?=(!empty($service->filter_category) && $service->filter_category == 'facebook')? 'selected': ''?>>Facebook</option>
+                      <option value="twitter" <?=(!empty($service->filter_category) && $service->filter_category == 'twitter')? 'selected': ''?>>Twitter/X</option>
+                      <option value="whatsapp" <?=(!empty($service->filter_category) && $service->filter_category == 'whatsapp')? 'selected': ''?>>WhatsApp</option>
+                      <option value="snapchat" <?=(!empty($service->filter_category) && $service->filter_category == 'snapchat')? 'selected': ''?>>Snapchat</option>
+                      <option value="linkedin" <?=(!empty($service->filter_category) && $service->filter_category == 'linkedin')? 'selected': ''?>>LinkedIn</option>
+                      <option value="other" <?=(empty($service->filter_category) || $service->filter_category == 'other')? 'selected': ''?>><?=lang("Other")?></option>
+                    </select>
+                    <small class="text-muted"><?=lang("platform_category_for_filtering")?></small>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label><?=lang("filter_name")?> <span class="text-muted">(<?=lang("Optional")?>)</span></label>
+                    <input type="text" class="form-control square" name="filter_name" value="<?=(!empty($service->filter_name))? $service->filter_name: ''?>" placeholder="<?=lang("custom_filter_label")?>">
+                    <small class="text-muted"><?=lang("leave_blank_for_auto")?></small>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                  <div class="form-group">
+                    <label><?=lang("filter_order")?></label>
+                    <input type="number" class="form-control square" name="filter_order" value="<?=(!empty($service->filter_order))? $service->filter_order: '999'?>" min="0" max="9999">
+                    <small class="text-muted"><?=lang("lower_number_appears_first")?></small>
+                  </div>
+                </div>
+
+                <div class="col-md-4 col-sm-6">
+                  <div class="form-group">
+                    <label><?=lang("show_in_filters")?></label>
+                    <select name="filter_enabled" class="form-control square">
+                      <option value="1" <?=(empty($service->filter_enabled) || $service->filter_enabled == 1)? 'selected': ''?>><?=lang("Yes")?></option>
+                      <option value="0" <?=(!empty($service->filter_enabled) && $service->filter_enabled == 0)? 'selected': ''?>><?=lang("No")?></option>
+                    </select>
+                    <small class="text-muted"><?=lang("display_in_order_page_filters")?></small>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
