@@ -12,7 +12,8 @@
             tabContentSelector: '.tab-content .tab-pane',
             editorClass: 'plugin_editor',
             navTabsSelector: '.nav-tabs',
-            activeClass: 'active show'
+            activeClass: 'active',
+            showClass: 'show'
         },
         
         // Store initialized editors
@@ -67,15 +68,15 @@
                 targetHash = $tabLink.attr('href');
             }
             
-            // Remove active class from all tabs
+            // Remove active and show classes from all tabs
             $(self.config.tabSelector).removeClass(self.config.activeClass);
-            $(self.config.tabContentSelector).removeClass(self.config.activeClass);
+            $(self.config.tabContentSelector).removeClass(self.config.activeClass).removeClass(self.config.showClass);
             
             // Add active class to clicked tab
             $tabLink.addClass(self.config.activeClass);
             
             // Show corresponding content
-            $(targetHash).addClass(self.config.activeClass);
+            $(targetHash).addClass(self.config.activeClass).addClass(self.config.showClass);
             
             // Update tab link styles
             self.updateTabStyles($tabLink);
@@ -90,22 +91,14 @@
         updateTabStyles: function($activeTab) {
             var self = this;
             
-            // Reset all tab styles
-            $(self.config.tabSelector).css({
-                'background': '#fff',
-                'color': '#333',
-                'border-bottom': '1px solid #ddd'
-            });
+            // Reset all tab styles by removing active state
+            $(self.config.tabSelector).removeClass('active');
+            
+            // Add active class to the current tab
+            $activeTab.addClass('active');
             
             // Remove any existing badges
             $(self.config.tabSelector).find('.editor-loaded-badge').remove();
-            
-            // Style active tab
-            $activeTab.css({
-                'background': '#f8f8f8',
-                'color': '#1B78FC',
-                'border-bottom': 'none'
-            });
             
             // Add loaded indicator to tabs that have initialized editors
             for (var tabId in self.initializedEditors) {
@@ -183,10 +176,10 @@
             if ($editor.length > 0 && typeof plugin_editor === 'function') {
                 // Add loading indicator
                 var $container = $editor.closest('.form-group');
-                var loadingHtml = '<div class="editor-loading-indicator" style="text-align:center; padding:20px; background:#f8f9fa; border-radius:4px; margin-bottom:10px;">' +
-                                 '<i class="fas fa-spinner fa-spin"></i> Loading editor...</div>';
+                var $loadingIndicator = $('<div class="editor-loading-indicator">' +
+                                          '<i class="fas fa-spinner fa-spin"></i> Loading editor...</div>');
                 
-                $container.prepend(loadingHtml);
+                $container.prepend($loadingIndicator);
                 
                 // Small delay to ensure tab is visible
                 setTimeout(function() {

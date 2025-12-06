@@ -49,8 +49,22 @@
     display: none;
   }
   
-  .tab-content > .tab-pane.active {
+  .tab-content > .tab-pane.active,
+  .tab-content > .tab-pane.show {
     display: block;
+  }
+  
+  /* Editor Loading Indicator */
+  .editor-loading-indicator {
+    text-align: center;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  
+  .editor-loading-indicator i {
+    color: #1B78FC;
   }
   
   /* Variables List Styles */
@@ -212,7 +226,7 @@
             <div class="tab-content mt-3">
               
               <!-- Dashboard Page Code Part -->
-              <div id="code_dashboard" class="tab-pane fade" role="tabpanel" aria-labelledby="code_dashboard-tab">
+              <div id="code_dashboard" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="dashboard">
                   <div class="row">
@@ -237,7 +251,7 @@
               </div>
               
               <!-- New Order Page Code Part -->
-              <div id="code_new_order" class="tab-pane fade" role="tabpanel" aria-labelledby="code_new_order-tab">
+              <div id="code_new_order" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="new_order">
                   <div class="row">
@@ -262,7 +276,7 @@
               </div>
               
               <!-- Order Logs Page Code Part -->
-              <div id="code_orders" class="tab-pane fade" role="tabpanel" aria-labelledby="code_orders-tab">
+              <div id="code_orders" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="orders">
                   <div class="row">
@@ -287,7 +301,7 @@
               </div>
               
               <!-- Services Page Code Part -->
-              <div id="code_services" class="tab-pane fade" role="tabpanel" aria-labelledby="code_services-tab">
+              <div id="code_services" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="services">
                   <div class="row">
@@ -312,7 +326,7 @@
               </div>
               
               <!-- Add Funds Page Code Part -->
-              <div id="code_add_funds" class="tab-pane fade" role="tabpanel" aria-labelledby="code_add_funds-tab">
+              <div id="code_add_funds" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="add_funds">
                   <div class="row">
@@ -337,7 +351,7 @@
               </div>
               
               <!-- API Page Code Part -->
-              <div id="code_api" class="tab-pane fade" role="tabpanel" aria-labelledby="code_api-tab">
+              <div id="code_api" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="api">
                   <div class="row">
@@ -362,7 +376,7 @@
               </div>
               
               <!-- Tickets Page Code Part -->
-              <div id="code_tickets" class="tab-pane fade" role="tabpanel" aria-labelledby="code_tickets-tab">
+              <div id="code_tickets" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="tickets">
                   <div class="row">
@@ -387,7 +401,7 @@
               </div>
               
               <!-- Child Panel Page Code Part -->
-              <div id="code_child_panel" class="tab-pane fade" role="tabpanel" aria-labelledby="code_child_panel-tab">
+              <div id="code_child_panel" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="child_panel">
                   <div class="row">
@@ -412,7 +426,7 @@
               </div>
               
               <!-- Transactions Page Code Part -->
-              <div id="code_transactions" class="tab-pane fade" role="tabpanel" aria-labelledby="code_transactions-tab">
+              <div id="code_transactions" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="transactions">
                   <div class="row">
@@ -437,7 +451,7 @@
               </div>
               
               <!-- Sign In Page Code Part -->
-              <div id="code_signin" class="tab-pane fade" role="tabpanel" aria-labelledby="code_signin-tab">
+              <div id="code_signin" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signin">
                   <div class="row">
@@ -462,7 +476,7 @@
               </div>
               
               <!-- Sign Up Page Code Part -->
-              <div id="code_signup" class="tab-pane fade" role="tabpanel" aria-labelledby="code_signup-tab">
+              <div id="code_signup" class="tab-pane fade" role="tabpanel">
                 <form class="actionForm" action="<?=cn("$module/ajax_save")?>" method="POST" data-redirect="<?php echo get_current_url(); ?>">
                   <input type="hidden" name="page_key" value="signup">
                   <div class="row">
