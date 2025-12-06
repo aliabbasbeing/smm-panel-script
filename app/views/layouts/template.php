@@ -51,8 +51,8 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
-    <!-- Summernote Editor CSS -->
-    <link href="<?php echo BASE; ?>assets/plugins/summernote/summernote-bs5.min.css" rel="stylesheet">
+    <!-- Summernote Editor CSS - Local with CDN fallback -->
+    <link href="<?php echo BASE; ?>assets/plugins/summernote/summernote-bs5.min.css" rel="stylesheet" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.css'">
     
     <!-- emoji -->
     <?php
@@ -153,8 +153,13 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Summernote Editor -->
+    <!-- Summernote Editor - Local with CDN fallback -->
     <script src="<?php echo BASE; ?>assets/plugins/summernote/summernote-bs5.min.js"></script>
+    <script>
+    if (typeof $.fn.summernote === 'undefined') {
+        document.write('<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.js"><\/script>');
+    }
+    </script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
