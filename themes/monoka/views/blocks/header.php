@@ -34,4 +34,4 @@
     </script>
     <?php echo htmlspecialchars_decode(get_option('embed_head_javascript', ''), ENT_QUOTES); ?>
 </head>
-<body data-spy="scroll" data-target=".fixed-top">
+<body data-spy="scroll" data-bs-target=".fixed-top">

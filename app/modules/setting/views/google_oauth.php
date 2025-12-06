@@ -69,7 +69,7 @@
           </div>
 
           <div class="form-group mt-4">
-            <button class="btn btn-primary btn-min-width text-uppercase mr-1"><i class="fe fe-check-circle"></i> <?=lang("Save")?></button>
+            <button class="btn btn-primary btn-min-width text-uppercase me-1"><i class="fe fe-check-circle"></i> <?=lang("Save")?></button>
             <button class="btn btn-secondary btn-min-width text-uppercase" type="reset"><i class="fe fe-x-circle"></i> <?=lang("reset")?></button>
           </div>
         </form>

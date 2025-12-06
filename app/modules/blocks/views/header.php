@@ -192,7 +192,7 @@ $cleanBalance = sprintf('%.2f', $cleanBalance);
             <a href="<?=cn('tickets')?>" class="menu-link">
               <i class="far fa-comments"></i> <?=lang("Tickets")?>
               <?php if(isset($total_unread_tickets) && $total_unread_tickets > 0): ?>
-                <span class="badge badge-info"><?=$total_unread_tickets?></span>
+                <span class="badge bg-info"><?=$total_unread_tickets?></span>
               <?php endif; ?>
             </a>
           </li>
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <?php if (get_option("enable_news_announcement") == 1) { ?>
-  <a href="<?=cn("news/ajax_notification")?>" style="position: fixed; bottom: 8px; right: 8px; font-size: 20px; padding-top: 3px; text-align: center; z-index: 10000000;" data-toggle="tooltip" data-placement="bottom" title="News & Announcement" class="ajaxModal text-white">
+  <a href="<?=cn("news/ajax_notification")?>" style="position: fixed; bottom: 8px; right: 8px; font-size: 20px; padding-top: 3px; text-align: center; z-index: 10000000;" data-bs-toggle="tooltip" data-bs-placement="bottom" title="News & Announcement" class="ajaxModal text-white">
     <div class="bell-fix">
       <i class="fas fa-bell"></i>
       <div class="test">

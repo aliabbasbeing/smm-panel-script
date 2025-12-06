@@ -189,7 +189,7 @@
       <a href="https://www.youtube.com/embed/wnCQolxg7OY?si=IHJBmRhhcZPAlbHr"
          target="_blank"
          class="youtube-btn">
-        <i class="fab fa-youtube-play mr-2"></i> Watch Tutorial on YouTube
+        <i class="fab fa-youtube-play me-2"></i> Watch Tutorial on YouTube
       </a>
     </div>
   </div>
@@ -296,7 +296,7 @@
 <!-- jQuery (must be before Select2 and Bootstrap JS) -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- Bootstrap JS (for collapse/accordion) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
 <!-- Select2 JS -->
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 

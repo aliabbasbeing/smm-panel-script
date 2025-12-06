@@ -47,17 +47,17 @@
 .notification-description {
     color: #6c757d;
 }
-.custom-switch-lg .custom-control-label::before {
+.custom-switch-lg .form-check-label::before {
     width: 3rem;
     height: 1.5rem;
     border-radius: 3rem;
 }
-.custom-switch-lg .custom-control-label::after {
+.custom-switch-lg .form-check-label::after {
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 50%;
 }
-.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+.custom-switch-lg .form-check-input:checked ~ .form-check-label::after {
     transform: translateX(1.5rem);
 }
 .status-badge {
@@ -66,11 +66,11 @@
     border-radius: 20px;
     font-weight: 600;
 }
-.badge-success {
+.bg-success {
     background-color: #25D366;
     color: white;
 }
-.badge-secondary {
+.bg-secondary {
     background-color: #6c757d;
     color: white;
 }
@@ -145,7 +145,7 @@
     <i class="fe fe-alert-circle"></i> 
     <strong><?=lang("Not Configured")?></strong> - 
     <?=lang("Please configure the WhatsApp API in the Device tab first.")?>
-    <a href="<?=cn('whatsapp/device')?>" class="btn btn-sm btn-warning ml-3"><?=lang("Configure Now")?></a>
+    <a href="<?=cn('whatsapp/device')?>" class="btn btn-sm btn-warning ms-3"><?=lang("Configure Now")?></a>
 </div>
 <?php endif; ?>
 
@@ -181,15 +181,15 @@
                                     <i class="fas fa-bell text-primary"></i> 
                                     <?=htmlspecialchars($notification->event_name)?>
                                 </h5>
-                                <div class="custom-control custom-switch custom-switch-lg">
+                                <div class="form-check form-switch custom-switch-lg">
                                     <input type="checkbox" 
-                                           class="custom-control-input notification-toggle" 
+                                           class="form-check-input notification-toggle" 
                                            name="notification_status[<?=$notification->event_type?>]" 
                                            id="status_<?=$notification->event_type?>"
                                            value="1"
                                            <?=($notification->status == 1) ? 'checked' : ''?>>
-                                    <label class="custom-control-label" for="status_<?=$notification->event_type?>">
-                                        <span class="status-badge <?=($notification->status == 1) ? 'badge-success' : 'badge-secondary'?>">
+                                    <label class="form-check-label" for="status_<?=$notification->event_type?>">
+                                        <span class="status-badge <?=($notification->status == 1) ? 'bg-success' : 'bg-secondary'?>">
                                             <?=($notification->status == 1) ? lang('Enabled') : lang('Disabled')?>
                                         </span>
                                     </label>
@@ -317,11 +317,11 @@ $(document).ready(function() {
 
     // Update badge text when switch changes
     $('.notification-toggle').on('change', function() {
-        var badge = $(this).siblings('.custom-control-label').find('.status-badge');
+        var badge = $(this).siblings('.form-check-label').find('.status-badge');
         if ($(this).is(':checked')) {
-            badge.removeClass('badge-secondary').addClass('badge-success').text('<?=lang("Enabled")?>');
+            badge.removeClass('bg-secondary').addClass('bg-success').text('<?=lang("Enabled")?>');
         } else {
-            badge.removeClass('badge-success').addClass('badge-secondary').text('<?=lang("Disabled")?>');
+            badge.removeClass('bg-success').addClass('bg-secondary').text('<?=lang("Disabled")?>');
         }
     });
 

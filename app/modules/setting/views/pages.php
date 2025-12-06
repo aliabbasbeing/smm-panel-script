@@ -13,31 +13,31 @@
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="mmm">
-                  <a class="active show" data-toggle="tab" href="#dashboard"><i class="fas fa-book"></i> Dashboard Page Text</a>
+                  <a class="active show" data-bs-toggle="tab" href="#dashboard"><i class="fas fa-book"></i> Dashboard Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#new_order"><i class="fas fa-book"></i> New Order Page Text</a>
+                  <a data-bs-toggle="tab" href="#new_order"><i class="fas fa-book"></i> New Order Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#orders"><i class="fas fa-book"></i> Order Logs Page Text</a>
+                  <a data-bs-toggle="tab" href="#orders"><i class="fas fa-book"></i> Order Logs Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#services"><i class="fas fa-book"></i> Services Page Text</a>
+                  <a data-bs-toggle="tab" href="#services"><i class="fas fa-book"></i> Services Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#add_funds"><i class="fas fa-book"></i> Add Funds Page Text</a>
+                  <a data-bs-toggle="tab" href="#add_funds"><i class="fas fa-book"></i> Add Funds Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#api"><i class="fas fa-book"></i> API Page Text</a>
+                  <a data-bs-toggle="tab" href="#api"><i class="fas fa-book"></i> API Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#tickets"><i class="fas fa-book"></i> Tickets Page Text</a>
+                  <a data-bs-toggle="tab" href="#tickets"><i class="fas fa-book"></i> Tickets Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#child_panel"><i class="fas fa-book"></i> Child Panel Page Text</a>
+                  <a data-bs-toggle="tab" href="#child_panel"><i class="fas fa-book"></i> Child Panel Page Text</a>
                 </li>
                 <li class="mmm">
-                  <a data-toggle="tab" href="#transactions"><i class="fas fa-book"></i> Transactions Page Text</a>
+                  <a data-bs-toggle="tab" href="#transactions"><i class="fas fa-book"></i> Transactions Page Text</a>
                 </li>
               </ul>
             </div>

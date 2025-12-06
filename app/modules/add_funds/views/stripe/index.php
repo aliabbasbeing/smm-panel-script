@@ -89,9 +89,9 @@
     </div>
 
     <div class="form-group">
-      <label class="custom-control custom-checkbox">
-        <input type="checkbox" class="custom-control-input" name="agree" value="1">
-        <span class="custom-control-label text-uppercase"><strong><?=lang("yes_i_understand_after_the_funds_added_i_will_not_ask_fraudulent_dispute_or_chargeback")?></strong></span>
+      <label class="form-check">
+        <input type="checkbox" class="form-check-input" name="agree" value="1">
+        <span class="form-check-label text-uppercase"><strong><?=lang("yes_i_understand_after_the_funds_added_i_will_not_ask_fraudulent_dispute_or_chargeback")?></strong></span>
       </label>
     </div>
     <div class="form-group">

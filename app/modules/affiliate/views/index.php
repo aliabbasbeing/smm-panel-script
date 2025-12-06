@@ -19,12 +19,12 @@
       <div class="col-sm-6 col-lg-3 item">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-success-gradient text-white me-3">
                <i class="fe fe-users"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?= $total_ref ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?= $total_ref ?></h4>
                 <small class="text-muted "><?= lang("total_referrals") ?></small>
               </div>
             </div>
@@ -35,12 +35,12 @@
       <div class="col-sm-6 col-lg-3 item">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-info-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-info-gradient text-white me-3">
               <i class="fe fe-dollar-sign"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_available+$details->affiliate_bal_transferred)) ? currency_format($details->affiliate_bal_available+$details->affiliate_bal_transferred, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_available+$details->affiliate_bal_transferred)) ? currency_format($details->affiliate_bal_available+$details->affiliate_bal_transferred, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
                 <small class="text-muted "><?= lang("total_amount_earned") ?></small>
               </div>
             </div>
@@ -51,12 +51,12 @@
       <div class="col-sm-6 col-lg-3 item">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-warning-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-warning-gradient text-white me-3">
               <i class="fe fe-dollar-sign"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_available)) ? currency_format($details->affiliate_bal_available, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_available)) ? currency_format($details->affiliate_bal_available, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
                 <small class="text-muted "><?= lang("total_amount_available") ?></small>
               </div>
             </div>
@@ -67,12 +67,12 @@
       <div class="col-sm-6 col-lg-3 item">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-danger-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-danger-gradient text-white me-3">
               <i class="fe fe-dollar-sign"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_transferred)) ? currency_format($details->affiliate_bal_transferred, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?= get_option('currency_symbol', "$") ?><?= (!empty($details->affiliate_bal_transferred)) ? currency_format($details->affiliate_bal_transferred, get_option('currency_decimal', 2), $decimalpoint, $separator) : 0 ?></h4>
                 <small class="text-muted "><?= lang("total_amount_transferred") ?></small>
               </div>
             </div>

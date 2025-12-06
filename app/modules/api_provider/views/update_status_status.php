@@ -37,9 +37,9 @@
                                 <td><?=$update['new_status']?></td>
                                 <td>
                                     <?php if($update['success']): ?>
-                                        <span class="badge badge-success">Success</span>
+                                        <span class="badge bg-success">Success</span>
                                     <?php else: ?>
-                                        <span class="badge badge-danger">Failed</span>
+                                        <span class="badge bg-danger">Failed</span>
                                     <?php endif; ?>
                                     <div class="small text-muted"><?=$update['message']?></div>
                                 </td>

@@ -17,6 +17,7 @@
     <meta name="MobileOptimized" content="320">
 
     
+    <link rel="stylesheet" href="<?=BASE?>assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="<?=BASE?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -71,12 +72,12 @@
             <img class="site-logo d-none" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
             <img class="site-logo-white" src="<?=get_option('website_logo', BASE."assets/images/logo.png")?>" alt="Webstie logo">
           </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span><i class="fe fe-menu"></i></span>
           </button>
 
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ms-auto">
               <?php
               // Get dynamic menu items for landing page
               $landing_menu_items = get_header_menu_items();

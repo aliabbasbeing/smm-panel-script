@@ -16,6 +16,7 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
 
+    <link rel="stylesheet" href="<?php echo BASE; ?>assets/css/bootstrap/bootstrap.min.css">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/all.min.css">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
@@ -51,7 +52,7 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
     <!-- Summernote Editor CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.css" rel="stylesheet">
     
     <!-- emoji -->
     <?php
@@ -138,6 +139,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/standalone/selectize.min.js"></script>
 
     <script src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo BASE; ?>assets/js/bootstrap-toast.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/selectize.min.js"></script>
     <script src="<?php echo BASE; ?>assets/js/vendors/jquery.tablesorter.min.js"></script>
@@ -152,7 +154,7 @@
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
     <!-- Summernote Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-bs5.min.js"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>

@@ -13,7 +13,7 @@
         <form class="form actionForm" action="<?=$url?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fe fe-edit"></i> <?=lang("Add_Funds")?></h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -77,7 +77,7 @@
           <div class="modal-footer">
             <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
             <button type="submit" class="btn btn-round btn-primary"><?=lang('Submit')?></button>
-            <button type="button" class="btn btn-round btn-default" data-dismiss="modal"><?=lang('Cancel')?></button>
+            <button type="button" class="btn btn-round btn-default" data-bs-dismiss="modal"><?=lang('Cancel')?></button>
           </div>
         </form>
       </div>

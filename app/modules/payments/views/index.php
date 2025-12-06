@@ -8,8 +8,8 @@
       <div class="card-header">
         <h3 class="card-title" style="color: #fff !important;"><?=lang("payments_methods"); ?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -44,9 +44,9 @@
               <td class="text-muted" style="width: 15%;"><?php echo $row->max; ?></td>
               <td style="width: 10%;">
                 <?php if(!empty($row->new_users) && $row->new_users == 1){?>
-                  <span class="badge badge-info">Allowed</span>
+                  <span class="badge bg-info">Allowed</span>
                   <?php }else{?>
-                  <span class="badge badge-warning">Not Allowed</span>
+                  <span class="badge bg-warning text-dark">Not Allowed</span>
                 <?php }?>
               </td>
               <td style="width: 10%;">
@@ -57,7 +57,7 @@
               </td>
               <td class="text-center" style="width: 15%;">
                 <div class="btn-group">
-                  <a href="<?=cn("$module/update/".$row->id)?>" class="btn btn-icon ajaxModal" data-toggle="tooltip" data-placement="bottom" title="Edit"><i class="fe fe-edit"></i></a>
+                  <a href="<?=cn("$module/update/".$row->id)?>" class="btn btn-icon ajaxModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="fe fe-edit"></i></a>
                 </div>
               </td>
             </tr>

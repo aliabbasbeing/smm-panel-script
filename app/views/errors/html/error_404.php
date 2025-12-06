@@ -79,7 +79,7 @@
 						</div>
 						<div class="note text-muted">We are so sorry for the inconvenience, the page you were trying to access has been deleted or never even exist</div>
 						<div class="go-back">
-			              <a href="<?php echo $base_url; ?>" class="btn btn-pill btn-gradient btn-go-home btn-min-width mr-1 mb-1"><span><i class="fe fe-arrow-left"></i></span> Back to Home Page</a>
+			              <a href="<?php echo $base_url; ?>" class="btn btn-pill btn-gradient btn-go-home btn-min-width me-1 mb-1"><span><i class="fe fe-arrow-left"></i></span> Back to Home Page</a>
 			            </div>
 					</div>
 				</div>

@@ -2,8 +2,8 @@
   <div class="row justify-content-md-center justify-content-between">
     <div class="col-md-12">
       <h1 class="page-title">
-        <span data-toggle="modal" data-target="#install-module">
-          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
+        <span data-bs-toggle="modal" data-bs-target="#install-module">
+          <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("add_new")?>" data-bs-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
           </span>
         </span> 
         <?=lang("Modules")?>
@@ -18,7 +18,7 @@
   ?>
   <div class="col-md-8">
     <div class="payment-errors alert alert-icon alert-danger alert-dismissible">
-      <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i>
+      <i class="fe fe-alert-triangle me-2" aria-hidden="true"></i>
       <span class="payment-errors-message"><?=base64_decode($_GET["error"])?></span>
     </div>
   </div>
@@ -61,7 +61,7 @@
                 </a>
               </div>
             </div>
-            <div class="ml-auto text-muted">
+            <div class="ms-auto text-muted">
               <small>ver<?=$version?></small>
             </div>
           </div>
@@ -71,7 +71,7 @@
                 $<?=$row->price?>
               </div>
             </div>
-            <div class="ml-auto text-muted">
+            <div class="ms-auto text-muted">
               <?php
                 if (!$purchase_exist) {
                   echo '<a href="'.$row->link.'" target="_blank" class="btn btn-pill btn-info btn-sm">'.lang('Buy_now').'</a>';
@@ -105,7 +105,7 @@
         <form class="actionForm" action="<?=cn($module."/ajax_install_module")?>" method="POST">
           <div class="modal-header">
             <h4 class="modal-title"><i class="fe fe-plus-circle"></i> Install Module</h4>
-            <button type="button" class="close" data-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
 
           <div class="modal-body">
@@ -116,8 +116,8 @@
           </div>
 
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           </div>
         </form>
       </div>

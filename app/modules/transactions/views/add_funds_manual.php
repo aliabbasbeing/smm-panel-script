@@ -10,7 +10,7 @@
             <h4 class="modal-title">
               <i class="fe fe-dollar-sign"></i> <?=lang("Add_Funds")?> (Manual)
             </h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
 
           <div class="modal-body">
@@ -73,7 +73,7 @@
 
           <div class="modal-footer">
             <button class="btn btn-primary btn-min-width"><?=lang("Add_Funds")?></button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Close")?></button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Close")?></button>
           </div>
         </form>
       </div>

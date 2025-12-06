@@ -8,7 +8,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 <div class="duplicates-content">
     <?php if(!empty($duplicates)): ?>
     <div class="alert alert-warning mb-4">
-        <i class="fe fe-alert-triangle mr-2"></i>
+        <i class="fe fe-alert-triangle me-2"></i>
         <?=sprintf(lang("found_x_duplicate_service_names"), count($duplicates))?>
     </div>
     
@@ -29,7 +29,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                         </span>
                     </td>
                     <td class="text-center">
-                        <span class="badge badge-warning"><?=$dup->count?></span>
+                        <span class="badge bg-warning text-dark"><?=$dup->count?></span>
                     </td>
                 </tr>
                 <?php endforeach; ?>
@@ -38,7 +38,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
     </div>
     
     <div class="text-muted small mt-3">
-        <i class="fe fe-info mr-1"></i>
+        <i class="fe fe-info me-1"></i>
         <?=lang("duplicate_services_tip")?>
     </div>
     <?php else: ?>

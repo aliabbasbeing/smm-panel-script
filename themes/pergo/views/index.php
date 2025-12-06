@@ -230,7 +230,7 @@
               </div>
               <div class="input-group">
                 <input type="email" name="email" class="form-control email" placeholder="Enter Your email" required>
-                <button class="input-group-append btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
+                <button class=" btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
                   <?php echo lang("subscribe_now"); ?>
                 </button>
               </div>
@@ -250,7 +250,7 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
-              <button type="button" class="close" data-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -258,7 +258,7 @@
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
             </div>
           </div>
         </div>

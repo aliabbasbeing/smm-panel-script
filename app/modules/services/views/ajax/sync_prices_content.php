@@ -7,7 +7,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 <div class="sync-prices-content">
     <div class="alert alert-info mb-4">
-        <i class="fe fe-info mr-2"></i>
+        <i class="fe fe-info me-2"></i>
         <?=lang("sync_prices_info")?>
     </div>
     
@@ -31,7 +31,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
         <i class="fe fe-alert-circle text-muted" style="font-size: 48px;"></i>
         <p class="text-muted mt-3"><?=lang("no_api_providers_found")?></p>
         <a href="<?=cn('api_provider')?>" class="btn btn-primary mt-2">
-            <i class="fe fe-plus mr-1"></i><?=lang("add_api_provider")?>
+            <i class="fe fe-plus me-1"></i><?=lang("add_api_provider")?>
         </a>
     </div>
     <?php endif; ?>

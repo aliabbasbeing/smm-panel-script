@@ -3,7 +3,7 @@
     <div class="card">
         <div class="card-header">
             <h3><i class="fas fa-file-text"></i> WhatsApp Message Templates</h3>
-            <a href="<?php echo cn($module . '/template_create'); ?>" class="btn btn-primary float-right ajaxModal">
+            <a href="<?php echo cn($module . '/template_create'); ?>" class="btn btn-primary float-end ajaxModal">
                 <i class="fas fa-plus"></i> Create Template
             </a>
         </div>

@@ -3,7 +3,7 @@
     <div class="page-header">
       <h1 class="page-title">
         <a href="<?php echo cn($module . '/smtp_create'); ?>" class="ajaxModal">
-          <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="Add New SMTP Config">
+          <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add New SMTP Config">
             <i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
           </span>
         </a>
@@ -25,7 +25,7 @@
       <div class="card-header">
         <h3 class="card-title" style="color:#fff !important;">SMTP Configuration List</h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -55,28 +55,28 @@
               <td><?php echo htmlspecialchars($smtp->host); ?></td>
               <td><?php echo $smtp->port; ?></td>
               <td>
-                <span class="badge badge-secondary"><?php echo strtoupper($smtp->encryption); ?></span>
+                <span class="badge bg-secondary"><?php echo strtoupper($smtp->encryption); ?></span>
               </td>
               <td><?php echo htmlspecialchars($smtp->from_email); ?></td>
               <td>
                 <?php if($smtp->is_default){ ?>
-                <span class="badge badge-success">Default</span>
+                <span class="badge bg-success">Default</span>
                 <?php } else { ?>
                 <span class="text-muted">-</span>
                 <?php } ?>
               </td>
               <td>
                 <?php if($smtp->status == 1){ ?>
-                <span class="badge badge-success">Active</span>
+                <span class="badge bg-success">Active</span>
                 <?php } else { ?>
-                <span class="badge badge-danger">Inactive</span>
+                <span class="badge bg-danger">Inactive</span>
                 <?php } ?>
               </td>
               <td>
                 <div class="btn-group">
                   <a href="<?php echo cn($module . '/smtp_edit/' . $smtp->ids); ?>" 
                     class="btn btn-sm btn-icon ajaxModal" 
-                    data-toggle="tooltip" 
+                    data-bs-toggle="tooltip" 
                     title="Edit">
                     <i class="fe fe-edit"></i>
                   </a>
@@ -84,7 +84,7 @@
                     class="btn btn-sm btn-icon btn-danger actionItem" 
                     data-id="<?php echo $smtp->ids; ?>" 
                     data-action="<?php echo cn($module . '/ajax_smtp_delete'); ?>" 
-                    data-toggle="tooltip" 
+                    data-bs-toggle="tooltip" 
                     title="Delete" 
                     data-confirm="Are you sure you want to delete this SMTP configuration?">
                     <i class="fe fe-trash"></i>

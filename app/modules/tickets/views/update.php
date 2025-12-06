@@ -38,7 +38,7 @@
                         if (get_role("admin") || get_role('supporter')) {
                       ?>
                       <div class="dropdown">
-                        <button  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn btn-<?=$button_type?> dropdown-toggle btn-sm">
+                        <button  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-toggle btn btn-<?=$button_type?> dropdown-toggle btn-sm">
                           <span class="p-r-5 p-l-5"><?=ticket_status_title($ticket->status)?> </span>
                         </button>
                         <div class="dropdown-menu dropdown-menu-right has-shadow">
@@ -159,7 +159,7 @@
                       <?php
                         if (!$is_messaged_user && session('user_current_info')['role'] == 'admin') {
                       ?>
-                      <a href="<?=cn("$module/ajax_delete_message_item/".$row->ids)?>" class="ajaxDeleteItem btn btn-sm btn-secondary" data-toggle="tooltip" data-placement="bottom"data-original-title="Delete"><i class="fe fe-trash"></i></a>
+                      <a href="<?=cn("$module/ajax_delete_message_item/".$row->ids)?>" class="ajaxDeleteItem btn btn-sm btn-secondary" data-bs-toggle="tooltip" data-bs-placement="bottom"data-bs-original-title="Delete"><i class="fe fe-trash"></i></a>
                       <?php }?>
                     </div>
                   </div>
@@ -179,7 +179,7 @@
             <label for="userinput8"><?=lang("Message")?></label>
             <textarea rows="10" class="form-control square plugin_editor" name="message" ></textarea>
           </div>
-          <button type="submit" class="btn round btn-info btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+          <button type="submit" class="btn round btn-info btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
         </form>
         <?php }?>
       </div>

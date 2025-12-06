@@ -5,7 +5,7 @@
         <h3 class="card-title" style="color:#fff !important;">
           <i class="fe fe-menu"></i> <?=lang("Header Menu Management")?>
         </h3>
-        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#menuModal" onclick="openAddModal()">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#menuModal" onclick="openAddModal()">
           <i class="fe fe-plus"></i> <?=lang("Add Menu Item")?>
         </button>
       </div>
@@ -55,14 +55,14 @@
                         foreach ($roles as $role): 
                           $role_label = isset($available_roles[$role]) ? $available_roles[$role] : $role;
                       ?>
-                        <span class="badge badge-secondary"><?=htmlspecialchars($role_label)?></span>
+                        <span class="badge bg-secondary"><?=htmlspecialchars($role_label)?></span>
                       <?php endforeach; ?>
                     </td>
                     <td>
                       <?php if (!empty($item['new_tab'])): ?>
-                        <span class="badge badge-info"><?=lang("Yes")?></span>
+                        <span class="badge bg-info"><?=lang("Yes")?></span>
                       <?php else: ?>
-                        <span class="badge badge-secondary"><?=lang("No")?></span>
+                        <span class="badge bg-secondary"><?=lang("No")?></span>
                       <?php endif; ?>
                     </td>
                     <td>
@@ -105,7 +105,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalTitle"><?=lang("Add Menu Item")?></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -152,9 +152,9 @@
             <div class="row">
               <?php foreach ($available_roles as $role_key => $role_label): ?>
                 <div class="col-md-4">
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input role-checkbox" name="roles[]" value="<?=$role_key?>">
-                    <span class="custom-control-label"><?=$role_label?></span>
+                  <label class="form-check">
+                    <input type="checkbox" class="form-check-input role-checkbox" name="roles[]" value="<?=$role_key?>">
+                    <span class="form-check-label"><?=$role_label?></span>
                   </label>
                 </div>
               <?php endforeach; ?>
@@ -164,24 +164,24 @@
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
-                <label class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" name="new_tab" id="menuNewTab" value="1">
-                  <span class="custom-control-label"><?=lang("Open in New Tab")?></span>
+                <label class="form-check">
+                  <input type="checkbox" class="form-check-input" name="new_tab" id="menuNewTab" value="1">
+                  <span class="form-check-label"><?=lang("Open in New Tab")?></span>
                 </label>
               </div>
             </div>
             <div class="col-md-6">
               <div class="form-group">
-                <label class="custom-control custom-checkbox">
-                  <input type="checkbox" class="custom-control-input" name="status" id="menuStatus" value="1" checked>
-                  <span class="custom-control-label"><?=lang("Enabled")?></span>
+                <label class="form-check">
+                  <input type="checkbox" class="form-check-input" name="status" id="menuStatus" value="1" checked>
+                  <span class="form-check-label"><?=lang("Enabled")?></span>
                 </label>
               </div>
             </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           <button type="submit" class="btn btn-primary" id="submitBtn"><?=lang("Save")?></button>
         </div>
       </form>
@@ -195,7 +195,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><?=lang("Confirm Delete")?></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -204,7 +204,7 @@
         <input type="hidden" id="deleteItemId" value="">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
         <button type="button" class="btn btn-danger" id="confirmDeleteBtn"><?=lang("Delete")?></button>
       </div>
     </div>

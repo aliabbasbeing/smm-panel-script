@@ -7,7 +7,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 <div class="duplicate-content">
     <div class="alert alert-info mb-4">
-        <i class="fe fe-info mr-2"></i>
+        <i class="fe fe-info me-2"></i>
         <?=lang("duplicate_service_info")?>
     </div>
     
@@ -17,7 +17,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
         <p class="text-muted"><?=lang("duplicate_service_instructions")?></p>
         
         <div class="mt-4">
-            <ol class="text-left" style="max-width: 400px; margin: 0 auto;">
+            <ol class="text-start" style="max-width: 400px; margin: 0 auto;">
                 <li class="mb-2"><?=lang("duplicate_step_1")?></li>
                 <li class="mb-2"><?=lang("duplicate_step_2")?></li>
                 <li class="mb-2"><?=lang("duplicate_step_3")?></li>

@@ -78,7 +78,7 @@
     <footer class="footer footer_bottom dark">
       <div class="container">
         <div class="row align-items-center flex-row-reverse">
-          <div class="col-auto ml-lg-auto">
+          <div class="col-auto ms-lg-auto">
             <div class="row align-items-center">
               <div class="col-auto">
                 <ul class="list-inline mb-0">
@@ -134,6 +134,7 @@
     <?php }?>
     
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <!-- toast -->

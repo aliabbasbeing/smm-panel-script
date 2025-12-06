@@ -4,8 +4,8 @@
       <h3 class="card-title"><i class="fe fe-list"></i> <?=lang("Lists")?>
       </h3>
       <div class="card-options">
-        <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-        <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+        <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+        <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
       </div>
     </div>
 
@@ -43,7 +43,7 @@
                 ?>
                 <?php if($is_unread){
                 ?>
-                <span class="badge badge-warning"><?=lang("Unread")?></span>
+                <span class="badge bg-warning text-dark"><?=lang("Unread")?></span>
                 <?php }?>
               </div>
               <div class="email"><?=$row->first_name." ".$row->last_name." - ".$row->user_email?></div>
@@ -76,7 +76,7 @@
             </a>
             <?php 
             if(get_role("admin") || get_role('supporter')) {?>
-            <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+            <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
             <div class="dropdown-menu dropdown-menu-right">
               <a href="javascript:void(0)" data-url="<?=cn($module."/ajax_change_status/".$row->ids)?>" data-status="new" class="ajaxChangeStatus dropdown-item"> <i class="dropdown-icon fe fe-mail"></i> <?=lang("mark_as_new")?></a>
 

@@ -158,9 +158,9 @@ function validateWhatsappNumber(event) {
         <?php } ?> 
 
         <div class="form-group">
-          <label class="custom-control custom-checkbox">
-            <input type="checkbox" name="terms" class="custom-control-input" />
-            <span class="custom-control-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>" class="text-white"><?=lang("terms__policy")?></a></span>
+          <label class="form-check">
+            <input type="checkbox" name="terms" class="form-check-input" />
+            <span class="form-check-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>" class="text-white"><?=lang("terms__policy")?></a></span>
           </label>
         </div>
 
@@ -292,17 +292,17 @@ function validateWhatsappNumber(event) {
   margin-right: 8px;
 }
 
-.form-signup .custom-control-label {
+.form-signup .form-check-label {
   color: #111827;
   font-size: 13px;
 }
 
-.form-signup .custom-control-label a {
+.form-signup .form-check-label a {
   color: #04a9f4;
   text-decoration: none;
 }
 
-.form-signup .custom-control-label a:hover {
+.form-signup .form-check-label a:hover {
   text-decoration: underline;
 }
 

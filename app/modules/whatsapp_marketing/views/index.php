@@ -125,7 +125,7 @@
       <div class="col-sm-6 col-lg-3">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-blue mr-3">
+            <span class="stamp stamp-md bg-blue me-3">
               <i class="fe fe-message-square"></i>
             </span>
             <div>
@@ -140,7 +140,7 @@
       <div class="col-sm-6 col-lg-3">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-green mr-3">
+            <span class="stamp stamp-md bg-green me-3">
               <i class="fe fe-file-text"></i>
             </span>
             <div>
@@ -155,7 +155,7 @@
       <div class="col-sm-6 col-lg-3">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-orange mr-3">
+            <span class="stamp stamp-md bg-orange me-3">
               <i class="fe fe-settings"></i>
             </span>
             <div>
@@ -170,7 +170,7 @@
       <div class="col-sm-6 col-lg-3">
         <div class="card p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-purple mr-3">
+            <span class="stamp stamp-md bg-purple me-3">
               <i class="fe fe-bar-chart-2"></i>
             </span>
             <div>
@@ -203,10 +203,10 @@
           <div class="col-md-6">
             <div class="mb-3">
               <div class="clearfix">
-                <div class="float-left">
+                <div class="float-start">
                   <strong>Running Campaigns</strong>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                   <small class="text-muted"><?php echo $stats->running_campaigns; ?></small>
                 </div>
               </div>
@@ -217,10 +217,10 @@
             
             <div class="mb-3">
               <div class="clearfix">
-                <div class="float-left">
+                <div class="float-start">
                   <strong>Completed Campaigns</strong>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                   <small class="text-muted"><?php echo $stats->completed_campaigns; ?></small>
                 </div>
               </div>
@@ -233,10 +233,10 @@
           <div class="col-md-6">
             <div class="mb-3">
               <div class="clearfix">
-                <div class="float-left">
+                <div class="float-start">
                   <strong>Paused Campaigns</strong>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                   <small class="text-muted"><?php echo $stats->paused_campaigns; ?></small>
                 </div>
               </div>
@@ -247,10 +247,10 @@
             
             <div class="mb-3">
               <div class="clearfix">
-                <div class="float-left">
+                <div class="float-start">
                   <strong>Pending Campaigns</strong>
                 </div>
-                <div class="float-right">
+                <div class="float-end">
                   <small class="text-muted"><?php echo $stats->pending_campaigns; ?></small>
                 </div>
               </div>
@@ -280,23 +280,23 @@
         <div class="list-group list-group-flush">
           <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
             <span>Total Campaigns</span>
-            <span class="badge badge-primary badge-pill"><?php echo $stats->total_campaigns; ?></span>
+            <span class="badge bg-primary badge-pill"><?php echo $stats->total_campaigns; ?></span>
           </div>
           <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
             <span>Active Campaigns</span>
-            <span class="badge badge-success badge-pill"><?php echo $stats->running_campaigns; ?></span>
+            <span class="badge bg-success badge-pill"><?php echo $stats->running_campaigns; ?></span>
           </div>
           <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
             <span>Total Messages Sent</span>
-            <span class="badge badge-info badge-pill"><?php echo number_format($stats->total_sent); ?></span>
+            <span class="badge bg-info badge-pill"><?php echo number_format($stats->total_sent); ?></span>
           </div>
           <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
             <span>Success Rate</span>
-            <span class="badge badge-success badge-pill"><?php echo $stats->total_messages > 0 ? round((($stats->total_sent - $stats->total_failed) / $stats->total_messages) * 100, 1) : 0; ?>%</span>
+            <span class="badge bg-success badge-pill"><?php echo $stats->total_messages > 0 ? round((($stats->total_sent - $stats->total_failed) / $stats->total_messages) * 100, 1) : 0; ?>%</span>
           </div>
           <div class="list-group-item d-flex justify-content-between align-items-center px-0" style="background-color: transparent !important;">
             <span>Delivery Rate</span>
-            <span class="badge badge-info badge-pill"><?php echo $stats->delivery_rate; ?>%</span>
+            <span class="badge bg-info badge-pill"><?php echo $stats->delivery_rate; ?>%</span>
           </div>
         </div>
       </div>

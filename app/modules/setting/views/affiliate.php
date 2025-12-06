@@ -29,7 +29,7 @@
 
           <div class="form-group">
             <div class="input-group">
-              <span class="input-group-prepend">
+              <span class="">
                 <span class="input-group-text"><?=get_option('currency_symbol',"$")?></span>
               </span>
               <input class="form-control" name="affiliate_bonus" value="<?= get_option('affiliate_bonus', "10") ?>">

@@ -11,7 +11,7 @@
 <div class="page-header">
   <h1 class="page-title">
     <a href="<?=cn("$module/add")?>">
-      <span class="add-new" data-toggle="tooltip" data-placement="bottom" data-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span>
+      <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span>
     </a>
     <?=lang("dripfeed")?>
   </h1>
@@ -38,8 +38,8 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang("Lists")?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -128,7 +128,7 @@
               <td class="text-red"><?=(empty($row->note))? "" : $row->note?></td>
               <td class="text-center">
                 <div class="item-action dropdown">
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu">
 
                     <a href="<?=cn("$module/update/".$row->ids)?>" class="dropdown-item ajaxModal"><i class="dropdown-icon fe fe-edit"></i> <?=lang('Edit')?> </a>
@@ -151,7 +151,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="float-right">
+    <div class="float-end">
       <?=$links?>
     </div>
   </div>

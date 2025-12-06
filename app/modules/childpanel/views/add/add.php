@@ -29,7 +29,7 @@
         <div class="tabs-list">
           <ul class="nav nav-tabs child-panel-tabs">
             <li class="nav-item">
-              <a class="nav-link active" data-toggle="tab" href="#new_order">
+              <a class="nav-link active" data-bs-toggle="tab" href="#new_order">
                 <i class="fas fa-shopping-cart"></i> <?=lang('add_new')?>
               </a>
             </li>
@@ -115,9 +115,9 @@
 
           <!-- Confirmation Checkbox -->
           <div class="form-group confirmation-section mb-4">
-            <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" name="agree" required>
-              <span class="custom-control-label">
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" name="agree" required>
+              <span class="form-check-label">
                 <?=lang("yes_i_have_confirmed_the_order")?>
               </span>
             </label>
@@ -339,14 +339,14 @@
     cursor: pointer;
   }
 
-  .custom-checkbox .custom-control-input {
+  .custom-checkbox .form-check-input {
     width: 20px;
     height: 20px;
     cursor: pointer;
     margin: 0;
   }
 
-  .custom-control-label {
+  .form-check-label {
     color: #0056b3;
     font-weight: 500;
     cursor: pointer;

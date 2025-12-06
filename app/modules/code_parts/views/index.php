@@ -34,77 +34,77 @@
   <ul class="nav nav-tabs" style="display:flex !important; flex-wrap:wrap !important; border-bottom:1px solid #ddd !important;">
     
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a class="active show" data-toggle="tab" href="#code_dashboard"
+      <a class="active show" data-bs-toggle="tab" href="#code_dashboard"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#f8f8f8 !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-home" style="margin-right:6px !important;"></i> Dashboard
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_new_order"
+      <a data-bs-toggle="tab" href="#code_new_order"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-cart-plus" style="margin-right:6px !important;"></i> New Order
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_orders"
+      <a data-bs-toggle="tab" href="#code_orders"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-list" style="margin-right:6px !important;"></i> Order Logs
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_services"
+      <a data-bs-toggle="tab" href="#code_services"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-server" style="margin-right:6px !important;"></i> Services
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_add_funds"
+      <a data-bs-toggle="tab" href="#code_add_funds"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-money-bill" style="margin-right:6px !important;"></i> Add Funds
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_api"
+      <a data-bs-toggle="tab" href="#code_api"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-plug" style="margin-right:6px !important;"></i> API
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_tickets"
+      <a data-bs-toggle="tab" href="#code_tickets"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-ticket" style="margin-right:6px !important;"></i> Tickets
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_child_panel"
+      <a data-bs-toggle="tab" href="#code_child_panel"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-child" style="margin-right:6px !important;"></i> Child Panel
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_transactions"
+      <a data-bs-toggle="tab" href="#code_transactions"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-arrow-right-arrow-left" style="margin-right:6px !important;"></i> Transactions
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:10px !important;">
-      <a data-toggle="tab" href="#code_signin"
+      <a data-bs-toggle="tab" href="#code_signin"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-right-to-bracket" style="margin-right:6px !important;"></i> Sign In
       </a>
     </li>
 
     <li class="code-parts-tab" style="margin-right:0 !important;">
-      <a data-toggle="tab" href="#code_signup"
+      <a data-bs-toggle="tab" href="#code_signup"
          style="padding:10px 15px !important; display:flex !important; align-items:center !important; border:1px solid #ddd !important; border-bottom:none !important; background:#fff !important; text-decoration:none !important; color:#333 !important;">
         <i class="fas fa-user-plus" style="margin-right:6px !important;"></i> Sign Up
       </a>

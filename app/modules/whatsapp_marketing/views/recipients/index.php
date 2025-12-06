@@ -64,7 +64,7 @@
       <div class="card-header">
         <h3 class="card-title">Recipients List (Showing last 100)</h3>
         <div class="card-options">
-          <span class="badge badge-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
+          <span class="badge bg-primary">Total: <?php echo number_format($campaign->total_messages); ?></span>
         </div>
       </div>
       <div class="table-responsive">

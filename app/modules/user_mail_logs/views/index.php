@@ -16,12 +16,12 @@
     ?>
     <div class="form-group d-flex">
       <div class="item-action dropdown action-options">
-        <button type="button" class="btn btn-pill btn-outline-info dropdown-toggle" data-toggle="dropdown">
-           <i class="fe fe-menu mr-2"></i> <?=lang("Action")?>
+        <button type="button" class="btn btn-pill btn-outline-info dropdown-toggle" data-bs-toggle="dropdown">
+           <i class="fe fe-menu me-2"></i> <?=lang("Action")?>
         </button>
         <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="delete"><i class="fe fe-trash-2 text-danger mr-2"></i> <?=lang('Delete')?></a>
-          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="clear_all"><i class="fe fe-trash-2 text-danger mr-2"></i> <?=lang('Clear_all')?></a>
+          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="delete"><i class="fe fe-trash-2 text-danger me-2"></i> <?=lang('Delete')?></a>
+          <a class="dropdown-item ajaxActionOptions" href="<?=cn($module.'/ajax_actions_option')?>" data-type="clear_all"><i class="fe fe-trash-2 text-danger me-2"></i> <?=lang('Clear_all')?></a>
         </div>
       </div>
     </div>
@@ -36,8 +36,8 @@
       <div class="card-header">
         <h3 class="card-title"><?=lang('Lists')?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -46,9 +46,9 @@
             <tr>
               <th class="text-center w-1">
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input check-all" data-name="chk_1">
-                    <span class="custom-control-label"></span>
+                  <label class="form-check">
+                    <input type="checkbox" class="form-check-input check-all" data-name="chk_1">
+                    <span class="form-check-label"></span>
                   </label>
                 </div>
               </th>
@@ -74,9 +74,9 @@
             <tr class="tr_<?=$row->ids?>">
               <th class="text-center w-1">
                 <div class="custom-controls-stacked">
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input chk_1"  name="ids[]" value="<?=$row->ids?>">
-                    <span class="custom-control-label"></span>
+                  <label class="form-check">
+                    <input type="checkbox" class="form-check-input chk_1"  name="ids[]" value="<?=$row->ids?>">
+                    <span class="form-check-label"></span>
                   </label>
                 </div>
               </th>
@@ -99,7 +99,7 @@
               ?>
               <td class="text-center" style="width: 6%">
                 <div class="item-action dropdown">
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu dropdown-menu-right">
                     <a href="<?=cn("$module/ajax_delete_item/".$row->ids)?>" class="dropdown-item ajaxDeleteItem"><i class="dropdown-icon fe fe-trash"></i> <?=lang('Delete')?> </a>
                   </div>
@@ -115,7 +115,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="float-right">
+    <div class="float-end">
       <?=$links?>
     </div>
   </div>

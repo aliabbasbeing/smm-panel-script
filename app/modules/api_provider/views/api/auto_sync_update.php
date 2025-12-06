@@ -17,7 +17,7 @@
         <form class="form actionForm" action="<?=cn($module."/ajax_auto_sync_services_setting")?>" data-redirect="<?=cn($module)?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fe fe-edit"></i> Auto Sync Service Setting</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -48,18 +48,18 @@
 
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_enable_sync_price" <?=(isset($is_enable_sync_price) && $is_enable_sync_price == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("enable_sync_the_price_min_max_of_current_services")?></span>
+                    <label class="form-check">
+                      <input type="checkbox" class="form-check-input" name="is_enable_sync_price" <?=(isset($is_enable_sync_price) && $is_enable_sync_price == 1)? "checked" : ''?>>
+                      <span class="form-check-label"><?=lang("enable_sync_the_price_min_max_of_current_services")?></span>
                     </label>
                   </div>
                 </div>
 
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label class="custom-control custom-checkbox">
-                      <input type="checkbox" class="custom-control-input" name="is_convert_to_new_currency" <?=(isset($is_convert_to_new_currency) && $is_convert_to_new_currency == 1)? "checked" : ''?>>
-                      <span class="custom-control-label"><?=lang("auto_convert_to_new_currency_with_currency_rate_like_in")?><a href="<?=cn("setting")."?t=currency"?>" target="_blank"><?=lang("currency_setting_page")?></a></span>
+                    <label class="form-check">
+                      <input type="checkbox" class="form-check-input" name="is_convert_to_new_currency" <?=(isset($is_convert_to_new_currency) && $is_convert_to_new_currency == 1)? "checked" : ''?>>
+                      <span class="form-check-label"><?=lang("auto_convert_to_new_currency_with_currency_rate_like_in")?><a href="<?=cn("setting")."?t=currency"?>" target="_blank"><?=lang("currency_setting_page")?></a></span>
                     </label>
                   </div>
                 </div>
@@ -76,8 +76,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           </div>
         </form>
       </div>

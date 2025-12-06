@@ -161,7 +161,7 @@
         <div class="form-actions left">
           <input type="hidden" name="payment_id" value="<?php echo $payment_id; ?>">
           <input type="hidden" name="payment_method" value="<?php echo $type; ?>">
-          <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
+          <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1" style="border-radius: 5px !important; background-color: #04a9f4; color: #fff; min-width: 120px; margin-right: 5px; margin-top: 15px; margin-bottom: 5px;">
             <?=lang("Pay")?>
           </button>
         </div>

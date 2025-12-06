@@ -32,7 +32,7 @@ if ($helper->isCli()) {
         <div class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <button type="button" class="navbar-toggle" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -44,7 +44,7 @@ if ($helper->isCli()) {
                     <ul class="nav navbar-nav"><?php
                     foreach ($helper->getSamples() as $category => $files) {
                         ?><li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category ?><strong class="caret"></strong></a>
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><?php echo $category ?><strong class="caret"></strong></a>
                             <ul class="dropdown-menu"><?php
                             foreach ($files as $name => $file) {
                                 echo '<li><a href="/' . $file . '">' . $name . '</a></li>';

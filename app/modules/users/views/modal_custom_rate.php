@@ -2,14 +2,14 @@
   <div class="modal-content">
     <div class="modal-header">
       <h4 class="modal-title"></i> <?php echo lang("edit_custom_rates"); ?> (<?php echo $user->email; ?>)</h4>
-      <button type="button" class="close" data-dismiss="modal"></button>
+      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
     </div>
     <form class="actionForm" action="<?php echo cn($module.'/ajax_save_custom_rates/'.$user->id); ?>" method="POST">
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
-              <select name="service-id" class="select-service-item" class="form-control custom-select">
+              <select name="service-id" class="select-service-item" class="form-control form-select">
                 <option value="1"><?php echo lang("add_custom_rate"); ?></option>
                 <?php
                   if ($services) {
@@ -92,12 +92,12 @@
         </div>
        
       </div>
-      <div class="card-footer text-right">
+      <div class="card-footer text-end">
         <div class="d-flex">
 
           <a href="javascript:void(0)" class="btn btn-link btn-remove-items"><?php echo lang("delete_all"); ?></a>
-          <button type="submit" class="btn btn-success btn-lg ml-auto mr-2"><?php echo lang("Save"); ?></button>
-          <button type="button" class="btn btn-default btn-lg" data-dismiss="modal"><?php echo lang("Close"); ?></button>
+          <button type="submit" class="btn btn-success btn-lg ms-auto me-2"><?php echo lang("Save"); ?></button>
+          <button type="button" class="btn btn-default btn-lg" data-bs-dismiss="modal"><?php echo lang("Close"); ?></button>
         </div>
       </div>
     </form>

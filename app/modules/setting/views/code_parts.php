@@ -22,37 +22,37 @@
             <div class="tabs-list">
               <ul class="nav nav-tabs">
                 <li class="code-parts-tab">
-                  <a class="active show" data-toggle="tab" href="#code_dashboard"><i class="fas fa-home"></i> Dashboard</a>
+                  <a class="active show" data-bs-toggle="tab" href="#code_dashboard"><i class="fas fa-home"></i> Dashboard</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_new_order"><i class="fas fa-cart-plus"></i> New Order</a>
+                  <a data-bs-toggle="tab" href="#code_new_order"><i class="fas fa-cart-plus"></i> New Order</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_orders"><i class="fas fa-list"></i> Order Logs</a>
+                  <a data-bs-toggle="tab" href="#code_orders"><i class="fas fa-list"></i> Order Logs</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_services"><i class="fas fa-server"></i> Services</a>
+                  <a data-bs-toggle="tab" href="#code_services"><i class="fas fa-server"></i> Services</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_add_funds"><i class="fas fa-money-bill"></i> Add Funds</a>
+                  <a data-bs-toggle="tab" href="#code_add_funds"><i class="fas fa-money-bill"></i> Add Funds</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_api"><i class="fas fa-plug"></i> API</a>
+                  <a data-bs-toggle="tab" href="#code_api"><i class="fas fa-plug"></i> API</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_tickets"><i class="fas fa-ticket"></i> Tickets</a>
+                  <a data-bs-toggle="tab" href="#code_tickets"><i class="fas fa-ticket"></i> Tickets</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_child_panel"><i class="fas fa-child"></i> Child Panel</a>
+                  <a data-bs-toggle="tab" href="#code_child_panel"><i class="fas fa-child"></i> Child Panel</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_transactions"><i class="fas fa-arrow-right-arrow-left"></i> Transactions</a>
+                  <a data-bs-toggle="tab" href="#code_transactions"><i class="fas fa-arrow-right-arrow-left"></i> Transactions</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_signin"><i class="fas fa-right-to-bracket"></i> Sign In</a>
+                  <a data-bs-toggle="tab" href="#code_signin"><i class="fas fa-right-to-bracket"></i> Sign In</a>
                 </li>
                 <li class="code-parts-tab">
-                  <a data-toggle="tab" href="#code_signup"><i class="fas fa-user-plus"></i> Sign Up</a>
+                  <a data-bs-toggle="tab" href="#code_signup"><i class="fas fa-user-plus"></i> Sign Up</a>
                 </li>
               </ul>
             </div>

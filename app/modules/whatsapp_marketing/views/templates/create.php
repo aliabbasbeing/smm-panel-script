@@ -6,7 +6,7 @@
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_template_create'); ?>" data-redirect="<?php echo cn($module . '/templates'); ?>" method="POST">
           <div class="modal-header bg-pantone">
             <h4 class="modal-title"><i class="fas fa-file-text"></i> Create New WhatsApp Template</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -49,8 +49,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
           </div>
         </form>
       </div>

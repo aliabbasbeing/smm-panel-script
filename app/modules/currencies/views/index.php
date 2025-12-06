@@ -77,14 +77,14 @@
     <i class="fe fe-dollar-sign"></i> <?=lang("Currency Manager")?>
   </h1>
   <div class="page-options d-flex">
-    <button type="button" class="btn btn-success mr-2" id="addCurrencyBtn">
+    <button type="button" class="btn btn-success me-2" id="addCurrencyBtn">
       <i class="fe fe-plus"></i> <?=lang("Add Currency")?>
     </button>
-    <button type="button" class="btn btn-info mr-2" id="fetchRatesBtn">
+    <button type="button" class="btn btn-info me-2" id="fetchRatesBtn">
       <i class="fe fe-refresh-cw"></i> <?=lang("Fetch Rates")?>
     </button>
     <div class="dropdown">
-      <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+      <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
         <i class="fe fe-more-vertical"></i> <?=lang("More")?>
       </button>
       <div class="dropdown-menu dropdown-menu-right">
@@ -129,7 +129,7 @@
 
 <!-- Cron URL Alert (hidden by default) -->
 <div class="alert alert-warning d-none" id="cronUrlBox">
-  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <button type="button" class="btn-close" data-bs-dismiss="alert">&times;</button>
   <strong><i class="fe fe-terminal"></i> <?=lang("Cron URL")?>:</strong><br>
   <code id="cronUrlText" class="d-block mt-2 p-2 bg-light"></code>
   <button type="button" class="btn btn-sm btn-primary mt-2" id="copyCronUrl">
@@ -143,7 +143,7 @@
   <div class="row align-items-center">
     <div class="col-md-4">
       <div class="input-group">
-        <div class="input-group-prepend">
+        <div class="">
           <span class="input-group-text"><i class="fe fe-search"></i></span>
         </div>
         <input type="text" class="form-control" id="searchCurrency" placeholder="<?=lang("Search currencies...")?>">
@@ -164,7 +164,7 @@
         <option value="rate"><?=lang("Sort by Rate")?></option>
       </select>
     </div>
-    <div class="col-md-2 text-right">
+    <div class="col-md-2 text-end">
       <button type="button" class="btn btn-outline-secondary" id="resetFilters">
         <i class="fe fe-x"></i> <?=lang("Reset")?>
       </button>
@@ -181,7 +181,7 @@
           <i class="fe fe-list"></i> <?=lang("Currency List")?>
         </h3>
         <div class="card-options">
-          <span class="text-white mr-3" id="currencyCount"><?=count($currencies)?> <?=lang("currencies")?></span>
+          <span class="text-white me-3" id="currencyCount"><?=count($currencies)?> <?=lang("currencies")?></span>
         </div>
       </div>
       <div class="card-body p-0 position-relative">
@@ -234,7 +234,7 @@
                            data-original="<?=$currency->exchange_rate?>"
                            value="<?=$currency->exchange_rate?>">
                     <?php if($currency->is_default): ?>
-                    <div class="input-group-append">
+                    <div class="">
                       <span class="input-group-text bg-info text-white">base</span>
                     </div>
                     <?php endif; ?>
@@ -242,7 +242,7 @@
                 </td>
                 <td class="text-center">
                   <?php if ($currency->is_default): ?>
-                    <span class="badge badge-success"><i class="fe fe-check"></i> <?=lang("Default")?></span>
+                    <span class="badge bg-success"><i class="fe fe-check"></i> <?=lang("Default")?></span>
                   <?php else: ?>
                     <button class="btn btn-sm btn-outline-primary set-default-btn" data-id="<?=$currency->id?>">
                       <?=lang("Set Default")?>
@@ -296,7 +296,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title"><i class="fe fe-plus-circle"></i> <?=lang("Add New Currency")?></h5>
-        <button type="button" class="close" data-dismiss="modal">
+        <button type="button" class="btn-close" data-bs-dismiss="modal">
           <span>&times;</span>
         </button>
       </div>
@@ -330,7 +330,7 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
           <button type="submit" class="btn btn-primary">
             <i class="fe fe-plus"></i> <?=lang("Add Currency")?>
           </button>
@@ -346,7 +346,7 @@
     <div class="modal-content">
       <div class="modal-header bg-danger text-white">
         <h5 class="modal-title"><i class="fe fe-alert-triangle"></i> <?=lang("Confirm Delete")?></h5>
-        <button type="button" class="close text-white" data-dismiss="modal">
+        <button type="button" class="close text-white" data-bs-dismiss="modal">
           <span>&times;</span>
         </button>
       </div>
@@ -355,7 +355,7 @@
         <p class="text-muted small"><?=lang("This action cannot be undone.")?></p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
         <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
           <i class="fe fe-trash-2"></i> <?=lang("Delete")?>
         </button>

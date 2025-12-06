@@ -199,7 +199,7 @@
         <h4 class="mb-0">
             <i class="fe fe-list"></i> <?=lang("Message Logs")?>
         </h4>
-        <span class="badge badge-light"><?=$total?> <?=lang("records")?></span>
+        <span class="badge bg-light text-dark"><?=$total?> <?=lang("records")?></span>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -286,8 +286,8 @@
     </div>
     <div class="card-body">
         <form id="cleanupForm" class="form-inline">
-            <label class="mr-2"><?=lang("Delete logs older than")?></label>
-            <select name="days" class="form-control mr-2" style="width: 150px;">
+            <label class="me-2"><?=lang("Delete logs older than")?></label>
+            <select name="days" class="form-control me-2" style="width: 150px;">
                 <option value="7">7 <?=lang("days")?></option>
                 <option value="14">14 <?=lang("days")?></option>
                 <option value="30" selected>30 <?=lang("days")?></option>
@@ -307,7 +307,7 @@
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title"><i class="fe fe-alert-triangle"></i> <?=lang("Confirm Delete")?></h5>
-                <button type="button" class="close text-white" data-dismiss="modal">
+                <button type="button" class="close text-white" data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -317,7 +317,7 @@
                 <p class="font-weight-bold" id="deleteConfirmDays"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Cancel")?></button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
                 <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
                     <i class="fe fe-trash-2"></i> <?=lang("Delete")?>
                 </button>
@@ -332,7 +332,7 @@
         <div class="modal-content">
             <div class="modal-header bg-light">
                 <h5 class="modal-title"><i class="fe fe-file-text"></i> <?=lang("Message Details")?></h5>
-                <button type="button" class="close" data-dismiss="modal">
+                <button type="button" class="btn-close" data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -367,7 +367,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?=lang("Close")?></button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><?=lang("Close")?></button>
             </div>
         </div>
     </div>
