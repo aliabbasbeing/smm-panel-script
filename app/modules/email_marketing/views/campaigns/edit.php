@@ -4,8 +4,8 @@
       <div class="modal-content">
         <form class="form actionForm" action="<?php echo cn($module . '/ajax_campaign_edit/' . $campaign->ids); ?>" data-redirect="<?php echo cn($module . '/campaigns'); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> Edit Campaign</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h4 class="modal-title"><i class="fas fa-edit"></i> Edit Campaign</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -54,11 +54,11 @@
                         foreach($smtp_configs as $smtp){
                           if($smtp->status == 1){
                       ?>
-                      <div class="custom-control custom-checkbox mb-2">
-                        <input type="checkbox" class="custom-control-input" name="smtp_config_ids[]" value="<?php echo $smtp->id; ?>" id="smtp_edit_<?php echo $smtp->id; ?>" <?php echo in_array($smtp->id, $selected_smtp_ids) ? 'checked' : ''; ?>>
-                        <label class="custom-control-label" for="smtp_edit_<?php echo $smtp->id; ?>">
+                      <div class="form-check mb-2">
+                        <input type="checkbox" class="form-check-input" name="smtp_config_ids[]" value="<?php echo $smtp->id; ?>" id="smtp_edit_<?php echo $smtp->id; ?>" <?php echo in_array($smtp->id, $selected_smtp_ids) ? 'checked' : ''; ?>>
+                        <label class="form-check-label" for="smtp_edit_<?php echo $smtp->id; ?>">
                           <?php echo htmlspecialchars($smtp->name); ?>
-                          <?php echo $smtp->is_default ? ' <span class="badge badge-primary">Default</span>' : ''; ?>
+                          <?php echo $smtp->is_default ? ' <span class="badge bg-primary">Default</span>' : ''; ?>
                         </label>
                       </div>
                       <?php }}} ?>
@@ -88,8 +88,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1">Submit</button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1">Submit</button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal">Cancel</button>
           </div>
         </form>
       </div>

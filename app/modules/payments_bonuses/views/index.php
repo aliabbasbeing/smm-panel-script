@@ -5,7 +5,7 @@
         <?php 
           if(get_role("admin")) {
         ?>
-        <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>" data-original-title="Add new"><i class="fa fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
+        <a href="<?=cn("$module/update")?>" class="ajaxModal"><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("add_new")?>" data-bs-original-title="Add new"><i class="fas fa-plus-square text-primary" aria-hidden="true"></i></span></a> 
         <?php }?>
         <?php echo lang("payments_bonuses"); ?>
       </h1>
@@ -23,8 +23,8 @@
           List
         </h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -65,7 +65,7 @@
               </td>
               <td style="width: 15%;">
                 <div class="btn-group">
-                  <a href="<?=cn("$module/update/".$row->ids)?>" class="btn btn-icon ajaxModal" data-toggle="tooltip" data-placement="bottom" title="<?php echo lang('edit'); ?>"><i class="fe fe-edit"></i></a>
+                  <a href="<?=cn("$module/update/".$row->ids)?>" class="btn btn-icon ajaxModal" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?php echo lang('edit'); ?>"><i class="fe fe-edit"></i></a>
                 </div>
               </td>
             </tr>

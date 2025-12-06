@@ -1,7 +1,7 @@
 
 <div class="page-header">
   <h1 class="page-title">
-    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="<?=lang("add_new")?>"><i class="fa fa-plus-square"></i></span></a>
+    <a href="<?=cn("$module/update")?>" class=""><span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" data-bs-original-title="<?=lang("add_new")?>"><i class="fas fa-plus-square"></i></span></a>
     <?=lang("users")?>
   </h1>
 </div>
@@ -16,7 +16,7 @@
         <div class="card-options">
         <div class="dropdown1" style="position: relative; display: inline-block;">
   <button type="button" class="btn btn-outline-info dropdown-toggle" onclick="toggleDropdown()" style="color: #04a9f4; border-color: #04a9f4; background-color: transparent;">
-    <i class="fe fe-upload mr-2"></i>Export
+    <i class="fe fe-upload me-2"></i>Export
   </button>
 
   <div id="customDropdown" class="dropdown-menu1" style="display: none; position: absolute; top: 100%; right: 2px; background-color: #051d2f; border: 1px solid #04a9f4; border-radius: 6px; padding: 8px 0; z-index: 1000;">
@@ -116,7 +116,7 @@
     <div class="title"><h6><?php _echo($row->first_name) . " " . _echo($row->last_name); ?></h6></div>
     <div class="sub" style="margin-right: 15px; margin-bottom: 10px;">
         <a href="<?=cn("$module/mail/".$row->ids)?>" class="ajaxModal" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #fdfdfdff; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
-            <i class="fa fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+            <i class="fas fa-envelope" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
             <small style="color:#000;"><?php _echo($row->email); ?></small>
         </a>
     </div>
@@ -124,7 +124,7 @@
     <div class="sub" style="margin-bottom: 10px;">
         <small>
             <a href="https://wa.me/<?php echo $row->whatsapp_number; ?>" target="_blank" style="display: inline-flex; align-items: center; padding: 4px 8px; border: 1px solid #04a9f4; border-radius: 4px; color: #000 !important; background-color: rgba(63, 81, 181, 0.1); text-decoration: none; transition: all 0.3s ease;">
-                <i class="fa fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
+                <i class="fab fa-whatsapp" style="margin-right: 6px; font-size: 14px; color: #04a9f4;"></i>
                 <?php echo $row->whatsapp_number; ?>
             </a>
         </small>
@@ -170,7 +170,7 @@
     <div class="modal-content">
       <div class="modal-header bg-primary">
         <h5 class="modal-title">Total Deposit</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -230,7 +230,7 @@
               </td>
               <td class="text-center">
                 <div class="item-action dropdown">
-                  <a href="javascript:void(0)" data-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
+                  <a href="javascript:void(0)" data-bs-toggle="dropdown" class="icon"><i class="fe fe-more-vertical"></i></a>
                   <div class="dropdown-menu">
                     <?php
                       if (get_role("admin")) {
@@ -261,7 +261,7 @@
     </div>
   </div>
   <div class="col-md-12">
-    <div class="float-right">
+    <div class="float-end">
       <?=$links?>
     </div>
   </div>
@@ -276,14 +276,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title"></i> Edit custom rates</h4>
-        <button type="button" class="close" data-dismiss="modal"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
             <div class="form-group">
               <label><?=lang("Select_Service")?></label>
-              <select name="service-id" class="select-service-item form-control custom-select">
+              <select name="service-id" class="select-service-item form-control form-select">
                 <option value="">--Select Service--</option>
               </select>
             </div>
@@ -343,7 +343,7 @@
        
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><?=lang("Close")?></button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal"><?=lang("Close")?></button>
       </div>
     </div>
 

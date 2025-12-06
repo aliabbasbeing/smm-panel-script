@@ -2,8 +2,8 @@
   <h1 class="page-title">
     <?php if(get_role("admin")) { ?>
       <a href="<?=cn("$module/update")?>" class="ajaxModal">
-        <span class="add-new" data-toggle="tooltip" data-placement="bottom" title="<?=lang("add_new")?>">
-          <i class="fa fa-plus-square text-primary" aria-hidden="true"></i>
+        <span class="add-new" data-bs-toggle="tooltip" data-bs-placement="bottom" title="<?=lang("add_new")?>">
+          <i class="fas fa-plus-square text-primary" aria-hidden="true"></i>
         </span>
       </a>
     <?php } ?>
@@ -18,8 +18,8 @@
       <div class="card-header">
         <h3 class="card-title" style="color: #fff !important;"><?=lang("Lists")?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-          <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
         </div>
       </div>
       <div class="table-responsive">
@@ -54,9 +54,9 @@
               <td style="width:20%;"><?php echo html_entity_decode($row->description, ENT_QUOTES); ?></td>
               <td style="width:10%;">
                 <?php if(!empty($row->status) && $row->status == 1){ ?>
-                  <span class="badge badge-info"><?=lang("Active")?></span>
+                  <span class="badge bg-info"><?=lang("Active")?></span>
                 <?php } else { ?>
-                  <span class="badge badge-warning"><?=lang("Deactive")?></span>
+                  <span class="badge bg-warning text-dark"><?=lang("Deactive")?></span>
                 <?php } ?>
               </td>
 
@@ -66,8 +66,8 @@
                   <!-- Edit Provider -->
                   <a href="<?=cn("$module/update/".$row->ids)?>"
                      class="btn btn-icon btn-outline-info ajaxModal"
-                     data-toggle="tooltip"
-                     data-placement="bottom"
+                     data-bs-toggle="tooltip"
+                     data-bs-placement="bottom"
                      title="<?=lang("edit_api")?>">
                      <i class="fe fe-edit"></i>
                   </a>
@@ -75,7 +75,7 @@
                   <!-- Sync Services (manual one-off) -->
                   <a href="<?=cn("$module/sync_services/".$row->ids)?>"
                      class="btn btn-icon btn-outline-success ajaxModal"
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<?=lang('sync_services')?>">
                      <i class="fe fe-refresh-cw"></i>
                   </a>
@@ -83,7 +83,7 @@
                   <!-- Bulk Add New Services -->
                   <a href="<?=cn("$module/bulk_services/".$row->ids)?>"
                      class="btn btn-icon btn-outline-primary ajaxModal"
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<?=lang('bulk_add_all_services')?>">
                      <i class="fe fe-plus-square"></i>
                   </a>
@@ -91,7 +91,7 @@
                   <!-- NEW: Auto Sync Setting (global settings modal) -->
                   <a href="<?=cn("$module/auto_sync_services_setting")?>"
                      class="btn btn-icon btn-outline-warning ajaxModal"
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<?=lang('auto_sync_service_setting')?>">
                      <i class="fe fe-clock"></i>
                   </a>
@@ -99,7 +99,7 @@
                   <!-- (Optional) Delete Provider - keep existing if already present (example stub)
                   <a href="<?=cn("$module/ajax_delete_item/".$row->ids)?>"
                      class="btn btn-icon btn-outline-danger ajaxDeleteItem"
-                     data-toggle="tooltip"
+                     data-bs-toggle="tooltip"
                      title="<?=lang('delete')?>">
                      <i class="fe fe-trash"></i>
                   </a>
@@ -134,7 +134,7 @@
                         </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
+                        <button type="submit" class="btn btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
                         <button type="button" class="btn btn-default btn-min-width mb-1" onclick="history.go(-1)"><?=lang("Cancel")?></button>
                     </div>
                 </form>

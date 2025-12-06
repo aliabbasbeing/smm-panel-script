@@ -2,7 +2,7 @@
 	<div class="form-group">
 	  <div class="input-group">
 	    <input type="text" class="form-control" name="query" placeholder="<?=lang("Search_for_")?>" value="<?php echo get('query'); ?>">
-	    <div class="input-group-append">
+	    <div class="">
 
 	     	<?php
 	     		if (!get_role('user') && $data_search) {

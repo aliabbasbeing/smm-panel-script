@@ -18,7 +18,8 @@
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>assets/plugins/font-awesome/css/all.min.css">
+    <link rel="stylesheet" href="<?php echo $base_url; ?>assets/plugins/font-awesome/css/v4-shims.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300i,400,400i,500,500i,600,600i,700,700i&amp;subset=latin-ext">
     <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
@@ -85,7 +86,7 @@
 						</div>
 						<div class="note text-muted">We are so sorry for the inconvenience, the page you were trying to access has been deleted or never even exist</div>
 						<div class="go-back">
-			              <a href="<?php echo $base_url; ?>" class="btn btn-pill btn-gradient btn-go-home btn-min-width mr-1 mb-1"><span><i class="fe fe-arrow-left"></i></span> BBack to Home Page</a>
+			              <a href="<?php echo $base_url; ?>" class="btn btn-pill btn-gradient btn-go-home btn-min-width me-1 mb-1"><span><i class="fe fe-arrow-left"></i></span> Back to Home Page</a>
 			            </div>
 					</div>
 				</div>

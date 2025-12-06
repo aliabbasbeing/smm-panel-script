@@ -32,7 +32,7 @@ if ($helper->isCli()) {
         <div class="navbar navbar-default" role="navigation">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <button type="button" class="navbar-toggle" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -44,7 +44,7 @@ if ($helper->isCli()) {
                     <ul class="nav navbar-nav"><?php
                     foreach ($helper->getSamples() as $category => $files) {
                         ?><li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php echo $category ?><strong class="caret"></strong></a>
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><?php echo $category ?><strong class="caret"></strong></a>
                             <ul class="dropdown-menu"><?php
                             foreach ($files as $name => $file) {
                                 echo '<li><a href="/' . $file . '">' . $name . '</a></li>';
@@ -54,8 +54,8 @@ if ($helper->isCli()) {
                     } ?>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a href="https://github.com/PHPOffice/PHPSpreadsheet"><i class="fa fa-github fa-lg" title="GitHub"></i>&nbsp;</a></li>
-                        <li><a href="https://phpspreadsheet.readthedocs.io"><i class="fa fa-book fa-lg" title="Docs"></i>&nbsp;</a></li>
+                        <li><a href="https://github.com/PHPOffice/PHPSpreadsheet"><i class="fab fa-github fa-lg" title="GitHub"></i>&nbsp;</a></li>
+                        <li><a href="https://phpspreadsheet.readthedocs.io"><i class="fas fa-book fa-lg" title="Docs"></i>&nbsp;</a></li>
                     </ul>
                 </div>
             </div>

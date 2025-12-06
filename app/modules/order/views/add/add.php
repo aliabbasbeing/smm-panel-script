@@ -1,5 +1,4 @@
 <!-- jQuery (Required for Select2) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -353,7 +352,7 @@ if (!empty($announcement_text)):
         <div class="modal-content">
             <div class="modal-header">
                <h5 class="modal-title">Update WhatsApp Number</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                     <!-- <span aria-hidden="true">&times;</span> -->
                 </button>
             </div>
@@ -389,7 +388,7 @@ if (!empty($announcement_text)):
            <!-- Card Header -->
           <div class="card-header1" style="padding: 20px 30px; border-bottom: 2px solid #04a9f4; display: flex; align-items: center; justify-content: space-between;">
             <h4 style="color: #fff !important; margin: 0; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">
-              <i class="fa fa-shopping-cart" style="margin-right: 10px; color: #04a9f4;"></i><?=lang("place_a_new_order")?>
+              <i class="fas fa-shopping-cart" style="margin-right: 10px; color: #04a9f4;"></i><?=lang("place_a_new_order")?>
             </h4>
           </div>
 
@@ -407,7 +406,7 @@ if (!empty($announcement_text)):
                         <!-- Platform Filter Bar -->
                         <div id="category-icon-filters" class="cat-icon-filter-bar">
                           <button type="button" class="catf-btn active" data-platform="all">
-                            <i class="fa fa-bars"></i><span>All</span>
+                            <i class="fas fa-bars"></i><span>All</span>
                           </button>
                           <button type="button" class="catf-btn" data-platform="tiktok">
                             <i class="fa-brands fa-tiktok"></i><span>TikTok</span>
@@ -437,7 +436,7 @@ if (!empty($announcement_text)):
                             <i class="fa-brands fa-linkedin"></i><span>Linkedin</span>
                           </button>
                           <button type="button" class="catf-btn" data-platform="other">
-                            <i class="fa fa-plus"></i><span>Other</span>
+                            <i class="fas fa-plus"></i><span>Other</span>
                           </button>
                         </div>
 
@@ -642,7 +641,7 @@ if (!empty($announcement_text)):
                               <label style="color: #fff; font-weight: 600; margin-bottom: 8px; display: block;"><?=lang("Expiry")?></label>
                               <div class="input-group">
                                 <input type="text" class="form-control datepicker" name="sub_expiry" onkeydown="return false" placeholder="" id="expiry" style="border-radius: 6px; border: 1px solid #ddd; padding: 10px; background-color: #fff; color: #333;">
-                                <span class="input-group-append">
+                                <span class="">
                                   <button class="btn btn-info" type="button" onclick="document.getElementById('expiry').value = ''" style="border-radius: 0 6px 6px 0; padding: 8px 12px;"><i class="fe fe-trash-2"></i></button>
                                 </span>
                               </div>
@@ -661,9 +660,9 @@ if (!empty($announcement_text)):
                               <div class="form-label" style="color: #fff; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between;">
                                 <span><?=lang("dripfeed")?></span>
                                 <label class="custom-switch">
-                                  <span class="custom-switch-description m-r-20"><i class="fa fa-question-circle" data-toggle="popover" data-trigger="hover" data-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>" style="cursor: help;"></i></span>
+                                  <span class="custom-switch-description m-r-20"><i class="fas fa-question-circle" data-bs-toggle="popover" data-trigger="hover" data-bs-placement="right" data-content="<?=lang("drip_feed_desc")?>" data-title="<?=lang("what_is_dripfeed")?>" style="cursor: help;"></i></span>
 
-                                  <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-toggle="collapse" data-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
+                                  <input type="checkbox" name="is_drip_feed" class="is_drip_feed custom-switch-input" data-bs-toggle="collapse" data-bs-target="#drip-feed" aria-expanded="false" aria-controls="drip-feed">
                                   <span class="custom-switch-indicator"></span>
                                 </label>
                               </div>
@@ -732,21 +731,21 @@ if (!empty($announcement_text)):
                           <p class="small text-muted" style="color: rgba(255, 255, 255, 0.7); margin-top: 10px; margin-bottom: 0; font-size: 12px;"><?=lang("custom_rate")?>: <span class="charge_number" style="color: #fff;"><?=$user->custom_rate?>%</span></p>
                           <?php }?>
                           <div class="alert alert-icon alert-danger d-none" role="alert" style="border-radius: 6px; margin-top: 10px; padding: 12px; border: 1px solid #dc3545;">
-                            <i class="fe fe-alert-triangle mr-2" aria-hidden="true"></i><?=lang("order_amount_exceeds_available_funds")?>
+                            <i class="fe fe-alert-triangle me-2" aria-hidden="true"></i><?=lang("order_amount_exceeds_available_funds")?>
                           </div>
                         </div>
 
                         <!-- Agreement Checkbox -->
                         <div class="form-group" style="margin-bottom: 20px;">
-                          <label class="custom-control custom-checkbox" style="display: flex; align-items: center; cursor: pointer;">
-                            <input type="checkbox" class="custom-control-input" name="agree" style="cursor: pointer;">
-                            <span class="custom-control-label text-uppercase" style="color: #fff; margin-left: 8px; font-size: 13px; font-weight: 500;"><?=lang("yes_i_have_confirmed_the_order")?></span>
+                          <label class="form-check" style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" class="form-check-input" name="agree" style="cursor: pointer;">
+                            <span class="form-check-label text-uppercase" style="color: #fff; margin-left: 8px; font-size: 13px; font-weight: 500;"><?=lang("yes_i_have_confirmed_the_order")?></span>
                           </label>
                         </div>
 
                         <!-- Submit Button -->
                         <div class="form-actions left">
-                          <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1" style="border-radius: 8px; background: linear-gradient(135deg, #04a9f4 0%, #0288d1 100%); color: #fff; min-width: 140px; margin-right: 5px; margin-top: 10px; margin-bottom: 5px; padding: 12px 24px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(4, 169, 244, 0.3);">
+                          <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1" style="border-radius: 8px; background: linear-gradient(135deg, #04a9f4 0%, #0288d1 100%); color: #fff; min-width: 140px; margin-right: 5px; margin-top: 10px; margin-bottom: 5px; padding: 12px 24px; border: none; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(4, 169, 244, 0.3);">
                             <?=lang("place_order")?>
                           </button>
                         </div>
@@ -778,7 +777,7 @@ if (!empty($announcement_text)):
         <!-- Card Header -->
         <div class="card-header1" style="padding: 20px 30px; border-bottom: 2px solid #04a9f4; display: flex; align-items: center; justify-content: space-between;">
             <h4 style="color: #fff !important; margin: 0; font-weight: 700; font-size: 18px; letter-spacing: 0.5px;">
-                <i class="fa fa-bell" style="margin-right: 10px; color: #04a9f4;"></i>Updates
+                <i class="fas fa-bell" style="margin-right: 10px; color: #04a9f4;"></i>Updates
             </h4>
             <span class="badge" style="background: #04a9f4; color: #fff; padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;">NEW</span>
         </div>
@@ -791,7 +790,7 @@ if (!empty($announcement_text)):
         <div class="video-wrapper">
           <!-- Video Title -->
           <h5 class="video-title">
-            <i class="fa fa-play-circle"></i>HOW TO PLACE ORDER ON BEAST SMM PANEL? 
+            <i class="fas fa-play-circle"></i>HOW TO PLACE ORDER ON BEAST SMM PANEL? 
           </h5>
 
           <!-- YouTube Embed with Enhanced Styling -->
@@ -809,7 +808,7 @@ if (!empty($announcement_text)):
           <!-- Watch Button -->
           <div class="video-button-wrapper">
             <a href="https://www.youtube.com/embed/Y_nv63RWNXQ" target="_blank" class="btn btn-watch">
-              <i class="fa fa-youtube"></i>Watch on YouTube
+              <i class="fab fa-youtube"></i>Watch on YouTube
             </a>
           </div>
         </div>
@@ -1168,14 +1167,14 @@ if (!empty($announcement_text)):
         var summaryContent = `
           <div class="order-summary p-4" style="background-color: ; color: #ecf0f1; animation: fadeIn 1s ease-in-out;">
             <div class="text-center mb-4">
-              <i class="fa fa-check-circle bounce-icon" style="font-size: 60px; color: #2ecc71; animation: bounce 1.5s infinite;"></i>
+              <i class="fas fa-check-circle bounce-icon" style="font-size: 60px; color: #2ecc71; animation: bounce 1.5s infinite;"></i>
             </div>
             <h5 class="text-center mb-3" style="color: #000000ff; font-size: 24px;">Order Confirmation</h5>
             <div class="order-details">
-              <p><i class="fa fa-bell" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Service Name:</strong> <span style="color: #000000ff;">${shortServiceName}</span></p>
-              <p><i class="fa fa-link" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Link:</strong> <span style="color: #000000ff;">${savedOrderData.link}</span></p>
-              <p><i class="fa fa-long-arrow-up" aria-hidden="true" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Quantity:</strong> <span style="color: #000000ff;">${savedOrderData.quantity}</span></p>
-              <p><i class="fa fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Total Charge:</strong> <span style="color: #000000ff;">${currencySymbol} ${savedOrderData.total_charge}</span></p>
+              <p><i class="fas fa-bell" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Service Name:</strong> <span style="color: #000000ff;">${shortServiceName}</span></p>
+              <p><i class="fas fa-link" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Link:</strong> <span style="color: #000000ff;">${savedOrderData.link}</span></p>
+              <p><i class="fas fa-long-arrow-up" aria-hidden="true" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Quantity:</strong> <span style="color: #000000ff;">${savedOrderData.quantity}</span></p>
+              <p><i class="fas fa-usd" style="color: #2ecc71; margin-right: 8px;"></i><strong style="color: #000000ff;">Total Charge:</strong> <span style="color: #000000ff;">${currencySymbol} ${savedOrderData.total_charge}</span></p>
             </div>
           </div>
 
@@ -1230,7 +1229,7 @@ if (!empty($announcement_text)):
         <div id="orderSummary"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
       </div>
     </div>
   </div>
@@ -1324,7 +1323,7 @@ $vertical_image_modal_url = get_option('vertical_image_modal_url', 'https://i.ib
     <div class="modal-content p-0">
       <button type="button"
               class="vertical-modal-close"
-              data-dismiss="modal"
+              data-bs-dismiss="modal"
               aria-label="Close vertical image modal">
         &times;
       </button>

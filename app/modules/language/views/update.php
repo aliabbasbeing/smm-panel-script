@@ -14,8 +14,8 @@
             <div class="card-header">
                 <h3 class="card-title"><?=lang("Language")?></h3>
                 <div class="card-options">
-                  <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
-                  <a href="#" class="card-options-remove" data-toggle="card-remove"><i class="fe fe-x"></i></a>
+                  <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+                  <a href="#" class="card-options-remove" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a>
                 </div>
             </div>
             <div class="card-body">
@@ -113,7 +113,7 @@
                             </table>
                         </div>
                         <div class="col-md-12 col-sm-12 col-xs-12 m-t-20">
-                            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Save")?></button>
+                            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Save")?></button>
                         </div>
                     </div>
                 </div>

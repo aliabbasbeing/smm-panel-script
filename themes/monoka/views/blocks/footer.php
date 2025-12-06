@@ -39,13 +39,13 @@
                             <?php 
                                 if (!session('uid')) {
                             ?>
-                            <li class="media">
+                            <li class="d-flex">
                                 <i class="fas fa-chevron-right"></i>
-                                <div class="media-body"> <a class="white" href="<?php echo cn()?>"><?php echo lang("Login"); ?></a></div>
+                                <div class="flex-grow-1"> <a class="white" href="<?php echo cn()?>"><?php echo lang("Login"); ?></a></div>
                             </li>
-                            <li class="media">
+                            <li class="d-flex">
                                 <i class="fas fa-chevron-right"></i>
-                                <div class="media-body"> <a class="white" href="<?php echo cn('auth/signup'); ?>"><?php echo lang("Sign_Up"); ?></a></div>
+                                <div class="flex-grow-1"> <a class="white" href="<?php echo cn('auth/signup'); ?>"><?php echo lang("Sign_Up"); ?></a></div>
                             </li>
                             <?php }?>
                             
@@ -57,22 +57,22 @@
                         <h4>&nbsp;</h4>
                         <ul class="list-unstyled li-space-lg p-small">
                             
-                            <li class="media">
+                            <li class="d-flex">
                                 <i class="fas fa-chevron-right"></i>
-                                <div class="media-body"> <a class="white" href="<?php echo cn('terms'); ?>"><?php echo lang("terms__conditions"); ?></a></div>
+                                <div class="flex-grow-1"> <a class="white" href="<?php echo cn('terms'); ?>"><?php echo lang("terms__conditions"); ?></a></div>
                             </li>
                             
-                            <li class="media">
+                            <li class="d-flex">
                                 <i class="fas fa-chevron-right"></i>
-                                <div class="media-body"> <a class="white" href="<?php echo cn('faq'); ?>"><?php echo lang("FAQs"); ?></a></div>
+                                <div class="flex-grow-1"> <a class="white" href="<?php echo cn('faq'); ?>"><?php echo lang("FAQs"); ?></a></div>
                             </li>
                             
                             <?php 
                                 if (get_option('enable_api_tab')) {
                             ?>
-                            <li class="media">
+                            <li class="d-flex">
                                 <i class="fas fa-chevron-right"></i>
-                                <div class="media-body"> <a class="white" href="<?php echo cn('api/docs')?>"><?php echo lang("api_documentation"); ?></a></div>
+                                <div class="flex-grow-1"> <a class="white" href="<?php echo cn('api/docs')?>"><?php echo lang("api_documentation"); ?></a></div>
                             </li>
                             <?php }?>
                             
@@ -87,7 +87,7 @@
     <footer class="footer copyright">
       <div class="container">
         <div class="row align-items-center flex-row-reverse">
-            <div class="col-auto ml-lg-auto">
+            <div class="col-auto ms-lg-auto">
                 <div class="row align-items-center">
                   <div class="col-auto">
                     <div class="icon-container">
@@ -162,7 +162,7 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
-              <button type="button" class="close" data-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -170,7 +170,7 @@
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
             </div>
           </div>
         </div>
@@ -180,6 +180,7 @@
     <?php } ?>
    
     <script type="text/javascript" src="<?php echo BASE; ?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="<?php echo BASE; ?>assets/js/bootstrap-toast.js"></script>
     <script type="text/javascript" src="<?php echo BASE; ?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script type="text/javascript" src="<?php echo BASE; ?>assets/js/core.js"></script>
     <script type="text/javascript" src="<?php echo BASE; ?>themes/monoka/assets/js/swiper.min.js"></script> 

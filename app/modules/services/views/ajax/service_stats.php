@@ -62,7 +62,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
     <!-- Quick Info -->
     <div class="alert alert-light mt-4 mb-0" style="border-left: 4px solid #667eea;">
         <div class="d-flex align-items-center">
-            <i class="fe fe-pie-chart text-primary mr-3" style="font-size: 24px;"></i>
+            <i class="fe fe-pie-chart text-primary me-3" style="font-size: 24px;"></i>
             <div>
                 <strong><?=lang("manual_vs_api")?></strong>
                 <div class="text-muted small">

@@ -222,7 +222,7 @@
             <div class="col-md-12">
               <div class="row step-lists">
 
-                <div class="col-sm-6 col-lg-3 step text-left">
+                <div class="col-sm-6 col-lg-3 step text-start">
                   <div class="header-name">
                     <h3><?php echo lang("register_and_log_in"); ?></h3>
                     <p class="desc"><?php echo lang("creating_an_account_is_the_first_step_then_you_need_to_log_in"); ?></p>
@@ -230,7 +230,7 @@
                   <div class="bg-number">1</div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3 step text-left">
+                <div class="col-sm-6 col-lg-3 step text-start">
                   <div class="header-name">
                     <h3><?php echo lang("add_funds"); ?></h3>
                     <p class="desc"><?php echo lang("next_pick_a_payment_method_and_add_funds_to_your_account"); ?></p>
@@ -238,7 +238,7 @@
                   <div class="bg-number">2</div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3 step text-left">
+                <div class="col-sm-6 col-lg-3 step text-start">
                   <div class="header-name">
                     <h3><?php echo lang("select_a_service"); ?></h3>
                     <p class="desc"><?php echo lang("select_the_services_you_want_and_get_ready_to_receive_more_publicity"); ?></p>
@@ -246,7 +246,7 @@
                   <div class="bg-number">3</div>
                 </div>
 
-                <div class="col-sm-6 col-lg-3 step text-left">
+                <div class="col-sm-6 col-lg-3 step text-start">
                   <div class="header-name">
                     <h3><?php echo lang("enjoy_superb_results"); ?></h3>
                     <p class="desc"><?php echo lang("you_can_enjoy_incredible_results_when_your_order_is_complete"); ?></p>
@@ -338,7 +338,7 @@
 
             <div class="modal-header">
               <h4 class="modal-title"><i class="fe fe-bell"></i> <?=lang("Notification")?></h4>
-              <button type="button" class="close" data-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
@@ -346,7 +346,7 @@
             </div>
 
             <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal"><?=lang("Close")?></button>
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal"><?=lang("Close")?></button>
             </div>
           </div>
         </div>

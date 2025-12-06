@@ -3,13 +3,13 @@
         <div class="container">
             <a class="navbar-brand logo-image" href="<?php echo cn(); ?>"><img src="<?=get_option('website_logo_white', BASE."assets/images/logo_white.png")?>" alt="Website logo"></a> 
             
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-awesome fas fa-bars"></span>
                 <span class="navbar-toggler-awesome fas fa-times"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav ms-auto">
                     <?php
                     // Get dynamic menu items for landing page
                     $landing_menu_items = get_header_menu_items();
@@ -120,7 +120,7 @@
                                         if (!session('uid')) {
                                     ?>
                                     <div class="col-md-6">
-                                        <a class="checkbox text-right" href="<?=cn("auth/forgot_password")?>"><?=lang("forgot_password")?>?</a>
+                                        <a class="checkbox text-end" href="<?=cn("auth/forgot_password")?>"><?=lang("forgot_password")?>?</a>
                                     </div>
                                     <?php }?>
                                 </div>
@@ -456,7 +456,7 @@
                             <div class="col-lg-12">
                                 <div class="faq-block__card">
                                     <div class="card">
-                                        <div class="faq-block__header collapsed" data-toggle="collapse" data-target="#faq-block-10-1" aria-expanded="false" aria-controls="#faq-block-10-1">
+                                        <div class="faq-block__header collapsed" data-bs-toggle="collapse" data-bs-target="#faq-block-10-1" aria-expanded="false" aria-controls="#faq-block-10-1">
                                             <div class="faq-block__header-title">
                                                 <h4><i class="far fa-question-circle"></i> <?php echo lang("smm_panels__what_are_they"); ?></h4>
                                             </div>
@@ -475,7 +475,7 @@
                             <div class="col-lg-12">
                                 <div class="faq-block__card">
                                     <div class="card">
-                                        <div class="faq-block__header collapsed" data-toggle="collapse" data-target="#faq-block-10-2" aria-expanded="false" aria-controls="#faq-block-10-2">
+                                        <div class="faq-block__header collapsed" data-bs-toggle="collapse" data-bs-target="#faq-block-10-2" aria-expanded="false" aria-controls="#faq-block-10-2">
                                             <div class="faq-block__header-title">
                                                 <h4><i class="far fa-question-circle"></i> <?php echo lang("what_smm_services_can_i_find_on_this_panel"); ?></h4>
                                             </div>
@@ -494,7 +494,7 @@
                             <div class="col-lg-12">
                                 <div class="faq-block__card">
                                     <div class="card">
-                                        <div class="faq-block__header collapsed" data-toggle="collapse" data-target="#faq-block-10-3" aria-expanded="false" aria-controls="#faq-block-10-3">
+                                        <div class="faq-block__header collapsed" data-bs-toggle="collapse" data-bs-target="#faq-block-10-3" aria-expanded="false" aria-controls="#faq-block-10-3">
                                             <div class="faq-block__header-title">
                                                 <h4><i class="far fa-question-circle"></i> <?php echo lang("are_smm_services_on_your_panel_safe_to_buy"); ?></h4>
                                             </div>
@@ -513,7 +513,7 @@
                             <div class="col-lg-12">
                                 <div class="faq-block__card">
                                     <div class="card">
-                                        <div class="faq-block__header collapsed" data-toggle="collapse" data-target="#faq-block-10-4" aria-expanded="false" aria-controls="#faq-block-10-4">
+                                        <div class="faq-block__header collapsed" data-bs-toggle="collapse" data-bs-target="#faq-block-10-4" aria-expanded="false" aria-controls="#faq-block-10-4">
                                             <div class="faq-block__header-title">
                                                 <h4><i class="far fa-question-circle"></i> <?php echo lang("how_does_a_mass_order_work"); ?></h4>
                                             </div>
@@ -532,7 +532,7 @@
                             <div class="col-lg-12">
                                 <div class="faq-block__card">
                                     <div class="card">
-                                        <div class="faq-block__header collapsed" data-toggle="collapse" data-target="#faq-block-10-5" aria-expanded="false" aria-controls="#faq-block-10-5">
+                                        <div class="faq-block__header collapsed" data-bs-toggle="collapse" data-bs-target="#faq-block-10-5" aria-expanded="false" aria-controls="#faq-block-10-5">
                                             <div class="faq-block__header-title">
                                                 <h4><i class="far fa-question-circle"></i> <?php echo lang("what_does_dripfeed_mean"); ?></h4>
                                             </div>

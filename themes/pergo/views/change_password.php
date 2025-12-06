@@ -14,13 +14,13 @@
         <div class="form-group">
           <div class="input-icon mb-5">
             <span class="input-icon-addon">
-              <i class="fa fa-key"></i>
+              <i class="fas fa-key"></i>
             </span>
             <input type="password" class="form-control" name="password" placeholder="<?=lang("new_password")?>" required>
           </div>    
           <div class="input-icon mb-5">
             <span class="input-icon-addon">
-              <i class="fa fa-key"></i>
+              <i class="fas fa-key"></i>
             </span>
             <input type="password" class="form-control" name="re_password" placeholder="<?=lang("Confirm_password")?>" required>
           </div>

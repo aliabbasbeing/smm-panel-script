@@ -19,7 +19,7 @@
                         <label class="form-label"><?= lang("childpanel_price") ?>
                         </label>
                         <div class="input-group">
-                            <span class="input-group-prepend">
+                            <span class="">
                                 <span class="input-group-text"><?= get_option('currency_symbol') ?></span>
                             </span>
                             <input type="number" class="form-control" name="childpanel_price" value="<?= get_option('childpanel_price') ?>">
@@ -93,7 +93,7 @@
 
           <div class="form-group">
             <div class="input-group">
-              <span class="input-group-prepend">
+              <span class="">
                 <span class="input-group-text"><?=get_option('currency_symbol',"$")?></span>
               </span>
               <input class="form-control" name="affiliate_bonus" value="<?= get_option('affiliate_bonus', "10") ?>">

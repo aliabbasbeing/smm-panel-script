@@ -146,7 +146,7 @@
               
               if(!empty($smtp_names)){
                 if(count($smtp_names) > 1){
-                  echo '<span class="badge badge-info mr-1">Round-Robin</span>';
+                  echo '<span class="badge bg-info me-1">Round-Robin</span>';
                 }
                 echo implode(', ', $smtp_names);
                 if(count($smtp_names) > 1){
@@ -260,7 +260,7 @@
           <?php if(!empty($health_issues)){ ?>
           <div class="alert alert-<?php echo $health_class; ?> mb-0">
             <strong>Issues Detected:</strong>
-            <ul class="mb-0 pl-3">
+            <ul class="mb-0 ps-3">
               <?php foreach($health_issues as $issue){ ?>
               <li><?php echo $issue; ?></li>
               <?php } ?>
@@ -291,8 +291,8 @@
         ?>
         <div class="mb-3">
           <div class="clearfix mb-2">
-            <div class="float-left"><strong><?php echo $progress; ?>% Complete</strong></div>
-            <div class="float-right"><small class="text-muted"><?php echo $campaign->sent_emails; ?> / <?php echo $campaign->total_emails; ?></small></div>
+            <div class="float-start"><strong><?php echo $progress; ?>% Complete</strong></div>
+            <div class="float-end"><small class="text-muted"><?php echo $campaign->sent_emails; ?> / <?php echo $campaign->total_emails; ?></small></div>
           </div>
           <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" style="width: <?php echo $progress; ?>%"></div>

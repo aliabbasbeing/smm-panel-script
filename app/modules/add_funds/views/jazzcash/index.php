@@ -246,13 +246,13 @@
 
         <!-- Agreement Checkbox -->
         <div class="form-group jc-agree mb-3">
-          <label class="custom-control custom-checkbox d-flex align-items-start">
+          <label class="form-check d-flex align-items-start">
             <input type="checkbox"
-                   class="custom-control-input mt-1"
+                   class="form-check-input mt-1"
                    name="agree"
                    value="1"
                    required>
-            <span class="custom-control-label text-uppercase ms-2">
+            <span class="form-check-label text-uppercase ms-2">
               <strong>
                 <?= lang("yes_i_understand_after_the_funds_added_i_will_not_ask_fraudulent_dispute_or_chargeback") ?>
               </strong>

@@ -169,10 +169,10 @@
           
           <!-- Open Tracking -->
           <div class="form-group">
-            <label class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" name="enable_open_tracking" value="1" 
+            <label class="form-check">
+              <input type="checkbox" class="form-check-input" name="enable_open_tracking" value="1" 
                      <?php echo $settings['enable_open_tracking'] == 1 ? 'checked' : ''; ?>>
-              <span class="custom-control-label"><strong>Enable Open Tracking</strong></span>
+              <span class="form-check-label"><strong>Enable Open Tracking</strong></span>
             </label>
             <small class="text-muted d-block">Add tracking pixel to emails to track opens</small>
           </div>

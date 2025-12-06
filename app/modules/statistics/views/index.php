@@ -73,12 +73,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-success-gradient text-white me-3">
               <i class="fe fe-users"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 style="color: #fff;" class="m-0 text-right number"><?=$data_log->total_users?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 style="color: #fff;" class="m-0 text-end number"><?=$data_log->total_users?></h4>
                 <small class="text-muted "><?=lang("total_users")?></small>
               </div>
             </div>
@@ -89,12 +89,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-success-gradient text-white me-3">
               <i class="fe fe-dollar-sign"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=(!empty($data_log->user_balance)) ? currency_format(convert_currency($data_log->user_balance), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$currency_symbol?><?=(!empty($data_log->user_balance)) ? currency_format(convert_currency($data_log->user_balance), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
                 <small class="text-muted "><?=lang("your_balance")?></small>
               </div>
             </div>
@@ -106,12 +106,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-info-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-info-gradient text-white me-3">
               <i class="fe fe-dollar-sign"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$currency_symbol?><?=(!empty($data_log->total_spent_receive)) ? currency_format(convert_currency($data_log->total_spent_receive), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$currency_symbol?><?=(!empty($data_log->total_spent_receive)) ? currency_format(convert_currency($data_log->total_spent_receive), get_option('currency_decimal', 2), $decimalpoint, $separator) : 0?></h4>
                 <small class="text-muted ">
                   <?=(get_role("admin") ? lang("total_amount_recieved") : lang("total_amount_spent"))?>
                 </small>
@@ -124,12 +124,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-warning-gradient text-white mr-3">
+            <span class="stamp stamp-md bg-warning-gradient text-white me-3">
               <i class="fe fe-shopping-cart"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->total?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->total?></h4>
                 <small class="text-muted "><?=lang("total_orders")?></small>
               </div>
             </div>
@@ -140,12 +140,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-danger-gradient text-white mr-3">
-              <i class="fa fa-ticket"></i>
+            <span class="stamp stamp-md bg-danger-gradient text-white me-3">
+              <i class="fas fa-ticket"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_tickets_log->total?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_tickets_log->total?></h4>
                 <small class="text-muted "><?=lang("total_tickets")?></small>
               </div>
             </div>
@@ -161,12 +161,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-success-gradient text-white mr-3">
-              <i class="icon-fa fa fa-money"></i>
+            <span class="stamp stamp-md bg-success-gradient text-white me-3">
+              <i class="icon-fa fas fa-money-bill"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->users_balance), 2, '.', ','); ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?php echo $currency_symbol.number_format(convert_currency($data_log->users_balance), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_users_balance"); ?> </small>
               </div>
             </div>
@@ -177,12 +177,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-info-gradient text-white mr-3">
-              <i class="icon-fa fa fa-balance-scale"></i>
+            <span class="stamp stamp-md bg-info-gradient text-white me-3">
+              <i class="icon-fa fas fa-balance-scale"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->providers_balance), 2, '.', ','); ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?php echo $currency_symbol.number_format(convert_currency($data_log->providers_balance), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_providers_balance"); ?> </small>
               </div>
             </div>
@@ -193,12 +193,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-warning-gradient text-white mr-3">
-              <i class="icon-fa fa fa-calculator"></i>
+            <span class="stamp stamp-md bg-warning-gradient text-white me-3">
+              <i class="icon-fa fas fa-calculator"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->last_profit_30_days), 2, '.', ','); ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?php echo $currency_symbol.number_format(convert_currency($data_log->last_profit_30_days), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_30_days"); ?></small>
               </div>
             </div>
@@ -209,12 +209,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-3">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md bg-danger-gradient text-white mr-3">
-              <i class="icon-fa fa fa-calculator"></i>
+            <span class="stamp stamp-md bg-danger-gradient text-white me-3">
+              <i class="icon-fa fas fa-calculator"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?php echo $currency_symbol.number_format(convert_currency($data_log->profit_today), 2, '.', ','); ?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?php echo $currency_symbol.number_format(convert_currency($data_log->profit_today), 2, '.', ','); ?></h4>
                 <small class="text-muted "><?php echo lang("total_profit_today"); ?></small>
               </div>
             </div>
@@ -229,12 +229,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-list"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->total?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->total?></h4>
                 <small class="text-muted "><?=lang("total_orders")?></small>
               </div>
             </div>
@@ -245,11 +245,11 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-check"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
                 <h4 class="m-0 number"><?=$data_orders_log->completed?></h4>
                 <small class="text-muted"><?=lang("Completed")?></small>
               </div>
@@ -261,12 +261,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-trending-up"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->processing?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->processing?></h4>
                 <small class="text-muted "><?=lang("Processing")?></small>
               </div>
             </div>
@@ -277,12 +277,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-loader"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->inprogress?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->inprogress?></h4>
                 <small class="text-muted "><?=lang("In_progress")?></small>
               </div>
             </div>
@@ -293,12 +293,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-pie-chart"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->pending?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->pending?></h4>
                 <small class="text-muted "><?=lang("Pending")?></small>
               </div>
             </div>
@@ -309,12 +309,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
-              <i class="fa fa-hourglass-half"></i>
+            <span class="stamp stamp-md me-3 text-info">
+              <i class="fas fa-hourglass-half"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->partial?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->partial?></h4>
                 <small class="text-muted "><?=lang("Partial")?></small>
               </div>
             </div>
@@ -325,12 +325,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-x-square"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->canceled?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->canceled?></h4>
                 <small class="text-muted "><?=lang("Canceled")?></small>
               </div>
             </div>
@@ -341,12 +341,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-rotate-ccw"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_orders_log->refunded?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_orders_log->refunded?></h4>
                 <small class="text-muted "><?=lang("Refunded")?></small>
               </div>
             </div>
@@ -362,12 +362,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
-              <i class="fa fa-ticket"></i>
+            <span class="stamp stamp-md me-3 text-info">
+              <i class="fas fa-ticket"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_tickets_log->total?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_tickets_log->total?></h4>
                 <small class="text-muted "><?=lang("total_tickets")?></small>
               </div>
             </div>
@@ -378,11 +378,11 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-mail"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
                 <h4 class="m-0 number"><?=$data_tickets_log->new?></h4>
                 <small class="text-muted"><?=lang("New")?></small>
               </div>
@@ -394,12 +394,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-pie-chart"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_tickets_log->pending?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_tickets_log->pending?></h4>
                 <small class="text-muted "><?=lang("Pending")?></small>
               </div>
             </div>
@@ -410,12 +410,12 @@ $user_role = get_field('general_users', ["id" => $user_id], 'role'); // Fetch us
       <div class="col-sm-6 col-lg-3 item">
         <div class="card2 p-4">
           <div class="d-flex align-items-center">
-            <span class="stamp stamp-md mr-3 text-info">
+            <span class="stamp stamp-md me-3 text-info">
               <i class="fe fe-check"></i>
             </span>
-            <div class="d-flex order-lg-2 ml-auto">
-              <div class="ml-2 d-lg-block text-right">
-                <h4 class="m-0 text-right number"><?=$data_tickets_log->closed?></h4>
+            <div class="d-flex order-lg-2 ms-auto">
+              <div class="ms-2 d-lg-block text-end">
+                <h4 class="m-0 text-end number"><?=$data_tickets_log->closed?></h4>
                 <small class="text-muted "><?=lang("Closed")?></small>
               </div>
             </div>

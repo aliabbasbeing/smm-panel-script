@@ -96,7 +96,7 @@
 
 <div class="page-header">
     <h1 class="page-title">
-        <i class="fa fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
+        <i class="fab fa-whatsapp text-success"></i> <?=lang("WhatsApp Manager")?>
     </h1>
 </div>
 
@@ -125,17 +125,17 @@
         <div class="card device-status-card" id="statusCard">
             <div class="whatsapp-header">
                 <h4 class="mb-0">
-                    <i class="fa fa-whatsapp"></i> <?=lang("Device Connection")?>
+                    <i class="fab fa-whatsapp"></i> <?=lang("Device Connection")?>
                 </h4>
             </div>
             <div class="card-body">
                 <!-- Connection Status -->
                 <div class="d-flex align-items-center mb-4">
-                    <div class="mr-3">
+                    <div class="me-3">
                         <span class="status-indicator checking" id="statusIndicator"></span>
                         <strong id="statusText"><?=lang("Checking...")?></strong>
                     </div>
-                    <div class="ml-auto">
+                    <div class="ms-auto">
                         <button class="btn btn-sm btn-outline-primary" id="refreshStatusBtn">
                             <i class="fe fe-refresh-cw"></i> <?=lang("Refresh")?>
                         </button>
@@ -167,7 +167,7 @@
                     <button class="btn btn-danger" id="logoutBtn" disabled>
                         <i class="fe fe-log-out"></i> <?=lang("Logout / Disconnect")?>
                     </button>
-                    <button class="btn btn-info ml-2" id="pingBtn">
+                    <button class="btn btn-info ms-2" id="pingBtn">
                         <i class="fe fe-zap"></i> <?=lang("Ping Server")?>
                     </button>
                 </div>

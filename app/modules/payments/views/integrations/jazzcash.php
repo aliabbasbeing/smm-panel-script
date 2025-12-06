@@ -12,8 +12,8 @@
         ?>
         <form class="form actionForm" action="<?php echo $url?>" data-redirect="<?php echo cn($module); ?>" method="POST">
           <div class="modal-header bg-pantone">
-            <h4 class="modal-title"><i class="fa fa-edit"></i> <?php echo $payment->name; ?> (JazzCash)</h4>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <h4 class="modal-title"><i class="fas fa-edit"></i> <?php echo $payment->name; ?> (JazzCash)</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
             </button>
           </div>
           <div class="modal-body">
@@ -96,11 +96,11 @@
                   <div class="form-group">
                     <label class="form-label"><?=lang("currency_rate")?></label>
                     <div class="input-group">
-                      <span class="input-group-prepend">
+                      <span class="">
                         <span class="input-group-text">1USD =</span>
                       </span>
-                      <input type="text" class="form-control text-right" name="payment_params[option][rate_to_usd]" value="<?php echo (isset($option->rate_to_usd)) ? $option->rate_to_usd : 76; ?>">
-                      <span class="input-group-append">
+                      <input type="text" class="form-control text-end" name="payment_params[option][rate_to_usd]" value="<?php echo (isset($option->rate_to_usd)) ? $option->rate_to_usd : 76; ?>">
+                      <span class="">
                         <span class="input-group-text">PKR</span>
                       </span>
                     </div>
@@ -126,9 +126,9 @@
       id="imap_pass"
       value="<?php echo (isset($option->imap_pass)) ? $option->imap_pass : ''; ?>"
     >
-    <div class="input-group-append">
+    <div class="">
       <span class="input-group-text" style="cursor:pointer;" id="togglePass">
-        <i class="fa fa-eye"></i>
+        <i class="fas fa-eye"></i>
       </span>
     </div>
   </div>
@@ -158,8 +158,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?php echo lang("Submit")?></button>
-            <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?php echo lang("Cancel")?></button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?php echo lang("Submit")?></button>
+            <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?php echo lang("Cancel")?></button>
           </div>
         </form>
       </div>

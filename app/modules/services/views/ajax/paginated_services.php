@@ -14,9 +14,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                 <?php if (get_role("admin")): ?>
                 <th class="text-center w-1">
                     <div class="custom-controls-stacked">
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input select-all-services" id="selectAllServices">
-                            <span class="custom-control-label"></span>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input select-all-services" id="selectAllServices">
+                            <span class="form-check-label"></span>
                         </label>
                     </div>
                 </th>
@@ -41,9 +41,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                 <?php if (get_role("admin")): ?>
                 <td class="text-center w-1">
                     <div class="custom-controls-stacked">
-                        <label class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input service-checkbox" name="ids[]" value="<?=$row->ids?>">
-                            <span class="custom-control-label"></span>
+                        <label class="form-check">
+                            <input type="checkbox" class="form-check-input service-checkbox" name="ids[]" value="<?=$row->ids?>">
+                            <span class="form-check-label"></span>
                         </label>
                     </div>
                 </td>
@@ -53,7 +53,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                     <div class="title"><?=$row->name?></div>
                 </td>
                 <td class="text-center">
-                    <span class="badge badge-secondary"><?=isset($row->category_name) ? $row->category_name : '-'?></span>
+                    <span class="badge bg-secondary"><?=isset($row->category_name) ? $row->category_name : '-'?></span>
                 </td>
                 
                 <?php if (get_role("admin") || get_role("supporter")): ?>
@@ -94,7 +94,7 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                 <td class="text-center" style="width: 8%;"><?=$row->min?> / <?=$row->max?></td>
                 
                 <td style="width: 6%;">
-                    <button class="btn btn-info btn-sm" type="button" data-toggle="modal" data-target="#desc_<?=$row->ids?>"><?=lang("Details")?></button>
+                    <button class="btn btn-info btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#desc_<?=$row->ids?>"><?=lang("Details")?></button>
                     <div id="desc_<?=$row->ids?>" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
                         <?php $this->load->view('descriptions', ['service' => $row]); ?>
                     </div>
@@ -103,9 +103,9 @@ if (!defined('BASEPATH')) exit('No direct script access allowed');
                 <?php if (get_role("admin") || get_role("supporter")): ?>
                 <td class="w-1 text-center">
                     <?php if(!empty($row->dripfeed) && $row->dripfeed == 1): ?>
-                    <span class="badge badge-info"><?=lang("Active")?></span>
+                    <span class="badge bg-info"><?=lang("Active")?></span>
                     <?php else: ?>
-                    <span class="badge badge-warning"><?=lang("Deactive")?></span>
+                    <span class="badge bg-warning text-dark"><?=lang("Deactive")?></span>
                     <?php endif; ?>
                 </td>
                 

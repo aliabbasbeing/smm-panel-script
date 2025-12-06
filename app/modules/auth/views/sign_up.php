@@ -48,7 +48,7 @@
           </div>  
           <div class="input-icon mb-3">
     <span class="input-icon-addon">
-      <i class="fa fa-whatsapp"></i>
+      <i class="fab fa-whatsapp"></i>
     </span>
     <input type="text" class="form-control" name="whatsapp_number" placeholder="WhatsApp Number" required>
   </div>
@@ -57,21 +57,21 @@
           ?>
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-              <i class="fa fa-skype"></i>
+              <i class="fab fa-skype"></i>
             </span>
             <input type="text" class="form-control" name="skype_id" placeholder="<?=lang("Skype_id")?>" required>
           </div>    
           <?php } ?>      
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-              <i class="fa fa-key"></i>
+              <i class="fas fa-key"></i>
             </span>
             <input type="password" class="form-control" name="password" placeholder="<?=lang("Password")?>" required>
           </div>    
 
           <div class="input-icon mb-3">
             <span class="input-icon-addon">
-              <i class="fa fa-key"></i>
+              <i class="fas fa-key"></i>
             </span>
             <input type="password" class="form-control" name="re_password" placeholder="<?=lang("Confirm_password")?>" required>
           </div>
@@ -105,9 +105,9 @@
         <?php } ?> 
 
         <div class="form-group">
-          <label class="custom-control custom-checkbox">
-            <input type="checkbox" name="terms" class="custom-control-input" />
-            <span class="custom-control-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>"><?=lang("terms__policy")?></a></span>
+          <label class="form-check">
+            <input type="checkbox" name="terms" class="form-check-input" />
+            <span class="form-check-label"><?=lang("i_agree_the")?> <a href="<?=cn('terms')?>"><?=lang("terms__policy")?></a></span>
           </label>
         </div>
         <div class="">

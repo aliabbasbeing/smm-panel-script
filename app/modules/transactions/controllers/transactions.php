@@ -16,7 +16,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *  - Make sure ms() helper (JSON response) and ids(), NOW constants exist (already in your codebase).
  *  - Ensure you add a trigger button in the transactions index view to open the add_funds_manual modal:
  *      <a href="<?=cn($module.'/add_funds_manual')?>" class="btn btn-outline-info btn-sm ajaxModal">
- *          <i class="fe fe-dollar-sign mr-1"></i><?=lang('Add_Funds')?>
+ *          <i class="fe fe-dollar-sign me-1"></i><?=lang('Add_Funds')?>
  *      </a>
  */
 class transactions extends MX_Controller {

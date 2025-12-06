@@ -111,11 +111,11 @@
                       <small><?=lang("applying_when_you_fetch_sync_all_services_from_smm_providers")?></small></span>
                     </label>
                     <div class="input-group">
-                      <span class="input-group-prepend">
+                      <span class="">
                         <span class="input-group-text"><?=lang("1_original_currency")?> =</span>
                       </span>
-                      <input type="text" class="form-control text-right" name="new_currecry_rate" value="<?=get_option('new_currecry_rate', 1)?>">
-                      <span class="input-group-append">
+                      <input type="text" class="form-control text-end" name="new_currecry_rate" value="<?=get_option('new_currecry_rate', 1)?>">
+                      <span class="">
                         <span class="input-group-text"><?=lang("new_currency")?></span>
                       </span>
                     </div>

@@ -703,13 +703,13 @@ class users extends MX_Controller {
 			echo 	'<div class="modal-dialog">
 					    <div class="modal-content">
 						    <div class="alert  alert-dismissible">
-							  <button type="button" class="close" data-dismiss="modal"></button>
+							  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 							  <h4>Warning!</h4>
 							  <p>
 							   User is inactive mode, please active this user before adding custom rate!
 							  </p>
 							  <div class="btn-list">
-							    <button class="btn btn-warning btn-sm" type="button" data-dismiss="modal">Okay</button>
+							    <button class="btn btn-warning btn-sm" type="button" data-bs-dismiss="modal">Okay</button>
 							  </div>
 							</div>
 					    </div>

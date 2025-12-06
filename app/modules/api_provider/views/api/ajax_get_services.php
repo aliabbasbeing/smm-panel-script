@@ -12,7 +12,7 @@
         if ($api_ids != "") {
       ?>
       <div class="card-options">
-        <a href="<?=cn($module."/bulk_services/$api_ids")?>" class="ajaxModal btn btn-pill btn-info btn-sm"><span class="mr-1"><i class="fe fe-plus-square"></i></span><?=lang("bulk_add_all_services")?>
+        <a href="<?=cn($module."/bulk_services/$api_ids")?>" class="ajaxModal btn btn-pill btn-info btn-sm"><span class="me-1"><i class="fe fe-plus-square"></i></span><?=lang("bulk_add_all_services")?>
         </a>
       </div>
       <?php } ?>
@@ -76,8 +76,8 @@
           
           <form class="form actionForm" action="<?=cn($module."/ajax_add_api_provider_service")?>" method="POST">
             <div class="modal-header bg-pantone">
-              <h4 class="modal-title"><i class="fa fa-edit"></i><?=lang("add_update_service")?></h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <h4 class="modal-title"><i class="fas fa-edit"></i><?=lang("add_update_service")?></h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
               </button>
             </div>
             <div class="modal-body">
@@ -145,9 +145,9 @@
 
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label class="custom-control custom-checkbox">
-                        <input type="checkbox" class="custom-control-input" name="is_convert_to_new_currency">
-                        <span class="custom-control-label">Auto convert to new currency with currency rate like in <a href="<?=cn("setting")."?t=currency"?>" target="_blank">Currency Setting page</a></span>
+                      <label class="form-check">
+                        <input type="checkbox" class="form-check-input" name="is_convert_to_new_currency">
+                        <span class="form-check-label">Auto convert to new currency with currency rate like in <a href="<?=cn("setting")."?t=currency"?>" target="_blank">Currency Setting page</a></span>
                       </label>
                     </div>
                   </div>
@@ -163,8 +163,8 @@
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?=lang("Submit")?></button>
-              <button type="button" class="btn round btn-default btn-min-width mr-1 mb-1" data-dismiss="modal"><?=lang("Cancel")?></button>
+              <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?=lang("Submit")?></button>
+              <button type="button" class="btn round btn-default btn-min-width me-1 mb-1" data-bs-dismiss="modal"><?=lang("Cancel")?></button>
             </div>
           </form>
         </div>

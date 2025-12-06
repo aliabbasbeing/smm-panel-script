@@ -20,7 +20,7 @@
       <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
         <h3 class="card-title"><?php echo lang("basic_information"); ?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
       <div class="card-body">
@@ -125,7 +125,7 @@
                   <div class="col-md-4">
                     <div class="form-group">
                       <div class="custom-controls-stacked">
-                        <label class="custom-switch mr-5">
+                        <label class="custom-switch me-5">
                           <input type="hidden" name="settings[limit_payments][<?php echo $payment_method->type; ?>]" value="0">
                           <input type="checkbox" name="settings[limit_payments][<?php echo $payment_method->type; ?>]" class="custom-switch-input" value="1" <?php echo (isset($limit_payments[$payment_method->type]) && $limit_payments[$payment_method->type] == 1) ? 'checked' : '' ;?> >
                           <span class="custom-switch-indicator"></span>
@@ -139,7 +139,7 @@
               </div>
 
               <div class="col-md-12 col-sm-12 col-xs-12">
-                <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?php echo lang('Save'); ?></button>
+                <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?php echo lang('Save'); ?></button>
               </div>
             </div>
           </div>
@@ -155,7 +155,7 @@
       <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
         <h3 class="card-title"><?php echo lang("more_informations"); ?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
       <div class="card-body">
@@ -209,7 +209,7 @@
               </div>
               
               <div class="col-md-12 col-sm-12 col-xs-12">
-                <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?php echo lang('Save'); ?></button>
+                <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?php echo lang('Save'); ?></button>
               </div>
             </div>
           </div>
@@ -228,7 +228,7 @@
       <div class="card-header" style="border: 0.1px solid #1B78FC; border-radius: 3.5px 3.5px 0px 0px; background: #1B78FC;">
         <h3 class="card-title"><?php echo lang("Add_Funds"); ?></h3>
         <div class="card-options">
-          <a href="#" class="card-options-collapse" data-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
+          <a href="#" class="card-options-collapse" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a>
         </div>
       </div>
       <div class="card-body">
@@ -238,7 +238,7 @@
             <input class="form-control square" name="funds" type="text" value="<?php echo (!empty($user->balance))? $user->balance: 0 ?>">
           </div>
           <div class="">
-            <button type="submit" class="btn round btn-primary btn-min-width mr-1 mb-1"><?php echo lang("Submit"); ?></button>
+            <button type="submit" class="btn round btn-primary btn-min-width me-1 mb-1"><?php echo lang("Submit"); ?></button>
           </div>
         </form>
       </div>

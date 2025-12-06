@@ -47,7 +47,7 @@
                   <?=order_status_title($row_status)?>
                   <?php
                       if (in_array($row_status, ['error']) && isset($number_error_orders)) {
-                          echo '<span class="badge badge-danger badge-error-orders">'.$number_error_orders.'</span>';
+                          echo '<span class="badge bg-danger badge-error-orders">'.$number_error_orders.'</span>';
                       }
                   ?>
               </a>
@@ -89,7 +89,7 @@
   <br><br>
   <?php if ($order_status == 'error') { ?>
     <div class="dropdown d-inline-block">
-      <button class="btn btn-secondary dropdown-toggle" type="button" id="bulkActionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="bulkActionDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Bulk Actions
       </button>
       <div class="dropdown-menu" aria-labelledby="bulkActionDropdown">
@@ -108,12 +108,12 @@
               <div class="card-options">
                   <?php if (get_role("admin")) { ?>
                   <div class="dropdown">
-                      <button type="button" class="btn btn-outline-info dropdown-toggle" data-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
-                          <i class="fa fa-clone mr-2"></i> Copy Options
+                      <button type="button" class="btn btn-outline-info dropdown-toggle" data-bs-toggle="dropdown" style="background-color: #06324e; color: #fff; border: none;">
+                          <i class="fas fa-clone me-2"></i> Copy Options
                       </button>
                       <div class="dropdown-menu" style="background-color: #051d2f!important; border: 1px solid #04a9f4;">
                           <a class="dropdown-item" href="#" onclick="copyAllApiOrderIds()" style="background-color: #051d2f!important; color: #fff !important;">
-                              <i class="fa fa-copy mr-2"></i> Copy All API Order IDs
+                              <i class="fas fa-copy me-2"></i> Copy All API Order IDs
                           </a>
                       </div>
                   </div>
@@ -167,7 +167,7 @@
                   <td style="color: #fff;">
                     <span id="orderId_<?=$row->id?>"><?=$row->id?></span>
                     <button onclick="copyToClipboard('orderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-                      <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
+                      <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
                     </button>
                   </td>
                   <?php if (get_role("admin") || get_role("supporter")) { ?>
@@ -177,7 +177,7 @@
                     </span>
                     <?php if ($row->api_order_id != 0 && $row->api_order_id != -1): ?>
                       <button onclick="copyToClipboard('apiOrderId_<?=$row->id?>')" style="background:none; border:none; cursor:pointer;">
-                        <i class="fa fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
+                        <i class="fas fa-copy" style="color: #2ecc71; margin-left: 8px;"></i>
                       </button>
                     <?php endif; ?>
                   </td>
@@ -303,7 +303,7 @@
         </div>
       </div>
       <div class="col-md-12">
-        <div class="float-right">
+        <div class="float-end">
           <?=$links?>
         </div>
       </div>

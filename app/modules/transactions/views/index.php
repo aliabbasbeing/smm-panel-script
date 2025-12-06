@@ -196,10 +196,10 @@
                     echo '<span class="badge badge-default">'.lang('Paid').'</span>';
                     break;
                   case 0:
-                    echo '<span class="badge badge-warning">'.lang("waiting_for_buyer_funds").'</span>';
+                    echo '<span class="badge bg-warning text-dark">'.lang("waiting_for_buyer_funds").'</span>';
                     break;
                   case -1:
-                    echo '<span class="badge badge-danger">'.lang('cancelled_timed_out').'</span>';
+                    echo '<span class="badge bg-danger">'.lang('cancelled_timed_out').'</span>';
                     break;
                 }
               ?>
@@ -220,7 +220,7 @@
 </div>
 
 <div class="col-md-12">
-  <div class="float-right">
+  <div class="float-end">
     <?=$links?>
   </div>
 </div>

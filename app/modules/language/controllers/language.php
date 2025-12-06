@@ -14,7 +14,7 @@ class language extends MX_Controller {
 		//Config Module
 		$this->tb_language_list       = LANGUAGE_LIST;
 		$this->tb_language           = LANGUAGE;
-		$this->module_icon = "fa fa-language";
+		$this->module_icon = "fas fa-language";
 		$this->columns = array(
 			"name"      => lang("Name"),
 			"code"      => lang("Code"),

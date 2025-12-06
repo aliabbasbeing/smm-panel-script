@@ -95,9 +95,9 @@
                 <?php } ?>
 
                 <div class="form-group">
-                  <label class="custom-control custom-checkbox">
-                    <input type="checkbox" name="terms" class="custom-control-input" />
-                    <span class="custom-control-label"><?= lang("i_agree_the") ?> <a href="<?= cn('terms') ?>"><?= lang("terms__policy") ?></a></span>
+                  <label class="form-check">
+                    <input type="checkbox" name="terms" class="form-check-input" />
+                    <span class="form-check-label"><?= lang("i_agree_the") ?> <a href="<?= cn('terms') ?>"><?= lang("terms__policy") ?></a></span>
                   </label>
                 </div>
 

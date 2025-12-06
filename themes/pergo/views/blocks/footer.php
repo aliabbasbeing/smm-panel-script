@@ -3,6 +3,7 @@
     <?php } ?>
     
     <script src="<?=BASE?>assets/js/vendors/bootstrap.bundle.min.js"></script>
+    <script src="<?=BASE?>assets/js/bootstrap-toast.js"></script>
     <script src="<?=BASE?>assets/js/vendors/jquery.sparkline.min.js"></script>
     <script src="<?=BASE?>assets/js/core.js"></script>
     <script type="text/javascript" src="<?=BASE?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>

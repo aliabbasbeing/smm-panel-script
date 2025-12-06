@@ -726,7 +726,7 @@ class api_provider extends MX_Controller {
 
 	private function error_alert(){
 		return '<div class="alert alert-icon alert-danger" role="alert">
-		          <i class="fe fe-alert-triangle mr-2"></i> '.lang("there_seems_to_be_an_issue_connecting_to_api_provider_please_check_api_key_and_token_again").'
+		          <i class="fe fe-alert-triangle me-2"></i> '.lang("there_seems_to_be_an_issue_connecting_to_api_provider_please_check_api_key_and_token_again").'
 		        </div>';
 	}
 
