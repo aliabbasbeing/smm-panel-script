@@ -230,11 +230,17 @@
         // Check if we're on the code parts page
         if ($('.code-parts-container').length > 0) {
             CodePartsTabs.init();
+        }
+    });
+    
+    // Add form submit handler for code parts - needs to be at document level to run first
+    if ($('.code-parts-container').length > 0) {
+        // Use capture phase to ensure this runs before other handlers
+        document.addEventListener('submit', function(e) {
+            var $target = $(e.target);
             
-            // Ensure TinyMCE content is saved before form submission
-            $('.actionForm').on('submit', function() {
-                var $form = $(this);
-                
+            // Only handle actionForm submissions on code parts page
+            if ($target.hasClass('actionForm') && $('.code-parts-container').length > 0) {
                 // Find the active tab's editor
                 var activeTabId = $('.code-parts-tab .nav-link.active').attr('href');
                 var $editor = $(activeTabId + ' .plugin_editor');
@@ -242,15 +248,25 @@
                 if ($editor.length > 0) {
                     var editorId = $editor.attr('id');
                     
-                    // Save TinyMCE content to textarea
-                    if (typeof tinymce !== 'undefined' && editorId && tinymce.get(editorId)) {
-                        tinymce.get(editorId).save();
-                        console.log('Code Parts: TinyMCE content saved before form submission');
+                    // Save TinyMCE content to textarea before form serialization
+                    if (typeof tinymce !== 'undefined' && editorId) {
+                        var editor = tinymce.get(editorId);
+                        if (editor) {
+                            // Force save the content
+                            editor.save();
+                            console.log('Code Parts: TinyMCE content force saved for:', editorId);
+                            console.log('Code Parts: Content length:', $editor.val().length);
+                        } else {
+                            console.warn('Code Parts: TinyMCE editor not found for:', editorId);
+                            console.warn('Code Parts: Available editors:', Object.keys(window.tinymceEditors || {}));
+                        }
+                    } else {
+                        console.warn('Code Parts: TinyMCE not available or no editor ID');
                     }
                 }
-            });
-        }
-    });
+            }
+        }, true); // Use capture phase
+    }
     
     // Expose to global scope for debugging
     window.CodePartsTabs = CodePartsTabs;

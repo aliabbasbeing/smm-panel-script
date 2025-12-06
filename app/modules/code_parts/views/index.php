@@ -236,7 +236,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('dashboard'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_dashboard" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('dashboard'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -261,7 +261,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('new_order'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_new_order" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('new_order'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -286,7 +286,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('orders'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_orders" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('orders'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -311,7 +311,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('services'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_services" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('services'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -336,7 +336,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('add_funds'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_add_funds" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('add_funds'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -361,7 +361,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('api'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_api" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('api'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -386,7 +386,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('tickets'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_tickets" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('tickets'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -411,7 +411,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('child_panel'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_child_panel" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('child_panel'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -436,7 +436,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('transactions'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_transactions" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('transactions'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -461,7 +461,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('signin'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_signin" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('signin'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
@@ -486,7 +486,7 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label class="form-label"><?=lang("Content")?></label>
-                            <textarea class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('signup'), ENT_QUOTES, 'UTF-8')?></textarea>
+                            <textarea id="editor_signup" class="form-control plugin_editor" name="content"><?=htmlspecialchars(get_code_part_raw('signup'), ENT_QUOTES, 'UTF-8')?></textarea>
                           </div>
                         </div>
                       </div>
