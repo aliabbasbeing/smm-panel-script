@@ -175,8 +175,6 @@ function plugin_editor(selector, settings){
     tinymce.init({
       selector: '#' + textareaId,
       height: _height,
-      base_url: 'https://cdn.jsdelivr.net/npm/tinymce@6.8.2',
-      suffix: '.min',
       menubar: true,
       promotion: false,
       branding: false,
