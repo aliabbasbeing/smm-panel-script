@@ -15,6 +15,7 @@ class code_parts extends MX_Controller {
 
     /**
      * Display the Code Parts management page
+     * Performance optimized - loads minimal data initially
      */
     public function index(){
         // Ensure only admin can access this feature
@@ -22,7 +23,9 @@ class code_parts extends MX_Controller {
             redirect(cn('statistics'));
         }
 
-        $code_parts = $this->model->get_all();
+        // Load only metadata (no content) for better performance
+        // Content will be loaded on-demand when tabs are activated
+        $code_parts = $this->model->get_all(false);
         
         $data = array(
             "module"     => get_class($this),

@@ -66,13 +66,19 @@ class code_parts_model extends MY_Model {
     }
     
     /**
-     * Get all code parts
+     * Get all code parts (optimized for performance)
+     * @param bool $activeOnly Whether to fetch only active code parts
      * @return array
      */
-    public function get_all(){
-        return $this->db->order_by('page_key', 'ASC')
-                        ->get($this->table)
-                        ->result();
+    public function get_all($activeOnly = false){
+        $this->db->select('id, page_key, page_name, status, updated_at')
+                 ->order_by('page_key', 'ASC');
+        
+        if ($activeOnly) {
+            $this->db->where('status', 1);
+        }
+        
+        return $this->db->get($this->table)->result();
     }
     
     /**
