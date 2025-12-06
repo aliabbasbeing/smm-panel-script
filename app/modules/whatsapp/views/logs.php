@@ -307,9 +307,7 @@
         <div class="modal-content">
             <div class="modal-header bg-danger text-white">
                 <h5 class="modal-title"><i class="fe fe-alert-triangle"></i> <?=lang("Confirm Delete")?></h5>
-                <button type="button" class="close text-white" data-bs-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body text-center">
                 <p><?=lang("Are you sure you want to delete old logs?")?></p>
@@ -332,9 +330,7 @@
         <div class="modal-content">
             <div class="modal-header bg-light">
                 <h5 class="modal-title"><i class="fe fe-file-text"></i> <?=lang("Message Details")?></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <div class="row mb-3">

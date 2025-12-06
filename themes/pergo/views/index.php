@@ -230,7 +230,7 @@
               </div>
               <div class="input-group">
                 <input type="email" name="email" class="form-control email" placeholder="Enter Your email" required>
-                <button class=" btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
+                <button class="btn btn-pill btn-gradient btn-signin btn-submit" type="submit">
                   <?php echo lang("subscribe_now"); ?>
                 </button>
               </div>
