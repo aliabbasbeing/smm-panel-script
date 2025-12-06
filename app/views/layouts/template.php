@@ -181,13 +181,21 @@
     <!-- Global Summernote initialization for plugin_editor elements -->
     <script type="text/javascript">
       $(document).ready(function() {
-        // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
-        $('.plugin_editor').each(function() {
-          var $this = $(this);
-          if (!$this.hasClass('note-editor') && !$this.next().hasClass('note-editor')) {
-            plugin_editor($this, {height: 300});
+        // Wait for Summernote to be available
+        function initSummernote() {
+          if (typeof $.fn.summernote === 'undefined') {
+            setTimeout(initSummernote, 100);
+            return;
           }
-        });
+          // Initialize any plugin_editor elements that haven't been initialized by page-specific scripts
+          $('.plugin_editor').each(function() {
+            var $this = $(this);
+            if (!$this.hasClass('note-editor') && !$this.next().hasClass('note-editor')) {
+              plugin_editor($this, {height: 300});
+            }
+          });
+        }
+        initSummernote();
       });
     </script>
     

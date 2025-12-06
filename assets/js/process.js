@@ -134,6 +134,16 @@ function plugin_editor(selector, settings){
     return $elements;
   }
   
+  // Check if Summernote is available
+  if (typeof $.fn.summernote === 'undefined') {
+    console.warn('Summernote is not loaded. Waiting for it to load...');
+    // Retry after a short delay
+    setTimeout(function() {
+      plugin_editor(selector, settings);
+    }, 500);
+    return $elements;
+  }
+  
   var _height = 300;
   
   if (typeof(settings) != 'undefined' && settings.height) {
