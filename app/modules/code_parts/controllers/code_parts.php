@@ -27,9 +27,21 @@ class code_parts extends MX_Controller {
         // Content will be loaded on-demand when tabs are activated
         $code_parts = $this->model->get_all(false);
         
+        // Create a settings array for easy access in the view
+        $code_parts_settings = [];
+        foreach ($code_parts as $part) {
+            $code_parts_settings[$part->page_key] = [
+                'device_visibility' => isset($part->device_visibility) ? $part->device_visibility : 'both',
+                'display_position' => isset($part->display_position) ? $part->display_position : 'top',
+                'show_on_mobile' => isset($part->show_on_mobile) ? (int)$part->show_on_mobile : 1,
+                'show_on_desktop' => isset($part->show_on_desktop) ? (int)$part->show_on_desktop : 1,
+            ];
+        }
+        
         $data = array(
             "module"     => get_class($this),
             "code_parts" => $code_parts,
+            "code_parts_settings" => $code_parts_settings,
         );
         
         $this->template->build("index", $data);
@@ -82,8 +94,16 @@ class code_parts extends MX_Controller {
         // Basic sanitization - remove dangerous scripts but keep styling
         $sanitized_content = $this->sanitize_html($content);
 
+        // Get advanced settings from POST
+        $settings = [
+            'device_visibility' => $this->input->post('device_visibility', true) ?: 'both',
+            'display_position' => $this->input->post('display_position', true) ?: 'top',
+            'show_on_mobile' => $this->input->post('show_on_mobile', true) ? 1 : 0,
+            'show_on_desktop' => $this->input->post('show_on_desktop', true) ? 1 : 0,
+        ];
+
         // Save using the model
-        $result = $this->model->save($page_key, $sanitized_content);
+        $result = $this->model->save($page_key, $sanitized_content, $settings);
 
         if ($result) {
             ms([
@@ -174,6 +194,50 @@ class code_parts extends MX_Controller {
             'status'  => 'success',
             'content' => $content
         ]);
+    }
+
+    /**
+     * Get code part settings via AJAX
+     */
+    public function ajax_get_settings() {
+        // Ensure only admin can access this feature
+        if (!get_role('admin')) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Access denied. Admin only.'
+            ]);
+            return;
+        }
+
+        $page_key = $this->input->get('page_key', true);
+
+        if (empty($page_key)) {
+            ms([
+                'status'  => 'error',
+                'message' => 'Page key is required'
+            ]);
+            return;
+        }
+
+        $settings = $this->model->get_settings($page_key);
+
+        if ($settings) {
+            ms([
+                'status'  => 'success',
+                'settings' => $settings
+            ]);
+        } else {
+            // Return defaults if not found
+            ms([
+                'status'  => 'success',
+                'settings' => [
+                    'device_visibility' => 'both',
+                    'display_position' => 'top',
+                    'show_on_mobile' => 1,
+                    'show_on_desktop' => 1
+                ]
+            ]);
+        }
     }
 
     /**

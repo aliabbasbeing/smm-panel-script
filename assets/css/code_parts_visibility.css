@@ -1,0 +1,54 @@
+/**
+ * Code Parts Device Visibility Styles
+ * Controls visibility of code blocks based on device type
+ */
+
+/* Hide on mobile devices (max-width: 768px) */
+@media only screen and (max-width: 768px) {
+  .code-part-wrapper.hide-on-mobile,
+  .hide-on-mobile {
+    display: none !important;
+  }
+}
+
+/* Hide on desktop devices (min-width: 769px) */
+@media only screen and (min-width: 769px) {
+  .code-part-wrapper.hide-on-desktop,
+  .hide-on-desktop {
+    display: none !important;
+  }
+}
+
+/* Code part wrapper ensures proper display */
+.code-part-wrapper {
+  width: 100%;
+  clear: both;
+}
+
+/* Position classes for debugging (optional) */
+.code-part-top {
+  margin-bottom: 20px;
+}
+
+.code-part-bottom {
+  margin-top: 20px;
+}
+
+/* Responsive utility classes */
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-only {
+  display: block !important;
+}
+
+@media only screen and (max-width: 768px) {
+  .mobile-only {
+    display: block !important;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+}
