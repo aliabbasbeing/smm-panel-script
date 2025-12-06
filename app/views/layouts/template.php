@@ -51,16 +51,6 @@
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/boostrap/colors.css" id="theme-stylesheet">
     <link rel="stylesheet" href="<?php echo BASE; ?>assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.css" id="theme-stylesheet">
     
-    <!-- Quill Editor CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-    <style>
-      .ql-editor { min-height: 200px; }
-      .ql-container { font-size: 14px; }
-      .quill-wrapper { background: #fff; border-radius: 4px; }
-      .quill-wrapper .ql-toolbar { border-radius: 4px 4px 0 0; }
-      .quill-wrapper .ql-container { border-radius: 0 0 4px 4px; }
-    </style>
-    
     <!-- emoji -->
     <?php
       if (in_array(segment('1'), ['services', 'api_provider', 'provider'])) {
@@ -160,8 +150,8 @@
     <script src="<?php echo BASE; ?>assets/js/general.js"></script>
     <!-- toast -->
     <script type="text/javascript" src="<?php echo BASE; ?>assets/plugins/jquery-toast/js/jquery.toast.js"></script>
-    <!-- Quill Editor -->
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    <!-- TinyMCE Editor (Self-hosted from CDN - no API key needed) -->
+    <script src="https://cdn.jsdelivr.net/npm/tinymce@6.8.2/tinymce.min.js"></script>
 
     <!-- emoji picker -->
     <script src="<?php echo BASE; ?>assets/plugins/emoji-picker/lib/js/config.js"></script>
@@ -185,24 +175,24 @@
     <!-- general JS -->
     <script src="<?php echo BASE; ?>assets/js/process.js"></script>
     
-    <!-- Global Quill Editor initialization for plugin_editor elements -->
+    <!-- Global TinyMCE Editor initialization for plugin_editor elements -->
     <script type="text/javascript">
       $(document).ready(function() {
-        // Wait for Quill to be available
-        function initQuillEditors() {
-          if (typeof Quill === 'undefined') {
-            setTimeout(initQuillEditors, 100);
+        // Wait for TinyMCE to be available
+        function initTinyMCEEditors() {
+          if (typeof tinymce === 'undefined') {
+            setTimeout(initTinyMCEEditors, 100);
             return;
           }
           // Initialize any plugin_editor elements that haven't been initialized
           $('.plugin_editor').each(function() {
             var $this = $(this);
-            if (!$this.data('quill-initialized')) {
+            if (!$this.data('tinymce-initialized')) {
               plugin_editor($this, {height: 300});
             }
           });
         }
-        initQuillEditors();
+        initTinyMCEEditors();
       });
     </script>
     

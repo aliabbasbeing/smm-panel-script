@@ -120,9 +120,9 @@
   });
 }
 
-/*----------  Configure Quill Editor  ----------*/
-// Store Quill instances globally for access
-window.quillEditors = window.quillEditors || {};
+/*----------  Configure TinyMCE Editor  ----------*/
+// Store TinyMCE instances globally for access
+window.tinymceEditors = window.tinymceEditors || {};
 
 function plugin_editor(selector, settings){
   // Handle both string selectors and jQuery objects
@@ -137,9 +137,9 @@ function plugin_editor(selector, settings){
     return $elements;
   }
   
-  // Check if Quill is available
-  if (typeof Quill === 'undefined') {
-    console.warn('Quill is not loaded. Waiting for it to load...');
+  // Check if TinyMCE is available
+  if (typeof tinymce === 'undefined') {
+    console.warn('TinyMCE is not loaded. Waiting for it to load...');
     // Retry after a short delay
     setTimeout(function() {
       plugin_editor(selector, settings);
@@ -157,68 +157,78 @@ function plugin_editor(selector, settings){
     var $textarea = $(this);
     
     // Skip if already initialized
-    if ($textarea.data('quill-initialized')) {
+    if ($textarea.data('tinymce-initialized')) {
       return;
     }
     
-    // Create unique ID for the editor
-    var editorId = 'quill-editor-' + Date.now() + '-' + index;
-    
-    // Create wrapper and editor container
-    var $wrapper = $('<div class="quill-wrapper mb-3"></div>');
-    var $editorDiv = $('<div id="' + editorId + '"></div>');
-    
-    // Hide the original textarea and insert the editor
-    $textarea.hide().after($wrapper);
-    $wrapper.append($editorDiv);
-    
-    // Set the initial content from textarea
-    var initialContent = $textarea.val();
-    
-    // Initialize Quill
-    var quill = new Quill('#' + editorId, {
-      theme: 'snow',
-      placeholder: $textarea.attr('placeholder') || 'Write something...',
-      modules: {
-        toolbar: [
-          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-          [{ 'font': [] }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          ['bold', 'italic', 'underline', 'strike'],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'script': 'sub'}, { 'script': 'super' }],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-          [{ 'indent': '-1'}, { 'indent': '+1' }],
-          [{ 'direction': 'rtl' }],
-          [{ 'align': [] }],
-          ['blockquote', 'code-block'],
-          ['link', 'image', 'video'],
-          ['clean']
-        ]
-      }
-    });
-    
-    // Set editor height
-    $editorDiv.find('.ql-editor').css('min-height', _height + 'px');
-    
-    // Set initial content
-    if (initialContent) {
-      quill.root.innerHTML = initialContent;
+    // Make sure textarea has an ID
+    var textareaId = $textarea.attr('id');
+    if (!textareaId) {
+      textareaId = 'tinymce-editor-' + Date.now() + '-' + index;
+      $textarea.attr('id', textareaId);
     }
     
-    // Sync content back to textarea on text change
-    quill.on('text-change', function() {
-      $textarea.val(quill.root.innerHTML);
-    });
+    // Mark as initialized to prevent double init
+    $textarea.data('tinymce-initialized', true);
     
-    // Store the quill instance
-    window.quillEditors[editorId] = quill;
-    $textarea.data('quill-instance', quill);
-    $textarea.data('quill-initialized', true);
-    
-    // Handle form submission - ensure textarea is synced
-    $textarea.closest('form').on('submit', function() {
-      $textarea.val(quill.root.innerHTML);
+    // Initialize TinyMCE with code view first in toolbar
+    tinymce.init({
+      selector: '#' + textareaId,
+      height: _height,
+      menubar: true,
+      promotion: false,
+      branding: false,
+      plugins: [
+        'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+        'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+        'insertdatetime', 'media', 'table', 'help', 'wordcount', 'codesample',
+        'emoticons', 'quickbars', 'directionality'
+      ],
+      // Code view (source code) is FIRST in toolbar as requested
+      toolbar: 'code | undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | link image media table codesample | charmap emoticons | ltr rtl | fullscreen preview | help',
+      toolbar_mode: 'sliding',
+      content_style: 'body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; font-size: 14px; }',
+      quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote',
+      quickbars_insert_toolbar: 'quickimage quicktable',
+      contextmenu: 'link image table',
+      image_advtab: true,
+      image_caption: true,
+      link_default_target: '_blank',
+      directionality: 'ltr',
+      codesample_languages: [
+        { text: 'HTML/XML', value: 'markup' },
+        { text: 'JavaScript', value: 'javascript' },
+        { text: 'CSS', value: 'css' },
+        { text: 'PHP', value: 'php' },
+        { text: 'Python', value: 'python' },
+        { text: 'Java', value: 'java' },
+        { text: 'C', value: 'c' },
+        { text: 'C++', value: 'cpp' },
+        { text: 'Ruby', value: 'ruby' },
+        { text: 'SQL', value: 'sql' },
+        { text: 'Bash', value: 'bash' }
+      ],
+      setup: function(editor) {
+        // Store the editor instance
+        window.tinymceEditors[textareaId] = editor;
+        $textarea.data('tinymce-instance', editor);
+        
+        // Sync content on change
+        editor.on('change', function() {
+          editor.save();
+        });
+        
+        // Sync on blur
+        editor.on('blur', function() {
+          editor.save();
+        });
+      },
+      init_instance_callback: function(editor) {
+        // Ensure content is synced on form submit
+        $textarea.closest('form').on('submit', function() {
+          editor.save();
+        });
+      }
     });
   });
   
@@ -226,9 +236,8 @@ function plugin_editor(selector, settings){
 }
 
 function elFinderBrowser (field_name, url, type, win) {
-  // Legacy function - no longer using TinyMCE file browser
-  // Quill handles image upload via toolbar
-  console.log('elFinderBrowser is deprecated - using Quill image upload instead');
+  // Legacy function - TinyMCE handles file browser internally
+  console.log('elFinderBrowser is deprecated - using TinyMCE internal file browser');
   return false;
 }
 
